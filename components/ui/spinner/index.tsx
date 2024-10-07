@@ -1,4 +1,5 @@
 'use client';
+import '../../../styles.css';
 import { ActivityIndicator } from 'react-native';
 import React from 'react';
 import { createSpinner } from '@gluestack-ui/spinner';

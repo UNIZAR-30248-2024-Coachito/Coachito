@@ -1,4 +1,5 @@
 'use client';
+import '../../../styles.css';
 import React, { useMemo } from 'react';
 import { createCheckbox } from '@gluestack-ui/checkbox';
 import { View, Pressable, Text } from 'react-native';

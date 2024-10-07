@@ -1,4 +1,5 @@
 'use client';
+import '../../../styles.css';
 import React from 'react';
 import { createProgress } from '@gluestack-ui/progress';
 import { View } from 'react-native';

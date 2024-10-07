@@ -1,4 +1,5 @@
 'use client';
+import '../../../styles.css';
 import React, { useMemo } from 'react';
 import { Text, View } from 'react-native';
 import { Svg } from 'react-native-svg';

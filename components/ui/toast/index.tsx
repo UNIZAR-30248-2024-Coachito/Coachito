@@ -1,4 +1,5 @@
 'use client';
+import '../../../styles.css';
 import React from 'react';
 import { createToast, createToastHook } from '@gluestack-ui/toast';
 import { Text, View, Platform } from 'react-native';

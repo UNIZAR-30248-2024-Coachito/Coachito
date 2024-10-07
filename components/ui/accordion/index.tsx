@@ -1,4 +1,5 @@
 'use client';
+import '../../../styles.css';
 import React, { useMemo } from 'react';
 import { createAccordion } from '@gluestack-ui/accordion';
 import { Svg } from 'react-native-svg';

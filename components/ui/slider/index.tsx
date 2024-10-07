@@ -1,4 +1,5 @@
 'use client';
+import '../../../styles.css';
 import { createSlider } from '@gluestack-ui/slider';
 import { Pressable } from 'react-native';
 import { View, Platform } from 'react-native';

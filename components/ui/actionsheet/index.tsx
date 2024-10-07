@@ -1,4 +1,5 @@
 'use client';
+import '../../../styles.css';
 import React, { useMemo } from 'react';
 import { H4 } from '@expo/html-elements';
 import { Svg } from 'react-native-svg';

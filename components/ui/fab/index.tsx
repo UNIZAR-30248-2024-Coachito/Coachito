@@ -1,4 +1,5 @@
 'use client';
+import '../../../styles.css';
 import React, { useMemo } from 'react';
 import { createFab } from '@gluestack-ui/fab';
 import { Platform, Text } from 'react-native';

@@ -1,4 +1,5 @@
 'use client';
+import '../../../styles.css';
 import React from 'react';
 import { createDivider } from '@gluestack-ui/divider';
 import { tva } from '@gluestack-ui/nativewind-utils/tva';

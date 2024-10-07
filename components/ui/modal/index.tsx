@@ -1,4 +1,5 @@
 'use client';
+import '../../../styles.css';
 import React from 'react';
 import { createModal } from '@gluestack-ui/modal';
 import { Pressable, View, ScrollView, Platform } from 'react-native';

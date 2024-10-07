@@ -1,4 +1,5 @@
 'use client';
+import '../../../styles.css';
 import React from 'react';
 import { View, Pressable, Platform, ScrollView } from 'react-native';
 import {

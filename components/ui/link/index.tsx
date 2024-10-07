@@ -1,4 +1,5 @@
 'use client';
+import '../../../styles.css';
 import { createLink } from '@gluestack-ui/link';
 import { Pressable, Platform } from 'react-native';
 import { Text } from 'react-native';

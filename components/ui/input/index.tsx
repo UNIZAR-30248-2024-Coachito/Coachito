@@ -1,4 +1,5 @@
 'use client';
+import '../../../styles.css';
 import React, { useMemo } from 'react';
 import { createInput } from '@gluestack-ui/input';
 import { Svg } from 'react-native-svg';

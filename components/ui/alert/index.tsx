@@ -1,4 +1,5 @@
 'use client';
+import '../../../styles.css';
 import { createAlert } from '@gluestack-ui/alert';
 import { View, Text } from 'react-native';
 import { tva } from '@gluestack-ui/nativewind-utils/tva';

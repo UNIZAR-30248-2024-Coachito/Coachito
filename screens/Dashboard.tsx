@@ -7,6 +7,7 @@ import { HStack } from '../components/ui/hstack';
 import { VStack } from '../components/ui/vstack';
 import { Text } from '../components/ui/text';
 import { Button } from '../components/ui/button';
+import '../styles.css';
 
 interface Exercise {
   name: string;

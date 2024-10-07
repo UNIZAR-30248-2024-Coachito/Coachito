@@ -1,4 +1,5 @@
 'use client';
+import '../../../styles.css';
 import React from 'react';
 import { createModal as createDrawer } from '@gluestack-ui/modal';
 import {
