@@ -1,8 +1,8 @@
 module.exports = {
-  darkMode: "class",
+  darkMode: process.env.DARK_MODE ? process.env.DARK_MODE : 'media',
   content: [
-    "./components/ui/**/*.{html,js,jsx,ts,tsx}",
-    "./App.{html,js,jsx,ts,tsx}",
+    "./components/**/*.{html,js,jsx,ts,tsx}",
+    "./screens/**/*.{html,js,jsx,ts,tsx}",
   ],
   presets: [require("nativewind/preset")],
   safelist: [

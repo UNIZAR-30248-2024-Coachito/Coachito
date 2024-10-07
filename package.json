@@ -6,7 +6,7 @@
     "start": "expo start -c",
     "android": "DARK_MODE=media expo start --android",
     "ios": "DARK_MODE=media expo start --ios",
-    "web": "DARK_MODE=media expo start --web"
+    "web": "DARK_MODE=class expo start --web"
   },
   "dependencies": {
     "@expo/html-elements": "^0.4.2",
@@ -40,14 +40,16 @@
     "@gluestack-ui/toast": "^1.0.7",
     "@gluestack-ui/tooltip": "^0.1.33",
     "@legendapp/motion": "^2.4.0",
+    "@supabase/supabase-js": "^2.45.4",
     "babel-plugin-module-resolver": "^5.0.2",
     "expo": "~51.0.28",
     "expo-status-bar": "~1.12.1",
-    "nativewind": "4.0.36",
+    "lucide-react-native": "^0.447.0",
+    "nativewind": "^4.0.36",
     "react": "18.2.0",
     "react-native": "0.74.5",
     "react-native-reanimated": "^3.15.4",
-    "react-native-svg": "^13.4.0",
+    "react-native-svg": "^15.1.0",
     "tailwindcss": "^3.4.13"
   },
   "devDependencies": {
