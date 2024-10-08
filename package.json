@@ -1,7 +1,7 @@
 {
   "name": "coachito",
   "version": "1.0.0",
-  "main": "expo/AppEntry.js",
+  "main": "AppEntry.js",
   "scripts": {
     "start": "expo start -c",
     "android": "DARK_MODE=media expo start --android",
