@@ -1,10 +1,10 @@
-import { SupabaseClient } from "@supabase/supabase-js";
-import { BaseRepository } from "./baseRepository";
-import { Tables, TablesInsert, TablesUpdate } from "../types/supabase";
+import { SupabaseClient } from '@supabase/supabase-js'
+import { BaseRepository } from './baseRepository'
+import { Tables, TablesInsert, TablesUpdate } from '../types/supabase'
 
-export type UserRow = Tables<'users'>;
-export type UserInsert = TablesInsert<'users'>;
-export type UserUpdate = TablesUpdate<'users'>;
+export type UserRow = Tables<'users'>
+export type UserInsert = TablesInsert<'users'>
+export type UserUpdate = TablesUpdate<'users'>
 
 export class UserRepository extends BaseRepository<
   UserRow,
@@ -12,6 +12,6 @@ export class UserRepository extends BaseRepository<
   UserUpdate
 > {
   constructor(supabase: SupabaseClient) {
-    super(supabase, 'users');
+    super(supabase, 'users')
   }
 }
