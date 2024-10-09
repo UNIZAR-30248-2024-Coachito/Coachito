@@ -1,0 +1,6 @@
+version: 2
+updates:
+  - package-ecosystem: "npm"  # Usando npm para gestionar dependencias
+    directory: "/"            # Directorio raíz donde está el archivo package.json
+    schedule:
+      interval: "weekly"      # Actualizaciones semanales
