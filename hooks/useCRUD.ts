@@ -30,7 +30,7 @@ const useCRUD = <DataType,>(asyncFunc: () => Promise<DataType>): UseCRUDReturn<D
     };
 
     executeAsync();
-  }, [asyncFunc]);
+  }, []);
 
   return { data, loading, error };
 };

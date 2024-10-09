@@ -3,6 +3,7 @@ import { GluestackUIProvider } from "@/components/ui/gluestack-ui-provider";
 import { Box } from '@/components/ui/box';
 import Dashboard from './Dashboard';
 import '../styles.css';
+import { useFetchExerciseWorkout } from '@/hooks/exerciseHook';
 
 export default function App() {
   const [colorMode, setColorMode] = useState<"light" | "dark">("dark");
