@@ -1,4 +1,5 @@
-import React, { createContext, useMemo, useContext } from 'react';
+/* eslint-disable */
+import React, { createContext, useMemo, useContext } from 'react'
 import {
   Table as ExpoTable,
   THead as ExpoTHead,
@@ -6,7 +7,7 @@ import {
   TFoot as ExpoTFoot,
   TR as ExpoTR,
   Caption as ExpoTCaption,
-} from '@expo/html-elements';
+} from '@expo/html-elements'
 import {
   tableStyle,
   tableHeaderStyle,
@@ -16,24 +17,24 @@ import {
   tableRowStyleStyle,
   tableDataStyle,
   tableCaptionStyle,
-} from './styles';
-import { Text, View } from 'react-native';
+} from './styles'
+import { Text, View } from 'react-native'
 
-const TableHeaderContext = createContext<any>({});
-const TableFooterContext = createContext<any>({});
+const TableHeaderContext = createContext<any>({})
+const TableFooterContext = createContext<any>({})
 
-type ITableProps = React.ComponentProps<typeof ExpoTable>;
-type ITableHeaderProps = React.ComponentProps<typeof ExpoTHead>;
-type ITableBodyProps = React.ComponentProps<typeof ExpoTBody>;
-type ITableFooterProps = React.ComponentProps<typeof ExpoTFoot>;
+type ITableProps = React.ComponentProps<typeof ExpoTable>
+type ITableHeaderProps = React.ComponentProps<typeof ExpoTHead>
+type ITableBodyProps = React.ComponentProps<typeof ExpoTBody>
+type ITableFooterProps = React.ComponentProps<typeof ExpoTFoot>
 type ITableHeadProps = React.ComponentProps<typeof View | typeof Text> & {
-  useRNView?: boolean;
-};
-type ITableRowProps = React.ComponentProps<typeof ExpoTR>;
+  useRNView?: boolean
+}
+type ITableRowProps = React.ComponentProps<typeof ExpoTR>
 type ITableDataProps = React.ComponentProps<typeof View | typeof Text> & {
-  useRNView?: boolean;
-};
-type ITableCaptionProps = React.ComponentProps<typeof ExpoTCaption>;
+  useRNView?: boolean
+}
+type ITableCaptionProps = React.ComponentProps<typeof ExpoTCaption>
 
 const Table = React.forwardRef<React.ElementRef<typeof ExpoTable>, ITableProps>(
   ({ className, ...props }, ref) => {
@@ -43,9 +44,9 @@ const Table = React.forwardRef<React.ElementRef<typeof ExpoTable>, ITableProps>(
         className={tableStyle({ class: className })}
         {...props}
       />
-    );
-  }
-);
+    )
+  },
+)
 
 const TableHeader = React.forwardRef<
   React.ElementRef<typeof ExpoTHead>,
@@ -54,8 +55,8 @@ const TableHeader = React.forwardRef<
   const contextValue = useMemo(() => {
     return {
       isHeaderRow: true,
-    };
-  }, []);
+    }
+  }, [])
   return (
     <TableHeaderContext.Provider value={contextValue}>
       <ExpoTHead
@@ -64,8 +65,8 @@ const TableHeader = React.forwardRef<
         {...props}
       />
     </TableHeaderContext.Provider>
-  );
-});
+  )
+})
 
 const TableBody = React.forwardRef<
   React.ElementRef<typeof ExpoTBody>,
@@ -77,8 +78,8 @@ const TableBody = React.forwardRef<
       className={tableBodyStyle({ class: className })}
       {...props}
     />
-  );
-});
+  )
+})
 
 const TableFooter = React.forwardRef<
   React.ElementRef<typeof ExpoTFoot>,
@@ -87,8 +88,8 @@ const TableFooter = React.forwardRef<
   const contextValue = useMemo(() => {
     return {
       isFooterRow: true,
-    };
-  }, []);
+    }
+  }, [])
   return (
     <TableFooterContext.Provider value={contextValue}>
       <ExpoTFoot
@@ -97,8 +98,8 @@ const TableFooter = React.forwardRef<
         {...props}
       />
     </TableFooterContext.Provider>
-  );
-});
+  )
+})
 
 const TableHead = React.forwardRef<
   React.ElementRef<typeof View | typeof Text>,
@@ -111,7 +112,7 @@ const TableHead = React.forwardRef<
         className={tableHeadStyle({ class: className })}
         {...props}
       />
-    );
+    )
   } else {
     return (
       <Text
@@ -119,16 +120,16 @@ const TableHead = React.forwardRef<
         className={tableHeadStyle({ class: className })}
         {...props}
       />
-    );
+    )
   }
-});
+})
 
 const TableRow = React.forwardRef<
   React.ElementRef<typeof ExpoTR>,
   ITableRowProps
 >(({ className, ...props }, ref) => {
-  const { isHeaderRow } = useContext(TableHeaderContext);
-  const { isFooterRow } = useContext(TableFooterContext);
+  const { isHeaderRow } = useContext(TableHeaderContext)
+  const { isFooterRow } = useContext(TableFooterContext)
 
   return (
     <ExpoTR
@@ -140,8 +141,8 @@ const TableRow = React.forwardRef<
       })}
       {...props}
     />
-  );
-});
+  )
+})
 
 const TableData = React.forwardRef<
   React.ElementRef<typeof View | typeof Text>,
@@ -154,7 +155,7 @@ const TableData = React.forwardRef<
         className={tableDataStyle({ class: className })}
         {...props}
       />
-    );
+    )
   } else {
     return (
       <Text
@@ -162,9 +163,9 @@ const TableData = React.forwardRef<
         className={tableDataStyle({ class: className })}
         {...props}
       />
-    );
+    )
   }
-});
+})
 
 const TableCaption = React.forwardRef<
   React.ElementRef<typeof ExpoTCaption>,
@@ -176,17 +177,17 @@ const TableCaption = React.forwardRef<
       className={tableCaptionStyle({ class: className })}
       {...props}
     />
-  );
-});
+  )
+})
 
-Table.displayName = 'Table';
-TableHeader.displayName = 'TableHeader';
-TableBody.displayName = 'TableBody';
-TableFooter.displayName = 'TableFooter';
-TableHead.displayName = 'TableHead';
-TableRow.displayName = 'TableRow';
-TableData.displayName = 'TableData';
-TableCaption.displayName = 'TableCaption';
+Table.displayName = 'Table'
+TableHeader.displayName = 'TableHeader'
+TableBody.displayName = 'TableBody'
+TableFooter.displayName = 'TableFooter'
+TableHead.displayName = 'TableHead'
+TableRow.displayName = 'TableRow'
+TableData.displayName = 'TableData'
+TableCaption.displayName = 'TableCaption'
 
 export {
   Table,
@@ -197,4 +198,4 @@ export {
   TableRow,
   TableData,
   TableCaption,
-};
+}
