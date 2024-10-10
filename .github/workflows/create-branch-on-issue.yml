@@ -1,0 +1,37 @@
+name: Create Branch on Issue Creation
+
+on:
+  issues:
+    types: [opened]
+
+jobs:
+  create-branch:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+      
+    - name: Create branch for the issue
+      run: |
+        ISSUE_NUMBER=${{ github.event.issue.number }}
+        ISSUE_TITLE=${{ github.event.issue.title }}
+        
+        # Limpiar el título del issue para usarlo en el nombre de la rama (opcional)
+        CLEAN_TITLE=$(echo "${ISSUE_TITLE}" | sed 's/[^a-zA-Z0-9._-]/-/g' | tr '[:upper:]' '[:lower:]')
+
+        # Crear una nueva rama basada en el issue
+        BRANCH_NAME="issue-${ISSUE_NUMBER}-${CLEAN_TITLE}"
+
+        # Crear la rama y hacer push
+        git checkout -b "$BRANCH_NAME"
+        git push origin "$BRANCH_NAME"
+
+    - name: Post comment with branch name
+      run: |
+        ISSUE_NUMBER=${{ github.event.issue.number }}
+        BRANCH_NAME="issue-${ISSUE_NUMBER}-${CLEAN_TITLE}"
+        COMMENT="Se ha creado la rama \`${BRANCH_NAME}\` para este issue."
+        gh issue comment ${{ github.event.issue.number }} --body "$COMMENT"
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
