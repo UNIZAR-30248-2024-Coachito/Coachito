@@ -1,19 +1,19 @@
-import React from 'react'
-import { useNavigation, useRoute } from '@react-navigation/native'
-import { Home, Dumbbell, User } from 'lucide-react-native'
-import { Pressable } from 'react-native'
-import { HStack } from '../ui/hstack'
-import { VStack } from '../ui/vstack'
-import { Text } from '../ui/text'
-import { NavigationProps } from '@/types/navigation'
+import React from 'react';
+import { useNavigation, useRoute } from '@react-navigation/native';
+import { Home, Dumbbell, User } from 'lucide-react-native';
+import { Pressable } from 'react-native';
+import { HStack } from '../ui/hstack';
+import { VStack } from '../ui/vstack';
+import { Text } from '../ui/text';
+import { NavigationProps } from '@/types/navigation';
 
 export default function BottomBar() {
-  const navigation = useNavigation<NavigationProps>()
-  const route = useRoute()
+  const navigation = useNavigation<NavigationProps>();
+  const route = useRoute();
 
-  const isDashboardActive = route.name === 'Dashboard'
-  const isRoutineActive = route.name === 'Routine'
-  const isProfileActive = route.name === 'Profile'
+  const isDashboardActive = route.name === 'Dashboard';
+  const isRoutineActive = route.name === 'Routine';
+  const isProfileActive = route.name === 'Profile';
 
   return (
     <HStack className="justify-around bg-zinc-950 py-4">
@@ -48,5 +48,5 @@ export default function BottomBar() {
         </VStack>
       </Pressable>
     </HStack>
-  )
+  );
 }

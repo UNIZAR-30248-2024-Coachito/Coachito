@@ -1,20 +1,20 @@
-import React, { forwardRef } from 'react'
-import type { VariantProps } from '@gluestack-ui/nativewind-utils'
-import { Animated, Easing, Platform, View } from 'react-native'
-import { skeletonStyle, skeletonTextStyle } from './styles'
+import React, { forwardRef } from 'react';
+import type { VariantProps } from '@gluestack-ui/nativewind-utils';
+import { Animated, Easing, Platform, View } from 'react-native';
+import { skeletonStyle, skeletonTextStyle } from './styles';
 
 type ISkeletonProps = React.ComponentProps<typeof View> &
   VariantProps<typeof skeletonStyle> & {
-    isLoaded?: boolean
-    startColor?: string
-  }
+    isLoaded?: boolean;
+    startColor?: string;
+  };
 
 type ISkeletonTextProps = React.ComponentProps<typeof View> &
   VariantProps<typeof skeletonTextStyle> & {
-    _lines?: number
-    isLoaded?: boolean
-    startColor?: string
-  }
+    _lines?: number;
+    isLoaded?: boolean;
+    startColor?: string;
+  };
 
 const Skeleton = forwardRef<
   React.ElementRef<typeof Animated.View>,
@@ -30,12 +30,12 @@ const Skeleton = forwardRef<
       speed = 2,
       ...props
     },
-    ref,
+    ref
   ) => {
-    const pulseAnim = new Animated.Value(1)
-    const customTimingFunction = Easing.bezier(0.4, 0, 0.6, 1)
-    const fadeDuration = 0.6
-    const animationDuration = (fadeDuration * 10000) / speed // Convert seconds to milliseconds
+    const pulseAnim = new Animated.Value(1);
+    const customTimingFunction = Easing.bezier(0.4, 0, 0.6, 1);
+    const fadeDuration = 0.6;
+    const animationDuration = (fadeDuration * 10000) / speed; // Convert seconds to milliseconds
 
     const pulse = Animated.sequence([
       Animated.timing(pulseAnim, {
@@ -56,10 +56,10 @@ const Skeleton = forwardRef<
         easing: customTimingFunction,
         useNativeDriver: Platform.OS !== 'web',
       }),
-    ])
+    ]);
 
     if (!isLoaded) {
-      Animated.loop(pulse).start()
+      Animated.loop(pulse).start();
       return (
         <Animated.View
           style={{ opacity: pulseAnim }}
@@ -70,14 +70,14 @@ const Skeleton = forwardRef<
           {...props}
           ref={ref}
         />
-      )
+      );
     } else {
-      Animated.loop(pulse).stop()
+      Animated.loop(pulse).stop();
 
-      return children
+      return children;
     }
-  },
-)
+  }
+);
 
 const SkeletonText = forwardRef<
   React.ElementRef<typeof View>,
@@ -93,7 +93,7 @@ const SkeletonText = forwardRef<
       children,
       ...props
     },
-    ref,
+    ref
   ) => {
     if (!isLoaded) {
       if (_lines) {
@@ -114,7 +114,7 @@ const SkeletonText = forwardRef<
               />
             ))}
           </View>
-        )
+        );
       } else {
         return (
           <Skeleton
@@ -124,15 +124,15 @@ const SkeletonText = forwardRef<
             {...props}
             ref={ref}
           />
-        )
+        );
       }
     } else {
-      return children
+      return children;
     }
-  },
-)
+  }
+);
 
-Skeleton.displayName = 'Skeleton'
-SkeletonText.displayName = 'SkeletonText'
+Skeleton.displayName = 'Skeleton';
+SkeletonText.displayName = 'SkeletonText';
 
-export { Skeleton, SkeletonText }
+export { Skeleton, SkeletonText };

@@ -1,21 +1,21 @@
-import React, { useState } from 'react'
-import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider'
-import { NavigationContainer } from '@react-navigation/native'
-import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
-import Dashboard from './Dashboard'
-import Routine from './Routine'
-import Profile from './Profile'
-import Exercises from './Exercises'
-import AddExercise from './addExercise'
-import AddRoutine from './addRoutine'
-import { RootStackParamList } from '@/types/navigation'
-import Template from '@/components/shared/Template'
-import '../styles.css'
+import React, { useState } from 'react';
+import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
+import { NavigationContainer } from '@react-navigation/native';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
+import Dashboard from './Dashboard';
+import Routine from './Routine';
+import Profile from './Profile';
+import Exercises from './Exercises';
+import AddExercise from './addExercise';
+import AddRoutine from './addRoutine';
+import { RootStackParamList } from '@/types/navigation';
+import Template from '@/components/shared/Template';
+import '../styles.css';
 
-const Tab = createBottomTabNavigator<RootStackParamList>()
+const Tab = createBottomTabNavigator<RootStackParamList>();
 
 export default function App() {
-  const [colorMode] = useState<'light' | 'dark'>('dark')
+  const [colorMode] = useState<'light' | 'dark'>('dark');
 
   return (
     <GluestackUIProvider mode={colorMode}>
@@ -71,5 +71,5 @@ export default function App() {
         </Tab.Navigator>
       </NavigationContainer>
     </GluestackUIProvider>
-  )
+  );
 }
