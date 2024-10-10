@@ -5,6 +5,9 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import Dashboard from './Dashboard'
 import Routine from './Routine'
 import Profile from './Profile'
+import Exercises from './Exercises'
+import AddExercise from './addExercise'
+import AddRoutine from './addRoutine'
 import { RootStackParamList } from '@/types/navigation'
 import Template from '@/components/shared/Template'
 import '../styles.css'
@@ -41,6 +44,27 @@ export default function App() {
             {() => (
               <Template>
                 <Profile />
+              </Template>
+            )}
+          </Tab.Screen>
+          <Tab.Screen name="Exercises">
+            {() => (
+              <Template>
+                <Exercises />
+              </Template>
+            )}
+          </Tab.Screen>
+          <Tab.Screen name="AddExercise">
+            {() => (
+              <Template>
+                <AddExercise />
+              </Template>
+            )}
+          </Tab.Screen>
+          <Tab.Screen name="AddRoutine">
+            {() => (
+              <Template>
+                <AddRoutine />
               </Template>
             )}
           </Tab.Screen>
