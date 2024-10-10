@@ -7,9 +7,41 @@ import { Button } from '../components/ui/button';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '@/types/navigation';
 import { InputField, Input } from '../components/ui/input';
+import { Pressable } from 'react-native';
+import { useState } from 'react';
+
+interface Ejercicio {
+  name: string;
+  foto: string;
+}
 
 const AddExercise: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
+  const [presionado, setPresionado] = useState<boolean[]>([false, false]);
+
+  const ejercicios: Ejercicio[] = [
+    {
+      name: 'Press de banca inclinado',
+      foto: 'Foto1',
+    },
+    {
+      name: 'Sentadillas con Barra',
+      foto: 'Foto2',
+    },
+  ];
+
+  const handlePress = (index: number) => {
+    // Crea una copia del estado actual
+    const newPresionado = [...presionado];
+    // Cambia el estado del ejercicio presionado
+    newPresionado[index] = !newPresionado[index];
+    // Actualiza el estado
+    setPresionado(newPresionado);
+  };
+
+  const getStyle = (index: number) => ({
+    backgroundColor: presionado[index] ? 'black' : 'blue',
+  });
 
   return (
     <Box className="flex-1 p-4">
@@ -40,9 +72,23 @@ const AddExercise: React.FC = () => {
             isInvalid={false}
             isReadOnly={false}
           >
-            <InputField placeholder="Buscar Ejercicio" />
+            <InputField className="text-white" placeholder="Buscar Ejercicio" />
           </Input>
         </Box>
+        {/* Mostrar lista de ejercicios */}
+        <VStack className="space-y-2 p-4">
+          {ejercicios.map((ejercicio, index) => (
+            <Pressable
+              key={index}
+              className="items-left p-4"
+              onPress={() => handlePress(index)}
+              style={getStyle(index)}
+            >
+              <Text className="text-lg">{ejercicio.name}</Text>
+              <Text>{ejercicio.foto}</Text>
+            </Pressable>
+          ))}
+        </VStack>
       </VStack>
     </Box>
   );
