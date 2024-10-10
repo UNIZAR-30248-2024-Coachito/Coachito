@@ -1,9 +1,9 @@
-import React from 'react'
-import { Box } from '../ui/box'
-import BottomBar from './BottomBar'
+import React from 'react';
+import { Box } from '../ui/box';
+import BottomBar from './BottomBar';
 
 interface TemplateProps {
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 const Template: React.FC<TemplateProps> = ({ children }) => {
@@ -12,7 +12,7 @@ const Template: React.FC<TemplateProps> = ({ children }) => {
       <Box className="flex-1">{children}</Box>
       <BottomBar />
     </Box>
-  )
-}
+  );
+};
 
-export default Template
+export default Template;

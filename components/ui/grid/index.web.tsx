@@ -1,28 +1,28 @@
-import React from 'react'
-import { gridStyle, gridItemStyle } from './styles'
+import React from 'react';
+import { gridStyle, gridItemStyle } from './styles';
 
-import type { VariantProps } from '@gluestack-ui/nativewind-utils'
+import type { VariantProps } from '@gluestack-ui/nativewind-utils';
 
 type IGridProps = React.ComponentPropsWithoutRef<'div'> &
   VariantProps<typeof gridStyle> & {
-    gap?: number
-    rowGap?: number
-    columnGap?: number
-    flexDirection?: 'row' | 'column' | 'row-reverse' | 'column-reverse'
-    padding?: number
-    paddingLeft?: number
-    paddingRight?: number
-    paddingStart?: number
-    paddingEnd?: number
+    gap?: number;
+    rowGap?: number;
+    columnGap?: number;
+    flexDirection?: 'row' | 'column' | 'row-reverse' | 'column-reverse';
+    padding?: number;
+    paddingLeft?: number;
+    paddingRight?: number;
+    paddingStart?: number;
+    paddingEnd?: number;
     _extra: {
-      className: string
-    }
-  }
+      className: string;
+    };
+  };
 
 const Grid = React.forwardRef<HTMLDivElement, IGridProps>(
   ({ className, _extra, ...props }, ref) => {
-    const gridClass = _extra?.className
-    const finalGridClass = gridClass ?? ''
+    const gridClass = _extra?.className;
+    const finalGridClass = gridClass ?? '';
     return (
       <div
         ref={ref}
@@ -31,22 +31,22 @@ const Grid = React.forwardRef<HTMLDivElement, IGridProps>(
         })}
         {...props}
       />
-    )
-  },
-)
+    );
+  }
+);
 
 type IGridItemProps = React.ComponentPropsWithoutRef<'div'> &
   VariantProps<typeof gridItemStyle> & {
-    index?: number
+    index?: number;
     _extra: {
-      className: string
-    }
-  }
+      className: string;
+    };
+  };
 const GridItem = React.forwardRef<HTMLDivElement, IGridItemProps>(
   ({ className, _extra, ...props }, ref) => {
-    const gridItemClass = _extra?.className
+    const gridItemClass = _extra?.className;
 
-    const finalGridItemClass = gridItemClass ?? ''
+    const finalGridItemClass = gridItemClass ?? '';
     return (
       <div
         ref={ref}
@@ -55,11 +55,11 @@ const GridItem = React.forwardRef<HTMLDivElement, IGridItemProps>(
         })}
         {...props}
       />
-    )
-  },
-)
+    );
+  }
+);
 
-Grid.displayName = 'Grid'
-GridItem.displayName = 'GridItem'
+Grid.displayName = 'Grid';
+GridItem.displayName = 'GridItem';
 
-export { Grid, GridItem }
+export { Grid, GridItem };

@@ -1,11 +1,11 @@
-import { fixupPluginRules } from '@eslint/compat'
-import globals from 'globals'
-import pluginJs from '@eslint/js'
-import tseslint from 'typescript-eslint'
-import pluginReact from 'eslint-plugin-react'
-import pluginReactNative from 'eslint-plugin-react-native'
-import pluginPrettier from 'eslint-plugin-prettier'
-import configPrettier from 'eslint-config-prettier'
+import { fixupPluginRules } from '@eslint/compat';
+import globals from 'globals';
+import pluginJs from '@eslint/js';
+import tseslint from 'typescript-eslint';
+import pluginReact from 'eslint-plugin-react';
+import pluginReactNative from 'eslint-plugin-react-native';
+import pluginPrettier from 'eslint-plugin-prettier';
+import configPrettier from 'eslint-config-prettier';
 
 export default [
   {
@@ -43,4 +43,4 @@ export default [
   ...tseslint.configs.recommended,
   pluginReact.configs.flat.recommended,
   configPrettier,
-]
+];

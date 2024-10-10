@@ -1,23 +1,23 @@
-import React from 'react'
-import { ScrollView } from 'react-native'
-import { Box } from '../components/ui/box'
-import { HStack } from '../components/ui/hstack'
-import { VStack } from '../components/ui/vstack'
-import { Text } from '../components/ui/text'
-import '../styles.css'
-import WorkoutHeaderResumeComponent from '@/components/workout/WorkoutHeaderResume'
+import React from 'react';
+import { ScrollView } from 'react-native';
+import { Box } from '../components/ui/box';
+import { HStack } from '../components/ui/hstack';
+import { VStack } from '../components/ui/vstack';
+import { Text } from '../components/ui/text';
+import '../styles.css';
+import WorkoutHeaderResumeComponent from '@/components/workout/WorkoutHeaderResume';
 
 interface Exercise {
-  name: string
-  icon: string
+  name: string;
+  icon: string;
 }
 
 interface Workout {
-  workoutDate: Date
-  workoutName: string
-  time: number
-  volume: number
-  exercises: Exercise[]
+  workoutDate: Date;
+  workoutName: string;
+  time: number;
+  volume: number;
+  exercises: Exercise[];
 }
 
 const WorkoutCard: React.FC<Workout> = ({
@@ -46,7 +46,7 @@ const WorkoutCard: React.FC<Workout> = ({
       Ver {exercises.length - 3} más ejercicios
     </Text>
   </Box>
-)
+);
 
 const Dashboard: React.FC = () => {
   const workouts: Workout[] = [
@@ -110,7 +110,7 @@ const Dashboard: React.FC = () => {
         },
       ],
     },
-  ]
+  ];
 
   return (
     <ScrollView className="flex-1">
@@ -120,7 +120,7 @@ const Dashboard: React.FC = () => {
         ))}
       </VStack>
     </ScrollView>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;

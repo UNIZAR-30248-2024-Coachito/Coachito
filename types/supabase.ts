@@ -4,350 +4,350 @@ export type Json =
   | boolean
   | null
   | { [key: string]: Json | undefined }
-  | Json[]
+  | Json[];
 
 export type Database = {
   graphql_public: {
     Tables: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Views: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Functions: {
       graphql: {
         Args: {
-          operationName?: string
-          query?: string
-          variables?: Json
-          extensions?: Json
-        }
-        Returns: Json
-      }
-    }
+          operationName?: string;
+          query?: string;
+          variables?: Json;
+          extensions?: Json;
+        };
+        Returns: Json;
+      };
+    };
     Enums: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     CompositeTypes: {
-      [_ in never]: never
-    }
-  }
+      [_ in never]: never;
+    };
+  };
   public: {
     Tables: {
       equipment_categories: {
         Row: {
-          id: number
-          name: string
-        }
+          id: number;
+          name: string;
+        };
         Insert: {
-          id?: never
-          name: string
-        }
+          id?: never;
+          name: string;
+        };
         Update: {
-          id?: never
-          name?: string
-        }
-        Relationships: []
-      }
+          id?: never;
+          name?: string;
+        };
+        Relationships: [];
+      };
       exercise_types: {
         Row: {
-          id: number
-          name: string
-        }
+          id: number;
+          name: string;
+        };
         Insert: {
-          id?: never
-          name: string
-        }
+          id?: never;
+          name: string;
+        };
         Update: {
-          id?: never
-          name?: string
-        }
-        Relationships: []
-      }
+          id?: never;
+          name?: string;
+        };
+        Relationships: [];
+      };
       exercises: {
         Row: {
-          equipment_category_id: number
-          exercise_image_url: string
-          exercise_thumbnail_url: string
-          exercise_type_id: number
-          id: number
-          name: string
-          primary_muscle_group_id: number
-        }
+          equipment_category_id: number;
+          exercise_image_url: string;
+          exercise_thumbnail_url: string;
+          exercise_type_id: number;
+          id: number;
+          name: string;
+          primary_muscle_group_id: number;
+        };
         Insert: {
-          equipment_category_id: number
-          exercise_image_url: string
-          exercise_thumbnail_url: string
-          exercise_type_id: number
-          id?: never
-          name: string
-          primary_muscle_group_id: number
-        }
+          equipment_category_id: number;
+          exercise_image_url: string;
+          exercise_thumbnail_url: string;
+          exercise_type_id: number;
+          id?: never;
+          name: string;
+          primary_muscle_group_id: number;
+        };
         Update: {
-          equipment_category_id?: number
-          exercise_image_url?: string
-          exercise_thumbnail_url?: string
-          exercise_type_id?: number
-          id?: never
-          name?: string
-          primary_muscle_group_id?: number
-        }
+          equipment_category_id?: number;
+          exercise_image_url?: string;
+          exercise_thumbnail_url?: string;
+          exercise_type_id?: number;
+          id?: never;
+          name?: string;
+          primary_muscle_group_id?: number;
+        };
         Relationships: [
           {
-            foreignKeyName: 'exercises_equipment_category_id_fkey'
-            columns: ['equipment_category_id']
-            isOneToOne: false
-            referencedRelation: 'equipment_categories'
-            referencedColumns: ['id']
+            foreignKeyName: 'exercises_equipment_category_id_fkey';
+            columns: ['equipment_category_id'];
+            isOneToOne: false;
+            referencedRelation: 'equipment_categories';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: 'exercises_exercise_type_id_fkey'
-            columns: ['exercise_type_id']
-            isOneToOne: false
-            referencedRelation: 'exercise_types'
-            referencedColumns: ['id']
+            foreignKeyName: 'exercises_exercise_type_id_fkey';
+            columns: ['exercise_type_id'];
+            isOneToOne: false;
+            referencedRelation: 'exercise_types';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: 'exercises_muscle_group_id_fkey'
-            columns: ['primary_muscle_group_id']
-            isOneToOne: false
-            referencedRelation: 'muscle_groups'
-            referencedColumns: ['id']
+            foreignKeyName: 'exercises_muscle_group_id_fkey';
+            columns: ['primary_muscle_group_id'];
+            isOneToOne: false;
+            referencedRelation: 'muscle_groups';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+        ];
+      };
       exercises_muscle_groups: {
         Row: {
-          exercise_id: number
-          id: number
-          muscle_group_id: number
-        }
+          exercise_id: number;
+          id: number;
+          muscle_group_id: number;
+        };
         Insert: {
-          exercise_id: number
-          id?: never
-          muscle_group_id: number
-        }
+          exercise_id: number;
+          id?: never;
+          muscle_group_id: number;
+        };
         Update: {
-          exercise_id?: number
-          id?: never
-          muscle_group_id?: number
-        }
+          exercise_id?: number;
+          id?: never;
+          muscle_group_id?: number;
+        };
         Relationships: [
           {
-            foreignKeyName: 'exercises_muscle_groups_exercise_id_fkey'
-            columns: ['exercise_id']
-            isOneToOne: false
-            referencedRelation: 'exercises'
-            referencedColumns: ['id']
+            foreignKeyName: 'exercises_muscle_groups_exercise_id_fkey';
+            columns: ['exercise_id'];
+            isOneToOne: false;
+            referencedRelation: 'exercises';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: 'exercises_muscle_groups_muscle_group_id_fkey'
-            columns: ['muscle_group_id']
-            isOneToOne: false
-            referencedRelation: 'muscle_groups'
-            referencedColumns: ['id']
+            foreignKeyName: 'exercises_muscle_groups_muscle_group_id_fkey';
+            columns: ['muscle_group_id'];
+            isOneToOne: false;
+            referencedRelation: 'muscle_groups';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+        ];
+      };
       muscle_groups: {
         Row: {
-          id: number
-          name: string
-        }
+          id: number;
+          name: string;
+        };
         Insert: {
-          id?: never
-          name: string
-        }
+          id?: never;
+          name: string;
+        };
         Update: {
-          id?: never
-          name?: string
-        }
-        Relationships: []
-      }
+          id?: never;
+          name?: string;
+        };
+        Relationships: [];
+      };
       users: {
         Row: {
-          created_at: string | null
-          email: string
-          id: number
-          password_hash: string
-          username: string
-        }
+          created_at: string | null;
+          email: string;
+          id: number;
+          password_hash: string;
+          username: string;
+        };
         Insert: {
-          created_at?: string | null
-          email: string
-          id?: never
-          password_hash: string
-          username: string
-        }
+          created_at?: string | null;
+          email: string;
+          id?: never;
+          password_hash: string;
+          username: string;
+        };
         Update: {
-          created_at?: string | null
-          email?: string
-          id?: never
-          password_hash?: string
-          username?: string
-        }
-        Relationships: []
-      }
+          created_at?: string | null;
+          email?: string;
+          id?: never;
+          password_hash?: string;
+          username?: string;
+        };
+        Relationships: [];
+      };
       workout_exercises: {
         Row: {
-          created_at: string | null
-          distance: number | null
-          exercise_id: number | null
-          id: number
-          notes: string | null
-          reps: number | null
-          rest_time: unknown | null
-          sets: number | null
-          target_number_reps: number | null
-          weight: number | null
-          workout_id: number | null
-        }
+          created_at: string | null;
+          distance: number | null;
+          exercise_id: number | null;
+          id: number;
+          notes: string | null;
+          reps: number | null;
+          rest_time: unknown | null;
+          sets: number | null;
+          target_number_reps: number | null;
+          weight: number | null;
+          workout_id: number | null;
+        };
         Insert: {
-          created_at?: string | null
-          distance?: number | null
-          exercise_id?: number | null
-          id?: never
-          notes?: string | null
-          reps?: number | null
-          rest_time?: unknown | null
-          sets?: number | null
-          target_number_reps?: number | null
-          weight?: number | null
-          workout_id?: number | null
-        }
+          created_at?: string | null;
+          distance?: number | null;
+          exercise_id?: number | null;
+          id?: never;
+          notes?: string | null;
+          reps?: number | null;
+          rest_time?: unknown | null;
+          sets?: number | null;
+          target_number_reps?: number | null;
+          weight?: number | null;
+          workout_id?: number | null;
+        };
         Update: {
-          created_at?: string | null
-          distance?: number | null
-          exercise_id?: number | null
-          id?: never
-          notes?: string | null
-          reps?: number | null
-          rest_time?: unknown | null
-          sets?: number | null
-          target_number_reps?: number | null
-          weight?: number | null
-          workout_id?: number | null
-        }
+          created_at?: string | null;
+          distance?: number | null;
+          exercise_id?: number | null;
+          id?: never;
+          notes?: string | null;
+          reps?: number | null;
+          rest_time?: unknown | null;
+          sets?: number | null;
+          target_number_reps?: number | null;
+          weight?: number | null;
+          workout_id?: number | null;
+        };
         Relationships: [
           {
-            foreignKeyName: 'workout_exercises_exercise_id_fkey'
-            columns: ['exercise_id']
-            isOneToOne: false
-            referencedRelation: 'exercises'
-            referencedColumns: ['id']
+            foreignKeyName: 'workout_exercises_exercise_id_fkey';
+            columns: ['exercise_id'];
+            isOneToOne: false;
+            referencedRelation: 'exercises';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: 'workout_exercises_workout_id_fkey'
-            columns: ['workout_id']
-            isOneToOne: false
-            referencedRelation: 'workouts'
-            referencedColumns: ['id']
+            foreignKeyName: 'workout_exercises_workout_id_fkey';
+            columns: ['workout_id'];
+            isOneToOne: false;
+            referencedRelation: 'workouts';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+        ];
+      };
       workout_templates: {
         Row: {
-          created_at: string | null
-          group_id: number | null
-          id: number
-          name: string
-          user_id: number
-        }
+          created_at: string | null;
+          group_id: number | null;
+          id: number;
+          name: string;
+          user_id: number;
+        };
         Insert: {
-          created_at?: string | null
-          group_id?: number | null
-          id?: never
-          name: string
-          user_id: number
-        }
+          created_at?: string | null;
+          group_id?: number | null;
+          id?: never;
+          name: string;
+          user_id: number;
+        };
         Update: {
-          created_at?: string | null
-          group_id?: number | null
-          id?: never
-          name?: string
-          user_id?: number
-        }
+          created_at?: string | null;
+          group_id?: number | null;
+          id?: never;
+          name?: string;
+          user_id?: number;
+        };
         Relationships: [
           {
-            foreignKeyName: 'workout_templates_group_id_fkey'
-            columns: ['group_id']
-            isOneToOne: false
-            referencedRelation: 'workout_templates_group'
-            referencedColumns: ['id']
+            foreignKeyName: 'workout_templates_group_id_fkey';
+            columns: ['group_id'];
+            isOneToOne: false;
+            referencedRelation: 'workout_templates_group';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: 'workout_templates_user_id_fkey'
-            columns: ['user_id']
-            isOneToOne: false
-            referencedRelation: 'users'
-            referencedColumns: ['id']
+            foreignKeyName: 'workout_templates_user_id_fkey';
+            columns: ['user_id'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
           },
-        ]
-      }
+        ];
+      };
       workout_templates_group: {
         Row: {
-          id: number
-          name: string
-        }
+          id: number;
+          name: string;
+        };
         Insert: {
-          id?: never
-          name: string
-        }
+          id?: never;
+          name: string;
+        };
         Update: {
-          id?: never
-          name?: string
-        }
-        Relationships: []
-      }
+          id?: never;
+          name?: string;
+        };
+        Relationships: [];
+      };
       workouts: {
         Row: {
-          created_at: string | null
-          duration: unknown | null
-          id: number
-          template: boolean
-          template_id: number
-          volume: number | null
-        }
+          created_at: string | null;
+          duration: unknown | null;
+          id: number;
+          template: boolean;
+          template_id: number;
+          volume: number | null;
+        };
         Insert: {
-          created_at?: string | null
-          duration?: unknown | null
-          id?: never
-          template?: boolean
-          template_id: number
-          volume?: number | null
-        }
+          created_at?: string | null;
+          duration?: unknown | null;
+          id?: never;
+          template?: boolean;
+          template_id: number;
+          volume?: number | null;
+        };
         Update: {
-          created_at?: string | null
-          duration?: unknown | null
-          id?: never
-          template?: boolean
-          template_id?: number
-          volume?: number | null
-        }
+          created_at?: string | null;
+          duration?: unknown | null;
+          id?: never;
+          template?: boolean;
+          template_id?: number;
+          volume?: number | null;
+        };
         Relationships: [
           {
-            foreignKeyName: 'fk_workouts_template_id'
-            columns: ['template_id']
-            isOneToOne: false
-            referencedRelation: 'workout_templates'
-            referencedColumns: ['id']
+            foreignKeyName: 'fk_workouts_template_id';
+            columns: ['template_id'];
+            isOneToOne: false;
+            referencedRelation: 'workout_templates';
+            referencedColumns: ['id'];
           },
           {
-            foreignKeyName: 'workouts_template_id_fkey'
-            columns: ['template_id']
-            isOneToOne: false
-            referencedRelation: 'workout_templates'
-            referencedColumns: ['id']
+            foreignKeyName: 'workouts_template_id_fkey';
+            columns: ['template_id'];
+            isOneToOne: false;
+            referencedRelation: 'workout_templates';
+            referencedColumns: ['id'];
           },
-        ]
-      }
-    }
+        ];
+      };
+    };
     Views: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Functions: {
-      [_ in never]: never
-    }
+      [_ in never]: never;
+    };
     Enums: {
       equipment_category_enum:
         | 'Barbell'
@@ -357,7 +357,7 @@ export type Database = {
         | 'Plate'
         | 'Resistance Band'
         | 'Suspension'
-        | 'Other'
+        | 'Other';
       exercise_type_enum:
         | 'Weight Reps Reps Only'
         | 'Weighted Bodyweight'
@@ -365,7 +365,7 @@ export type Database = {
         | 'Duration'
         | 'Weight & Duration'
         | 'Distance Duration'
-        | 'Weight & Distance'
+        | 'Weight & Distance';
       muscle_group_enum:
         | 'Abdominals'
         | 'Abductors'
@@ -386,15 +386,15 @@ export type Database = {
         | 'Traps'
         | 'Neck'
         | 'Full Body'
-        | 'Other'
-    }
+        | 'Other';
+    };
     CompositeTypes: {
-      [_ in never]: never
-    }
-  }
-}
+      [_ in never]: never;
+    };
+  };
+};
 
-type PublicSchema = Database[Extract<keyof Database, 'public'>]
+type PublicSchema = Database[Extract<keyof Database, 'public'>];
 
 export type Tables<
   PublicTableNameOrOptions extends
@@ -407,7 +407,7 @@ export type Tables<
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? (Database[PublicTableNameOrOptions['schema']]['Tables'] &
       Database[PublicTableNameOrOptions['schema']]['Views'])[TableName] extends {
-      Row: infer R
+      Row: infer R;
     }
     ? R
     : never
@@ -415,11 +415,11 @@ export type Tables<
         PublicSchema['Views'])
     ? (PublicSchema['Tables'] &
         PublicSchema['Views'])[PublicTableNameOrOptions] extends {
-        Row: infer R
+        Row: infer R;
       }
       ? R
       : never
-    : never
+    : never;
 
 export type TablesInsert<
   PublicTableNameOrOptions extends
@@ -430,17 +430,17 @@ export type TablesInsert<
     : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
-      Insert: infer I
+      Insert: infer I;
     }
     ? I
     : never
   : PublicTableNameOrOptions extends keyof PublicSchema['Tables']
     ? PublicSchema['Tables'][PublicTableNameOrOptions] extends {
-        Insert: infer I
+        Insert: infer I;
       }
       ? I
       : never
-    : never
+    : never;
 
 export type TablesUpdate<
   PublicTableNameOrOptions extends
@@ -451,17 +451,17 @@ export type TablesUpdate<
     : never = never,
 > = PublicTableNameOrOptions extends { schema: keyof Database }
   ? Database[PublicTableNameOrOptions['schema']]['Tables'][TableName] extends {
-      Update: infer U
+      Update: infer U;
     }
     ? U
     : never
   : PublicTableNameOrOptions extends keyof PublicSchema['Tables']
     ? PublicSchema['Tables'][PublicTableNameOrOptions] extends {
-        Update: infer U
+        Update: infer U;
       }
       ? U
       : never
-    : never
+    : never;
 
 export type Enums<
   PublicEnumNameOrOptions extends
@@ -474,4 +474,4 @@ export type Enums<
   ? Database[PublicEnumNameOrOptions['schema']]['Enums'][EnumName]
   : PublicEnumNameOrOptions extends keyof PublicSchema['Enums']
     ? PublicSchema['Enums'][PublicEnumNameOrOptions]
-    : never
+    : never;
