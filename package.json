@@ -47,7 +47,7 @@
     "@react-navigation/native-stack": "^6.11.0",
     "@supabase/supabase-js": "^2.45.4",
     "babel-plugin-module-resolver": "^5.0.2",
-    "expo": "~51.0.28",
+    "expo": "~51.0.37",
     "expo-status-bar": "~1.12.1",
     "lucide-react-native": "^0.447.0",
     "nativewind": "^4.0.36",
