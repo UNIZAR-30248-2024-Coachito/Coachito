@@ -7,8 +7,10 @@ import { Button } from '../components/ui/button';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '@/types/navigation';
 import { InputField, Input } from '../components/ui/input';
-import { Pressable } from 'react-native';
+import { Pressable, ScrollView } from 'react-native';
 import { useState } from 'react';
+import { useFetchDashboardWorkouts } from '@/hooks/dashboardHook';
+import { ExerciseResume } from './ExerciseResume';
 
 interface Ejercicio {
   name: string;
@@ -16,6 +18,7 @@ interface Ejercicio {
 }
 
 const AddExercise: React.FC = () => {
+  const { workoutResumes, loading, error } = useFetchDashboardWorkouts();
   const navigation = useNavigation<NavigationProps>();
   const [presionado, setPresionado] = useState<boolean[]>([false, false]);
 
@@ -58,12 +61,12 @@ const AddExercise: React.FC = () => {
           <Text className="text-xl">Agregar Ejercicio</Text>
           <Button
             className="bg-blue-500"
-            onPress={() => navigation.navigate('Dashboard')}
+            onPress={() => navigation.navigate('Routine')}
           >
             <Text className="text-white ">Guardar</Text>
           </Button>
         </HStack>
-        {/* Input para el título de la rutina */}
+        {/* Input para filtrar un ejercicio*/}
         <Box className="w-full pt-2">
           <Input
             variant="outline"
@@ -76,6 +79,7 @@ const AddExercise: React.FC = () => {
           </Input>
         </Box>
         {/* Mostrar lista de ejercicios */}
+        {/*
         <VStack className="space-y-2 p-4">
           {ejercicios.map((ejercicio, index) => (
             <Pressable
@@ -88,7 +92,19 @@ const AddExercise: React.FC = () => {
               <Text>{ejercicio.foto}</Text>
             </Pressable>
           ))}
-        </VStack>
+        </VStack>*/}
+        <ScrollView>
+          <VStack className="p-4">
+            {!loading &&
+              !error &&
+              workoutResumes!.map((workout, index) => (
+                <ExerciseResume
+                  key={index}
+                  exercises={workout.WorkoutExercisesResume}
+                />
+              ))}
+          </VStack>
+        </ScrollView>
       </VStack>
     </Box>
   );

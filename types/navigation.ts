@@ -7,6 +7,7 @@ export type RootStackParamList = {
   Exercises: undefined;
   AddExercise: undefined;
   AddRoutine: undefined;
+  ExerciseResume: undefined;
 };
 
 export type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
