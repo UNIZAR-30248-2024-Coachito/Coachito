@@ -4,12 +4,14 @@ import { Box } from '../ui/box';
 import { HStack } from '../ui/hstack';
 import { VStack } from '../ui/vstack';
 import '../../styles.css';
+import { calculateDaysDifferenceNow } from '@/utils/date';
 
-interface WorkoutHeaderResume {
+export interface WorkoutHeaderResume {
   workoutName: string;
   workoutDate: Date;
   workoutTime: number;
   workoutVolume: number;
+  workoutSeries: number;
 }
 
 const WorkoutHeaderResumeComponent: React.FC<WorkoutHeaderResume> = ({
@@ -17,18 +19,9 @@ const WorkoutHeaderResumeComponent: React.FC<WorkoutHeaderResume> = ({
   workoutDate,
   workoutTime,
   workoutVolume,
+  workoutSeries,
 }) => {
-  function calculateDaysDifference(date: Date): number {
-    const currentDate = new Date();
-
-    const differenceInMillis = currentDate.getTime() - date.getTime();
-
-    const differenceInDays = differenceInMillis / (1000 * 60 * 60 * 24);
-
-    return Math.floor(differenceInDays);
-  }
-
-  const daysOffset = calculateDaysDifference(workoutDate);
+  const daysOffset = calculateDaysDifferenceNow(workoutDate);
 
   return (
     <Box>
@@ -42,7 +35,7 @@ const WorkoutHeaderResumeComponent: React.FC<WorkoutHeaderResume> = ({
           </Text>
         </VStack>
       </HStack>
-      <HStack className="justify-start gap-x-8 mb-4">
+      <HStack className="justify-between gap-x-8 mb-4">
         <VStack>
           <Text className="text-gray-400">Tiempo</Text>
           <Text className="text-white">{workoutTime} min</Text>
@@ -50,6 +43,10 @@ const WorkoutHeaderResumeComponent: React.FC<WorkoutHeaderResume> = ({
         <VStack>
           <Text className="text-gray-400">Volumen</Text>
           <Text className="text-white">{workoutVolume} Kg</Text>
+        </VStack>
+        <VStack>
+          <Text className="text-gray-400">Series</Text>
+          <Text className="text-white">{workoutSeries}</Text>
         </VStack>
       </HStack>
     </Box>

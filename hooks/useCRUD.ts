@@ -37,7 +37,7 @@ const useCRUD = <DataType>(
     };
 
     executeAsync();
-  }, [asyncFunc]);
+  }, []);
 
   return { data, loading, error };
 };
