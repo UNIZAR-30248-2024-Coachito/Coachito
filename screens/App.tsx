@@ -6,7 +6,7 @@ import Dashboard from './Dashboard';
 import Routine from './Routine';
 import Profile from './Profile';
 import Exercises from './Exercises';
-import AddExercise from './addExercise';
+import AddExercise from '../components/exercise/addExercise';
 import AddRoutine from './addRoutine';
 import { RootStackParamList } from '@/types/navigation';
 import Template from '@/components/shared/Template';

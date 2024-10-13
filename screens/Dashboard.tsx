@@ -18,6 +18,7 @@ const Dashboard: React.FC = () => {
               key={index}
               workoutHeaderResume={workout.workoutHeaderResume}
               workoutExercisesResume={workout.workoutExercisesResume}
+              showHeader={true}
             />
           ))}
       </VStack>

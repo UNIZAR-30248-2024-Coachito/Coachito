@@ -1,50 +1,19 @@
 import React from 'react';
-import { Text } from '../components/ui/text';
-import { HStack } from '../components/ui/hstack';
-import { Box } from '../components/ui/box';
-import { VStack } from '../components/ui/vstack';
-import { Button } from '../components/ui/button';
+import { Text } from '../ui/text';
+import { HStack } from '../ui/hstack';
+import { Box } from '../ui/box';
+import { VStack } from '../ui/vstack';
+import { Button } from '../ui/button';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '@/types/navigation';
-import { InputField, Input } from '../components/ui/input';
-import { Pressable, ScrollView } from 'react-native';
-import { useState } from 'react';
-import { useFetchDashboardWorkouts } from '@/hooks/dashboardHook';
-import { ExerciseResume } from './ExerciseResume';
-
-interface Ejercicio {
-  name: string;
-  foto: string;
-}
+import { InputField, Input } from '../ui/input';
+import { ScrollView } from 'react-native';
+import { useFetchAddExercise } from '@/hooks/addExerciseHook';
+import ExerciseCardResumeComponent from './ExerciseCardResume';
 
 const AddExercise: React.FC = () => {
-  const { workoutResumes, loading, error } = useFetchDashboardWorkouts();
+  const { exerciseResumes, loading, error } = useFetchAddExercise();
   const navigation = useNavigation<NavigationProps>();
-  const [presionado, setPresionado] = useState<boolean[]>([false, false]);
-
-  const ejercicios: Ejercicio[] = [
-    {
-      name: 'Press de banca inclinado',
-      foto: 'Foto1',
-    },
-    {
-      name: 'Sentadillas con Barra',
-      foto: 'Foto2',
-    },
-  ];
-
-  const handlePress = (index: number) => {
-    // Crea una copia del estado actual
-    const newPresionado = [...presionado];
-    // Cambia el estado del ejercicio presionado
-    newPresionado[index] = !newPresionado[index];
-    // Actualiza el estado
-    setPresionado(newPresionado);
-  };
-
-  const getStyle = (index: number) => ({
-    backgroundColor: presionado[index] ? 'black' : 'blue',
-  });
 
   return (
     <Box className="flex-1 p-4">
@@ -97,10 +66,10 @@ const AddExercise: React.FC = () => {
           <VStack className="p-4">
             {!loading &&
               !error &&
-              workoutResumes!.map((workout, index) => (
-                <ExerciseResume
+              exerciseResumes!.map((exercise, index) => (
+                <ExerciseCardResumeComponent
                   key={index}
-                  exercises={workout.WorkoutExercisesResume}
+                  exerciseResume={exercise}
                 />
               ))}
           </VStack>
