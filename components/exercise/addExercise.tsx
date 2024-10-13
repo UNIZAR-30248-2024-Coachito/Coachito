@@ -69,7 +69,7 @@ const AddExercise: React.FC = () => {
               exerciseResumes!.map((exercise, index) => (
                 <ExerciseCardResumeComponent
                   key={index}
-                  exerciseResume={exercise}
+                  exerciseResume={exercise.exerciseResume}
                 />
               ))}
           </VStack>
