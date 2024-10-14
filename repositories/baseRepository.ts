@@ -1,10 +1,10 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 
 export class BaseRepository<RowType, InsertType, UpdateType> {
-  private table: string;
+  protected table: string;
 
   constructor(
-    private supabase: SupabaseClient,
+    protected supabase: SupabaseClient,
     table: string
   ) {
     this.table = table;
