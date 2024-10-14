@@ -1,7 +1,7 @@
 import { supabase } from '@/api/supabaseClient';
 import { WorkoutRepository } from '@/repositories/workoutRepository';
 import useCRUD from './useCRUD';
-import { mapWorkoutDataToMyRoutinesCardResume } from '@/mappers/mapWorkoutDataToMyRoutinesCardResume';
+import { mapWorkoutDataToGroupedRoutinesResume } from '@/mappers/mapWorkoutDataToGroupedRoutinesResume';
 
 const workoutRepository = new WorkoutRepository(supabase);
 
@@ -12,7 +12,7 @@ const useFetchMyRoutinesWorkouts = () => {
   let myRoutineResume = null;
 
   if (!loading && !error) {
-    myRoutineResume = mapWorkoutDataToMyRoutinesCardResume(data!);
+    myRoutineResume = mapWorkoutDataToGroupedRoutinesResume(data!);
   }
 
   return { myRoutineResume, loading, error };

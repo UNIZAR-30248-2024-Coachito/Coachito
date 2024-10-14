@@ -5,6 +5,7 @@ import '../../styles.css';
 import { Button } from '../ui/button';
 import { MoreHorizontal } from 'lucide-react-native';
 import SlideUpModal from './SlideUpModal';
+import { Pressable } from 'react-native';
 
 export interface MyRoutinesCardResume {
   myRoutineName: string;
@@ -22,7 +23,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutinesCardResume> = ({
   };
 
   return (
-    <Box className="bg-zinc-900 p-4 mb-4 rounded-lg">
+    <Pressable className="bg-zinc-900 p-4 mb-4 rounded-lg">
       <Box className="flex-row justify-between items-center">
         <Text className="text-xl font-bold mb-2 text-white">
           {myRoutineName}
@@ -47,7 +48,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutinesCardResume> = ({
         onClose={toggleModal}
         routineName={myRoutineName}
       />
-    </Box>
+    </Pressable>
   );
 };
 

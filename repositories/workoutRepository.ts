@@ -19,6 +19,7 @@ export interface WorkoutDataDB {
 
 export interface WorkoutTemplateDB {
   name: string;
+  workout_templates_group: WorkoutTemplateGroupDB;
 }
 
 export interface WorkoutExerciseDB {
@@ -44,6 +45,10 @@ export interface MuscleGroupDB {
   name: string;
 }
 
+export interface WorkoutTemplateGroupDB {
+  name: string;
+}
+
 export class WorkoutRepository extends BaseRepository<
   WorkoutRow,
   WorkoutInsert,
@@ -59,7 +64,10 @@ export class WorkoutRepository extends BaseRepository<
       .select(
         `
         *,
-        workout_templates!fk_workouts_template_id (name),
+        workout_templates!fk_workouts_template_id (
+          name,
+          workout_templates_group (name)
+        ),
         workout_exercises (
           exercises (
             name
