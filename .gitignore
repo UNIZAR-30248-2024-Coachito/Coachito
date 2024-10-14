@@ -3,6 +3,9 @@
 # dependencies
 node_modules/
 
+# Jest
+coverage/**/*
+
 # Expo
 .expo/
 dist/

@@ -1,13 +1,12 @@
 import { SupabaseClient } from '@supabase/supabase-js';
 
 export class BaseRepository<RowType, InsertType, UpdateType> {
-  private table: string;
+  protected table: string;
+  protected supabase: SupabaseClient;
 
-  constructor(
-    private supabase: SupabaseClient,
-    table: string
-  ) {
+  constructor(supabase: SupabaseClient, table: string) {
     this.table = table;
+    this.supabase = supabase;
   }
 
   async create(data: InsertType): Promise<RowType> {
