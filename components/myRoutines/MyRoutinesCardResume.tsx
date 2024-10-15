@@ -58,13 +58,13 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutinesCardResume> = ({
     </Text>,
     <Button
       key="2"
-      className="bg-zinc-700 rounded-lg mb-4"
+      className="bg-red-800 rounded-lg mb-4"
       onPress={() => {
         setIsDeleteModalVisible(false);
         handleDelete();
       }}
     >
-      <Text className="text-red-600">Eliminar rutina</Text>
+      <Text className="text-white">Eliminar rutina</Text>
     </Button>,
     <Button
       key="3"
