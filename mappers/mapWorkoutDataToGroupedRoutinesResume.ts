@@ -5,7 +5,9 @@ import { WorkoutDataDB } from '@/repositories/workoutRepository';
 export const mapWorkoutDataToGroupedRoutinesResume = (
   workouts: WorkoutDataDB[]
 ): GroupedRoutines[] => {
-  const groupedWorkouts: { [key: string]: MyRoutinesCardResume[] } = {};
+  const groupedWorkouts: {
+    [key: string]: { groupId: number; routines: MyRoutinesCardResume[] };
+  } = {};
 
   workouts.forEach((workout) => {
     const uniqueExerciseNames = Array.from(
@@ -17,6 +19,7 @@ export const mapWorkoutDataToGroupedRoutinesResume = (
     const exerciseNames = uniqueExerciseNames.join(', ');
 
     const routine: MyRoutinesCardResume = {
+      templateId: workout.template_id,
       myRoutineName: workout.workout_templates.name,
       myRoutineExercises: exerciseNames,
     };
@@ -24,15 +27,21 @@ export const mapWorkoutDataToGroupedRoutinesResume = (
     const groupName =
       workout.workout_templates.workout_templates_group?.name || 'Mis Rutinas';
 
+    const groupId = workout.workout_templates.workout_templates_group?.id || 0;
+
     if (!groupedWorkouts[groupName]) {
-      groupedWorkouts[groupName] = [];
+      groupedWorkouts[groupName] = {
+        groupId: groupId,
+        routines: [],
+      };
     }
 
-    groupedWorkouts[groupName].push(routine);
+    groupedWorkouts[groupName].routines.push(routine);
   });
 
   return Object.keys(groupedWorkouts).map((groupName) => ({
+    groupId: groupedWorkouts[groupName].groupId,
     groupName,
-    routines: groupedWorkouts[groupName],
+    routines: groupedWorkouts[groupName].routines,
   }));
 };
