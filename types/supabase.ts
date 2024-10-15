@@ -252,6 +252,7 @@ export type Database = {
           id: number;
           name: string;
           user_id: number;
+          deleted: boolean;
         };
         Insert: {
           created_at?: string | null;

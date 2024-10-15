@@ -3,11 +3,11 @@ import { Text } from '../ui/text';
 import { Box } from '../ui/box';
 import '../../styles.css';
 import { Button } from '../ui/button';
-import { MoreHorizontal } from 'lucide-react-native';
-import RoutineSlideUpModal from './RoutineSlideUpModal';
+import { MoreHorizontal, Pencil, Trash } from 'lucide-react-native';
 import { Pressable } from 'react-native';
-import ConfirmDeleteModal from './ConfirmDeleteModal';
-import { useDeleteTemplateWorkoutById } from '@/hooks/templateWorkoutHook';
+import { useFetchWorkoutTemplateById, useUpdateWorkoutTemplate } from '@/hooks/workoutTemplateHook';
+import SlideUpBaseModal from '../shared/SlideUpBaseModal';
+import PopupBaseModal from '../shared/PopupBaseModal';
 
 export interface MyRoutinesCardResume {
   templateId: number;
@@ -20,12 +20,62 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutinesCardResume> = ({
   myRoutineName,
   myRoutineExercises,
 }) => {
-  const [isModalVisible, setIsModalVisible] = useState(false);
-  const [isDeleteModal, setIsDeleteModal] = useState(false);
+  const [isSlideUpModalVisible, setIsSlideUpModalVisible] = useState(false);
+  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
   const handleDelete = async () => {
-    await useDeleteTemplateWorkoutById(templateId);
+    //const entity = await useFetchWorkoutTemplateById(templateId);
+    //entity.data!.deleted = true;
+    //await useUpdateWorkoutTemplate(entity.data);
+    console.log("Rutina eliminada");
   };
+
+  const buttonsSlideUpModal: React.ReactNode[] = [
+    <Button
+      key="1"
+      className="bg-transparent text-white"
+      //onPress={() => navigation.navigate('EditRoutine')}
+    >
+      <Pencil color="white" />
+      <Text className="text-white ml-4">Editar Rutina</Text>
+    </Button>,
+    <Button
+      key="2"
+      className="bg-transparent mt-4"
+      onPress={() => {
+        setIsDeleteModalVisible(true);
+        setIsSlideUpModalVisible(false);
+      }}
+    >
+      <Trash color="red" />
+      <Text className="text-red-600 ml-4">Eliminar Rutina</Text>
+    </Button>,
+  ];
+
+  const componentsPopUpModal: React.ReactNode[] = [
+    <Text key="1" className="text-xl font-bold text-center text-white pb-8">
+      ¿Está seguro de que quiere eliminar la rutina?
+    </Text>,
+    <Button
+      key="2"
+      className="bg-zinc-700 rounded-lg mb-4"
+      onPress={() => {
+        setIsDeleteModalVisible(false);
+        handleDelete();
+      }}
+    >
+      <Text className="text-red-600">Eliminar rutina</Text>
+    </Button>,
+    <Button
+      key="3"
+      className="bg-zinc-700 rounded-lg"
+      onPress={() => {
+        setIsDeleteModalVisible(false);
+      }}
+    >
+      <Text className="text-white">Cancelar</Text>
+    </Button>,
+  ];
 
   return (
     <Pressable className="bg-zinc-900 p-4 mb-4 rounded-lg">
@@ -37,7 +87,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutinesCardResume> = ({
         <Button
           className="bg-transparent"
           onPress={() => {
-            setIsModalVisible(true);
+            setIsSlideUpModalVisible(true);
           }}
         >
           <MoreHorizontal color="white" />
@@ -53,17 +103,17 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutinesCardResume> = ({
         <Text className="text-white">Empezar Rutina</Text>
       </Button>
 
-      <RoutineSlideUpModal
-        isVisible={isModalVisible}
-        routineName={myRoutineName}
-        setIsDeleteModal={setIsDeleteModal}
-        setIsModalVisible={setIsModalVisible}
+      <SlideUpBaseModal
+        buttons={buttonsSlideUpModal}
+        title={myRoutineName}
+        isVisible={isSlideUpModalVisible}
+        setIsModalVisible={setIsSlideUpModalVisible}
       />
 
-      <ConfirmDeleteModal
-        isVisible={isDeleteModal}
-        setIsDeleteModal={setIsDeleteModal}
-        onDelete={handleDelete}
+      <PopupBaseModal
+        components={componentsPopUpModal}
+        isVisible={isDeleteModalVisible}
+        setIsModalVisible={setIsDeleteModalVisible}
       />
     </Pressable>
   );

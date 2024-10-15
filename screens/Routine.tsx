@@ -7,7 +7,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '@/types/navigation';
 import { ScrollView } from '@/components/ui/scroll-view';
 import { VStack } from '@/components/ui/vstack';
-import { useFetchTemplateWorkouts } from '@/hooks/templateWorkoutHook';
+import { useFetchTemplateWorkouts } from '@/hooks/workoutTemplateHook';
 import { HStack } from '@/components/ui/hstack';
 import GroupedRoutinesResumeComponent from '@/components/myRoutines/GroupedRoutinesResume';
 
