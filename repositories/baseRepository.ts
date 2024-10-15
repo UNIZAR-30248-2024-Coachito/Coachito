@@ -46,11 +46,14 @@ export class BaseRepository<RowType, InsertType, UpdateType> {
   }
 
   async delete(id: number): Promise<RowType> {
+    console.log(id);
     const { data, error } = await this.supabase
       .from(this.table)
       .delete()
       .eq('id', id)
       .single();
+    console.log(error);
+    console.log(data);
     if (error) throw error;
     return data;
   }

@@ -46,6 +46,7 @@ export interface MuscleGroupDB {
 }
 
 export interface WorkoutTemplateGroupDB {
+  id: number;
   name: string;
 }
 
@@ -66,7 +67,10 @@ export class WorkoutRepository extends BaseRepository<
         *,
         workout_templates!fk_workouts_template_id (
           name,
-          workout_templates_group (name)
+          workout_templates_group (
+            id,
+            name
+          )
         ),
         workout_exercises (
           exercises (

@@ -1,10 +1,11 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { PostgrestResponseFailure } from '@supabase/postgrest-js/src/types';
 
 interface UseCRUDReturn<DataType> {
   data: DataType | null;
   loading: boolean;
   error: string | null;
+  execute: () => Promise<void>;
 }
 
 const useCRUD = <DataType>(
@@ -14,32 +15,28 @@ const useCRUD = <DataType>(
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    const executeAsync = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const result = await asyncFunc();
-        setData(result);
-      } catch (error: unknown) {
-        if (isPostgrestResponseFailure(error)) {
-          setError(error.error.message || 'Unknown error occurred');
-        } else if (error instanceof Error) {
-          setError(error.message);
-        } else if (typeof error === 'string') {
-          setError(error);
-        } else {
-          setError('Unknown error occurred');
-        }
-      } finally {
-        setLoading(false);
+  const execute = async () => {
+    setLoading(true);
+    setError(null);
+    try {
+      const result = await asyncFunc();
+      setData(result);
+    } catch (error: unknown) {
+      if (isPostgrestResponseFailure(error)) {
+        setError(error.error.message || 'Unknown error occurred');
+      } else if (error instanceof Error) {
+        setError(error.message);
+      } else if (typeof error === 'string') {
+        setError(error);
+      } else {
+        setError('Unknown error occurred');
       }
-    };
+    } finally {
+      setLoading(false);
+    }
+  };
 
-    executeAsync();
-  }, []);
-
-  return { data, loading, error };
+  return { data, loading, error, execute };
 };
 
 function isPostgrestResponseFailure(

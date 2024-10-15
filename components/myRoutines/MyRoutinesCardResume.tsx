@@ -4,22 +4,27 @@ import { Box } from '../ui/box';
 import '../../styles.css';
 import { Button } from '../ui/button';
 import { MoreHorizontal } from 'lucide-react-native';
-import SlideUpModal from './SlideUpModal';
+import RoutineSlideUpModal from './RoutineSlideUpModal';
 import { Pressable } from 'react-native';
+import ConfirmDeleteModal from './ConfirmDeleteModal';
+import { useDeleteTemplateWorkoutById } from '@/hooks/templateWorkoutHook';
 
 export interface MyRoutinesCardResume {
+  templateId: number;
   myRoutineName: string;
   myRoutineExercises: string;
 }
 
 const MyRoutinesCardResumeComponent: React.FC<MyRoutinesCardResume> = ({
+  templateId,
   myRoutineName,
   myRoutineExercises,
 }) => {
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isDeleteModal, setIsDeleteModal] = useState(false);
 
-  const toggleModal = () => {
-    setIsModalVisible((prev) => !prev);
+  const handleDelete = async () => {
+    await useDeleteTemplateWorkoutById(templateId);
   };
 
   return (
@@ -29,7 +34,12 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutinesCardResume> = ({
           {myRoutineName}
         </Text>
 
-        <Button className="bg-transparent" onPress={toggleModal}>
+        <Button
+          className="bg-transparent"
+          onPress={() => {
+            setIsModalVisible(true);
+          }}
+        >
           <MoreHorizontal color="white" />
         </Button>
       </Box>
@@ -43,10 +53,17 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutinesCardResume> = ({
         <Text className="text-white">Empezar Rutina</Text>
       </Button>
 
-      <SlideUpModal
+      <RoutineSlideUpModal
         isVisible={isModalVisible}
-        onClose={toggleModal}
         routineName={myRoutineName}
+        setIsDeleteModal={setIsDeleteModal}
+        setIsModalVisible={setIsModalVisible}
+      />
+
+      <ConfirmDeleteModal
+        isVisible={isDeleteModal}
+        setIsDeleteModal={setIsDeleteModal}
+        onDelete={handleDelete}
       />
     </Pressable>
   );

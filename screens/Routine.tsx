@@ -7,12 +7,12 @@ import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '@/types/navigation';
 import { ScrollView } from '@/components/ui/scroll-view';
 import { VStack } from '@/components/ui/vstack';
-import { useFetchMyRoutinesWorkouts } from '@/hooks/myRoutinesHook';
+import { useFetchTemplateWorkouts } from '@/hooks/templateWorkoutHook';
 import { HStack } from '@/components/ui/hstack';
 import GroupedRoutinesResumeComponent from '@/components/myRoutines/GroupedRoutinesResume';
 
 const Routine: React.FC = () => {
-  const { myRoutineResume, loading, error } = useFetchMyRoutinesWorkouts();
+  const { myRoutineResume, loading, error } = useFetchTemplateWorkouts();
   const navigation = useNavigation<NavigationProps>();
 
   return (
@@ -29,19 +29,23 @@ const Routine: React.FC = () => {
             <Text className="text-white ml-2">Nueva Rutina</Text>
           </Button>
 
-          <Button
-            className="bg-zinc-900 ml-4"
-            //onPress={() => navigation.navigate('AddFolder')}
-          >
-            <FolderPlus color="white" />
-            <Text className="text-white ml-2">Nueva Carpeta</Text>
-          </Button>
+          <VStack>
+            <Button
+              className="bg-zinc-900 ml-4"
+              //onPress={() => navigation.navigate('AddFolder')}
+            >
+              <FolderPlus color="white" />
+              <Text className="text-white ml-2">Nueva Carpeta</Text>
+            </Button>
+          </VStack>
         </HStack>
+
         {!loading &&
           !error &&
           myRoutineResume!.map((routine, index) => (
             <GroupedRoutinesResumeComponent
               key={index}
+              groupId={routine.groupId}
               groupName={routine.groupName}
               routines={routine.routines}
             />

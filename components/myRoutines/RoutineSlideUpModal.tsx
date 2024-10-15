@@ -1,4 +1,3 @@
-// SlideUpModal.tsx
 import React from 'react';
 import { Modal, TouchableOpacity } from 'react-native';
 import { Text } from '../ui/text';
@@ -7,29 +6,35 @@ import { Box } from '../ui/box';
 import { Minus, Pencil, Trash } from 'lucide-react-native';
 
 interface SlideUpModalProps {
-  isVisible: boolean;
-  onClose: () => void;
   routineName: string;
+  isVisible: boolean;
+  setIsDeleteModal: (newState: boolean) => void;
+  setIsModalVisible: (newState: boolean) => void;
 }
 
-const SlideUpModal: React.FC<SlideUpModalProps> = ({
-  isVisible,
-  onClose,
+const RoutineSlideUpModal: React.FC<SlideUpModalProps> = ({
   routineName,
+  isVisible,
+  setIsDeleteModal,
+  setIsModalVisible,
 }) => {
   return (
     <Modal
       visible={isVisible}
       transparent={true}
       animationType="slide"
-      onRequestClose={onClose}
+      onRequestClose={() => {
+        setIsModalVisible(false);
+      }}
     >
       <TouchableOpacity
-        className="flex-1 -black bg-opacity-50"
-        onPress={onClose}
+        className="flex-1 bg-black/75"
+        onPress={() => {
+          setIsModalVisible(false);
+        }}
         activeOpacity={1}
       >
-        <Box className="absolute bottom-0 w-full bg-zinc-900 rounded-t-2xl shadow-lg items-center">
+        <Box className="absolute bottom-0 w-full bg-zinc-950 rounded-t-2xl shadow-lg items-center">
           <Minus color="grey" />
           <Text className="text-xl font-bold text-center text-white pb-8">
             {routineName}
@@ -44,7 +49,10 @@ const SlideUpModal: React.FC<SlideUpModalProps> = ({
             </Button>
             <Button
               className="bg-transparent mt-4"
-              //onPress={() => DeleteRoutine}
+              onPress={() => {
+                setIsDeleteModal(true);
+                setIsModalVisible(false);
+              }}
             >
               <Trash color="red" />
               <Text className="text-red-600 ml-4">Eliminar Rutina</Text>
@@ -56,4 +64,4 @@ const SlideUpModal: React.FC<SlideUpModalProps> = ({
   );
 };
 
-export default SlideUpModal;
+export default RoutineSlideUpModal;
