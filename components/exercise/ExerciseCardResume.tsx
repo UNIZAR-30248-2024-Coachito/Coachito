@@ -35,8 +35,10 @@ const ExerciseCardResumeComponent: React.FC<ExerciseCardResume> = ({
             />
           </Avatar>
           <VStack>
-            <Text className="text-white">{exerciseResume.exerciseName}</Text>
-            <Text className="text-white">
+            <Text className="flex-1 w-screen text-white">
+              {exerciseResume.exerciseName}
+            </Text>
+            <Text className="flex-1 w-screen text-white">
               {exerciseResume.primaryMuscleGroup}
             </Text>
           </VStack>

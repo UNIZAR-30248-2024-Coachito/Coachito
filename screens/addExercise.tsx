@@ -1,18 +1,15 @@
 import React from 'react';
-import { Text } from '../ui/text';
-import { HStack } from '../ui/hstack';
-import { Box } from '../ui/box';
-import { VStack } from '../ui/vstack';
-import { Button } from '../ui/button';
+import { Text } from '../components/ui/text';
+import { HStack } from '../components/ui/hstack';
+import { Box } from '../components/ui/box';
+import { VStack } from '../components/ui/vstack';
+import { Button } from '../components/ui/button';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '@/types/navigation';
-import { InputField, Input } from '../ui/input';
-import { ScrollView } from 'react-native';
-import { useFetchAddExercise } from '@/hooks/addExerciseHook';
-import ExerciseCardResumeComponent from './ExerciseCardResume';
+import { InputField, Input } from '../components/ui/input';
+import ExerciseListCardResume from '@/components/exercise/ExerciseListCardResume';
 
 const AddExercise: React.FC = () => {
-  const { exerciseResumes, loading, error } = useFetchAddExercise();
   const navigation = useNavigation<NavigationProps>();
 
   return (
@@ -48,32 +45,7 @@ const AddExercise: React.FC = () => {
           </Input>
         </Box>
         {/* Mostrar lista de ejercicios */}
-        {/*
-        <VStack className="space-y-2 p-4">
-          {ejercicios.map((ejercicio, index) => (
-            <Pressable
-              key={index}
-              className="items-left p-4"
-              onPress={() => handlePress(index)}
-              style={getStyle(index)}
-            >
-              <Text className="text-lg">{ejercicio.name}</Text>
-              <Text>{ejercicio.foto}</Text>
-            </Pressable>
-          ))}
-        </VStack>*/}
-        <ScrollView>
-          <VStack className="p-4">
-            {!loading &&
-              !error &&
-              exerciseResumes!.map((exercise, index) => (
-                <ExerciseCardResumeComponent
-                  key={index}
-                  exerciseResume={exercise.exerciseResume}
-                />
-              ))}
-          </VStack>
-        </ScrollView>
+        <ExerciseListCardResume />
       </VStack>
     </Box>
   );
