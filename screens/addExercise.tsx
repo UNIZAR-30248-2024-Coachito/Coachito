@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Text } from '../components/ui/text';
 import { HStack } from '../components/ui/hstack';
 import { Box } from '../components/ui/box';
@@ -11,11 +11,30 @@ import ExerciseListCardResume from '@/components/exercise/ExerciseListCardResume
 
 const AddExercise: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
+  const [selectedExercises, setSelectedExercises] = useState<string[]>([]);
+
+  const handleSelectExercise = (exerciseName: string) => {
+    setSelectedExercises((prevSelected) => {
+      if (prevSelected.includes(exerciseName)) {
+        // Si el ejercicio ya está seleccionado, lo eliminamos
+        return prevSelected.filter((name) => name !== exerciseName);
+      } else {
+        // Si no está seleccionado, lo añadimos
+        return [...prevSelected, exerciseName];
+      }
+    });
+  };
+
+  const handleSaveExercises = () => {
+    console.log('Ejercicios guardados:', selectedExercises);
+    // Aquí puedes agregar la lógica para guardar los ejercicios
+    setSelectedExercises([]);
+  };
 
   return (
     <Box className="flex-1 p-4">
       {/* Contenedor principal */}
-      <VStack className="space-y-4">
+      <VStack className="flex-1 pace-y-4">
         {/* Primera fila con 'Cancelar', 'Crear Rutina' y 'Guardar' */}
         <HStack className="justify-between items-center">
           <Button
@@ -45,7 +64,22 @@ const AddExercise: React.FC = () => {
           </Input>
         </Box>
         {/* Mostrar lista de ejercicios */}
-        <ExerciseListCardResume />
+        <ExerciseListCardResume
+          selectedExercises={selectedExercises}
+          onSelect={handleSelectExercise}
+        />
+        <HStack className="justify-center mt-auto">
+          {selectedExercises.length > 0 && (
+            <HStack className="justify-center">
+              <Button
+                className="bg-blue-500 flex-grow"
+                onPress={handleSaveExercises}
+              >
+                <Text className="text-white">Añadir Ejercicios</Text>
+              </Button>
+            </HStack>
+          )}
+        </HStack>
       </VStack>
     </Box>
   );

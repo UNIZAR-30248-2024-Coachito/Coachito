@@ -4,11 +4,13 @@ import { Pressable } from 'react-native';
 import { HStack } from '../ui/hstack';
 import { VStack } from '../ui/vstack';
 import { Text } from '../ui/text';
-import { Box } from 'lucide-react-native';
 import { Avatar, AvatarFallbackText, AvatarImage } from '../ui/avatar';
+import { Box } from '../ui/box';
 
 export interface ExerciseCardResume {
   exerciseResume: ExerciseResume;
+  onSelect: () => void; // Agregamos onSelect como función que no recibe argumentos y no devuelve nada
+  isSelected: boolean;
 }
 
 export interface ExerciseResume {
@@ -19,9 +21,14 @@ export interface ExerciseResume {
 
 const ExerciseCardResumeComponent: React.FC<ExerciseCardResume> = ({
   exerciseResume,
+  onSelect,
+  isSelected,
 }) => {
   return (
-    <Pressable className="bg-zinc-900 p-4 mb-4 rounded-lg">
+    <Pressable
+      onPress={onSelect}
+      className={`p-3 bg-zinc-900 mb-4 mt-1 rounded-lg ${isSelected ? 'bg-blue-200' : 'bg-white'}`}
+    >
       <Box>
         <HStack className="items-center gap-4">
           <Avatar>
