@@ -8,6 +8,7 @@ import Profile from './Profile';
 import Exercises from './Exercises';
 import AddExercise from './addExercise';
 import AddRoutine from './addRoutine';
+import VerEntrenamiento from './VerEntrenamiento';
 import { RootStackParamList } from '@/types/navigation';
 import Template from '@/components/shared/Template';
 import '../styles.css';
@@ -65,6 +66,13 @@ export default function App() {
             {() => (
               <Template>
                 <AddRoutine />
+              </Template>
+            )}
+          </Tab.Screen>
+          <Tab.Screen name="VerEntrenamiento">
+            {() => (
+              <Template>
+                <VerEntrenamiento />
               </Template>
             )}
           </Tab.Screen>

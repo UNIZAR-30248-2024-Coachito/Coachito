@@ -11,14 +11,16 @@ import WorkoutHeaderResumeComponent, {
 export interface WorkoutCardResume {
   workoutHeaderResume: WorkoutHeaderResume;
   workoutExercisesResume: WorkoutExercisesResume;
+  onPress?: () => void;
 }
 
 const WorkoutCardResumeComponent: React.FC<WorkoutCardResume> = ({
   workoutHeaderResume,
   workoutExercisesResume,
+  onPress,
 }) => {
   return (
-    <Pressable className="bg-zinc-900 p-4 mb-4 rounded-lg">
+    <Pressable onPress={onPress} className="bg-zinc-900 p-4 mb-4 rounded-lg">
       <WorkoutHeaderResumeComponent
         workoutName={workoutHeaderResume.workoutName}
         workoutDate={workoutHeaderResume.workoutDate}
