@@ -11,6 +11,7 @@ import AddRoutine from './addRoutine';
 import { RootStackParamList } from '@/types/navigation';
 import Template from '@/components/shared/Template';
 import '../styles.css';
+import SaveRoutine from './SaveRoutine';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -65,6 +66,13 @@ export default function App() {
             {() => (
               <Template>
                 <AddRoutine />
+              </Template>
+            )}
+          </Tab.Screen>
+          <Tab.Screen name="SaveRoutine">
+            {() => (
+              <Template>
+                <SaveRoutine />
               </Template>
             )}
           </Tab.Screen>

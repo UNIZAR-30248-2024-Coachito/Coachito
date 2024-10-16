@@ -44,11 +44,8 @@ const AddExercise: React.FC = () => {
             <Text className="text-blue-500 ">Cancelar</Text>
           </Button>
           <Text className="text-xl">Agregar Ejercicio</Text>
-          <Button
-            className="bg-blue-500"
-            onPress={() => navigation.navigate('Routine')}
-          >
-            <Text className="text-white ">Guardar</Text>
+          <Button className="bg-blue-500">
+            <Text className="text-white ">Crear</Text>
           </Button>
         </HStack>
         {/* Input para filtrar un ejercicio*/}
@@ -73,7 +70,10 @@ const AddExercise: React.FC = () => {
             <HStack className="justify-center">
               <Button
                 className="bg-blue-500 flex-grow"
-                onPress={handleSaveExercises}
+                onPress={() => {
+                  handleSaveExercises();
+                  navigation.navigate('SaveRoutine');
+                }}
               >
                 <Text className="text-white">Añadir Ejercicios</Text>
               </Button>
