@@ -80,7 +80,6 @@ export class WorkoutRepository extends BaseRepository<
       )
       .eq('template', 'FALSE');
 
-    console.log(data);
     if (error) throw error;
     return data;
   }

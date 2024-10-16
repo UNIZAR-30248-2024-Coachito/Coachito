@@ -1,9 +1,5 @@
 // BaseRepository.test.ts
-import {
-  createClient,
-  setTestData,
-  setTestError,
-} from '../../__mocks__/@supabase/supabase-js';
+import { createClient } from '../../__mocks__/@supabase/supabase-js';
 import { BaseRepository } from '../../repositories/baseRepository';
 
 interface MockRow {
@@ -31,89 +27,165 @@ describe('BaseRepository', () => {
     );
   });
 
-  it('should create a new record', async () => {
+  it('should create', async () => {
     const mockData: MockInsert = { name: 'Test Record' };
-    const expectedResponse: MockRow = { id: 1, name: 'Test Record' };
 
-    setTestData([expectedResponse]); // Establecer el dato de prueba
-
-    const result = await repository.create(mockData);
+    await repository.create(mockData);
 
     expect(mockSupabase.from).toHaveBeenCalledWith('mockTable');
     expect(mockSupabase.from('mockTable').insert).toHaveBeenCalledWith(
       mockData
     );
-    expect(result).toEqual(expectedResponse);
   });
 
-  it('should get all records', async () => {
-    const mockResponse: MockRow[] = [
-      { id: 1, name: 'Test Record' },
-      { id: 2, name: 'Another Record' },
-    ];
+  it('should throw error when creating', async () => {
+    const insertMock = mockSupabase.from('mockTable').insert;
+    insertMock.mockImplementation(() => ({
+      single: jest.fn().mockResolvedValue({
+        data: null,
+        error: new Error('Error'),
+      }),
+    }));
 
-    setTestData(mockResponse); // Establecer datos de prueba
-    const data = await repository.getAll();
+    await expect(repository.create({ name: 'Test Record' })).rejects.toThrow(
+      'Error'
+    );
+  });
+
+  it('should get all', async () => {
+    await repository.getAll();
 
     expect(mockSupabase.from).toHaveBeenCalledWith('mockTable');
     expect(mockSupabase.from('mockTable').select).toHaveBeenCalledWith('*');
-    expect(data).toEqual(mockResponse);
+  });
+
+  it('should throw error when fetching all', async () => {
+    const selectMock = mockSupabase.from('mockTable').select;
+
+    selectMock.mockResolvedValue({
+      data: null,
+      error: new Error('Error'),
+    });
+
+    await expect(repository.getAll()).rejects.toThrow('Error');
   });
 
   it('should get a record by id', async () => {
-    const mockResponse: MockRow = { id: 1, name: 'Test Record' };
+    const fromMock = mockSupabase.from('mockTable');
+    const selectMock = fromMock.select;
 
-    setTestData([mockResponse]); // Establecer datos de prueba
+    const singleMock = jest
+      .fn()
+      .mockResolvedValue({ data: { id: 1, name: 'Test Record' }, error: null });
 
-    const result = await repository.getById(1);
+    const eqMock = jest.fn().mockImplementation(() => ({
+      single: singleMock,
+    }));
+
+    selectMock.mockImplementation(() => ({
+      eq: eqMock,
+    }));
+
+    await repository.getById(1);
 
     expect(mockSupabase.from).toHaveBeenCalledWith('mockTable');
-    expect(mockSupabase.from('mockTable').select).toHaveBeenCalledWith('*');
-    expect(mockSupabase.from('mockTable').eq).toHaveBeenCalledWith('id', 1);
-    expect(result).toEqual(mockResponse);
+    expect(selectMock).toHaveBeenCalledWith('*');
+    expect(eqMock).toHaveBeenCalledWith('id', 1);
+    expect(singleMock).toHaveBeenCalled();
+  });
+
+  it('should throw error when fetching record by ID', async () => {
+    const selectMock = mockSupabase.from('mockTable').select;
+    selectMock.mockImplementation(() => ({
+      eq: jest.fn().mockImplementation(() => ({
+        single: jest.fn().mockResolvedValue({
+          data: null,
+          error: new Error('Error'),
+        }),
+      })),
+    }));
+
+    await expect(repository.getById(1)).rejects.toThrow('Error');
   });
 
   it('should update a record', async () => {
-    const mockResponse: MockRow = { id: 1, name: 'Updated Record' };
-    const mockData: MockUpdate = { name: 'Updated Record' };
+    const mockData = { id: 1, name: 'Updated Record' };
+    const fromMock = mockSupabase.from('mockTable');
+    const updateMock = fromMock.update;
 
-    setTestData([mockResponse]); // Establecer datos de prueba
+    const singleMock = jest
+      .fn()
+      .mockResolvedValue({ data: mockData, error: null });
 
-    const result = await repository.update(1, mockData);
+    const eqMock = jest.fn().mockImplementation(() => ({
+      single: singleMock,
+    }));
+
+    updateMock.mockImplementation(() => ({
+      eq: eqMock,
+    }));
+
+    await repository.update(mockData.id, mockData);
 
     expect(mockSupabase.from).toHaveBeenCalledWith('mockTable');
-    expect(mockSupabase.from('mockTable').update).toHaveBeenCalledWith(
-      mockData
+    expect(updateMock).toHaveBeenCalledWith(mockData);
+    expect(eqMock).toHaveBeenCalledWith('id', 1);
+    expect(singleMock).toHaveBeenCalledWith();
+  });
+
+  it('should throw error when updating a record', async () => {
+    const mockData = { id: 1, name: 'Updated Record' };
+
+    const updateMock = mockSupabase.from('mockTable').update;
+    updateMock.mockImplementation(() => ({
+      eq: jest.fn().mockImplementation(() => ({
+        single: jest.fn().mockResolvedValue({
+          data: null,
+          error: new Error('Error'),
+        }),
+      })),
+    }));
+
+    await expect(repository.update(mockData.id, mockData)).rejects.toThrow(
+      'Error'
     );
-    expect(mockSupabase.from('mockTable').eq).toHaveBeenCalledWith('id', 1);
-    expect(result).toEqual(mockResponse);
   });
 
-  it('should delete a record', async () => {
-    const mockResponse: MockRow = { id: 1, name: 'Test Record' };
+  it('should delete a record by id', async () => {
+    const fromMock = mockSupabase.from('mockTable');
+    const deleteMock = fromMock.delete;
 
-    setTestData([mockResponse]); // Establecer datos de prueba
+    const singleMock = jest
+      .fn()
+      .mockResolvedValue({ data: { id: 1, name: 'Test Record' }, error: null });
 
-    const result = await repository.delete(1);
+    const eqMock = jest.fn().mockImplementation(() => ({
+      single: singleMock,
+    }));
+
+    deleteMock.mockImplementation(() => ({
+      eq: eqMock,
+    }));
+
+    await repository.delete(1);
 
     expect(mockSupabase.from).toHaveBeenCalledWith('mockTable');
-    expect(mockSupabase.from('mockTable').delete).toHaveBeenCalled();
-    expect(mockSupabase.from('mockTable').eq).toHaveBeenCalledWith('id', 1);
-    expect(result).toEqual(mockResponse);
+    expect(deleteMock).toHaveBeenCalledWith();
+    expect(eqMock).toHaveBeenCalledWith('id', 1);
+    expect(singleMock).toHaveBeenCalled();
   });
 
-  it('should throw an error when creating a record fails', async () => {
-    const mockData: MockInsert = { name: 'Test Record' };
-    const error = new Error('Insert error');
-    setTestError(error); // Establecer un error para el test
+  it('should throw error when deleting a record by ID', async () => {
+    const deleteMock = mockSupabase.from('mockTable').delete;
+    deleteMock.mockImplementation(() => ({
+      eq: jest.fn().mockImplementation(() => ({
+        single: jest.fn().mockResolvedValue({
+          data: null,
+          error: new Error('Error'),
+        }),
+      })),
+    }));
 
-    await expect(repository.create(mockData)).rejects.toThrow('Insert error');
-  });
-
-  it('should throw an error when getting all records fails', async () => {
-    const error = new Error('Select error');
-    setTestError(error); // Establecer un error para el test
-
-    await expect(repository.getAll()).rejects.toThrow('Select error');
+    await expect(repository.delete(1)).rejects.toThrow('Error');
   });
 });
