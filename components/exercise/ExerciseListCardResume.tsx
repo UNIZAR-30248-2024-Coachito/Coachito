@@ -1,6 +1,5 @@
 import React from 'react';
 import { useFetchAddExercise } from '@/hooks/addExerciseHook';
-import { Box } from 'lucide-react-native';
 import { VStack } from '../ui/vstack';
 import ExerciseCardResumeComponent from './ExerciseCardResume';
 
@@ -11,25 +10,23 @@ const ExerciseListCardResume: React.FC<{
   const { exerciseResumes, loading, error } = useFetchAddExercise();
 
   return (
-    <Box className="flex-1">
-      <VStack className="space-y-4">
-        {!loading &&
-          !error &&
-          exerciseResumes!.map((exercise, index) => {
-            const exerciseName = exercise.exerciseResume.exerciseName;
-            const isSelected = selectedExercises.includes(exerciseName); // Verifica si el ejercicio está seleccionado
+    <VStack className="space-y-4">
+      {!loading &&
+        !error &&
+        exerciseResumes!.map((exercise, index) => {
+          const exerciseName = exercise.exerciseResume.exerciseName;
+          const isSelected = selectedExercises.includes(exerciseName); // Verifica si el ejercicio está seleccionado
 
-            return (
-              <ExerciseCardResumeComponent
-                key={index}
-                exerciseResume={exercise.exerciseResume}
-                onSelect={() => onSelect(exerciseName)} // Llama a la función de selección
-                isSelected={isSelected} // Marca si está seleccionado
-              />
-            );
-          })}
-      </VStack>
-    </Box>
+          return (
+            <ExerciseCardResumeComponent
+              key={index}
+              exerciseResume={exercise.exerciseResume}
+              onSelect={() => onSelect(exerciseName)} // Llama a la función de selección
+              isSelected={isSelected} // Marca si está seleccionado
+            />
+          );
+        })}
+    </VStack>
   );
 };
 

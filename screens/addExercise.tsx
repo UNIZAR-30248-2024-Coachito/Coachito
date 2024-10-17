@@ -43,7 +43,7 @@ const AddExercise: React.FC = () => {
           >
             <Text className="text-blue-500 ">Cancelar</Text>
           </Button>
-          <Text className="text-xl">Agregar Ejercicio</Text>
+          <Text className="text-xl pr-4">Agregar Ejercicio</Text>
           <Button className="bg-blue-500">
             <Text className="text-white ">Crear</Text>
           </Button>

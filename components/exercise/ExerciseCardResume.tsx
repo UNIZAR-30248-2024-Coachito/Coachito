@@ -5,7 +5,6 @@ import { HStack } from '../ui/hstack';
 import { VStack } from '../ui/vstack';
 import { Text } from '../ui/text';
 import { Avatar, AvatarFallbackText, AvatarImage } from '../ui/avatar';
-import { Box } from '../ui/box';
 
 export interface ExerciseCardResume {
   exerciseResume: ExerciseResume;
@@ -25,32 +24,27 @@ const ExerciseCardResumeComponent: React.FC<ExerciseCardResume> = ({
   isSelected,
 }) => {
   return (
-    <Pressable
-      onPress={onSelect}
-      className={`p-3 bg-zinc-900 mb-4 mt-1 rounded-lg ${isSelected ? 'bg-blue-200' : 'bg-white'}`}
-    >
-      <Box>
-        <HStack className="items-center gap-4">
-          <Avatar>
-            <AvatarFallbackText>
-              {exerciseResume.exerciseName}
-            </AvatarFallbackText>
-            <AvatarImage
-              source={{
-                uri: exerciseResume.exerciseThumbnailUrl,
-              }}
-            />
-          </Avatar>
-          <VStack>
-            <Text className="flex-1 w-screen text-white">
-              {exerciseResume.exerciseName}
-            </Text>
-            <Text className="flex-1 w-screen text-white">
-              {exerciseResume.primaryMuscleGroup}
-            </Text>
-          </VStack>
-        </HStack>
-      </Box>
+    <Pressable onPress={onSelect} className="mt-6">
+      <HStack
+        className={`items-center gap-4 rounded-lg ${isSelected ? 'bg-blue-500' : ' bg-zinc-900 '}`}
+      >
+        <Avatar>
+          <AvatarFallbackText>{exerciseResume.exerciseName}</AvatarFallbackText>
+          <AvatarImage
+            source={{
+              uri: exerciseResume.exerciseThumbnailUrl,
+            }}
+          />
+        </Avatar>
+        <VStack>
+          <Text className="flex-1 w-screen text-white">
+            {exerciseResume.exerciseName}
+          </Text>
+          <Text className="flex-1 w-screen text-white">
+            {exerciseResume.primaryMuscleGroup}
+          </Text>
+        </VStack>
+      </HStack>
     </Pressable>
   );
 };
