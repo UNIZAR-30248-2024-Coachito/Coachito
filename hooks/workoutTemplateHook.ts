@@ -2,11 +2,7 @@ import { supabase } from '@/api/supabaseClient';
 import { WorkoutRepository } from '@/repositories/workoutRepository';
 import useCRUD from './useCRUD';
 import { mapWorkoutDataToGroupedRoutinesResume } from '@/mappers/mapWorkoutDataToGroupedRoutinesResume';
-import {
-  WorkoutTemplateRepository,
-  WorkoutTemplateUpdate,
-} from '@/repositories/workoutTemplateRepository';
-import { useEffect } from 'react';
+import { WorkoutTemplateRepository } from '@/repositories/workoutTemplateRepository';
 
 const workoutRepository = new WorkoutRepository(supabase);
 const workoutTemplateRepository = new WorkoutTemplateRepository(supabase);
@@ -18,33 +14,32 @@ const useFetchWorkoutTemplateById = (id: number) => {
   return { execute, ...rest };
 };
 
-const useUpdateWorkoutTemplate = (entity: WorkoutTemplateUpdate) => {
-  const { execute, ...rest } = useCRUD(() =>
-    workoutTemplateRepository.update(entity.id!, entity)
-  );
-  return { execute, ...rest };
+const useDeleteWorkoutTemplate = async (id: number) => {
+  const { execute } = useCRUD(() => workoutTemplateRepository.delete(id));
+
+  const { data, error } = await execute();
+
+  return { data, error };
 };
 
-const useFetchTemplateWorkouts = () => {
-  const { data, loading, error, execute } = useCRUD(() =>
+const useFetchTemplateWorkouts = async () => {
+  const { execute } = useCRUD(() =>
     workoutRepository.getTemplateWorkoutsWithExercises()
   );
 
-  useEffect(() => {
-    execute();
-  }, []);
+  const { data, error } = await execute();
 
   let myRoutineResume = null;
 
-  if (!loading && !error) {
+  if (!error) {
     myRoutineResume = mapWorkoutDataToGroupedRoutinesResume(data!);
   }
 
-  return { myRoutineResume, loading, error };
+  return { myRoutineResume, error };
 };
 
 export {
   useFetchWorkoutTemplateById,
-  useUpdateWorkoutTemplate,
+  useDeleteWorkoutTemplate,
   useFetchTemplateWorkouts,
 };

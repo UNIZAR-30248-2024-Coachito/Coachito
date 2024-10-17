@@ -67,6 +67,7 @@ export class WorkoutRepository extends BaseRepository<
         *,
         workout_templates!fk_workouts_template_id (
           name,
+          deleted,
           workout_templates_group (
             id,
             name
@@ -79,8 +80,9 @@ export class WorkoutRepository extends BaseRepository<
         )
       `
       )
-      .eq('template', 'TRUE');
-
+      .eq('template', 'TRUE')
+      .is('workout_templates.deleted', 'FALSE')
+      .not('workout_templates', 'is', null);
     console.log(data);
     if (error) throw error;
     return data;

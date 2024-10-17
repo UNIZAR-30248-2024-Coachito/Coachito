@@ -5,7 +5,7 @@ import '../../styles.css';
 import { Button } from '../ui/button';
 import { MoreHorizontal, Pencil, Trash } from 'lucide-react-native';
 import { Pressable } from 'react-native';
-import { useFetchWorkoutTemplateById, useUpdateWorkoutTemplate } from '@/hooks/workoutTemplateHook';
+import { useDeleteWorkoutTemplate } from '@/hooks/workoutTemplateHook';
 import SlideUpBaseModal from '../shared/SlideUpBaseModal';
 import PopupBaseModal from '../shared/PopupBaseModal';
 
@@ -15,40 +15,47 @@ export interface MyRoutinesCardResume {
   myRoutineExercises: string;
 }
 
-const MyRoutinesCardResumeComponent: React.FC<MyRoutinesCardResume> = ({
-  templateId,
-  myRoutineName,
-  myRoutineExercises,
+export interface MyRoutineCardResumeProps {
+  routineCardResume: MyRoutinesCardResume;
+  refetchMethod: () => Promise<void>;
+}
+
+const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
+  routineCardResume,
+  refetchMethod,
 }) => {
   const [isSlideUpModalVisible, setIsSlideUpModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
-  const handleDelete = async () => {
-    //const entity = await useFetchWorkoutTemplateById(templateId);
-    //entity.data!.deleted = true;
-    //await useUpdateWorkoutTemplate(entity.data);
-    console.log("Rutina eliminada");
+  const deleteRoutine = async () => {
+    const { error } = await useDeleteWorkoutTemplate(
+      routineCardResume.templateId
+    );
+
+    if (!error) {
+      refetchMethod();
+    }
   };
 
   const buttonsSlideUpModal: React.ReactNode[] = [
     <Button
       key="1"
-      className="bg-transparent text-white"
+      className="bg-transparent gap-2"
       //onPress={() => navigation.navigate('EditRoutine')}
     >
       <Pencil color="white" />
-      <Text className="text-white ml-4">Editar Rutina</Text>
+      <Text className="text-white">Editar Rutina</Text>
     </Button>,
     <Button
       key="2"
-      className="bg-transparent mt-4"
+      className="bg-transparent gap-2"
       onPress={() => {
         setIsDeleteModalVisible(true);
         setIsSlideUpModalVisible(false);
       }}
     >
       <Trash color="red" />
-      <Text className="text-red-600 ml-4">Eliminar Rutina</Text>
+      <Text className="text-red-600">Eliminar Rutina</Text>
     </Button>,
   ];
 
@@ -61,7 +68,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutinesCardResume> = ({
       className="bg-red-800 rounded-lg mb-4"
       onPress={() => {
         setIsDeleteModalVisible(false);
-        handleDelete();
+        deleteRoutine();
       }}
     >
       <Text className="text-white">Eliminar rutina</Text>
@@ -81,7 +88,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutinesCardResume> = ({
     <Pressable className="bg-zinc-900 p-4 mb-4 rounded-lg">
       <Box className="flex-row justify-between items-center">
         <Text className="text-xl font-bold mb-2 text-white">
-          {myRoutineName}
+          {routineCardResume.myRoutineName}
         </Text>
 
         <Button
@@ -94,7 +101,9 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutinesCardResume> = ({
         </Button>
       </Box>
 
-      <Text className="text-gray-400 mb-4">{myRoutineExercises}</Text>
+      <Text className="text-gray-400 mb-4">
+        {routineCardResume.myRoutineExercises}
+      </Text>
 
       <Button
         className="bg-blue-500 rounded-lg"
@@ -105,7 +114,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutinesCardResume> = ({
 
       <SlideUpBaseModal
         buttons={buttonsSlideUpModal}
-        title={myRoutineName}
+        title={routineCardResume.myRoutineName}
         isVisible={isSlideUpModalVisible}
         setIsModalVisible={setIsSlideUpModalVisible}
       />
