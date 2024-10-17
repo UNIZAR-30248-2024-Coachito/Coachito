@@ -17,11 +17,11 @@ const SaveRoutine: React.FC = () => {
   return (
     <Box className="flex-1">
       {/* Contenedor principal */}
-      <VStack className="p-4 space-y-4">
+      <VStack className="p-4">
         {/* Primera fila con 'Cancelar', 'Crear Rutina' y 'Guardar' */}
         <HStack className="justify-between items-center">
           <Text className="text-xl text-blue-500">Cancelar</Text>
-          <Text className="text-xl">SaveRoutine</Text>
+          <Text className="text-xl">Crear Rutina</Text>
           <Button
             className="bg-blue-500"
             onPress={() => navigation.navigate('Routine')}

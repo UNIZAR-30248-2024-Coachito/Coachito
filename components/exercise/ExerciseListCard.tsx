@@ -1,29 +1,33 @@
 import React from 'react';
-import { Box } from 'lucide-react-native';
 import ExerciseCard, { Exercise } from './ExerciseCard';
 import { VStack } from '../ui/vstack';
+import { Button } from '../ui/button';
+import { Text } from '../ui/text';
+import { Plus } from 'lucide-react-native';
 
 const ExerciseListCard: React.FC = () => {
   const exercises: Exercise[] = [
     {
-      exerciseName: 'Sentadilla',
+      exerciseName: 'Remo Sentado (Máquina)',
       exerciseThumbnailUrl: 'https://link_a_la_imagen_sentadilla.jpg',
     },
     {
-      exerciseName: 'Press de banca',
+      exerciseName: 'Press de Hombros Sentado (Máquina)',
       exerciseThumbnailUrl: 'https://link_a_la_imagen_press_banca.jpg',
     },
     // Puedes añadir más ejercicios aquí
   ];
 
   return (
-    <Box>
-      <VStack>
-        {exercises!.map((exercise, index) => {
-          return <ExerciseCard key={index} exercise={exercise} />;
-        })}
-      </VStack>
-    </Box>
+    <VStack className="">
+      {exercises!.map((exercise, index) => {
+        return <ExerciseCard key={index} exercise={exercise} />;
+      })}
+      <Button className="bg-blue-500 w-full mt-4 rounded-lg">
+        <Plus color={'white'} />
+        <Text className="text-white">Agregar Ejercicio</Text>
+      </Button>
+    </VStack>
   );
 };
 
