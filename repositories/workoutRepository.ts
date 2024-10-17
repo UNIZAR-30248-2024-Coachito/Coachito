@@ -32,6 +32,7 @@ export interface WorkoutExerciseDB {
   rest_time: string | null;
   exercise_id: number;
   target_number_reps: number;
+  created_at: string;
 }
 
 export interface ExerciseDB {
@@ -57,6 +58,40 @@ export class WorkoutRepository extends BaseRepository<
 > {
   constructor(supabase: SupabaseClient) {
     super(supabase, 'workouts');
+  }
+
+  async getDetailsWorkout(templateId: number): Promise<WorkoutDataDB> {
+    const { data, error } = await this.supabase
+      .from(this.table)
+      .select(
+        `
+        *,
+        workout_templates!fk_workouts_template_id (name),
+        workout_exercises (
+          sets,
+          reps,
+          weight,
+          distance,
+          notes,
+          rest_time,
+          target_number_reps,
+          created_at,
+          exercises (
+            id,
+            name,
+            exercise_thumbnail_url
+          )
+        )
+      `
+      )
+      .eq('template_id', templateId)
+      .eq('template', 'FALSE')
+      .order('created_at', { ascending: false })
+      .single();
+
+    console.log(data);
+    if (error) throw error;
+    return data;
   }
 
   async getTemplateWorkoutsWithExercises(): Promise<WorkoutDataDB[]> {

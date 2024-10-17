@@ -3,7 +3,6 @@ import '../../styles.css';
 import { Text } from '../ui/text';
 import { Button } from '../ui/button';
 import {
-  ArrowDownUp,
   ChevronDown,
   ChevronRight,
   MoreHorizontal,
