@@ -1,11 +1,13 @@
 import React from 'react';
-import { ScrollView } from 'react-native';
+//import { ScrollView } from 'react-native';
 import { Text } from '../ui/text';
 import { Box } from '../ui/box';
 import { HStack } from '../ui/hstack';
 import { VStack } from '../ui/vstack';
 import '../../styles.css';
 import { Avatar, AvatarFallbackText, AvatarImage } from '../ui/avatar';
+import WorkoutHeaderComponent from './WorkoutHeader';
+import WorkoutDivisionComponent from './WorkoutDivision';
 
 export interface WorkoutExercise {
   exerciseName: string;
@@ -32,10 +34,14 @@ const WorkoutExercisesComponent: React.FC<WorkoutExercises> = ({
 }) => {
   return (
     <Box>
-      <Text className="font-semibold mb-2 text-white">
-        {header.workoutName}
-      </Text>
-      <ScrollView>
+      <VStack className="gap-y-4">
+        <WorkoutHeaderComponent
+          workoutName={header.workoutName}
+          workoutTime={header.workoutTime}
+          workoutVolume={header.workoutVolume}
+          workoutSeries={header.workoutSeries}
+        />
+        <WorkoutDivisionComponent pecho={70} espalda={20} pierna={10} />
         <VStack className="gap-y-4">
           {exercises.map((exercise, index) => (
             <Box key={index}>
@@ -67,7 +73,7 @@ const WorkoutExercisesComponent: React.FC<WorkoutExercises> = ({
             </Box>
           ))}
         </VStack>
-      </ScrollView>
+      </VStack>
     </Box>
   );
 };

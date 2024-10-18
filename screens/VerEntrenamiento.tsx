@@ -8,8 +8,9 @@ import { useNavigation } from '@react-navigation/native';
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '@/types/navigation';
 import { NavigationProps } from '@/types/navigation';
-import WorkoutExercisesComponent from '@/components/workout/WorkoutExercise';
+import WorkoutExercisesComponent from '@/components/verEntrenamiento/WorkoutExercise';
 import { Ellipsis, ArrowLeft } from 'lucide-react-native';
+import { ScrollView } from 'react-native';
 
 type VerEntrenamientoRouteProp = RouteProp<
   RootStackParamList,
@@ -45,13 +46,15 @@ const VerEntrenamiento: React.FC = () => {
             <Ellipsis color="#ffffff" />
           </Button>
         </HStack>
-        {/* Input para el título de la rutina */}
-        <Box className="w-full pt-2">
-          <WorkoutExercisesComponent
-            header={workout.workoutHeaderResume}
-            exercises={workout.workoutExercisesResume.exercises}
-          />
-        </Box>
+        <ScrollView>
+          {/* Input para el título de la rutina */}
+          <Box className="w-full pt-2">
+            <WorkoutExercisesComponent
+              header={workout.workoutHeaderResume}
+              exercises={workout.workoutExercisesResume.exercises}
+            />
+          </Box>
+        </ScrollView>
       </VStack>
     </Box>
   );
