@@ -41,7 +41,9 @@ const WorkoutExercisesComponent: React.FC<WorkoutExercises> = ({
           workoutVolume={header.workoutVolume}
           workoutSeries={header.workoutSeries}
         />
-        <WorkoutDivisionComponent pecho={70} espalda={20} pierna={10} />
+        <Text className="text-l mb-2 text-gray-400">División muscular</Text>
+        <WorkoutDivisionComponent pecho={7} espalda={2} pierna={1} />
+        <Text className="text-l mb-2 text-gray-400">Ejercicios</Text>
         <VStack className="gap-y-4">
           {exercises.map((exercise, index) => (
             <Box key={index}>
