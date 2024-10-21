@@ -9,7 +9,7 @@ export type RootStackParamList = {
   Exercises: undefined;
   AddExercise: undefined;
   AddRoutine: undefined;
-  VerEntrenamiento: { workout: WorkoutCardResume };
+  VerEntrenamiento: { workout: WorkoutCardResume; templateId: number };
 };
 
 export type NavigationProps = NativeStackNavigationProp<RootStackParamList>;

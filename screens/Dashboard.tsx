@@ -34,7 +34,12 @@ const Dashboard: React.FC = () => {
             key={index}
             workoutHeaderResume={workout.workoutHeaderResume}
             workoutExercisesResume={workout.workoutExercisesResume}
-            onPress={() => navigation.navigate('VerEntrenamiento', { workout })}
+            onPress={() =>
+              navigation.navigate('VerEntrenamiento', {
+                workout,
+                templateId: index,
+              })
+            }
           />
         ))}
       </VStack>

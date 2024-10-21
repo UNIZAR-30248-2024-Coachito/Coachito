@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Text } from '../components/ui/text';
 import { Box } from '../components/ui/box';
 import { VStack } from '../components/ui/vstack';
@@ -11,9 +11,12 @@ import WorkoutExercisesComponent from '@/components/verEntrenamiento/WorkoutExer
 import WorkoutBarraSuperiorComponent from '@/components/verEntrenamiento/WorkoutBarraSuperior';
 import { ScrollView } from 'react-native';
 
+import { useFetchDetailsWorkout } from '@/hooks/workoutHook';
+
 import { Pencil, Trash } from 'lucide-react-native';
 import SlideUpBaseModal from '@/components/shared/SlideUpBaseModal';
 import PopupBaseModal from '@/components/shared/PopupBaseModal';
+import { ExerciseResume } from '@/components/detailsRoutine/ExerciseResume';
 
 type VerEntrenamientoRouteProp = RouteProp<
   RootStackParamList,
@@ -23,10 +26,26 @@ type VerEntrenamientoRouteProp = RouteProp<
 const VerEntrenamiento: React.FC = () => {
   const route = useRoute<VerEntrenamientoRouteProp>();
   const navigation = useNavigation<NavigationProps>();
-  const { workout } = route.params;
+  const { workout, templateId } = route.params;
+  const [exercises, setExercises] = useState<ExerciseResume[]>([]);
+  //const template = useState(true);
 
   const [isSlideUpModalVisible, setIsSlideUpModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+
+  const fetchExercises = async () => {
+    const { myRoutineResume, error: errorRoutines } =
+      await useFetchDetailsWorkout(templateId);
+
+    if (!errorRoutines) {
+      setExercises(myRoutineResume!);
+    }
+  };
+
+  useEffect(() => {
+    fetchExercises();
+    console.log(exercises);
+  }, [templateId]);
 
   const handleDelete = async () => {
     //const entity = await useFetchWorkoutTemplateById(templateId);
