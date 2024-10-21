@@ -9,6 +9,7 @@ export type RootStackParamList = {
   AddExercise: { selectedExercises: ExerciseListResume[] };
   AddRoutine: { exercises: ExerciseListResume[] };
   ExerciseResume: undefined;
+  EditRoutine: { exercises: ExerciseListResume[] };
 };
 
 export type NavigationProps = NativeStackNavigationProp<RootStackParamList>;

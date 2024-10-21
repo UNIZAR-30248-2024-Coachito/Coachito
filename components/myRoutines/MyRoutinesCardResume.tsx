@@ -8,6 +8,8 @@ import { Pressable } from 'react-native';
 import { useDeleteWorkoutTemplate } from '@/hooks/workoutTemplateHook';
 import SlideUpBaseModal from '../shared/SlideUpBaseModal';
 import PopupBaseModal from '../shared/PopupBaseModal';
+import { useNavigation } from '@react-navigation/native';
+import { NavigationProps } from '@/types/navigation';
 
 export interface MyRoutinesCardResume {
   templateId: number;
@@ -24,6 +26,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
   routineCardResume,
   refetchMethod,
 }) => {
+  const navigation = useNavigation<NavigationProps>();
   const [isSlideUpModalVisible, setIsSlideUpModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
@@ -41,7 +44,11 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
     <Button
       key="1"
       className="bg-transparent gap-2"
-      //onPress={() => navigation.navigate('EditRoutine')}
+      onPress={() =>
+        navigation.navigate('EditRoutine', {
+          exercises: [],
+        })
+      }
     >
       <Pencil color="white" />
       <Text className="text-white">Editar Rutina</Text>

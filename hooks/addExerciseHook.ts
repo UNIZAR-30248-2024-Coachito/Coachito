@@ -12,6 +12,7 @@ import {
   WorkoutExerciseInsert,
   WorkoutExerciseRepository,
 } from '@/repositories/workoutExerciseRepository';
+import { ExerciseResume } from '@/components/exercise/detailsExerciseResume';
 
 const exerciseRepo = new ExerciseRepository(supabase);
 const workoutTemplateRepo = new WorkoutTemplateRepository(supabase);
@@ -32,7 +33,7 @@ const useFetchExercisesList = async () => {
   return { exercisesResume, error };
 };
 
-const useCreateRoutine = async (name: string, exercises: number[]) => {
+const useCreateRoutine = async (name: string, exercises: ExerciseResume[]) => {
   const newWorkoutTemplateEntity = {
     id: undefined,
     name: name,
@@ -48,7 +49,7 @@ const useCreateRoutine = async (name: string, exercises: number[]) => {
     await executeWorkoutTemplateInsert();
 
   if (errorWorkoutTemplateInsert) {
-    return { data: '', errorWorkoutTemplateInsert };
+    return { error: errorWorkoutTemplateInsert };
   }
 
   const newWorkoutsEntity = {
@@ -65,25 +66,46 @@ const useCreateRoutine = async (name: string, exercises: number[]) => {
     await executeWorkoutsInsert();
 
   if (errorWorkoutsInsert) {
-    return { data: '', errorWorkoutsInsert };
+    return { errorWorkoutsInsert };
   }
 
-  for (const id of exercises) {
+  for (const exercise of exercises) {
     const newWorkoutExerciseEntity = {
       id: undefined,
       workout_id: dataWorkoutsInsert?.id,
-      exercise_id: id,
+      exercise_id: exercise.id,
+      notes: exercise.notes,
+      rest_time: exercise.restTime,
     } as WorkoutExerciseInsert;
 
-    const { execute: executeWorkoutExerciseInsert } = useCRUD(() =>
-      workoutExercisesRepo.create(newWorkoutExerciseEntity)
-    );
+    if (exercise.sets.length > 0) {
+      for (const set of exercise.sets) {
+        newWorkoutExerciseEntity.reps = set.reps;
+        newWorkoutExerciseEntity.sets = 1;
+        newWorkoutExerciseEntity.weight = set.weight;
 
-    const { error: errorWorkoutExerciseInsert } =
-      await executeWorkoutExerciseInsert();
+        const { execute: executeWorkoutExerciseInsert } = useCRUD(() =>
+          workoutExercisesRepo.create(newWorkoutExerciseEntity)
+        );
 
-    if (errorWorkoutExerciseInsert) {
-      return { data: '', error: errorWorkoutExerciseInsert };
+        const { error: errorWorkoutExerciseInsert } =
+          await executeWorkoutExerciseInsert();
+
+        if (errorWorkoutExerciseInsert) {
+          return { error: errorWorkoutExerciseInsert };
+        }
+      }
+    } else {
+      const { execute: executeWorkoutExerciseInsert } = useCRUD(() =>
+        workoutExercisesRepo.create(newWorkoutExerciseEntity)
+      );
+
+      const { error: errorWorkoutExerciseInsert } =
+        await executeWorkoutExerciseInsert();
+
+      if (errorWorkoutExerciseInsert) {
+        return { error: errorWorkoutExerciseInsert };
+      }
     }
   }
 

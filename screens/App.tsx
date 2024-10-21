@@ -11,6 +11,7 @@ import Template from '@/components/shared/Template';
 import '../styles.css';
 import AddRoutine from './AddRoutine';
 import AddExercise from './AddExercise';
+import EditRoutine from './EditRoutine';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -65,6 +66,13 @@ export default function App() {
             {() => (
               <Template>
                 <AddRoutine />
+              </Template>
+            )}
+          </Tab.Screen>
+          <Tab.Screen name="EditRoutine">
+            {() => (
+              <Template>
+                <EditRoutine />
               </Template>
             )}
           </Tab.Screen>

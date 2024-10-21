@@ -18,9 +18,9 @@ import ExerciseResumeComponent, {
 import { useCreateRoutine } from '@/hooks/addExerciseHook';
 import { ScrollView } from 'react-native';
 
-const AddRoutine: React.FC = () => {
+const EditRoutine: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
-  const route = useRoute<RouteProp<RootStackParamList, 'AddRoutine'>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'EditRoutine'>>();
   const [routineTitleInputValue, setroutineTitleInputValue] = useState('');
   const [selectedExercises, setSelectedExercises] = useState<
     ExerciseListResume[]
@@ -31,7 +31,7 @@ const AddRoutine: React.FC = () => {
 
   const componentsCancelRoutinePopUpModal: React.ReactNode[] = [
     <Text key="1" className="text-xl font-bold text-center text-white pb-8">
-      ¿Está seguro de que quiere descartar la rutina?
+      ¿Está seguro de que quiere descartar los cambios?
     </Text>,
     <Button
       key="2"
@@ -42,7 +42,7 @@ const AddRoutine: React.FC = () => {
         navigation.navigate('Routine');
       }}
     >
-      <Text className="text-white">Descartar rutina</Text>
+      <Text className="text-white">Descartar cambios</Text>
     </Button>,
     <Button
       key="3"
@@ -65,7 +65,7 @@ const AddRoutine: React.FC = () => {
     const routineTitle = routineTitleInputValue.trim();
 
     if (routineTitle === '') {
-      alert('Por favor, introduce un nombre para la nueva rutina.');
+      alert('Por favor, introduce un nombre para la rutina.');
       return;
     }
 
@@ -78,7 +78,7 @@ const AddRoutine: React.FC = () => {
     if (!error) {
       navigation.navigate('Routine');
     } else {
-      alert('Se ha producido un error al crear la rutina.');
+      alert('Se ha producido un error al guardar la rutina.');
     }
   };
 
@@ -159,4 +159,4 @@ const AddRoutine: React.FC = () => {
   );
 };
 
-export default AddRoutine;
+export default EditRoutine;
