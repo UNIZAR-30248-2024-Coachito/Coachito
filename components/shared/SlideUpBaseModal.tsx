@@ -3,6 +3,7 @@ import { Modal, TouchableOpacity } from 'react-native';
 import { Text } from '../ui/text';
 import { Box } from '../ui/box';
 import { Minus } from 'lucide-react-native';
+import { Divider } from '../ui/divider';
 
 export interface SlideUpModalProps {
   buttons: React.ReactNode[];
@@ -11,7 +12,7 @@ export interface SlideUpModalProps {
   setIsModalVisible: (newState: boolean) => void;
 }
 
-const RoutineSlideUpModal: React.FC<SlideUpModalProps> = ({
+const SlideUpBaseModal: React.FC<SlideUpModalProps> = ({
   buttons,
   title,
   isVisible,
@@ -35,11 +36,20 @@ const RoutineSlideUpModal: React.FC<SlideUpModalProps> = ({
       >
         <Box className="absolute bottom-0 w-full bg-zinc-950 rounded-t-2xl shadow-lg items-center">
           <Minus color="grey" />
-          <Text className="text-xl font-bold text-center text-white pb-8">
+          <Text className="text-xl font-bold text-center text-white py-4">
             {title}
           </Text>
-          <Box className="bottom-0 bg-zinc-800 rounded-lg p-4 w-full">
-            {buttons.map((button) => button)}
+          <Box className="bottom-0 bg-zinc-800 rounded-lg p-4 w-full gap-2">
+            {buttons.map((button, index) => (
+              <React.Fragment key={index}>
+                {button}
+                {index < buttons.length - 1 ? (
+                  <Divider className="my-0.5 bg-zinc-700" />
+                ) : (
+                  <></>
+                )}
+              </React.Fragment>
+            ))}
           </Box>
         </Box>
       </TouchableOpacity>
@@ -47,4 +57,4 @@ const RoutineSlideUpModal: React.FC<SlideUpModalProps> = ({
   );
 };
 
-export default RoutineSlideUpModal;
+export default SlideUpBaseModal;
