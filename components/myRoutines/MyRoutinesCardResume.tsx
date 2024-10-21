@@ -46,7 +46,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
       className="bg-transparent gap-2"
       onPress={() =>
         navigation.navigate('EditRoutine', {
-          exercises: [],
+          routineId: routineCardResume.templateId,
         })
       }
     >
