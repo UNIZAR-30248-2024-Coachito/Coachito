@@ -32,7 +32,7 @@ const WorkoutDivisionComponent: React.FC<WorkoutDivision> = ({
     <Box>
       <VStack className="justify-between gap-x-8 mb-4">
         <VStack className="flex-1 mb-2">
-          <Text className="text-l mb-2 text-white">Pecho</Text>
+          <Text className="text-l mb-1 text-white">Pecho</Text>
           <HStack>
             <Progress
               value={100}
@@ -44,7 +44,8 @@ const WorkoutDivisionComponent: React.FC<WorkoutDivision> = ({
               }}
             >
               <ProgressFilledTrack
-                style={{ borderRadius: 5, backgroundColor: '#4CAF50' }}
+                className="bg-blue-500"
+                style={{ borderRadius: 5 }}
               />
             </Progress>
             <Text className="text-l text-gray-400 ml-2">
@@ -54,7 +55,7 @@ const WorkoutDivisionComponent: React.FC<WorkoutDivision> = ({
         </VStack>
 
         <VStack className="flex-1 mb-2">
-          <Text className="text-l mb-2 text-white">Espalda</Text>
+          <Text className="text-l mb-1 text-white">Espalda</Text>
           <HStack>
             <Progress
               value={100}
@@ -67,7 +68,8 @@ const WorkoutDivisionComponent: React.FC<WorkoutDivision> = ({
               }}
             >
               <ProgressFilledTrack
-                style={{ borderRadius: 5, backgroundColor: '#4CAF50' }}
+                className="bg-blue-500"
+                style={{ borderRadius: 5 }}
               />
             </Progress>
             <Text className="text-l text-gray-400 ml-2">
@@ -77,7 +79,7 @@ const WorkoutDivisionComponent: React.FC<WorkoutDivision> = ({
         </VStack>
 
         <VStack>
-          <Text className="text-l mb-2 text-white">Pierna</Text>
+          <Text className="text-l mb-1 text-white">Pierna</Text>
           <HStack>
             <Progress
               value={100}
@@ -90,7 +92,8 @@ const WorkoutDivisionComponent: React.FC<WorkoutDivision> = ({
               }}
             >
               <ProgressFilledTrack
-                style={{ borderRadius: 5, backgroundColor: '#4CAF50' }}
+                className="bg-blue-500"
+                style={{ borderRadius: 5 }}
               />
             </Progress>
             <Text className="text-l text-gray-400 ml-2">

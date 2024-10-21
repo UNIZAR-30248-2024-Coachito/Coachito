@@ -58,17 +58,30 @@ const WorkoutExercisesComponent: React.FC<WorkoutExercises> = ({
                     }}
                   />
                 </Avatar>
-                <Text className="flex-1 text-white">
+                <Text className="flex-1 text-blue-500 font-bold">
                   {exercise.exerciseName}
                 </Text>
               </HStack>
               <VStack className="mt-2">
+                <HStack className="mb-2">
+                  <Text className="w-12 text-center text-gray-400 text-xs">
+                    SERIE
+                  </Text>
+                  <Text className="text-gray-400 ml-2 text-xs">
+                    PESO Y REPES
+                  </Text>
+                </HStack>
                 {/* Simulamos información de cada serie */}
                 {Array.from({ length: exercise.series }).map(
                   (_, seriesIndex) => (
-                    <Text key={seriesIndex} className="text-gray-400">
-                      Serie {seriesIndex + 1}: 10 repeticiones a 50 kg
-                    </Text>
+                    <HStack key={seriesIndex} className="items-center mb-2">
+                      <Text className="w-12 text-center text-white font-bold">
+                        {seriesIndex + 1}
+                      </Text>
+                      <Text className="text-white ml-2">
+                        10 repeticiones a 50 kg
+                      </Text>
+                    </HStack>
                   )
                 )}
               </VStack>

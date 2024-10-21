@@ -86,7 +86,7 @@ const VerEntrenamiento: React.FC = () => {
   return (
     <Box className="flex-1 p-4">
       {/* Contenedor principal */}
-      <VStack className="space-y-4">
+      <VStack className="space-y-2">
         {/* Primera fila con 'Cancelar', 'Crear Rutina' y 'Guardar' */}
         <WorkoutBarraSuperiorComponent
           fecha={workout.workoutHeaderResume.workoutDate}
