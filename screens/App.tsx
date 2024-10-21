@@ -12,6 +12,7 @@ import VerEntrenamiento from './VerEntrenamiento';
 import { RootStackParamList } from '@/types/navigation';
 import Template from '@/components/shared/Template';
 import '../styles.css';
+import DetailsRoutine from './DetailsRoutine';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -38,6 +39,13 @@ export default function App() {
             {() => (
               <Template>
                 <Routine />
+              </Template>
+            )}
+          </Tab.Screen>
+          <Tab.Screen name="DetailsRoutine">
+            {() => (
+              <Template>
+                <DetailsRoutine />
               </Template>
             )}
           </Tab.Screen>
