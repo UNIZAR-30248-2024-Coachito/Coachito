@@ -1,25 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ScrollView } from 'react-native';
 import { VStack } from '../components/ui/vstack';
 import '../styles.css';
-import WorkoutCardResumeComponent from '@/components/workout/WorkoutCardResume';
+import WorkoutCardResumeComponent, {
+  WorkoutCardResume,
+} from '@/components/workout/WorkoutCardResume';
 import { useFetchDashboardWorkouts } from '@/hooks/dashboardHook';
 
 const Dashboard: React.FC = () => {
-  const { workoutResumes, loading, error } = useFetchDashboardWorkouts();
+  const [workouts, setWorkouts] = useState<WorkoutCardResume[]>([]);
+
+  const fetchWorkouts = async () => {
+    const { workoutResumes, error: errorRoutines } =
+      await useFetchDashboardWorkouts();
+
+    if (!errorRoutines) {
+      setWorkouts(workoutResumes!);
+    }
+  };
+
+  useEffect(() => {
+    fetchWorkouts();
+  }, []);
 
   return (
     <ScrollView className="flex-1">
       <VStack className="p-4">
-        {!loading &&
-          !error &&
-          workoutResumes!.map((workout, index) => (
-            <WorkoutCardResumeComponent
-              key={index}
-              workoutHeaderResume={workout.workoutHeaderResume}
-              workoutExercisesResume={workout.workoutExercisesResume}
-            />
-          ))}
+        {workouts!.map((workout, index) => (
+          <WorkoutCardResumeComponent
+            key={index}
+            workoutHeaderResume={workout.workoutHeaderResume}
+            workoutExercisesResume={workout.workoutExercisesResume}
+          />
+        ))}
       </VStack>
     </ScrollView>
   );
