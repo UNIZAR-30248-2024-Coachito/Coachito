@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // __mocks__/baseRepository.ts
 import { SupabaseClient } from '@supabase/supabase-js';
 import { BaseRepository } from '../../repositories/baseRepository';

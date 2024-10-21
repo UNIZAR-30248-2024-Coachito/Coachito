@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // __mocks__/@supabase/supabase-js.ts
 let testData: any[] = [];
 let testError: Error | null = null;
