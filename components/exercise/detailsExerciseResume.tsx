@@ -21,12 +21,6 @@ import { VStack } from '../ui/vstack';
 import { Box } from '../ui/box';
 import Slider from '@react-native-assets/slider';
 
-export interface SeriesExerciseResume {
-  serie: number;
-  weight: number;
-  reps: number;
-}
-
 export interface ExerciseSet {
   weight: number;
   reps: number;

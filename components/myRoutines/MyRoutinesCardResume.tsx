@@ -43,11 +43,12 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
     <Button
       key="1"
       className="bg-transparent gap-2"
-      onPress={() =>
+      onPress={() => {
         navigation.navigate('EditRoutine', {
           routineId: routineCardResume.templateId,
-        })
-      }
+          routineName: routineCardResume.myRoutineName,
+        });
+      }}
     >
       <Pencil color="white" />
       <Text className="text-white">Editar Rutina</Text>

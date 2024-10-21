@@ -54,12 +54,16 @@ const Routine: React.FC = () => {
     const routineRenamedListener = emitter.addListener('routineRenamed', () => {
       fetchRoutinesAndGroups();
     });
+    const routineAddedListener = emitter.addListener('routineAdded', () => {
+      fetchRoutinesAndGroups();
+    });
 
     fetchRoutinesAndGroups();
 
     return () => {
       routineDeletedListener.remove();
       routineRenamedListener.remove();
+      routineAddedListener.remove();
     };
   }, [navigation]);
 

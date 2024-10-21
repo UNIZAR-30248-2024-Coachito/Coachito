@@ -12,22 +12,55 @@ import { NavigationProps, RootStackParamList } from '@/types/navigation';
 import PopupBaseModal from '@/components/shared/PopupBaseModal';
 import { ExerciseListResume } from './AddExercise';
 import ExerciseResumeComponent, {
-  ExerciseResume,
   ExerciseResumeRef,
 } from '@/components/exercise/detailsExerciseResume';
 import { useCreateRoutine } from '@/hooks/addExerciseHook';
 import { ScrollView } from 'react-native';
+import { useFetchDetailsWorkout } from '@/hooks/workoutHook';
+import { ExerciseResume } from '@/components/detailsRoutine/ExerciseResume';
 
 const EditRoutine: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute<RouteProp<RootStackParamList, 'EditRoutine'>>();
-  const [routineTitleInputValue, setroutineTitleInputValue] = useState('');
+  const exerciseRefs = useRef<(ExerciseResumeRef | null)[]>([]);
+  const [exercises, setExercises] = useState<ExerciseResume[]>([]);
+
+  const fetchExercises = async () => {
+    const { myRoutineResume, error: errorRoutines } =
+      await useFetchDetailsWorkout(route.params.routineId);
+
+    if (!errorRoutines) {
+      console.log(myRoutineResume?.length);
+
+      setExercises(myRoutineResume!);
+
+      const mapped: ExerciseListResume[] = myRoutineResume!.map(
+        (exercise, index) => {
+          return {
+            id: index + 1,
+            exerciseName: exercise.name,
+            exerciseThumbnailUrl: exercise.thumbnailUrl,
+            primaryMuscleGroup: '',
+          };
+        }
+      );
+
+      setSelectedExercises(mapped);
+    }
+  };
+
+  useEffect(() => {
+    fetchExercises();
+  }, [route.params.routineId, route.params.routineName]);
+
+  const [routineTitleInputValue, setroutineTitleInputValue] = useState(
+    route.params.routineName
+  );
   const [selectedExercises, setSelectedExercises] = useState<
     ExerciseListResume[]
-  >(route.params.exercises);
+  >([]);
   const [isCancelRoutineModalVisible, setIsCancelRoutineModalVisible] =
     useState(false);
-  const exerciseRefs = useRef<(ExerciseResumeRef | null)[]>([]);
 
   const componentsCancelRoutinePopUpModal: React.ReactNode[] = [
     <Text key="1" className="text-xl font-bold text-center text-white pb-8">
@@ -54,12 +87,6 @@ const EditRoutine: React.FC = () => {
       <Text className="text-white">Cancelar</Text>
     </Button>,
   ];
-
-  useEffect(() => {
-    if (route.params?.exercises) {
-      setSelectedExercises(route.params.exercises);
-    }
-  }, [route.params?.exercises]);
 
   const createRoutine = async () => {
     const routineTitle = routineTitleInputValue.trim();
@@ -94,7 +121,7 @@ const EditRoutine: React.FC = () => {
           >
             <Text className="text-blue-500">Cancelar</Text>
           </Button>
-          <Text className="text-xl">Crear Rutina</Text>
+          <Text className="text-xl">Editar Rutina</Text>
           <Button className="bg-blue-500 rounded-lg" onPress={createRoutine}>
             <Text className="text-white">Guardar</Text>
           </Button>

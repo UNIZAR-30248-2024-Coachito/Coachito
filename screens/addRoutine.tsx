@@ -17,6 +17,7 @@ import ExerciseResumeComponent, {
 } from '@/components/exercise/detailsExerciseResume';
 import { useCreateRoutine } from '@/hooks/addExerciseHook';
 import { ScrollView } from 'react-native';
+import { emitter } from '@/utils/emitter';
 
 const AddRoutine: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
@@ -29,6 +30,12 @@ const AddRoutine: React.FC = () => {
     useState(false);
   const exerciseRefs = useRef<(ExerciseResumeRef | null)[]>([]);
 
+  const resetState = () => {
+    setSelectedExercises([]);
+    exerciseRefs.current = [];
+    setroutineTitleInputValue('');
+  };
+
   const componentsCancelRoutinePopUpModal: React.ReactNode[] = [
     <Text key="1" className="text-xl font-bold text-center text-white pb-8">
       ¿Está seguro de que quiere descartar la rutina?
@@ -38,7 +45,7 @@ const AddRoutine: React.FC = () => {
       className="bg-red-800 rounded-lg mb-4"
       onPress={() => {
         setIsCancelRoutineModalVisible(false);
-        setSelectedExercises([]);
+        resetState();
         navigation.navigate('Routine');
       }}
     >
@@ -75,7 +82,9 @@ const AddRoutine: React.FC = () => {
 
     const { error } = await useCreateRoutine(routineTitle, allExerciseData);
 
+    resetState();
     if (!error) {
+      emitter.emit('routineAdded');
       navigation.navigate('Routine');
     } else {
       alert('Se ha producido un error al crear la rutina.');
