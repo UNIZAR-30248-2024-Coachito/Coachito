@@ -37,7 +37,7 @@ const Dashboard: React.FC = () => {
             onPress={() =>
               navigation.navigate('VerEntrenamiento', {
                 workout,
-                templateId: index,
+                templateId: workout.workoutHeaderResume.workoutId,
               })
             }
           />

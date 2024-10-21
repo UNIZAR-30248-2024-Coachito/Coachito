@@ -22,6 +22,7 @@ const WorkoutCardResumeComponent: React.FC<WorkoutCardResume> = ({
   return (
     <Pressable onPress={onPress} className="bg-zinc-900 p-4 mb-4 rounded-lg">
       <WorkoutHeaderResumeComponent
+        workoutId={workoutHeaderResume.workoutId}
         workoutName={workoutHeaderResume.workoutName}
         workoutDate={workoutHeaderResume.workoutDate}
         workoutTime={workoutHeaderResume.workoutTime}

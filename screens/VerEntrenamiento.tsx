@@ -107,6 +107,7 @@ const VerEntrenamiento: React.FC = () => {
       {/* Contenedor principal */}
       <VStack className="space-y-2">
         {/* Primera fila con 'Cancelar', 'Crear Rutina' y 'Guardar' */}
+        <Text>{workout.workoutHeaderResume.workoutId}</Text>
         <WorkoutBarraSuperiorComponent
           fecha={workout.workoutHeaderResume.workoutDate}
           setIsSlideUpModalVisible={setIsSlideUpModalVisible}
