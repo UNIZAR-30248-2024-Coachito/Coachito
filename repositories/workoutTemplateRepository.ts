@@ -14,4 +14,15 @@ export class WorkoutTemplateRepository extends BaseRepository<
   constructor(supabase: SupabaseClient) {
     super(supabase, 'workout_templates');
   }
+
+  async delete(id: number): Promise<WorkoutTemplateRow> {
+    const { data, error } = await this.supabase
+      .from(this.table)
+      .update({ deleted: true })
+      .eq('id', id)
+      .select()
+      .single();
+    if (error) throw error;
+    return data;
+  }
 }

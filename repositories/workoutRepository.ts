@@ -94,29 +94,48 @@ export class WorkoutRepository extends BaseRepository<
     return data;
   }
 
-  async getTemplateWorkoutsWithExercises(): Promise<WorkoutDataDB[]> {
-    const { data, error } = await this.supabase
+  async getWorkoutsWithExercises(template: boolean): Promise<WorkoutDataDB[]> {
+    let query = this.supabase
       .from(this.table)
       .select(
         `
         *,
         workout_templates!fk_workouts_template_id (
           name,
+          deleted,
           workout_templates_group (
             id,
             name
           )
         ),
         workout_exercises (
+          sets,
+          reps,
+          weight,
+          distance,
+          notes,
+          rest_time,
+          target_number_reps,
+          exercise_id,
           exercises (
-            name
+            name,
+            exercise_thumbnail_url,
+            exercise_image_url,
+            muscle_groups (name)
           )
         )
       `
       )
-      .eq('template', 'TRUE');
+      .eq('template', template);
 
-    console.log(data);
+    if (template) {
+      query = query
+        .is('workout_templates.deleted', 'FALSE')
+        .not('workout_templates', 'is', null);
+    }
+
+    const { data, error } = await query;
+
     if (error) throw error;
     return data;
   }

@@ -3,26 +3,65 @@ import useCRUD from './useCRUD';
 import {
   WorkoutTemplateGroupRepository,
   WorkoutTemplateGroupInsert,
+  WorkoutTemplateGroupUpdate,
 } from '@/repositories/workoutTemplateGroupRepository';
+import { mapWorkoutTemplateGroupRowsToGroups } from '@/mappers/mapWorkoutTemplateGroupRowsToGroups';
 
 const workoutTemplateGroupRepository = new WorkoutTemplateGroupRepository(
   supabase
 );
 
-const useCreateTemplateWorkoutGroup = (
-  newEntity: WorkoutTemplateGroupInsert
-) => {
-  const { execute, ...rest } = useCRUD(() =>
+const useFetchTemplateWorkoutGroups = async () => {
+  const { execute } = useCRUD(() => workoutTemplateGroupRepository.getAll());
+
+  const { data, error } = await execute();
+
+  let groups = null;
+
+  if (!error) {
+    groups = mapWorkoutTemplateGroupRowsToGroups(data!);
+  }
+
+  return { groups, error };
+};
+
+const useCreateTemplateWorkoutGroup = async (name: string) => {
+  const newEntity = { id: undefined, name: name } as WorkoutTemplateGroupInsert;
+
+  const { execute } = useCRUD(() =>
     workoutTemplateGroupRepository.create(newEntity)
   );
-  return { execute, ...rest };
+
+  const { data, error } = await execute();
+
+  return { data, error };
 };
 
-const useDeleteTemplateWorkoutGroupById = (id: number) => {
-  const { execute, ...rest } = useCRUD(() =>
-    workoutTemplateGroupRepository.delete(id)
+const useEditTemplateWorkoutGroup = async (id: number, name: string) => {
+  const updatedEntity = {
+    name: name,
+  } as unknown as WorkoutTemplateGroupUpdate;
+
+  const { execute } = useCRUD(() =>
+    workoutTemplateGroupRepository.update(id, updatedEntity)
   );
-  return { execute, ...rest };
+
+  const { data, error } = await execute();
+
+  return { data, error };
 };
 
-export { useCreateTemplateWorkoutGroup, useDeleteTemplateWorkoutGroupById };
+const useDeleteTemplateWorkoutGroupById = async (id: number) => {
+  const { execute } = useCRUD(() => workoutTemplateGroupRepository.delete(id));
+
+  const { data, error } = await execute();
+
+  return { data, error };
+};
+
+export {
+  useFetchTemplateWorkoutGroups,
+  useCreateTemplateWorkoutGroup,
+  useEditTemplateWorkoutGroup,
+  useDeleteTemplateWorkoutGroupById,
+};

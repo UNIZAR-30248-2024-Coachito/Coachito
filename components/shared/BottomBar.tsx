@@ -19,7 +19,10 @@ export default function BottomBar() {
     <HStack className="justify-around bg-zinc-950 py-4">
       <Pressable onPress={() => navigation.navigate('Dashboard')}>
         <VStack className="items-center">
-          <Home color={isDashboardActive ? 'rgb(59 130 246)' : 'white'} />
+          <Home
+            testID="inicio-icon"
+            color={isDashboardActive ? 'rgb(59 130 246)' : 'white'}
+          />
           <Text
             className={`text-xs ${isDashboardActive ? 'text-blue-500' : 'text-gray-400'}`}
           >
@@ -29,7 +32,10 @@ export default function BottomBar() {
       </Pressable>
       <Pressable onPress={() => navigation.navigate('Routine')}>
         <VStack className="items-center">
-          <Dumbbell color={isRoutineActive ? 'rgb(59 130 246)' : 'white'} />
+          <Dumbbell
+            testID="entrenamiento-icon"
+            color={isRoutineActive ? 'rgb(59 130 246)' : 'white'}
+          />
           <Text
             className={`text-xs ${isRoutineActive ? 'text-blue-500' : 'text-gray-400'}`}
           >
@@ -39,7 +45,10 @@ export default function BottomBar() {
       </Pressable>
       <Pressable onPress={() => navigation.navigate('Profile')}>
         <VStack className="items-center">
-          <User color={isProfileActive ? 'rgb(59 130 246)' : 'white'} />
+          <User
+            testID="perfil-icon"
+            color={isProfileActive ? 'rgb(59 130 246)' : 'white'}
+          />
           <Text
             className={`text-xs ${isProfileActive ? 'text-blue-500' : 'text-gray-400'}`}
           >

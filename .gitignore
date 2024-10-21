@@ -3,6 +3,12 @@
 # dependencies
 node_modules/
 
+# Jest
+coverage/
+
+# ¿Carpeta autogenerada?
+%ProgramData%/
+
 # Expo
 .expo/
 dist/

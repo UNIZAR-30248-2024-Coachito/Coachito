@@ -14,7 +14,10 @@ import MyRoutinesCardResumeComponent, {
   MyRoutinesCardResume,
 } from './MyRoutinesCardResume';
 import { VStack } from '../ui/vstack';
-import { useDeleteTemplateWorkoutGroupById } from '@/hooks/workoutTemplateGroupHook';
+import {
+  useDeleteTemplateWorkoutGroupById,
+  useEditTemplateWorkoutGroup,
+} from '@/hooks/workoutTemplateGroupHook';
 import { HStack } from '../ui/hstack';
 import SlideUpBaseModal from '../shared/SlideUpBaseModal';
 import { useNavigation } from '@react-navigation/native';
@@ -28,10 +31,14 @@ export interface GroupedRoutines {
   routines: MyRoutinesCardResume[];
 }
 
-const GroupedRoutinesResumeComponent: React.FC<GroupedRoutines> = ({
-  groupId,
-  groupName,
-  routines,
+export interface GroupedRoutinesProps {
+  groupedRoutine: GroupedRoutines;
+  refetchMethod: () => Promise<void>;
+}
+
+const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
+  groupedRoutine,
+  refetchMethod,
 }) => {
   const navigation = useNavigation<NavigationProps>();
   const [showRoutines, setShowRoutines] = useState(true);
@@ -39,13 +46,38 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutines> = ({
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [isRenameGroupModalVisible, setIsRenameGroupModalVisible] =
     useState(false);
-  const [newFolderName, setNewFolderName] = useState('');
+  const [newFolderName, setNewFolderName] = useState(groupedRoutine.groupName);
 
-  const { execute: deleteTemplateWorkoutGroupById } =
-    useDeleteTemplateWorkoutGroupById(groupId);
+  const deleteGroup = async () => {
+    const { error } = await useDeleteTemplateWorkoutGroupById(
+      groupedRoutine.groupId
+    );
 
-  const handleDelete = async () => {
-    await deleteTemplateWorkoutGroupById();
+    if (!error) {
+      refetchMethod();
+    }
+  };
+
+  const updateGroup = async () => {
+    const folderName = newFolderName.trim();
+    setIsRenameGroupModalVisible(false);
+
+    if (folderName === '') {
+      alert('Por favor, introduce un nombre para la nueva carpeta.');
+      return;
+    }
+
+    const { error } = await useEditTemplateWorkoutGroup(
+      groupedRoutine.groupId,
+      folderName
+    );
+
+    if (!error) {
+      setNewFolderName(folderName);
+      refetchMethod();
+    } else {
+      setNewFolderName(groupedRoutine.groupName);
+    }
   };
 
   const componentsRenameGroupPopUpModal: React.ReactNode[] = [
@@ -55,17 +87,14 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutines> = ({
     <Input key="2" className="mb-4">
       <InputField
         placeholder="Nuevo nombre"
-        value={groupName}
+        value={newFolderName}
         onChangeText={setNewFolderName}
       />
     </Input>,
     <Button
       key="3"
       className="bg-blue-500 rounded-lg mb-4"
-      onPress={() => {
-        setIsRenameGroupModalVisible(false);
-        //handleRename();
-      }}
+      onPress={updateGroup}
     >
       <Text className="text-white">Guardar</Text>
     </Button>,
@@ -83,33 +112,33 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutines> = ({
   const buttonsSlideUpModal: React.ReactNode[] = [
     <Button
       key="1"
-      className="bg-transparent mt-4"
+      className="bg-transparent gap-2"
       onPress={() => {
         setIsSlideUpModalVisible(false);
         setIsRenameGroupModalVisible(true);
       }}
     >
       <Pencil color="white" />
-      <Text className="text-white ml-4">Renombrar Carpeta</Text>
+      <Text className="text-white">Renombrar Carpeta</Text>
     </Button>,
     <Button
       key="2"
-      className="bg-transparent mt-4"
+      className="bg-transparent gap-2"
       onPress={() => navigation.navigate('AddRoutine')}
     >
       <Plus color="white" />
-      <Text className="text-white ml-4">Agregar nueva rutina</Text>
+      <Text className="text-white">Agregar nueva rutina</Text>
     </Button>,
     <Button
       key="3"
-      className="bg-transparent mt-4"
+      className="bg-transparent gap-2"
       onPress={() => {
         setIsDeleteModalVisible(true);
         setIsSlideUpModalVisible(false);
       }}
     >
       <Trash color="red" />
-      <Text className="text-red-600 ml-4">Eliminar Carpeta</Text>
+      <Text className="text-red-600">Eliminar Carpeta</Text>
     </Button>,
   ];
 
@@ -122,7 +151,7 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutines> = ({
       className="bg-red-800 rounded-lg mb-4"
       onPress={() => {
         setIsDeleteModalVisible(false);
-        handleDelete();
+        deleteGroup();
       }}
     >
       <Text className="text-white">Eliminar carpeta</Text>
@@ -153,11 +182,11 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutines> = ({
             <ChevronRight color="gray" />
           )}
           <Text className="text-gray-400 ml-2">
-            {groupName} ({routines?.length || 0})
+            {groupedRoutine.groupName} ({groupedRoutine.routines?.length || 0})
           </Text>
         </Button>
 
-        {groupName !== 'Mis Rutinas' && (
+        {groupedRoutine.groupName !== 'Mis Rutinas' && (
           <Button
             className="bg-transparent"
             onPress={() => {
@@ -170,13 +199,17 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutines> = ({
       </HStack>
 
       {showRoutines &&
-        routines!.map((routine, index) => (
-          <MyRoutinesCardResumeComponent key={index} {...routine} />
+        groupedRoutine.routines!.map((routine, index) => (
+          <MyRoutinesCardResumeComponent
+            key={index}
+            routineCardResume={routine}
+            refetchMethod={refetchMethod}
+          />
         ))}
 
       <SlideUpBaseModal
         buttons={buttonsSlideUpModal}
-        title={groupName}
+        title={groupedRoutine.groupName}
         isVisible={isSlideUpModalVisible}
         setIsModalVisible={setIsSlideUpModalVisible}
       />

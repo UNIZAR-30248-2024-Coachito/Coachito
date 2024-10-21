@@ -17,7 +17,6 @@ const PopupBaseModal: React.FC<PopupBaseModalProps> = ({
     <Modal
       visible={isVisible}
       transparent={true}
-      animationType="slide"
       onRequestClose={() => {
         setIsModalVisible(false);
       }}
