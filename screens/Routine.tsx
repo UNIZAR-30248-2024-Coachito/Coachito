@@ -1,25 +1,161 @@
-import React from 'react';
-import { Box } from '../components/ui/box';
+import React, { useEffect, useState } from 'react';
 import '../styles.css';
 import { Text } from '../components/ui/text';
 import { Button } from '../components/ui/button';
-import {} from 'lucide-react-native';
+import { ClipboardList, FolderPlus } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '@/types/navigation';
+import { ScrollView } from '@/components/ui/scroll-view';
+import { VStack } from '@/components/ui/vstack';
+import { useFetchTemplateWorkouts } from '@/hooks/workoutTemplateHook';
+import { HStack } from '@/components/ui/hstack';
+import GroupedRoutinesResumeComponent, {
+  GroupedRoutines,
+} from '@/components/myRoutines/GroupedRoutinesResume';
+import PopupBaseModal from '@/components/shared/PopupBaseModal';
+import { Input, InputField } from '@/components/ui/input';
+import {
+  useCreateTemplateWorkoutGroup,
+  useFetchTemplateWorkoutGroups,
+} from '@/hooks/workoutTemplateGroupHook';
+
+export interface Group {
+  id: number;
+  name: string;
+}
 
 const Routine: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
+  const [routines, setRoutines] = useState<GroupedRoutines[]>([]);
+  const [groups, setGroups] = useState<Group[]>([]);
+  const [isNewGroupModalVisible, setIsNewGroupModalVisible] = useState(false);
+  const [newFolderInputValue, setNewFolderInputValue] = useState('');
+
+  const fetchRoutinesAndGroups = async () => {
+    const { myRoutineResume, error: errorRoutines } =
+      await useFetchTemplateWorkouts();
+    const { groups, error: errorGroups } =
+      await useFetchTemplateWorkoutGroups();
+
+    if (!errorRoutines) {
+      setRoutines(myRoutineResume!);
+    }
+
+    if (!errorGroups) {
+      setGroups(groups!);
+    }
+  };
+
+  useEffect(() => {
+    fetchRoutinesAndGroups();
+  }, []);
+
+  const createGroup = async () => {
+    const folderName = newFolderInputValue.trim();
+    setIsNewGroupModalVisible(false);
+    setNewFolderInputValue('');
+
+    if (folderName === '') {
+      alert('Por favor, introduce un nombre para la nueva carpeta.');
+      return;
+    }
+
+    const { error } = await useCreateTemplateWorkoutGroup(folderName);
+    if (!error) {
+      fetchRoutinesAndGroups();
+    }
+  };
+
+  const newFolderComponentsPopUpModal: React.ReactNode[] = [
+    <Text key="1" className="text-xl font-bold text-center text-white mb-4">
+      Crear nueva carpeta
+    </Text>,
+    <Input key="2" className="mb-4">
+      <InputField
+        placeholder="Nueva carpeta"
+        value={newFolderInputValue}
+        onChangeText={setNewFolderInputValue}
+      />
+    </Input>,
+    <Button
+      key="3"
+      className="bg-blue-500 rounded-lg mb-4"
+      onPress={createGroup}
+    >
+      <Text className="text-white">Guardar</Text>
+    </Button>,
+    <Button
+      key="4"
+      className="bg-zinc-700 rounded-lg"
+      onPress={() => {
+        setIsNewGroupModalVisible(false);
+      }}
+    >
+      <Text className="text-white">Cancelar</Text>
+    </Button>,
+  ];
 
   return (
-    <Box className="flex-1 p-4">
-      <Text className="text-xs text-blue-500">Lista de Entrenamientos</Text>
-      <Button
-        className="bg-blue-500"
-        onPress={() => navigation.navigate('AddRoutine')}
-      >
-        <Text className="text-white ">Nueva Rutina</Text>
-      </Button>
-    </Box>
+    <ScrollView className="flex-1">
+      <VStack className="p-4">
+        <Text className="text-xl font-bold text-white mb-4">Rutinas</Text>
+
+        <HStack className="mb-4">
+          <Button
+            className="bg-zinc-900"
+            onPress={() => navigation.navigate('AddRoutine')}
+          >
+            <ClipboardList color="white" />
+            <Text className="text-white ml-2">Nueva Rutina</Text>
+          </Button>
+
+          <VStack>
+            <Button
+              className="bg-zinc-900 ml-4"
+              onPress={() => {
+                setIsNewGroupModalVisible(true);
+              }}
+            >
+              <FolderPlus color="white" />
+              <Text className="text-white ml-2">Nueva Carpeta</Text>
+            </Button>
+          </VStack>
+        </HStack>
+
+        {routines!.map((routine, index) => (
+          <GroupedRoutinesResumeComponent
+            key={index}
+            groupedRoutine={routine}
+            refetchMethod={fetchRoutinesAndGroups}
+          />
+        ))}
+
+        {groups
+          .filter(
+            (group) =>
+              !routines.some(
+                (groupedRoutine) => groupedRoutine.groupId === group.id
+              )
+          )!
+          .map((group, index) => (
+            <GroupedRoutinesResumeComponent
+              key={index}
+              groupedRoutine={{
+                groupId: group.id,
+                groupName: group.name,
+                routines: [],
+              }}
+              refetchMethod={fetchRoutinesAndGroups}
+            />
+          ))}
+
+        <PopupBaseModal
+          components={newFolderComponentsPopUpModal}
+          isVisible={isNewGroupModalVisible}
+          setIsModalVisible={setIsNewGroupModalVisible}
+        />
+      </VStack>
+    </ScrollView>
   );
 };
 

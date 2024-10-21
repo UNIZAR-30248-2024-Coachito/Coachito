@@ -19,6 +19,7 @@ export interface WorkoutDataDB {
 
 export interface WorkoutTemplateDB {
   name: string;
+  workout_templates_group: WorkoutTemplateGroupDB;
 }
 
 export interface WorkoutExerciseDB {
@@ -44,6 +45,11 @@ export interface MuscleGroupDB {
   name: string;
 }
 
+export interface WorkoutTemplateGroupDB {
+  id: number;
+  name: string;
+}
+
 export class WorkoutRepository extends BaseRepository<
   WorkoutRow,
   WorkoutInsert,
@@ -53,33 +59,30 @@ export class WorkoutRepository extends BaseRepository<
     super(supabase, 'workouts');
   }
 
-  async getWorkoutsWithExercises(): Promise<WorkoutDataDB[]> {
+  async getTemplateWorkoutsWithExercises(): Promise<WorkoutDataDB[]> {
     const { data, error } = await this.supabase
       .from(this.table)
       .select(
         `
         *,
-        workout_templates!fk_workouts_template_id (name),
+        workout_templates!fk_workouts_template_id (
+          name,
+          deleted,
+          workout_templates_group (
+            id,
+            name
+          )
+        ),
         workout_exercises (
-          sets,
-          reps,
-          weight,
-          distance,
-          notes,
-          rest_time,
-          target_number_reps,
-          exercise_id,
           exercises (
-            name,
-            exercise_thumbnail_url,
-            exercise_image_url,
-            muscle_groups (name)
+            name
           )
         )
       `
       )
-      .eq('template', 'FALSE');
-
+      .eq('template', 'TRUE')
+      .is('workout_templates.deleted', 'FALSE')
+      .not('workout_templates', 'is', null);
     console.log(data);
     if (error) throw error;
     return data;
