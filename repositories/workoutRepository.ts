@@ -59,13 +59,20 @@ export class WorkoutRepository extends BaseRepository<
     super(supabase, 'workouts');
   }
 
-  async getWorkoutsWithExercises(): Promise<WorkoutDataDB[]> {
-    const { data, error } = await this.supabase
+  async getWorkoutsWithExercises(template: boolean): Promise<WorkoutDataDB[]> {
+    let query = this.supabase
       .from(this.table)
       .select(
         `
         *,
-        workout_templates!fk_workouts_template_id (name),
+        workout_templates!fk_workouts_template_id (
+          name,
+          deleted,
+          workout_templates_group (
+            id,
+            name
+          )
+        ),
         workout_exercises (
           sets,
           reps,
@@ -84,37 +91,16 @@ export class WorkoutRepository extends BaseRepository<
         )
       `
       )
-      .eq('template', 'FALSE');
+      .eq('template', template);
 
-    if (error) throw error;
-    return data;
-  }
+    if (template) {
+      query = query
+        .is('workout_templates.deleted', 'FALSE')
+        .not('workout_templates', 'is', null);
+    }
 
-  async getTemplateWorkoutsWithExercises(): Promise<WorkoutDataDB[]> {
-    const { data, error } = await this.supabase
-      .from(this.table)
-      .select(
-        `
-        *,
-        workout_templates!fk_workouts_template_id (
-          name,
-          deleted,
-          workout_templates_group (
-            id,
-            name
-          )
-        ),
-        workout_exercises (
-          exercises (
-            name
-          )
-        )
-      `
-      )
-      .eq('template', 'TRUE')
-      .is('workout_templates.deleted', 'FALSE')
-      .not('workout_templates', 'is', null);
-    console.log(data);
+    const { data, error } = await query;
+
     if (error) throw error;
     return data;
   }

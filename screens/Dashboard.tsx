@@ -8,27 +8,25 @@ import WorkoutCardResumeComponent, {
 import { useFetchDashboardWorkouts } from '@/hooks/dashboardHook';
 
 const Dashboard: React.FC = () => {
-  const [dashboardWorkouts, setDashboardWorkouts] = useState<
-    WorkoutCardResume[]
-  >([]);
+  const [workouts, setWorkouts] = useState<WorkoutCardResume[]>([]);
 
-  const fetchDashboardWorkouts = async () => {
-    const { workoutResumes, error: errorDashboardWorkouts } =
+  const fetchWorkouts = async () => {
+    const { workoutResumes, error: errorRoutines } =
       await useFetchDashboardWorkouts();
 
-    if (!errorDashboardWorkouts) {
-      setDashboardWorkouts(workoutResumes!);
+    if (!errorRoutines) {
+      setWorkouts(workoutResumes!);
     }
   };
 
   useEffect(() => {
-    fetchDashboardWorkouts();
+    fetchWorkouts();
   }, []);
 
   return (
     <ScrollView className="flex-1">
       <VStack className="p-4">
-        {dashboardWorkouts!.map((workout, index) => (
+        {workouts!.map((workout, index) => (
           <WorkoutCardResumeComponent
             key={index}
             workoutHeaderResume={workout.workoutHeaderResume}

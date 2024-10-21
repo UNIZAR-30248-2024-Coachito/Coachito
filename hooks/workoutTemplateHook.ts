@@ -24,7 +24,7 @@ const useDeleteWorkoutTemplate = async (id: number) => {
 
 const useFetchTemplateWorkouts = async () => {
   const { execute } = useCRUD(() =>
-    workoutRepository.getTemplateWorkoutsWithExercises()
+    workoutRepository.getWorkoutsWithExercises(true)
   );
 
   const { data, error } = await execute();
