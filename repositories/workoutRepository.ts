@@ -85,11 +85,10 @@ export class WorkoutRepository extends BaseRepository<
       `
       )
       .eq('template_id', templateId)
-      .eq('template', 'FALSE')
       .order('created_at', { ascending: false })
+      .limit(1)
       .single();
 
-    console.log(data);
     if (error) throw error;
     return data;
   }

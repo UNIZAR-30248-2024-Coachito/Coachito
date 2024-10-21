@@ -1,27 +1,23 @@
 import { supabase } from '@/api/supabaseClient';
 import { WorkoutRepository } from '@/repositories/workoutRepository';
 import useCRUD from './useCRUD';
-import { useEffect } from 'react';
 import { mapWorkoutDataToDetailsRoutineResume } from '@/mappers/mapWorkoutDataToDetailsRoutinesResume';
 
 const workoutRepository = new WorkoutRepository(supabase);
 
-const useFetchDetailsWorkout = (templateId: number) => {
-  const { data, loading, error, execute } = useCRUD(() =>
+const useFetchDetailsWorkout = async (templateId: number) => {
+  const { execute } = useCRUD(() =>
     workoutRepository.getDetailsWorkout(templateId)
   );
 
-  useEffect(() => {
-    execute();
-  }, []);
+  const { data, error } = await execute();
 
   let myRoutineResume = null;
-
-  if (!loading && !error) {
+  if (!error) {
     myRoutineResume = mapWorkoutDataToDetailsRoutineResume(data!);
   }
 
-  return { myRoutineResume, loading, error };
+  return { myRoutineResume, error };
 };
 
 export { useFetchDetailsWorkout };

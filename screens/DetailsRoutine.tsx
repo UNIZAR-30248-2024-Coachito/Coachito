@@ -1,31 +1,51 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../styles.css';
 import { Text } from '../components/ui/text';
 import { ScrollView } from '@/components/ui/scroll-view';
 import { VStack } from '@/components/ui/vstack';
-import { RootStackParamList } from '@/types/navigation';
-import { useRoute, RouteProp } from '@react-navigation/native';
+import { NavigationProps, RootStackParamList } from '@/types/navigation';
+import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import { useFetchDetailsWorkout } from '@/hooks/workoutHook';
 import { HStack } from '@/components/ui/hstack';
-import ExerciseResumeComponent from '@/components/detailsRoutine/ExerciseResume';
+import ExerciseResumeComponent, {
+  ExerciseResume,
+} from '@/components/detailsRoutine/ExerciseResume';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal, Pencil, Trash } from 'lucide-react-native';
 import SlideUpBaseModal from '@/components/shared/SlideUpBaseModal';
 import PopupBaseModal from '@/components/shared/PopupBaseModal';
+import { useDeleteWorkoutTemplate } from '@/hooks/workoutTemplateHook';
+import { emitter } from '@/utils/emitter';
 
 const DetailsRoutine: React.FC = () => {
+  const navigation = useNavigation<NavigationProps>();
   const route = useRoute<RouteProp<RootStackParamList, 'DetailsRoutine'>>();
   const { templateId, myRoutineName } = route.params;
-  const { myRoutineResume, loading, error } =
-    useFetchDetailsWorkout(templateId);
+
+  const [exercises, setExercises] = useState<ExerciseResume[]>([]);
   const [isSlideUpModalVisible, setIsSlideUpModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
-  const handleDelete = async () => {
-    //const entity = await useFetchWorkoutTemplateById(templateId);
-    //entity.data!.deleted = true;
-    //await useUpdateWorkoutTemplate(entity.data);
-    console.log('Rutina eliminada');
+  const fetchExercises = async () => {
+    const { myRoutineResume, error: errorRoutines } =
+      await useFetchDetailsWorkout(templateId);
+
+    if (!errorRoutines) {
+      setExercises(myRoutineResume!);
+    }
+  };
+
+  useEffect(() => {
+    fetchExercises();
+  }, [templateId]);
+
+  const deleteRoutine = async () => {
+    const { error } = await useDeleteWorkoutTemplate(templateId);
+
+    if (!error) {
+      emitter.emit('routineDeleted');
+      navigation.navigate('Routine');
+    }
   };
 
   const buttonsSlideUpModal: React.ReactNode[] = [
@@ -59,7 +79,7 @@ const DetailsRoutine: React.FC = () => {
       className="bg-red-800 rounded-lg mb-4"
       onPress={() => {
         setIsDeleteModalVisible(false);
-        handleDelete();
+        deleteRoutine();
       }}
     >
       <Text className="text-white">Borrar rutina</Text>
@@ -107,18 +127,16 @@ const DetailsRoutine: React.FC = () => {
           </Button>
         </HStack>
 
-        {!loading &&
-          !error &&
-          myRoutineResume!.map((exercise, index) => (
-            <ExerciseResumeComponent
-              key={index}
-              name={exercise.name}
-              thumbnailUrl={exercise.thumbnailUrl}
-              restTime={exercise.restTime}
-              notes={exercise.notes}
-              series={exercise.series}
-            />
-          ))}
+        {exercises!.map((exercise, index) => (
+          <ExerciseResumeComponent
+            key={index}
+            name={exercise.name}
+            thumbnailUrl={exercise.thumbnailUrl}
+            restTime={exercise.restTime}
+            notes={exercise.notes}
+            series={exercise.series}
+          />
+        ))}
 
         <SlideUpBaseModal
           buttons={buttonsSlideUpModal}
