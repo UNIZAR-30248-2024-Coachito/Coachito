@@ -1,63 +1,153 @@
-import React from 'react';
-import { Box } from '../components/ui/box';
+import React, { useEffect, useState } from 'react';
 import '../styles.css';
 import { HStack } from '../components/ui/hstack';
 import { VStack } from '../components/ui/vstack';
 import { Text } from '../components/ui/text';
 import { Button } from '../components/ui/button';
 import { InputField, Input } from '../components/ui/input';
-import {} from 'lucide-react-native';
+import { Plus } from 'lucide-react-native';
 import { Dumbbell } from 'lucide-react-native';
-import { useNavigation } from '@react-navigation/native';
-import { NavigationProps } from '@/types/navigation';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { NavigationProps, RootStackParamList } from '@/types/navigation';
+import PopupBaseModal from '@/components/shared/PopupBaseModal';
+import { ExerciseListResume } from './AddExercise';
+import ExerciseResumeComponent, { ExerciseResume } from '@/components/exercise/detailsExerciseResume';
+import { useCreateRoutine } from '@/hooks/addExerciseHook';
+import { ScrollView } from 'react-native';
 
 const AddRoutine: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
+  const route = useRoute<RouteProp<RootStackParamList, 'AddRoutine'>>();
+  const [routineTitleInputValue, setroutineTitleInputValue] = useState('');
+  const [selectedExercises, setSelectedExercises] = useState<
+    ExerciseListResume[]
+  >(route.params.exercises);
+  const [isCancelRoutineModalVisible, setIsCancelRoutineModalVisible] =
+    useState(false);
+  const [exercises, setExercises] = useState<ExerciseResume[]>([]);
+
+  const componentsCancelRoutinePopUpModal: React.ReactNode[] = [
+    <Text key="1" className="text-xl font-bold text-center text-white pb-8">
+      ¿Está seguro de que quiere descartar la rutina?
+    </Text>,
+    <Button
+      key="2"
+      className="bg-red-800 rounded-lg mb-4"
+      onPress={() => {
+        setIsCancelRoutineModalVisible(false);
+        setSelectedExercises([]);
+        navigation.navigate('Routine');
+      }}
+    >
+      <Text className="text-white">Descartar rutina</Text>
+    </Button>,
+    <Button
+      key="3"
+      className="bg-zinc-700 rounded-lg"
+      onPress={() => {
+        setIsCancelRoutineModalVisible(false);
+      }}
+    >
+      <Text className="text-white">Cancelar</Text>
+    </Button>,
+  ];
+
+  useEffect(() => {
+    if (route.params?.exercises) {
+      setSelectedExercises(route.params.exercises);
+    }
+  }, [route.params?.exercises]);
+
+  const createRoutine = async () => {
+    const routineTitle = routineTitleInputValue.trim();
+
+    if (routineTitle === '') {
+      alert('Por favor, introduce un nombre para la nueva rutina.');
+      return;
+    }
+
+    const exercisesIds = selectedExercises.map((exercise) => exercise.id);
+
+    const { error } = await useCreateRoutine(routineTitle, exercisesIds);
+
+    if (!error) {
+      navigation.navigate('Routine');
+    } else {
+      alert('Se ha producido un error al crear la rutina.');
+    }
+  };
 
   return (
-    <Box className="flex-1 p-4">
-      {/* Contenedor principal */}
-      <VStack className="space-y-4">
-        {/* Primera fila con 'Cancelar', 'Crear Rutina' y 'Guardar' */}
-        <HStack className="justify-between items-center">
-          <Text className="text-xl text-blue-500">Cancelar</Text>
-          <Text className="text-xl">Crear Rutina</Text>
+    <ScrollView className="flex-1">
+      <VStack className="p-4 gap-2 items-center">
+        <HStack className="w-full gap-6 mb-4">
           <Button
-            className="bg-blue-500"
-            onPress={() => navigation.navigate('Dashboard')}
+            className="bg-transparent rounded-lg"
+            onPress={() => {
+              setIsCancelRoutineModalVisible(true);
+            }}
           >
-            <Text className="text-white ">Guardar</Text>
+            <Text className="text-blue-500">Cancelar</Text>
+          </Button>
+          <Text className="text-xl">Crear Rutina</Text>
+          <Button className="bg-blue-500 rounded-lg" onPress={createRoutine}>
+            <Text className="text-white">Guardar</Text>
           </Button>
         </HStack>
 
-        {/* Input para el título de la rutina */}
-        <Box className="w-full pt-2">
-          <Input
-            variant="outline"
-            size="md"
-            isDisabled={false}
-            isInvalid={false}
-            isReadOnly={false}
-          >
-            <InputField placeholder="Título de la rutina" />
-          </Input>
-        </Box>
+        <Input
+          className="mb-4"
+          variant="outline"
+          size="md"
+          isDisabled={false}
+          isInvalid={false}
+          isReadOnly={false}
+        >
+          <InputField
+            placeholder="Título de la rutina"
+            value={routineTitleInputValue}
+            onChangeText={setroutineTitleInputValue}
+          />
+        </Input>
 
-        {/* Texto e botón para agregar ejercicios */}
-        <VStack className="space-y-4 pt-12 items-center">
-          <Dumbbell color={'rgb(59 130 246)'} />
-          <Text className="text-md">
-            Empieza agregando un ejercicio a tu rutina
-          </Text>
-          <Button
-            className="flex-row items-center bg-blue-500"
-            onPress={() => navigation.navigate('AddExercise')}
-          >
-            <Text className="text-white">Agregar ejercicio</Text>
-          </Button>
-        </VStack>
+        {selectedExercises.length === 0 ? (
+          <>
+            <Dumbbell color="gray" />
+            <Text className="text-gray-400">
+              Empieza agregando un ejercicio a tu rutina
+            </Text>
+          </>
+        ) : (
+          selectedExercises.map((exercise, index) => (
+            <ExerciseResumeComponent
+              key={index}
+              name={exercise.exerciseName}
+              thumbnailUrl={exercise.exerciseThumbnailUrl}
+              restTime={'DESACTIVADO'}
+              notes={''}
+            />
+          ))
+        )}
+
+        <Button
+          className="w-full bg-blue-500 rounded-lg mt-4"
+          onPress={() =>
+            navigation.navigate('AddExercise', {
+              selectedExercises,
+            })
+          }
+        >
+          <Plus color="white" />
+          <Text className="text-white ml-2">Agregar ejercicio</Text>
+        </Button>
+
+        <PopupBaseModal
+          components={componentsCancelRoutinePopUpModal}
+          isVisible={isCancelRoutineModalVisible}
+          setIsModalVisible={setIsCancelRoutineModalVisible}
+        />
       </VStack>
-    </Box>
+    </ScrollView>
   );
 };
 

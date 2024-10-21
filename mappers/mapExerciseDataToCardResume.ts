@@ -1,14 +1,13 @@
-import { ExerciseCardResume } from '@/components/exercise/ExerciseCardResume';
-import { ExerciseDB } from '@/repositories/workoutRepository';
+import { ExercisesListDB } from '@/repositories/exerciseRepository';
+import { ExerciseListResume } from '@/screens/AddExercise';
 
-export const mapExercisesToCardResume = (
-  exerciseDBArray: ExerciseDB[]
-): ExerciseCardResume[] => {
-  return exerciseDBArray.map((exercise) => ({
-    exerciseResume: {
-      exerciseName: exercise.name,
-      exerciseThumbnailUrl: exercise.exercise_thumbnail_url,
-      primaryMuscleGroup: exercise.muscle_groups.name,
-    },
+export const mapExercisesToExerciseCardResume = (
+  rows: ExercisesListDB[]
+): ExerciseListResume[] => {
+  return rows.map((exercise) => ({
+    id: exercise.id,
+    exerciseName: exercise.name!,
+    exerciseThumbnailUrl: exercise.exercise_thumbnail_url,
+    primaryMuscleGroup: exercise.muscle_groups?.name || 'Unknown',
   }));
 };

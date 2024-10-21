@@ -103,7 +103,11 @@ const Routine: React.FC = () => {
         <HStack className="mb-4">
           <Button
             className="bg-zinc-900"
-            onPress={() => navigation.navigate('AddRoutine')}
+            onPress={() =>
+              navigation.navigate('AddRoutine', {
+                exercises: [],
+              })
+            }
           >
             <ClipboardList color="white" />
             <Text className="text-white ml-2">Nueva Rutina</Text>

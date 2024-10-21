@@ -6,19 +6,20 @@ export type ExerciseRow = Tables<'exercises'>;
 export type ExerciseInsert = TablesInsert<'exercises'>;
 export type ExerciseUpdate = TablesUpdate<'exercises'>;
 
-interface MuscleGroupDB {
-  name: string;
-}
-
-interface ExerciseDB {
+export type ExercisesListDB = {
   id: number;
   name: string;
   exercise_thumbnail_url: string;
-  exercise_image_url: string;
-  exercise_type_id: number;
-  equipment_category_id: number;
-  primary_muscle_group_id: number;
   muscle_groups: MuscleGroupDB;
+  equipment_categories: EquipmentCategoriesDB;
+};
+
+export interface MuscleGroupDB {
+  name: string;
+}
+
+export interface EquipmentCategoriesDB {
+  name: string;
 }
 
 export class ExerciseRepository extends BaseRepository<
@@ -29,14 +30,18 @@ export class ExerciseRepository extends BaseRepository<
   constructor(supabase: SupabaseClient) {
     super(supabase, 'exercises');
   }
-  async getExercisesWithPrimaryMuscleGroup(): Promise<ExerciseDB[]> {
-    const { data, error } = await this.supabase.from(this.table).select(
-      `
-        *,
-        muscle_groups!exercises_muscle_group_id_fkey (name)
-      `
-    );
+
+  async getExercisesListData(): Promise<ExercisesListDB[]> {
+    const { data, error } = await this.supabase.from(this.table).select(`
+        id,
+        name,
+        exercise_thumbnail_url,
+        muscle_groups (name),
+        equipment_categories (name)
+      `);
     if (error) throw error;
+
+    // @ts-expect-error Ignorar el error de tipo en la siguiente línea
     return data;
   }
 }

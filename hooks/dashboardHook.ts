@@ -5,16 +5,19 @@ import { mapWorkoutDataToCardResume } from '@/mappers/mapWorkoutDataToCardResume
 
 const workoutRepository = new WorkoutRepository(supabase);
 
-const useFetchDashboardWorkouts = () => {
-  const { data, loading, error } = useCRUD(() =>
+const useFetchDashboardWorkouts = async () => {
+  const { execute } = useCRUD(() =>
     workoutRepository.getWorkoutsWithExercises()
   );
+
+  const { data, error } = await execute();
+
   let workoutResumes = null;
 
-  if (!loading && !error) {
+  if (!error) {
     workoutResumes = mapWorkoutDataToCardResume(data!);
   }
 
-  return { workoutResumes, loading, error };
+  return { workoutResumes, error };
 };
 export { useFetchDashboardWorkouts };

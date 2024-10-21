@@ -1,87 +1,128 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Text } from '../components/ui/text';
 import { HStack } from '../components/ui/hstack';
-import { Box } from '../components/ui/box';
 import { VStack } from '../components/ui/vstack';
 import { Button } from '../components/ui/button';
-import { useNavigation } from '@react-navigation/native';
-import { NavigationProps } from '@/types/navigation';
-import { InputField, Input } from '../components/ui/input';
-import ExerciseListCardResume from '@/components/exercise/ExerciseListCardResume';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import { NavigationProps, RootStackParamList } from '@/types/navigation';
+import {
+  InputField,
+  Input,
+  InputSlot,
+  InputIcon,
+} from '../components/ui/input';
+import { Pressable, ScrollView } from 'react-native';
+import { useFetchExercisesList } from '@/hooks/addExerciseHook';
+import ExercisesResume from '@/components/exercise/ExercisesListCardResume';
+import { SearchIcon } from 'lucide-react-native';
+
+export interface ExerciseListResume {
+  id: number;
+  exerciseName: string;
+  exerciseThumbnailUrl: string;
+  primaryMuscleGroup: string;
+}
+
+type AddExerciseRouteProp = RouteProp<RootStackParamList, 'AddExercise'>;
 
 const AddExercise: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
-  const [selectedExercises, setSelectedExercises] = useState<string[]>([]);
+  const route = useRoute<AddExerciseRouteProp>();
+  const [exercises, setExercises] = useState<ExerciseListResume[]>([]);
+  const [selectedExercises, setSelectedExercises] = useState<
+    ExerciseListResume[]
+  >(route.params?.selectedExercises || []);
 
-  const handleSelectExercise = (exerciseName: string) => {
+  const handleSelectExercise = (exercise: ExerciseListResume) => {
     setSelectedExercises((prevSelected) => {
-      if (prevSelected.includes(exerciseName)) {
-        // Si el ejercicio ya está seleccionado, lo eliminamos
-        return prevSelected.filter((name) => name !== exerciseName);
+      const exists = prevSelected.find(
+        (e) => e.exerciseName === exercise.exerciseName
+      );
+      if (exists) {
+        return prevSelected.filter(
+          (e) => e.exerciseName !== exercise.exerciseName
+        );
       } else {
-        // Si no está seleccionado, lo añadimos
-        return [...prevSelected, exerciseName];
+        return [...prevSelected, exercise];
       }
     });
   };
 
-  const handleSaveExercises = () => {
-    console.log('Ejercicios guardados:', selectedExercises);
-    // Aquí puedes agregar la lógica para guardar los ejercicios
-    setSelectedExercises([]);
+  const fetchExercises = async () => {
+    const { exercisesResume, error: errorExercises } =
+      await useFetchExercisesList();
+
+    if (!errorExercises) {
+      setExercises(exercisesResume!);
+    }
   };
 
+  useEffect(() => {
+    fetchExercises();
+  }, []);
+
   return (
-    <Box className="flex-1 p-4">
-      {/* Contenedor principal */}
-      <VStack className="flex-1 pace-y-4">
-        {/* Primera fila con 'Cancelar', 'Crear Rutina' y 'Guardar' */}
-        <HStack className="justify-between items-center">
+    <ScrollView className="flex-1">
+      <VStack className="p-4 gap-4">
+        <HStack className="items-left gap-4">
           <Button
-            className="bg-black"
-            onPress={() => navigation.navigate('Routine')}
+            className="bg-transparent rounded-lg"
+            onPress={() => {
+              navigation.navigate('AddRoutine', {
+                exercises: selectedExercises,
+              });
+              setSelectedExercises([]);
+            }}
           >
-            <Text className="text-blue-500 ">Cancelar</Text>
+            <Text className="text-blue-500">Cancelar</Text>
           </Button>
-          <Text className="text-xl pr-4">Agregar Ejercicio</Text>
-          <Button className="bg-blue-500">
-            <Text className="text-white ">Crear</Text>
-          </Button>
+          <Text className="text-xl">Agregar Ejercicio</Text>
         </HStack>
-        {/* Input para filtrar un ejercicio*/}
-        <Box className="w-full pt-2">
-          <Input
-            variant="outline"
-            size="md"
-            isDisabled={false}
-            isInvalid={false}
-            isReadOnly={false}
-          >
-            <InputField className="text-white" placeholder="Buscar Ejercicio" />
-          </Input>
-        </Box>
-        {/* Mostrar lista de ejercicios */}
-        <ExerciseListCardResume
-          selectedExercises={selectedExercises}
-          onSelect={handleSelectExercise}
-        />
-        <HStack className="justify-center mt-auto">
-          {selectedExercises.length > 0 && (
-            <HStack className="justify-center">
-              <Button
-                className="bg-blue-500 flex-grow"
-                onPress={() => {
-                  handleSaveExercises();
-                  navigation.navigate('SaveRoutine');
-                }}
+
+        <Input
+          variant="outline"
+          size="md"
+          isDisabled={false}
+          isInvalid={false}
+          isReadOnly={false}
+        >
+          <InputSlot className="pl-3">
+            <InputIcon as={SearchIcon} />
+          </InputSlot>
+          <InputField className="text-white" placeholder="Buscar Ejercicio" />
+        </Input>
+
+        {exercises.map((exercise, index) => {
+          return (
+            <Pressable
+              key={index}
+              onPress={() => {
+                handleSelectExercise(exercise);
+              }}
+            >
+              <HStack
+                className={`${selectedExercises.includes(exercise) ? 'bg-blue-500' : 'bg-transparent'}`}
               >
-                <Text className="text-white">Añadir Ejercicios</Text>
-              </Button>
-            </HStack>
-          )}
-        </HStack>
+                <ExercisesResume key="1" exercises={exercise} />
+              </HStack>
+            </Pressable>
+          );
+        })}
+
+        {selectedExercises.length > 0 && (
+          <Button
+            className="w-full bg-blue-500 rounded-lg"
+            onPress={() => {
+              navigation.navigate('AddRoutine', {
+                exercises: selectedExercises,
+              });
+            }}
+          >
+            <Text className="text-white">Añadir Ejercicios</Text>
+          </Button>
+        )}
       </VStack>
-    </Box>
+    </ScrollView>
   );
 };
 

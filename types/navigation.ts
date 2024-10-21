@@ -1,3 +1,4 @@
+import { ExerciseListResume } from '@/screens/AddExercise';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type RootStackParamList = {
@@ -5,10 +6,9 @@ export type RootStackParamList = {
   Routine: undefined;
   Profile: undefined;
   Exercises: undefined;
-  AddExercise: undefined;
-  AddRoutine: undefined;
+  AddExercise: { selectedExercises: ExerciseListResume[] };
+  AddRoutine: { exercises: ExerciseListResume[] };
   ExerciseResume: undefined;
-  SaveRoutine: undefined;
 };
 
 export type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
