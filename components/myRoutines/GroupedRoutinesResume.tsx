@@ -24,6 +24,7 @@ import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '@/types/navigation';
 import PopupBaseModal from '../shared/PopupBaseModal';
 import { Input, InputField } from '../ui/input';
+import { emitter } from '@/utils/emitter';
 
 export interface GroupedRoutines {
   groupId: number;
@@ -33,12 +34,10 @@ export interface GroupedRoutines {
 
 export interface GroupedRoutinesProps {
   groupedRoutine: GroupedRoutines;
-  refetchMethod: () => Promise<void>;
 }
 
 const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
   groupedRoutine,
-  refetchMethod,
 }) => {
   const navigation = useNavigation<NavigationProps>();
   const [showRoutines, setShowRoutines] = useState(true);
@@ -54,7 +53,7 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
     );
 
     if (!error) {
-      refetchMethod();
+      emitter.emit('routineDeleted');
     }
   };
 
@@ -74,7 +73,7 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
 
     if (!error) {
       setNewFolderName(folderName);
-      refetchMethod();
+      emitter.emit('routineRenamed');
     } else {
       setNewFolderName(groupedRoutine.groupName);
     }
@@ -207,7 +206,6 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
           <MyRoutinesCardResumeComponent
             key={index}
             routineCardResume={routine}
-            refetchMethod={refetchMethod}
           />
         ))}
 

@@ -18,6 +18,7 @@ import {
   useCreateTemplateWorkoutGroup,
   useFetchTemplateWorkoutGroups,
 } from '@/hooks/workoutTemplateGroupHook';
+import { emitter } from '@/utils/emitter';
 
 export interface Group {
   id: number;
@@ -47,8 +48,20 @@ const Routine: React.FC = () => {
   };
 
   useEffect(() => {
+    const routineDeletedListener = emitter.addListener('routineDeleted', () => {
+      fetchRoutinesAndGroups();
+    });
+    const routineRenamedListener = emitter.addListener('routineRenamed', () => {
+      fetchRoutinesAndGroups();
+    });
+
     fetchRoutinesAndGroups();
-  }, []);
+
+    return () => {
+      routineDeletedListener.remove();
+      routineRenamedListener.remove();
+    };
+  }, [navigation]);
 
   const createGroup = async () => {
     const folderName = newFolderInputValue.trim();
@@ -130,7 +143,6 @@ const Routine: React.FC = () => {
           <GroupedRoutinesResumeComponent
             key={index}
             groupedRoutine={routine}
-            refetchMethod={fetchRoutinesAndGroups}
           />
         ))}
 
@@ -149,7 +161,6 @@ const Routine: React.FC = () => {
                 groupName: group.name,
                 routines: [],
               }}
-              refetchMethod={fetchRoutinesAndGroups}
             />
           ))}
 

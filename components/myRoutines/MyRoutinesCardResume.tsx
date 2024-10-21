@@ -10,6 +10,7 @@ import SlideUpBaseModal from '../shared/SlideUpBaseModal';
 import PopupBaseModal from '../shared/PopupBaseModal';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '@/types/navigation';
+import { emitter } from '@/utils/emitter';
 
 export interface MyRoutinesCardResume {
   templateId: number;
@@ -19,12 +20,10 @@ export interface MyRoutinesCardResume {
 
 export interface MyRoutineCardResumeProps {
   routineCardResume: MyRoutinesCardResume;
-  refetchMethod: () => Promise<void>;
 }
 
 const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
   routineCardResume,
-  refetchMethod,
 }) => {
   const navigation = useNavigation<NavigationProps>();
   const [isSlideUpModalVisible, setIsSlideUpModalVisible] = useState(false);
@@ -36,7 +35,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
     );
 
     if (!error) {
-      refetchMethod();
+      emitter.emit('routineDeleted');
     }
   };
 
@@ -92,7 +91,15 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
   ];
 
   return (
-    <Pressable className="bg-zinc-900 p-4 mb-4 rounded-lg">
+    <Pressable
+      className="bg-zinc-900 p-4 mb-4 rounded-lg"
+      onPress={() =>
+        navigation.navigate('DetailsRoutine', {
+          templateId: routineCardResume.templateId,
+          myRoutineName: routineCardResume.myRoutineName,
+        })
+      }
+    >
       <Box className="flex-row justify-between items-center">
         <Text className="text-xl font-bold mb-2 text-white">
           {routineCardResume.myRoutineName}
