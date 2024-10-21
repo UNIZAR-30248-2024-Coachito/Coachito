@@ -59,8 +59,8 @@ export class WorkoutRepository extends BaseRepository<
     super(supabase, 'workouts');
   }
 
-  async getTemplateWorkoutsWithExercises(): Promise<WorkoutDataDB[]> {
-    const { data, error } = await this.supabase
+  async getWorkoutsWithExercises(template: boolean): Promise<WorkoutDataDB[]> {
+    let query = this.supabase
       .from(this.table)
       .select(
         `
@@ -74,16 +74,33 @@ export class WorkoutRepository extends BaseRepository<
           )
         ),
         workout_exercises (
+          sets,
+          reps,
+          weight,
+          distance,
+          notes,
+          rest_time,
+          target_number_reps,
+          exercise_id,
           exercises (
-            name
+            name,
+            exercise_thumbnail_url,
+            exercise_image_url,
+            muscle_groups (name)
           )
         )
       `
       )
-      .eq('template', 'TRUE')
-      .is('workout_templates.deleted', 'FALSE')
-      .not('workout_templates', 'is', null);
-    console.log(data);
+      .eq('template', template);
+
+    if (template) {
+      query = query
+        .is('workout_templates.deleted', 'FALSE')
+        .not('workout_templates', 'is', null);
+    }
+
+    const { data, error } = await query;
+
     if (error) throw error;
     return data;
   }
