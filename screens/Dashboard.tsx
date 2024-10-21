@@ -11,6 +11,7 @@ import { NavigationProps } from '@/types/navigation';
 
 const Dashboard: React.FC = () => {
   const [workouts, setWorkouts] = useState<WorkoutCardResume[]>([]);
+  const navigation = useNavigation<NavigationProps>();
 
   const fetchWorkouts = async () => {
     const { workoutResumes, error: errorRoutines } =
@@ -33,6 +34,7 @@ const Dashboard: React.FC = () => {
             key={index}
             workoutHeaderResume={workout.workoutHeaderResume}
             workoutExercisesResume={workout.workoutExercisesResume}
+            onPress={() => navigation.navigate('VerEntrenamiento', { workout })}
           />
         ))}
       </VStack>
