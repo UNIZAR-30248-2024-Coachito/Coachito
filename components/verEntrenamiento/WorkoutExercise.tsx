@@ -34,60 +34,56 @@ const WorkoutExercisesComponent: React.FC<WorkoutExercises> = ({
   header,
 }) => {
   return (
-    <Box>
-      <VStack className="gap-y-4">
-        <WorkoutHeaderComponent
-          workoutName={header.workoutName}
-          workoutTime={header.workoutTime}
-          workoutVolume={header.workoutVolume}
-          workoutSeries={header.workoutSeries}
-        />
-        <Text className="text-l mb-2 text-gray-400">División muscular</Text>
-        <WorkoutDivisionComponent pecho={7} espalda={2} pierna={1} />
-        <Text className="text-l mb-2 text-gray-400">Ejercicios</Text>
+    <VStack className="gap-y-4">
+      <WorkoutHeaderComponent
+        workoutName={header.workoutName}
+        workoutTime={header.workoutTime}
+        workoutVolume={header.workoutVolume}
+        workoutSeries={header.workoutSeries}
+      />
+      <Text className="text-l mb-2 text-gray-400">División muscular</Text>
+      <WorkoutDivisionComponent pecho={7} espalda={2} pierna={1} />
+      <Text className="text-l mb-2 text-gray-400">Ejercicios</Text>
 
-        <VStack className="gap-y-4">
-          {datos.map((exercise, index) => (
-            <Box key={index}>
-              <HStack className="items-center gap-4">
-                <Avatar>
-                  <AvatarFallbackText>{exercise.name}</AvatarFallbackText>
-                  <AvatarImage
-                    source={{
-                      uri: exercise.thumbnailUrl,
-                    }}
-                  />
-                </Avatar>
-                <Text className="flex-1 text-blue-500 font-bold">
-                  {exercise.name}
+      <VStack className="gap-y-4">
+        {datos.map((exercise, index) => (
+          <Box key={index}>
+            <HStack className="items-center gap-4">
+              <Avatar>
+                <AvatarFallbackText>{exercise.name}</AvatarFallbackText>
+                <AvatarImage
+                  source={{
+                    uri: exercise.thumbnailUrl,
+                  }}
+                />
+              </Avatar>
+              <Text className="flex-1 text-blue-500 font-bold">
+                {exercise.name}
+              </Text>
+            </HStack>
+            <VStack className="mt-2">
+              <HStack className="mb-2">
+                <Text className="w-12 text-center text-gray-400 text-xs">
+                  SERIE
                 </Text>
+                <Text className="text-gray-400 ml-2 text-xs">PESO Y REPES</Text>
               </HStack>
-              <VStack className="mt-2">
-                <HStack className="mb-2">
-                  <Text className="w-12 text-center text-gray-400 text-xs">
-                    SERIE
+              {/* Simulamos información de cada serie */}
+              {exercise.series.map((serie, seriesIndex) => (
+                <HStack key={seriesIndex} className="items-center mb-2">
+                  <Text className="w-12 text-center text-white font-bold">
+                    {serie.serie}
                   </Text>
-                  <Text className="text-gray-400 ml-2 text-xs">
-                    PESO Y REPES
+                  <Text className="text-white ml-2">
+                    {serie.reps} repeticiones a {serie.weight} kg
                   </Text>
                 </HStack>
-                {/* Simulamos información de cada serie */}
-                {exercise.series.map((serie, seriesIndex) => (
-                  <HStack key={seriesIndex} className="items-center mb-2">
-                    <Text className="w-12 text-center text-white font-bold">
-                      {serie.serie}
-                    </Text>
-                    <Text className="text-white ml-2">
-                      {serie.reps} repeticiones a {serie.weight} kg
-                    </Text>
-                  </HStack>
-                ))}
-              </VStack>
-            </Box>
-          ))}
-        </VStack>
+              ))}
+            </VStack>
+          </Box>
+        ))}
       </VStack>
-    </Box>
+    </VStack>
   );
 };
 

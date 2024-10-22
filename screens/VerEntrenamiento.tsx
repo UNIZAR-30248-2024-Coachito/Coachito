@@ -39,7 +39,6 @@ const VerEntrenamiento: React.FC = () => {
 
     if (!errorRoutines) {
       setExercises(myRoutineResume!);
-      console.log(myRoutineResume);
     }
   };
 
@@ -125,9 +124,8 @@ const VerEntrenamiento: React.FC = () => {
         />
         <ScrollView>
           {/* Input para el título de la rutina */}
-          <Box className="w-full pt-2">
-            <WorkoutExercisesComponent datos={exercises} header={header} />
-          </Box>
+
+          <WorkoutExercisesComponent datos={exercises} header={header} />
         </ScrollView>
       </VStack>
     </Box>
