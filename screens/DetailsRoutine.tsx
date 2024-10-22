@@ -52,7 +52,13 @@ const DetailsRoutine: React.FC = () => {
     <Button
       key="2"
       className="bg-transparent mt-4"
-      // onPress={() => navigation.navigate('EditRoutine')}
+      onPress={() =>
+        navigation.navigate('EditRoutine', {
+          routineId: templateId,
+          routineName: myRoutineName,
+          exercises,
+        })
+      }
     >
       <Pencil color="white" />
       <Text className="text-white ml-4">Editar rutina</Text>
@@ -112,7 +118,12 @@ const DetailsRoutine: React.FC = () => {
 
         <Button
           className="bg-blue-500 rounded-lg w-full mb-4"
-          //onPress={() => navigation.navigate('StartRoutine')}
+          onPress={() =>
+            navigation.navigate('StartWorkout', {
+              routineId: templateId,
+              routineName: myRoutineName,
+            })
+          }
         >
           <Text className="text-white">Empezar Rutina</Text>
         </Button>
@@ -121,7 +132,13 @@ const DetailsRoutine: React.FC = () => {
           <Text className="text-gray-400 mt-4">Ejercicios</Text>
           <Button
             className="bg-transparent"
-            //onPress={() => navigation.navigate('EditRoutine')}
+            onPress={() =>
+              navigation.navigate('EditRoutine', {
+                routineId: templateId,
+                routineName: myRoutineName,
+                exercises,
+              })
+            }
           >
             <Text className="text-blue-500">Editar rutina</Text>
           </Button>
