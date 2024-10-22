@@ -1,5 +1,5 @@
 import { ExerciseResume } from '@/components/detailsRoutine/ExerciseResume';
-import { ExerciseProportion } from '@/components/verEntrenamiento/WorkoutDivision';
+import { ExerciseProportion } from '@/components/workout/WorkoutDivision';
 
 export const mapToExerciseProportions = (
   exerciseResumes: ExerciseResume[]
