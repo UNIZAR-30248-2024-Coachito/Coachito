@@ -26,6 +26,7 @@ export interface ExerciseResume {
   restTime: string;
   notes: string;
   series: SeriesExerciseResume[];
+  primary_muscle: string;
 }
 
 const ExerciseResumeComponent: React.FC<ExerciseResume> = ({

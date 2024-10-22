@@ -5,7 +5,7 @@ import { ScrollView } from '@/components/ui/scroll-view';
 import { VStack } from '@/components/ui/vstack';
 import { NavigationProps, RootStackParamList } from '@/types/navigation';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
-import { useFetchDetailsWorkout } from '@/hooks/workoutHook';
+import { useFetchDetailsLastWorkout } from '@/hooks/workoutHook';
 import { HStack } from '@/components/ui/hstack';
 import ExerciseResumeComponent, {
   ExerciseResume,
@@ -27,11 +27,11 @@ const DetailsRoutine: React.FC = () => {
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
   const fetchExercises = async () => {
-    const { myRoutineResume, error: errorRoutines } =
-      await useFetchDetailsWorkout(templateId);
+    const { exercisesResumes, error: errorRoutines } =
+      await useFetchDetailsLastWorkout(templateId);
 
     if (!errorRoutines) {
-      setExercises(myRoutineResume!);
+      setExercises(exercisesResumes!);
     }
   };
 
@@ -135,6 +135,7 @@ const DetailsRoutine: React.FC = () => {
             restTime={exercise.restTime}
             notes={exercise.notes}
             series={exercise.series}
+            primary_muscle={exercise.primary_muscle}
           />
         ))}
 

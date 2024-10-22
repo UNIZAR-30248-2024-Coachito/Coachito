@@ -6,9 +6,12 @@ import WorkoutCardResumeComponent, {
   WorkoutCardResume,
 } from '@/components/workout/WorkoutCardResume';
 import { useFetchDashboardWorkouts } from '@/hooks/dashboardHook';
+import { useNavigation } from '@react-navigation/native';
+import { NavigationProps } from '@/types/navigation';
 
 const Dashboard: React.FC = () => {
   const [workouts, setWorkouts] = useState<WorkoutCardResume[]>([]);
+  const navigation = useNavigation<NavigationProps>();
 
   const fetchWorkouts = async () => {
     const { workoutResumes, error: errorRoutines } =
@@ -31,6 +34,11 @@ const Dashboard: React.FC = () => {
             key={index}
             workoutHeaderResume={workout.workoutHeaderResume}
             workoutExercisesResume={workout.workoutExercisesResume}
+            onPress={() =>
+              navigation.navigate('VerEntrenamiento', {
+                workoutId: workout.workoutHeaderResume.workoutId,
+              })
+            }
           />
         ))}
       </VStack>

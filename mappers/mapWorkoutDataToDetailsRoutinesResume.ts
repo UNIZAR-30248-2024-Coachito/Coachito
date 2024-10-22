@@ -16,7 +16,7 @@ const convertRestTime = (restTime: string): string => {
   return result.trim() || 'Desactivado';
 };
 
-export const mapWorkoutDataToDetailsRoutineResume = (
+export const mapWorkoutDataToExerciseResumeArray = (
   workout: WorkoutDataDB
 ): ExerciseResume[] => {
   const exercisesMap = workout.workout_exercises
@@ -34,6 +34,7 @@ export const mapWorkoutDataToDetailsRoutineResume = (
           restTime: convertRestTime(exercise.rest_time ?? '00:00:00'),
           notes: exercise.notes ?? '',
           series: [],
+          primary_muscle: exercise.exercises.muscle_groups.name,
         };
       }
 

@@ -4,35 +4,26 @@ import { Box } from '../ui/box';
 import { HStack } from '../ui/hstack';
 import { VStack } from '../ui/vstack';
 import '../../styles.css';
-import { calculateDaysDifferenceNow } from '@/utils/date';
 
-export interface WorkoutHeaderResume {
-  workoutId: number;
+export interface WorkoutHeader {
   workoutName: string;
-  workoutDate: Date;
   workoutTime: number;
   workoutVolume: number;
   workoutSeries: number;
 }
 
-const WorkoutHeaderResumeComponent: React.FC<WorkoutHeaderResume> = ({
+const WorkoutHeaderComponent: React.FC<WorkoutHeader> = ({
   workoutName,
-  workoutDate,
   workoutTime,
   workoutVolume,
   workoutSeries,
 }) => {
-  const daysOffset = calculateDaysDifferenceNow(workoutDate);
-
   return (
     <Box>
       <HStack className="items-center mb-2 space-x-2">
         <VStack>
           <Text className="text-xl font-bold mb-2 text-white">
             {workoutName}
-          </Text>
-          <Text className="text-xs text-gray-400">
-            hace {daysOffset} {daysOffset > 1 ? 'días' : 'día'}
           </Text>
         </VStack>
       </HStack>
@@ -54,4 +45,4 @@ const WorkoutHeaderResumeComponent: React.FC<WorkoutHeaderResume> = ({
   );
 };
 
-export default WorkoutHeaderResumeComponent;
+export default WorkoutHeaderComponent;

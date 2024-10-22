@@ -8,6 +8,7 @@ export type RootStackParamList = {
   Exercises: undefined;
   AddExercise: undefined;
   AddRoutine: undefined;
+  VerEntrenamiento: { workoutId: number };
 };
 
 export type NavigationProps = NativeStackNavigationProp<RootStackParamList>;
