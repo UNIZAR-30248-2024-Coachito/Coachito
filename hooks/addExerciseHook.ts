@@ -12,7 +12,7 @@ import {
   WorkoutExerciseInsert,
   WorkoutExerciseRepository,
 } from '@/repositories/workoutExerciseRepository';
-import { ExerciseResume } from '@/components/exercise/detailsExerciseResume';
+import { ExerciseResume } from '@/components/detailsRoutine/ExerciseResume';
 
 const exerciseRepo = new ExerciseRepository(supabase);
 const workoutTemplateRepo = new WorkoutTemplateRepository(supabase);

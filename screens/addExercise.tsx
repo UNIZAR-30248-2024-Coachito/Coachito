@@ -13,35 +13,27 @@ import {
 } from '../components/ui/input';
 import { Pressable, ScrollView } from 'react-native';
 import { useFetchExercisesList } from '@/hooks/addExerciseHook';
-import ExercisesResume from '@/components/exercise/ExercisesListCardResume';
+import ExercisesListCardResume from '@/components/exercise/ExercisesListCardResume';
 import { SearchIcon } from 'lucide-react-native';
-
-export interface ExerciseListResume {
-  id: number;
-  exerciseName: string;
-  exerciseThumbnailUrl: string;
-  primaryMuscleGroup: string;
-}
+import { ExerciseResume } from '@/components/detailsRoutine/ExerciseResume';
 
 type AddExerciseRouteProp = RouteProp<RootStackParamList, 'AddExercise'>;
 
 const AddExercise: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute<AddExerciseRouteProp>();
-  const [exercises, setExercises] = useState<ExerciseListResume[]>([]);
-  const [selectedExercises, setSelectedExercises] = useState<
-    ExerciseListResume[]
-  >(route.params?.selectedExercises || []);
 
-  const handleSelectExercise = (exercise: ExerciseListResume) => {
+  const [exercises, setExercises] = useState<ExerciseResume[]>([]);
+  const [selectedExercises, setSelectedExercises] = useState<ExerciseResume[]>(
+    route.params?.selectedExercises
+  );
+  const selectedExercisesInit = route.params?.selectedExercises;
+
+  const handleSelectExercise = (exercise: ExerciseResume) => {
     setSelectedExercises((prevSelected) => {
-      const exists = prevSelected.find(
-        (e) => e.exerciseName === exercise.exerciseName
-      );
+      const exists = prevSelected.find((e) => e.id === exercise.id);
       if (exists) {
-        return prevSelected.filter(
-          (e) => e.exerciseName !== exercise.exerciseName
-        );
+        return prevSelected.filter((e) => e.id !== exercise.id);
       } else {
         return [...prevSelected, exercise];
       }
@@ -61,6 +53,10 @@ const AddExercise: React.FC = () => {
     fetchExercises();
   }, []);
 
+  useEffect(() => {
+    setSelectedExercises(route.params?.selectedExercises || []);
+  }, [route.params?.selectedExercises]);
+
   return (
     <ScrollView className="flex-1">
       <VStack className="p-4 gap-4">
@@ -69,9 +65,9 @@ const AddExercise: React.FC = () => {
             className="bg-transparent rounded-lg"
             onPress={() => {
               navigation.navigate('AddRoutine', {
-                exercises: selectedExercises,
+                exercises: selectedExercisesInit,
               });
-              setSelectedExercises([]);
+              setSelectedExercises(selectedExercisesInit);
             }}
           >
             <Text className="text-blue-500">Cancelar</Text>
@@ -103,7 +99,16 @@ const AddExercise: React.FC = () => {
               <HStack
                 className={`${selectedExercises.includes(exercise) ? 'bg-blue-500' : 'bg-transparent'}`}
               >
-                <ExercisesResume key="1" exercises={exercise} />
+                <ExercisesListCardResume
+                  key="1"
+                  id={exercise.id}
+                  name={exercise.name}
+                  thumbnailUrl={exercise.thumbnailUrl}
+                  notes={exercise.notes}
+                  primaryMuscleGroup={exercise.primaryMuscleGroup}
+                  restTime={exercise.restTime}
+                  sets={exercise.sets}
+                />
               </HStack>
             </Pressable>
           );
@@ -116,6 +121,7 @@ const AddExercise: React.FC = () => {
               navigation.navigate('AddRoutine', {
                 exercises: selectedExercises,
               });
+              console.log('Añadir', selectedExercises);
             }}
           >
             <Text className="text-white">Añadir Ejercicios</Text>

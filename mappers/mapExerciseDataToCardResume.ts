@@ -1,13 +1,16 @@
+import { ExerciseResume } from '@/components/detailsRoutine/ExerciseResume';
 import { ExercisesListDB } from '@/repositories/exerciseRepository';
-import { ExerciseListResume } from '@/screens/AddExercise';
 
 export const mapExercisesToExerciseCardResume = (
   rows: ExercisesListDB[]
-): ExerciseListResume[] => {
+): ExerciseResume[] => {
   return rows.map((exercise) => ({
     id: exercise.id,
-    exerciseName: exercise.name!,
-    exerciseThumbnailUrl: exercise.exercise_thumbnail_url,
+    name: exercise.name!,
+    thumbnailUrl: exercise.exercise_thumbnail_url,
+    restTime: null,
+    notes: '',
     primaryMuscleGroup: exercise.muscle_groups?.name || 'Unknown',
+    sets: [],
   }));
 };

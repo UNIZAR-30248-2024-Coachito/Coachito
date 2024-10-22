@@ -3,29 +3,29 @@ import { VStack } from '../ui/vstack';
 import { Avatar, AvatarFallbackText, AvatarImage } from '../ui/avatar';
 import { Text } from '../ui/text';
 import { HStack } from '../ui/hstack';
-import { ExerciseListResume } from '@/screens/AddExercise';
+import { ExerciseResume } from '../detailsRoutine/ExerciseResume';
 
-interface ExerciseResumeProps {
-  exercises: ExerciseListResume;
-}
-
-const ExercisesResume: React.FC<ExerciseResumeProps> = ({ exercises }) => {
+const ExercisesListCardResume: React.FC<ExerciseResume> = ({
+  name,
+  thumbnailUrl,
+  primaryMuscleGroup,
+}) => {
   return (
     <HStack className="gap-4 p-2 w-full">
       <Avatar>
-        <AvatarFallbackText>{exercises.exerciseName}</AvatarFallbackText>
+        <AvatarFallbackText>{name}</AvatarFallbackText>
         <AvatarImage
           source={{
-            uri: exercises.exerciseThumbnailUrl,
+            uri: thumbnailUrl,
           }}
         />
       </Avatar>
       <VStack>
-        <Text className="text-white">{exercises.exerciseName}</Text>
-        <Text className="text-gray-400">{exercises.primaryMuscleGroup}</Text>
+        <Text className="text-white">{name}</Text>
+        <Text className="text-gray-400">{primaryMuscleGroup}</Text>
       </VStack>
     </HStack>
   );
 };
 
-export default ExercisesResume;
+export default ExercisesListCardResume;

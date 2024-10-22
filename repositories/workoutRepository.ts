@@ -36,6 +36,7 @@ export interface WorkoutExerciseDB {
 }
 
 export interface ExerciseDB {
+  id: number;
   name: string;
   muscle_groups: MuscleGroupDB;
   exercise_image_url: string;
@@ -79,7 +80,8 @@ export class WorkoutRepository extends BaseRepository<
           exercises (
             id,
             name,
-            exercise_thumbnail_url
+            exercise_thumbnail_url,
+            muscle_groups (name)
           )
         )
       `

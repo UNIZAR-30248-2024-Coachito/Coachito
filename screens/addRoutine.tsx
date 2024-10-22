@@ -10,22 +10,22 @@ import { Dumbbell } from 'lucide-react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NavigationProps, RootStackParamList } from '@/types/navigation';
 import PopupBaseModal from '@/components/shared/PopupBaseModal';
-import { ExerciseListResume } from './AddExercise';
 import ExerciseResumeComponent, {
-  ExerciseResume,
   ExerciseResumeRef,
-} from '@/components/exercise/detailsExerciseResume';
+} from '@/components/exercise/DetailsExerciseResume';
 import { useCreateRoutine } from '@/hooks/addExerciseHook';
 import { ScrollView } from 'react-native';
 import { emitter } from '@/utils/emitter';
+import { ExerciseResume } from '@/components/detailsRoutine/ExerciseResume';
 
 const AddRoutine: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute<RouteProp<RootStackParamList, 'AddRoutine'>>();
+
   const [routineTitleInputValue, setroutineTitleInputValue] = useState('');
-  const [selectedExercises, setSelectedExercises] = useState<
-    ExerciseListResume[]
-  >(route.params.exercises);
+  const [selectedExercises, setSelectedExercises] = useState<ExerciseResume[]>(
+    route.params.exercises
+  );
   const [isCancelRoutineModalVisible, setIsCancelRoutineModalVisible] =
     useState(false);
   const exerciseRefs = useRef<(ExerciseResumeRef | null)[]>([]);
@@ -73,6 +73,11 @@ const AddRoutine: React.FC = () => {
 
     if (routineTitle === '') {
       alert('Por favor, introduce un nombre para la nueva rutina.');
+      return;
+    }
+
+    if (selectedExercises.length === 0) {
+      alert('La rutina debe contener mínimo un ejercicio.');
       return;
     }
 
@@ -136,12 +141,13 @@ const AddRoutine: React.FC = () => {
             <ExerciseResumeComponent
               key={index}
               ref={(el) => (exerciseRefs.current[index] = el)}
-              name={exercise.exerciseName}
-              thumbnailUrl={exercise.exerciseThumbnailUrl}
-              restTime={0}
-              notes={''}
-              sets={[]}
               id={exercise.id}
+              name={exercise.name}
+              thumbnailUrl={exercise.thumbnailUrl}
+              restTime={exercise.restTime}
+              notes={exercise.notes}
+              primaryMuscleGroup={exercise.primaryMuscleGroup}
+              sets={exercise.sets}
             />
           ))
         )}

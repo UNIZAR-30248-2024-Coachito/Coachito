@@ -130,11 +130,13 @@ const DetailsRoutine: React.FC = () => {
         {exercises!.map((exercise, index) => (
           <ExerciseResumeComponent
             key={index}
+            id={exercise.id}
             name={exercise.name}
             thumbnailUrl={exercise.thumbnailUrl}
             restTime={exercise.restTime}
             notes={exercise.notes}
-            series={exercise.series}
+            primaryMuscleGroup={exercise.primaryMuscleGroup}
+            sets={exercise.sets}
           />
         ))}
 

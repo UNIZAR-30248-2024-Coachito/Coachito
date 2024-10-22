@@ -20,20 +20,10 @@ import SlideUpBaseModal from '../shared/SlideUpBaseModal';
 import { VStack } from '../ui/vstack';
 import { Box } from '../ui/box';
 import Slider from '@react-native-assets/slider';
-
-export interface ExerciseSet {
-  weight: number;
-  reps: number;
-}
-
-export interface ExerciseResume {
-  id: number;
-  name: string;
-  thumbnailUrl: string;
-  restTime: number;
-  notes: string;
-  sets: ExerciseSet[];
-}
+import {
+  ExerciseResume,
+  SetsExerciseResume,
+} from '../detailsRoutine/ExerciseResume';
 
 export interface ExerciseResumeRef {
   getExerciseData: () => ExerciseResume;
@@ -41,12 +31,27 @@ export interface ExerciseResumeRef {
 
 // eslint-disable-next-line react/display-name
 const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
-  ({ id, name, thumbnailUrl, restTime, notes, sets }, ref) => {
+  (
+    { id, name, thumbnailUrl, restTime, notes, primaryMuscleGroup, sets },
+    ref
+  ) => {
+    const convertRestTimeToSeconds = (restTimeStr: string | null) => {
+      if (!restTimeStr) return 0;
+      const [hours, minutes, seconds] = restTimeStr.split(':').map(Number);
+      return hours * 3600 + minutes * 60 + seconds;
+    };
+
     const [exerciseId] = useState(id);
     const [exerciseName] = useState(name);
-    const [exerciseRestTime, setExerciseRestTime] = useState(restTime);
+    const [exerciseRestTimeNumber, setExerciseRestTimeNumber] = useState(
+      convertRestTimeToSeconds(restTime)
+    );
+    const [exerciseRestTimeString, setExerciseRestTimeString] =
+      useState(restTime);
     const [exerciseNotes, setExerciseNotes] = useState(notes);
-    const [exerciseSets, setExerciseSets] = useState<ExerciseSet[]>(sets);
+    const [exercisePrimaryMuscleGroup] = useState(primaryMuscleGroup);
+    const [exerciseSets, setExerciseSets] =
+      useState<SetsExerciseResume[]>(sets);
     const [isSlideUpModalVisible, setIsSlideUpModalVisible] = useState(false);
 
     useImperativeHandle(ref, () => ({
@@ -54,15 +59,16 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
         id: exerciseId,
         name: exerciseName,
         thumbnailUrl,
-        restTime: exerciseRestTime,
+        restTime: exerciseRestTimeNumber > 0 ? exerciseRestTimeString : '0',
         notes: exerciseNotes,
+        primaryMuscleGroup: exercisePrimaryMuscleGroup,
         sets: exerciseSets,
       }),
     }));
 
     const handleSetChange = (
       index: number,
-      field: keyof ExerciseSet,
+      field: keyof SetsExerciseResume,
       value: string
     ) => {
       const updatedSets = [...exerciseSets];
@@ -71,21 +77,29 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
     };
 
     const addNewSet = () => {
-      const newSet: ExerciseSet = { weight: 0, reps: 0 };
+      const newSet: SetsExerciseResume = { weight: 0, reps: 0 };
       setExerciseSets([...exerciseSets, newSet]);
+    };
+
+    const formatRestTimeToString = (seconds: number) => {
+      const minutes = Math.floor(seconds / 60);
+      const remainingSeconds = seconds % 60;
+      return `${minutes} min ${remainingSeconds} s`;
     };
 
     const componentsTemporizadorPopUpModal: React.ReactNode[] = [
       <VStack key="1" className="gap-4 p-4">
         <Text className="text-center">
-          {Math.floor(exerciseRestTime / 60)} min {exerciseRestTime % 60} s
+          {exerciseRestTimeNumber === 0
+            ? '0 min 0 s'
+            : `${formatRestTimeToString(exerciseRestTimeNumber)}`}
         </Text>
         <Slider
           minimumValue={0}
           maximumValue={300}
           step={15}
-          value={exerciseRestTime}
-          onValueChange={(value) => setExerciseRestTime(value)}
+          value={exerciseRestTimeNumber}
+          onValueChange={(value) => setExerciseRestTimeNumber(value)}
           slideOnTap={true}
           thumbSize={20}
           trackHeight={6}
@@ -106,6 +120,9 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
         className="bg-blue-500 rounded-lg"
         onPress={() => {
           setIsSlideUpModalVisible(false);
+          setExerciseRestTimeString(
+            formatRestTimeToString(exerciseRestTimeNumber)
+          );
         }}
       >
         <Text className="text-white">Confirmar</Text>
@@ -114,14 +131,16 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
 
     return (
       <>
-        <Box className="p-4 gap-4">
+        <Box className="p-4 rounded-lg gap-4">
           <HStack className="items-center gap-4">
             <Avatar>
               <AvatarFallbackText>{exerciseName}</AvatarFallbackText>
               <AvatarImage source={{ uri: thumbnailUrl }} />
             </Avatar>
             <Pressable className="flex-1">
-              <Text className="text-blue-500">{exerciseName}</Text>
+              <Text className="text-xl text-white" bold>
+                {exerciseName}
+              </Text>
             </Pressable>
           </HStack>
 
@@ -139,8 +158,10 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
           >
             <Timer color="#3b82f6" />
             <Text className="text-blue-500">
-              Temporizador de descanso: {Math.floor(exerciseRestTime / 60)} min{' '}
-              {exerciseRestTime % 60} s
+              Temporizador de descanso:{' '}
+              {exerciseRestTimeNumber > 0
+                ? exerciseRestTimeString
+                : 'Desactivado'}
             </Text>
           </Button>
 
@@ -150,7 +171,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
                 <TableHead>SERIE</TableHead>
                 <TableHead>KG</TableHead>
                 <TableHead>REPS</TableHead>
-                <TableHead className="w-[15px]"></TableHead>
+                <TableHead>Eliminar</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -158,10 +179,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
                 <TableRow key={index} className="border-b-0 bg-background-50">
                   <TableData>{index + 1}</TableData>
                   <TableData>
-                    <Input
-                      className="w-[32px] text-center"
-                      variant="underlined"
-                    >
+                    <Input className="w-full text-center" variant="underlined">
                       <InputField
                         value={set.weight.toString()}
                         onChangeText={(value) =>
@@ -171,10 +189,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
                     </Input>
                   </TableData>
                   <TableData>
-                    <Input
-                      className="w-[32px] text-center"
-                      variant="underlined"
-                    >
+                    <Input className="w-full text-center" variant="underlined">
                       <InputField
                         value={set.reps.toString()}
                         onChangeText={(value) =>
@@ -185,7 +200,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
                   </TableData>
                   <TableData>
                     <Button
-                      className="bg-transparent w-[15px]"
+                      className="bg-transparent"
                       //onPress={() => setIsSlideUpModalVisible(true)}
                     >
                       <Trash color="red" />
