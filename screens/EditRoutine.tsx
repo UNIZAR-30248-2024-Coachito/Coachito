@@ -13,7 +13,7 @@ import PopupBaseModal from '@/components/shared/PopupBaseModal';
 import ExerciseResumeComponent, {
   ExerciseResumeRef,
 } from '@/components/exercise/DetailsExerciseResume';
-import { useCreateRoutine } from '@/hooks/addExerciseHook';
+import { useUpdateRoutine } from '@/hooks/routineHook';
 import { ScrollView } from 'react-native';
 import { useFetchDetailsWorkout } from '@/hooks/workoutHook';
 import { ExerciseResume } from '@/components/detailsRoutine/ExerciseResume';
@@ -41,6 +41,7 @@ const EditRoutine: React.FC = () => {
   };
 
   useEffect(() => {
+    setroutineTitleInputValue(route.params.routineName);
     fetchExercises();
   }, [route.params.routineId, route.params.routineName]);
 
@@ -70,7 +71,7 @@ const EditRoutine: React.FC = () => {
     </Button>,
   ];
 
-  const createRoutine = async () => {
+  const updateRoutine = async () => {
     const routineTitle = routineTitleInputValue.trim();
 
     if (routineTitle === '') {
@@ -87,7 +88,11 @@ const EditRoutine: React.FC = () => {
       ref!.getExerciseData()
     );
 
-    const { error } = await useCreateRoutine(routineTitle, allExerciseData);
+    const { error } = await useUpdateRoutine(
+      route.params.routineId,
+      routineTitle,
+      allExerciseData
+    );
 
     if (!error) {
       navigation.navigate('Routine');
@@ -109,7 +114,7 @@ const EditRoutine: React.FC = () => {
             <Text className="text-blue-500">Cancelar</Text>
           </Button>
           <Text className="text-xl">Editar Rutina</Text>
-          <Button className="bg-blue-500 rounded-lg" onPress={createRoutine}>
+          <Button className="bg-blue-500 rounded-lg" onPress={updateRoutine}>
             <Text className="text-white">Guardar</Text>
           </Button>
         </HStack>

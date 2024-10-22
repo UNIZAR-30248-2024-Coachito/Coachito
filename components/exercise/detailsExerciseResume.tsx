@@ -24,6 +24,10 @@ import {
   ExerciseResume,
   SetsExerciseResume,
 } from '../detailsRoutine/ExerciseResume';
+import {
+  convertIntervalToSeconds,
+  convertStringToInterval,
+} from '@/utils/interval';
 
 export interface ExerciseResumeRef {
   getExerciseData: () => ExerciseResume;
@@ -35,16 +39,12 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
     { id, name, thumbnailUrl, restTime, notes, primaryMuscleGroup, sets },
     ref
   ) => {
-    const convertRestTimeToSeconds = (restTimeStr: string | null) => {
-      if (!restTimeStr) return 0;
-      const [hours, minutes, seconds] = restTimeStr.split(':').map(Number);
-      return hours * 3600 + minutes * 60 + seconds;
-    };
-
     const [exerciseId] = useState(id);
     const [exerciseName] = useState(name);
     const [exerciseRestTimeNumber, setExerciseRestTimeNumber] = useState(
-      convertRestTimeToSeconds(restTime)
+      convertIntervalToSeconds(
+        convertStringToInterval(restTime ? restTime : '0')
+      )
     );
     const [exerciseRestTimeString, setExerciseRestTimeString] =
       useState(restTime);
@@ -81,7 +81,12 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
       setExerciseSets([...exerciseSets, newSet]);
     };
 
-    const formatRestTimeToString = (seconds: number) => {
+    const deleteSet = (index: number) => {
+      const updatedSets = exerciseSets.filter((_, i) => i !== index);
+      setExerciseSets(updatedSets);
+    };
+
+    const convertSecondsToString = (seconds: number) => {
       const minutes = Math.floor(seconds / 60);
       const remainingSeconds = seconds % 60;
       return `${minutes} min ${remainingSeconds} s`;
@@ -92,7 +97,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
         <Text className="text-center">
           {exerciseRestTimeNumber === 0
             ? '0 min 0 s'
-            : `${formatRestTimeToString(exerciseRestTimeNumber)}`}
+            : `${convertSecondsToString(exerciseRestTimeNumber)}`}
         </Text>
         <Slider
           minimumValue={0}
@@ -122,7 +127,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
         onPress={() => {
           setIsSlideUpModalVisible(false);
           setExerciseRestTimeString(
-            formatRestTimeToString(exerciseRestTimeNumber)
+            convertSecondsToString(exerciseRestTimeNumber)
           );
         }}
       >
@@ -172,7 +177,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
                 <TableHead>SERIE</TableHead>
                 <TableHead>KG</TableHead>
                 <TableHead>REPS</TableHead>
-                <TableHead>Eliminar</TableHead>
+                <TableHead></TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -202,7 +207,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
                   <TableData>
                     <Button
                       className="bg-transparent"
-                      //onPress={() => setIsSlideUpModalVisible(true)}
+                      onPress={() => deleteSet(index)}
                     >
                       <Trash color="red" />
                     </Button>

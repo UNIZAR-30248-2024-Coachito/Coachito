@@ -5,6 +5,7 @@ import {
   ExerciseUpdate,
 } from '@/repositories/exerciseRepository';
 import useCRUD from './useCRUD';
+import { mapExercisesToExerciseCardResume } from '@/mappers/mapExerciseDataToCardResume';
 
 const exerciseRepo = new ExerciseRepository(supabase);
 
@@ -28,10 +29,25 @@ const useDeleteExerciseById = (id: number) => {
   return useCRUD(() => exerciseRepo.delete(id));
 };
 
+const useFetchExercisesList = async () => {
+  const { execute } = useCRUD(() => exerciseRepo.getExercisesListData());
+
+  const { data, error } = await execute();
+
+  let exercisesResume = null;
+
+  if (!error) {
+    exercisesResume = mapExercisesToExerciseCardResume(data!);
+  }
+
+  return { exercisesResume, error };
+};
+
 export {
   useFetchExercises,
   useFetchExerciseById,
   useCreateExercise,
   useUpdateExercise,
   useDeleteExerciseById,
+  useFetchExercisesList,
 };

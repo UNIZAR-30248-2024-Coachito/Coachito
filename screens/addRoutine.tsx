@@ -13,7 +13,7 @@ import PopupBaseModal from '@/components/shared/PopupBaseModal';
 import ExerciseResumeComponent, {
   ExerciseResumeRef,
 } from '@/components/exercise/DetailsExerciseResume';
-import { useCreateRoutine } from '@/hooks/addExerciseHook';
+import { useCreateRoutine } from '@/hooks/routineHook';
 import { ScrollView } from 'react-native';
 import { emitter } from '@/utils/emitter';
 import { ExerciseResume } from '@/components/detailsRoutine/ExerciseResume';
