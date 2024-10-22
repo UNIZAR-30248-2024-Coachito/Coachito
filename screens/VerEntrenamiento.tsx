@@ -39,11 +39,13 @@ const VerEntrenamiento: React.FC = () => {
 
     if (!errorRoutines) {
       setExercises(myRoutineResume!);
+      console.log(myRoutineResume);
     }
   };
 
   useEffect(() => {
     fetchExercises();
+    console.log(exercises);
   }, [templateId]);
 
   const handleDelete = async () => {
