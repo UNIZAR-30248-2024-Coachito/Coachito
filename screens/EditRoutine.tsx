@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import '../styles.css';
 import { HStack } from '../components/ui/hstack';
 import { VStack } from '../components/ui/vstack';
@@ -7,7 +7,12 @@ import { Button } from '../components/ui/button';
 import { InputField, Input } from '../components/ui/input';
 import { Plus } from 'lucide-react-native';
 import { Dumbbell } from 'lucide-react-native';
-import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
+import {
+  RouteProp,
+  useFocusEffect,
+  useNavigation,
+  useRoute,
+} from '@react-navigation/native';
 import { NavigationProps, RootStackParamList } from '@/types/navigation';
 import PopupBaseModal from '@/components/shared/PopupBaseModal';
 import ExerciseResumeComponent, {
@@ -33,17 +38,19 @@ const EditRoutine: React.FC = () => {
 
   const fetchExercises = async () => {
     const { myRoutineResume, error: errorRoutines } =
-      await useFetchDetailsWorkout(route.params.routineId);
+      await useFetchDetailsWorkout(route.params.routineId!);
 
     if (!errorRoutines) {
       setSelectedExercises(myRoutineResume!);
     }
   };
 
-  useEffect(() => {
-    setroutineTitleInputValue(route.params.routineName);
-    fetchExercises();
-  }, [route.params.routineId, route.params.routineName]);
+  useFocusEffect(
+    React.useCallback(() => {
+      setroutineTitleInputValue(route.params.routineName);
+      fetchExercises();
+    }, [route.params.routineId])
+  );
 
   const componentsCancelRoutinePopUpModal: React.ReactNode[] = [
     <Text key="1" className="text-xl font-bold text-center text-white pb-8">
@@ -54,7 +61,6 @@ const EditRoutine: React.FC = () => {
       className="bg-red-800 rounded-lg mb-4"
       onPress={() => {
         setIsCancelRoutineModalVisible(false);
-        setSelectedExercises([]);
         navigation.navigate('Routine');
       }}
     >
@@ -72,7 +78,7 @@ const EditRoutine: React.FC = () => {
   ];
 
   const updateRoutine = async () => {
-    const routineTitle = routineTitleInputValue.trim();
+    const routineTitle = routineTitleInputValue!.trim();
 
     if (routineTitle === '') {
       alert('Por favor, introduce un nombre para la rutina.');
@@ -89,7 +95,7 @@ const EditRoutine: React.FC = () => {
     );
 
     const { error } = await useUpdateRoutine(
-      route.params.routineId,
+      route.params.routineId!,
       routineTitle,
       allExerciseData
     );
@@ -129,7 +135,7 @@ const EditRoutine: React.FC = () => {
         >
           <InputField
             placeholder="Título de la rutina"
-            value={routineTitleInputValue}
+            value={routineTitleInputValue!}
             onChangeText={setroutineTitleInputValue}
           />
         </Input>
@@ -160,8 +166,10 @@ const EditRoutine: React.FC = () => {
         <Button
           className="w-full bg-blue-500 rounded-lg mt-4"
           onPress={() =>
-            navigation.navigate('AddExercise', {
+            navigation.navigate('AddExerciseEdit', {
               selectedExercises,
+              routineId: route.params.routineId,
+              routineName: route.params.routineName,
             })
           }
         >

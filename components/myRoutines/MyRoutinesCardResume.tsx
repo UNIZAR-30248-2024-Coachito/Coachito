@@ -47,6 +47,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
         navigation.navigate('EditRoutine', {
           routineId: routineCardResume.templateId,
           routineName: routineCardResume.myRoutineName,
+          exercises: [],
         });
       }}
     >
@@ -122,7 +123,12 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
 
       <Button
         className="bg-blue-500 rounded-lg"
-        //onPress={() => navigation.navigate('StartRoutine')}
+        onPress={() =>
+          navigation.navigate('StartWorkout', {
+            routineId: routineCardResume.templateId,
+            routineName: routineCardResume.myRoutineName,
+          })
+        }
       >
         <Text className="text-white">Empezar Rutina</Text>
       </Button>
