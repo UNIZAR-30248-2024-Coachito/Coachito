@@ -18,7 +18,7 @@ import ExerciseResumeComponent, {
 import WorkoutHeaderResumeComponent, {
   WorkoutHeaderResume,
 } from '@/components/workout/WorkoutHeaderResume';
-import WorkoutDivisionComponent from '@/components/verEntrenamiento/WorkoutDivision';
+import WorkoutDivisionComponent from '@/components/workout/WorkoutDivision';
 import { HStack } from '@/components/ui/hstack';
 import { mapToExerciseProportions } from '@/mappers/mapExerciseResumeToExerciseProportion';
 
