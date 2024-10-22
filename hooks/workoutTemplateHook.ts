@@ -29,13 +29,13 @@ const useFetchTemplateWorkouts = async () => {
 
   const { data, error } = await execute();
 
-  let myRoutineResume = null;
+  let exercisesResumes = null;
 
   if (!error) {
-    myRoutineResume = mapWorkoutDataToGroupedRoutinesResume(data!);
+    exercisesResumes = mapWorkoutDataToGroupedRoutinesResume(data!);
   }
 
-  return { myRoutineResume, error };
+  return { exercisesResumes, error };
 };
 
 export {

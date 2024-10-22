@@ -1,59 +1,54 @@
 import React, { useState, useEffect } from 'react';
 import { Text } from '../components/ui/text';
-import { Box } from '../components/ui/box';
 import { VStack } from '../components/ui/vstack';
 import { Button } from '../components/ui/button';
 import { useNavigation } from '@react-navigation/native';
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '@/types/navigation';
 import { NavigationProps } from '@/types/navigation';
-import WorkoutExercisesComponent from '@/components/verEntrenamiento/WorkoutExercise';
-import WorkoutBarraSuperiorComponent from '@/components/verEntrenamiento/WorkoutBarraSuperior';
 import { ScrollView } from 'react-native';
 
 import { useFetchDetailsWorkout } from '@/hooks/workoutHook';
 
-import { Pencil, Trash } from 'lucide-react-native';
+import { ArrowLeft, MoreHorizontal, Pencil } from 'lucide-react-native';
 import SlideUpBaseModal from '@/components/shared/SlideUpBaseModal';
-import PopupBaseModal from '@/components/shared/PopupBaseModal';
-import { ExerciseResume } from '@/components/detailsRoutine/ExerciseResume';
+import ExerciseResumeComponent, {
+  ExerciseResume,
+} from '@/components/detailsRoutine/ExerciseResume';
+import WorkoutHeaderResumeComponent, {
+  WorkoutHeaderResume,
+} from '@/components/workout/WorkoutHeaderResume';
+import WorkoutDivisionComponent from '@/components/verEntrenamiento/WorkoutDivision';
+import { HStack } from '@/components/ui/hstack';
+import { mapToExerciseProportions } from '@/mappers/mapExerciseResumeToExerciseProportion';
 
-type VerEntrenamientoRouteProp = RouteProp<
-  RootStackParamList,
-  'VerEntrenamiento'
->;
+export interface WorkoutResume {
+  header: WorkoutHeaderResume;
+  exercises: ExerciseResume[];
+}
 
 const VerEntrenamiento: React.FC = () => {
-  const route = useRoute<VerEntrenamientoRouteProp>();
+  const route = useRoute<RouteProp<RootStackParamList, 'VerEntrenamiento'>>();
   const navigation = useNavigation<NavigationProps>();
-  const { header, templateId } = route.params;
-  const [exercises, setExercises] = useState<ExerciseResume[]>([]);
-  //const template = useState(true);
-
+  const { workoutId } = route.params;
+  const [workoutResume, setWorkoutResume] = useState<WorkoutResume | null>(
+    null
+  );
   const [isSlideUpModalVisible, setIsSlideUpModalVisible] = useState(false);
-  const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
 
   const fetchExercises = async () => {
-    const { myRoutineResume, error: errorRoutines } =
-      await useFetchDetailsWorkout(templateId);
+    const { exercisesResumes, error: errorRoutines } =
+      await useFetchDetailsWorkout(workoutId);
 
     if (!errorRoutines) {
-      setExercises(myRoutineResume!);
+      console.log(exercisesResumes!);
+      setWorkoutResume(exercisesResumes!);
     }
   };
 
   useEffect(() => {
     fetchExercises();
-    console.log(exercises);
-  }, [templateId]);
-
-  const handleDelete = async () => {
-    //const entity = await useFetchWorkoutTemplateById(templateId);
-    //entity.data!.deleted = true;
-    //await useUpdateWorkoutTemplate(entity.data);
-    console.log('Entrenamiento eliminado');
-    navigation.navigate('Dashboard');
-  };
+  }, [workoutId]);
 
   const buttonsSlideUpModal: React.ReactNode[] = [
     <Button
@@ -64,71 +59,83 @@ const VerEntrenamiento: React.FC = () => {
       <Pencil color="white" />
       <Text className="text-white ml-4">Editar entrenamiento</Text>
     </Button>,
-    <Button
-      key="3"
-      className="bg-transparent mt-4"
-      onPress={() => {
-        setIsDeleteModalVisible(true);
-        setIsSlideUpModalVisible(false);
-      }}
-    >
-      <Trash color="red" />
-      <Text className="text-red-600 ml-4">Borrar entrenamiento</Text>
-    </Button>,
-  ];
-
-  const componentsDeleteGroupPopUpModal: React.ReactNode[] = [
-    <Text key="1" className="text-xl font-bold text-center text-white pb-8">
-      ¿Está seguro de que quiere borrar el entrenamiento?
-    </Text>,
-    <Button
-      key="2"
-      className="bg-red-800 rounded-lg mb-4"
-      onPress={() => {
-        setIsDeleteModalVisible(false);
-        handleDelete();
-      }}
-    >
-      <Text className="text-white">Borrar entrenamiento</Text>
-    </Button>,
-    <Button
-      key="3"
-      className="bg-zinc-700 rounded-lg"
-      onPress={() => {
-        setIsDeleteModalVisible(false);
-      }}
-    >
-      <Text className="text-white">Cancelar</Text>
-    </Button>,
   ];
 
   return (
-    <Box className="flex-1 p-4">
-      {/* Contenedor principal */}
-      <VStack className="space-y-2">
-        {/* Primera fila con 'Cancelar', 'Crear Rutina' y 'Guardar' */}
-        <WorkoutBarraSuperiorComponent
-          fecha={header.workoutDate}
-          setIsSlideUpModalVisible={setIsSlideUpModalVisible}
-        />
+    <ScrollView className="flex-1">
+      <VStack className="p-4">
+        <HStack className="justify-between">
+          <Button
+            className="bg-transparent"
+            onPress={() => {
+              navigation.navigate('Dashboard');
+            }}
+          >
+            <ArrowLeft color="white" />
+          </Button>
+          <Text className="text-xl font-bold text-white">
+            Detalles de entrenamiento
+          </Text>
+          <Button
+            className="bg-transparent"
+            onPress={() => {
+              setIsSlideUpModalVisible(true);
+            }}
+          >
+            <MoreHorizontal color="white" />
+          </Button>
+        </HStack>
+
+        {workoutResume && (
+          <>
+            <WorkoutHeaderResumeComponent
+              workoutId={workoutResume.header.workoutId}
+              workoutName={workoutResume.header.workoutName}
+              workoutDate={workoutResume.header.workoutDate}
+              workoutTime={workoutResume.header.workoutTime}
+              workoutVolume={workoutResume.header.workoutVolume}
+              workoutSeries={workoutResume.header.workoutSeries}
+            />
+            <WorkoutDivisionComponent
+              exercisesProportion={mapToExerciseProportions(
+                workoutResume?.exercises
+              )}
+            />
+          </>
+        )}
+
+        <HStack className="justify-between mb-4">
+          <Text className="text-gray-400 mt-4">Ejercicios</Text>
+          <Button
+            className="bg-transparent"
+            //onPress={() => navigation.navigate('EditRoutine')}
+          >
+            <Text className="text-blue-500">Editar rutina</Text>
+          </Button>
+        </HStack>
+
+        {workoutResume?.exercises!.map((exercise, index) => (
+          <ExerciseResumeComponent
+            key={index}
+            name={exercise.name}
+            thumbnailUrl={exercise.thumbnailUrl}
+            restTime={exercise.restTime}
+            notes={exercise.notes}
+            series={exercise.series}
+            primary_muscle={exercise.primary_muscle}
+          />
+        ))}
+
         <SlideUpBaseModal
           buttons={buttonsSlideUpModal}
-          title={header.workoutName}
+          title={
+            workoutResume !== null ? workoutResume!.header.workoutName : ''
+          }
           isVisible={isSlideUpModalVisible}
           setIsModalVisible={setIsSlideUpModalVisible}
         />
-        <PopupBaseModal
-          components={componentsDeleteGroupPopUpModal}
-          isVisible={isDeleteModalVisible}
-          setIsModalVisible={setIsDeleteModalVisible}
-        />
-        <ScrollView>
-          {/* Input para el título de la rutina */}
-
-          <WorkoutExercisesComponent datos={exercises} header={header} />
-        </ScrollView>
       </VStack>
-    </Box>
+    </ScrollView>
   );
 };
 

@@ -60,7 +60,7 @@ export class WorkoutRepository extends BaseRepository<
     super(supabase, 'workouts');
   }
 
-  async getDetailsWorkout(templateId: number): Promise<WorkoutDataDB> {
+  async getDetailsWorkout(id: number): Promise<WorkoutDataDB> {
     const { data, error } = await this.supabase
       .from(this.table)
       .select(
@@ -79,7 +79,40 @@ export class WorkoutRepository extends BaseRepository<
           exercises (
             id,
             name,
-            exercise_thumbnail_url
+            exercise_thumbnail_url,
+            muscle_groups (name)
+          )
+        )
+      `
+      )
+      .eq('id', id)
+      .single();
+    console.log(data);
+    if (error) throw error;
+    return data;
+  }
+
+  async getDetailsLastWorkout(templateId: number): Promise<WorkoutDataDB> {
+    const { data, error } = await this.supabase
+      .from(this.table)
+      .select(
+        `
+        *,
+        workout_templates!fk_workouts_template_id (name),
+        workout_exercises (
+          sets,
+          reps,
+          weight,
+          distance,
+          notes,
+          rest_time,
+          target_number_reps,
+          created_at,
+          exercises (
+            id,
+            name,
+            exercise_thumbnail_url,
+            muscle_groups (name)
           )
         )
       `
