@@ -26,7 +26,7 @@ type VerEntrenamientoRouteProp = RouteProp<
 const VerEntrenamiento: React.FC = () => {
   const route = useRoute<VerEntrenamientoRouteProp>();
   const navigation = useNavigation<NavigationProps>();
-  const { workout, templateId } = route.params;
+  const { header, templateId } = route.params;
   const [exercises, setExercises] = useState<ExerciseResume[]>([]);
   //const template = useState(true);
 
@@ -107,12 +107,12 @@ const VerEntrenamiento: React.FC = () => {
       <VStack className="space-y-2">
         {/* Primera fila con 'Cancelar', 'Crear Rutina' y 'Guardar' */}
         <WorkoutBarraSuperiorComponent
-          fecha={workout.workoutHeaderResume.workoutDate}
+          fecha={header.workoutDate}
           setIsSlideUpModalVisible={setIsSlideUpModalVisible}
         />
         <SlideUpBaseModal
           buttons={buttonsSlideUpModal}
-          title={workout.workoutHeaderResume.workoutName}
+          title={header.workoutName}
           isVisible={isSlideUpModalVisible}
           setIsModalVisible={setIsSlideUpModalVisible}
         />
@@ -124,10 +124,7 @@ const VerEntrenamiento: React.FC = () => {
         <ScrollView>
           {/* Input para el título de la rutina */}
           <Box className="w-full pt-2">
-            <WorkoutExercisesComponent
-              datos={exercises}
-              header={workout.workoutHeaderResume}
-            />
+            <WorkoutExercisesComponent datos={exercises} header={header} />
           </Box>
         </ScrollView>
       </VStack>

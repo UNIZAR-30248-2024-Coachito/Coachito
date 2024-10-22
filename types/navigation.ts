@@ -1,5 +1,5 @@
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
-import { WorkoutCardResume } from '@/components/workout/WorkoutCardResume';
+import { WorkoutHeaderResume } from '@/components/workout/WorkoutHeaderResume';
 
 export type RootStackParamList = {
   Dashboard: undefined;
@@ -9,7 +9,7 @@ export type RootStackParamList = {
   Exercises: undefined;
   AddExercise: undefined;
   AddRoutine: undefined;
-  VerEntrenamiento: { workout: WorkoutCardResume; templateId: number };
+  VerEntrenamiento: { header: WorkoutHeaderResume; templateId: number };
 };
 
 export type NavigationProps = NativeStackNavigationProp<RootStackParamList>;

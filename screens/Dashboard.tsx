@@ -36,7 +36,7 @@ const Dashboard: React.FC = () => {
             workoutExercisesResume={workout.workoutExercisesResume}
             onPress={() =>
               navigation.navigate('VerEntrenamiento', {
-                workout,
+                header: workout.workoutHeaderResume,
                 templateId: workout.workoutHeaderResume.workoutId,
               })
             }
