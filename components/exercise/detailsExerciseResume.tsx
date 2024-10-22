@@ -107,6 +107,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
           maximumTrackTintColor="grey"
           minimumTrackTintColor="grey"
           hitSlop={40}
+          // eslint-disable-next-line react-native/no-inline-styles
           style={{
             paddingTop: 30,
             paddingBottom: 30,
