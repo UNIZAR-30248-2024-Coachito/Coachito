@@ -44,7 +44,6 @@ const VerEntrenamiento: React.FC = () => {
 
   useEffect(() => {
     fetchExercises();
-    console.log(exercises);
   }, [templateId]);
 
   const handleDelete = async () => {
@@ -107,7 +106,6 @@ const VerEntrenamiento: React.FC = () => {
       {/* Contenedor principal */}
       <VStack className="space-y-2">
         {/* Primera fila con 'Cancelar', 'Crear Rutina' y 'Guardar' */}
-        <Text>{workout.workoutHeaderResume.workoutId}</Text>
         <WorkoutBarraSuperiorComponent
           fecha={workout.workoutHeaderResume.workoutDate}
           setIsSlideUpModalVisible={setIsSlideUpModalVisible}
@@ -127,8 +125,8 @@ const VerEntrenamiento: React.FC = () => {
           {/* Input para el título de la rutina */}
           <Box className="w-full pt-2">
             <WorkoutExercisesComponent
+              datos={exercises}
               header={workout.workoutHeaderResume}
-              exercises={workout.workoutExercisesResume.exercises}
             />
           </Box>
         </ScrollView>

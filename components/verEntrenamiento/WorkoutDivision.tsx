@@ -35,18 +35,15 @@ const WorkoutDivisionComponent: React.FC<WorkoutDivision> = ({
           <Text className="text-l mb-1 text-white">Pecho</Text>
           <HStack>
             <Progress
+              className="h-[30px] bg-transparent"
               value={100}
               size="md"
               orientation="horizontal"
               style={{
                 width: `${pechoPorcentaje * 0.9}%`,
-                height: 30,
               }}
             >
-              <ProgressFilledTrack
-                className="bg-blue-500"
-                style={{ borderRadius: 5 }}
-              />
+              <ProgressFilledTrack className="bg-blue-500 rounded-lg" />
             </Progress>
             <Text className="text-l text-gray-400 ml-2">
               {pechoPorcentaje}%
@@ -58,19 +55,15 @@ const WorkoutDivisionComponent: React.FC<WorkoutDivision> = ({
           <Text className="text-l mb-1 text-white">Espalda</Text>
           <HStack>
             <Progress
+              className="h-[30px] bg-transparent"
               value={100}
               size="md"
               orientation="horizontal"
               style={{
                 width: `${espaldaPorcentaje * 0.9}%`,
-                height: 30,
-                backgroundColor: 'transparent',
               }}
             >
-              <ProgressFilledTrack
-                className="bg-blue-500"
-                style={{ borderRadius: 5 }}
-              />
+              <ProgressFilledTrack className="bg-blue-500 rounded-lg" />
             </Progress>
             <Text className="text-l text-gray-400 ml-2">
               {espaldaPorcentaje}%
@@ -82,19 +75,15 @@ const WorkoutDivisionComponent: React.FC<WorkoutDivision> = ({
           <Text className="text-l mb-1 text-white">Pierna</Text>
           <HStack>
             <Progress
+              className="h-[30px] bg-transparent"
               value={100}
               size="md"
               orientation="horizontal"
               style={{
                 width: `${piernaPorcentaje * 0.9}%`,
-                height: 30,
-                backgroundColor: 'transparent',
               }}
             >
-              <ProgressFilledTrack
-                className="bg-blue-500"
-                style={{ borderRadius: 5 }}
-              />
+              <ProgressFilledTrack className="bg-blue-500 rounded-lg" />
             </Progress>
             <Text className="text-l text-gray-400 ml-2">
               {piernaPorcentaje}%

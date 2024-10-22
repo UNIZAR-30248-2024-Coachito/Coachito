@@ -16,7 +16,6 @@ export interface WorkoutHeaderResume {
 }
 
 const WorkoutHeaderResumeComponent: React.FC<WorkoutHeaderResume> = ({
-  workoutId,
   workoutName,
   workoutDate,
   workoutTime,

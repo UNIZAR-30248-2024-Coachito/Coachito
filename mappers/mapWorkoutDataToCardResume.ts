@@ -9,7 +9,7 @@ export const mapWorkoutDataToCardResume = (
 ): WorkoutCardResume[] => {
   return workouts.map((workout) => {
     const workoutHeaderResume: WorkoutHeaderResume = {
-      workoutId: workout.id,
+      workoutId: workout.template_id,
       workoutName: workout.workout_templates.name,
       workoutDate: new Date(workout.created_at),
       workoutTime: convertIntervalToMinutes(workout.duration),

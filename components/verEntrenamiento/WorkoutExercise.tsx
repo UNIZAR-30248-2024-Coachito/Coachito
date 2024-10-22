@@ -8,6 +8,7 @@ import '../../styles.css';
 import { Avatar, AvatarFallbackText, AvatarImage } from '../ui/avatar';
 import WorkoutHeaderComponent from './WorkoutHeader';
 import WorkoutDivisionComponent from './WorkoutDivision';
+import { ExerciseResume } from '../detailsRoutine/ExerciseResume';
 
 export interface WorkoutExercise {
   exerciseName: string;
@@ -16,8 +17,8 @@ export interface WorkoutExercise {
 }
 
 export interface WorkoutExercises {
+  datos: ExerciseResume[];
   header: WorkoutHeaderResume;
-  exercises: WorkoutExercise[];
 }
 
 export interface WorkoutHeaderResume {
@@ -29,8 +30,8 @@ export interface WorkoutHeaderResume {
 }
 
 const WorkoutExercisesComponent: React.FC<WorkoutExercises> = ({
+  datos,
   header,
-  exercises,
 }) => {
   return (
     <Box>
@@ -44,22 +45,21 @@ const WorkoutExercisesComponent: React.FC<WorkoutExercises> = ({
         <Text className="text-l mb-2 text-gray-400">División muscular</Text>
         <WorkoutDivisionComponent pecho={7} espalda={2} pierna={1} />
         <Text className="text-l mb-2 text-gray-400">Ejercicios</Text>
+
         <VStack className="gap-y-4">
-          {exercises.map((exercise, index) => (
+          {datos.map((exercise, index) => (
             <Box key={index}>
               <HStack className="items-center gap-4">
                 <Avatar>
-                  <AvatarFallbackText>
-                    {exercise.exerciseName}
-                  </AvatarFallbackText>
+                  <AvatarFallbackText>{exercise.name}</AvatarFallbackText>
                   <AvatarImage
                     source={{
-                      uri: exercise.exerciseThumbnailUrl,
+                      uri: exercise.thumbnailUrl,
                     }}
                   />
                 </Avatar>
                 <Text className="flex-1 text-blue-500 font-bold">
-                  {exercise.exerciseName}
+                  {exercise.name}
                 </Text>
               </HStack>
               <VStack className="mt-2">
@@ -72,18 +72,16 @@ const WorkoutExercisesComponent: React.FC<WorkoutExercises> = ({
                   </Text>
                 </HStack>
                 {/* Simulamos información de cada serie */}
-                {Array.from({ length: exercise.series }).map(
-                  (_, seriesIndex) => (
-                    <HStack key={seriesIndex} className="items-center mb-2">
-                      <Text className="w-12 text-center text-white font-bold">
-                        {seriesIndex + 1}
-                      </Text>
-                      <Text className="text-white ml-2">
-                        10 repeticiones a 50 kg
-                      </Text>
-                    </HStack>
-                  )
-                )}
+                {exercise.series.map((serie, seriesIndex) => (
+                  <HStack key={seriesIndex} className="items-center mb-2">
+                    <Text className="w-12 text-center text-white font-bold">
+                      {serie.serie}
+                    </Text>
+                    <Text className="text-white ml-2">
+                      {serie.reps} repeticiones a {serie.weight} kg
+                    </Text>
+                  </HStack>
+                ))}
               </VStack>
             </Box>
           ))}
