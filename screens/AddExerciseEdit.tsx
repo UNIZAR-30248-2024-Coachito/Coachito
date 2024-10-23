@@ -102,7 +102,7 @@ const AddExerciseEdit: React.FC = () => {
               }}
             >
               <HStack
-                className={`${selectedExercises.includes(exercise) ? 'bg-blue-500' : 'bg-transparent'}`}
+                className={`${selectedExercises.some((e) => e.id === exercise.id) ? 'bg-blue-500' : 'bg-transparent'}`}
               >
                 <ExercisesListCardResume
                   key="1"
