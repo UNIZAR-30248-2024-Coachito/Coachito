@@ -24,6 +24,7 @@ export type RootStackParamList = {
     routineId: number;
     routineName: string;
   };
+  VerEntrenamiento: { workoutId: number };
 };
 
 export type NavigationProps = NativeStackNavigationProp<RootStackParamList>;

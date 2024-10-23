@@ -7,6 +7,7 @@ import '../../styles.css';
 import { calculateDaysDifferenceNow } from '@/utils/date';
 
 export interface WorkoutHeaderResume {
+  workoutId: number;
   workoutName: string;
   workoutDate: Date;
   workoutTime: number;

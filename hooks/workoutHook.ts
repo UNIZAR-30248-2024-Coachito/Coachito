@@ -4,29 +4,43 @@ import {
   WorkoutRepository,
 } from '@/repositories/workoutRepository';
 import useCRUD from './useCRUD';
-import { mapWorkoutDataToDetailsRoutineResume } from '@/mappers/mapWorkoutDataToDetailsRoutinesResume';
+import { mapWorkoutDataToExerciseResumeArray } from '@/mappers/mapWorkoutDataToDetailsRoutinesResume';
 import { ExerciseResume } from '@/components/detailsRoutine/ExerciseResume';
 import {
   WorkoutExerciseInsert,
   WorkoutExerciseRepository,
 } from '@/repositories/workoutExerciseRepository';
+import { mapWorkoutDataToWorkoutResume } from '@/mappers/mapWorkoutDataToWorkoutResume';
 
 const workoutRepository = new WorkoutRepository(supabase);
 const workoutExercisesRepo = new WorkoutExerciseRepository(supabase);
 
-const useFetchDetailsWorkout = async (templateId: number) => {
+const useFetchDetailsLastWorkout = async (templateId: number) => {
   const { execute } = useCRUD(() =>
-    workoutRepository.getDetailsWorkout(templateId)
+    workoutRepository.getDetailsLastWorkout(templateId)
   );
 
   const { data, error } = await execute();
 
-  let myRoutineResume = null;
+  let exercisesResumes = null;
   if (!error) {
-    myRoutineResume = mapWorkoutDataToDetailsRoutineResume(data!);
+    exercisesResumes = mapWorkoutDataToExerciseResumeArray(data!);
   }
 
-  return { myRoutineResume, error };
+  return { exercisesResumes, error };
+};
+
+const useFetchDetailsWorkout = async (id: number) => {
+  const { execute } = useCRUD(() => workoutRepository.getDetailsWorkout(id));
+
+  const { data, error } = await execute();
+
+  let exercisesResumes = null;
+  if (!error) {
+    exercisesResumes = mapWorkoutDataToWorkoutResume(data!);
+  }
+
+  return { exercisesResumes, error };
 };
 
 const useCreateWorkout = async (
@@ -95,4 +109,4 @@ const useCreateWorkout = async (
   return { error: null };
 };
 
-export { useFetchDetailsWorkout, useCreateWorkout };
+export { useFetchDetailsLastWorkout, useFetchDetailsWorkout, useCreateWorkout };

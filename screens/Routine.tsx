@@ -33,13 +33,13 @@ const Routine: React.FC = () => {
   const [newFolderInputValue, setNewFolderInputValue] = useState('');
 
   const fetchRoutinesAndGroups = async () => {
-    const { myRoutineResume, error: errorRoutines } =
+    const { exercisesResumes, error: errorRoutines } =
       await useFetchTemplateWorkouts();
     const { groups, error: errorGroups } =
       await useFetchTemplateWorkoutGroups();
 
     if (!errorRoutines) {
-      setRoutines(myRoutineResume!);
+      setRoutines(exercisesResumes!);
     }
 
     if (!errorGroups) {
