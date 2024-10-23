@@ -51,7 +51,7 @@ const DetailsRoutine: React.FC = () => {
   const buttonsSlideUpModal: React.ReactNode[] = [
     <Button
       key="2"
-      className="bg-transparent mt-4"
+      className="bg-transparent"
       onPress={() =>
         navigation.navigate('EditRoutine', {
           routineId: templateId,
@@ -65,7 +65,7 @@ const DetailsRoutine: React.FC = () => {
     </Button>,
     <Button
       key="3"
-      className="bg-transparent mt-4"
+      className="bg-transparent"
       onPress={() => {
         setIsDeleteModalVisible(true);
         setIsSlideUpModalVisible(false);

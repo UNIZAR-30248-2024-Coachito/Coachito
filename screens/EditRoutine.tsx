@@ -20,7 +20,7 @@ import ExerciseResumeComponent, {
 } from '@/components/exercise/DetailsExerciseResume';
 import { useUpdateRoutine } from '@/hooks/routineHook';
 import { ScrollView } from 'react-native';
-import { useFetchDetailsWorkout } from '@/hooks/workoutHook';
+import { useFetchDetailsLastWorkout } from '@/hooks/workoutHook';
 import { ExerciseResume } from '@/components/detailsRoutine/ExerciseResume';
 
 const EditRoutine: React.FC = () => {
@@ -37,11 +37,11 @@ const EditRoutine: React.FC = () => {
     useState(false);
 
   const fetchExercises = async () => {
-    const { myRoutineResume, error: errorRoutines } =
-      await useFetchDetailsWorkout(route.params.routineId!);
+    const { exercisesResumes, error: errorRoutines } =
+      await useFetchDetailsLastWorkout(route.params.routineId!);
 
     if (!errorRoutines) {
-      setSelectedExercises(myRoutineResume!);
+      setSelectedExercises(exercisesResumes!);
     }
   };
 

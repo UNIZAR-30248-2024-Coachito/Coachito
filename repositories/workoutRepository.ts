@@ -88,7 +88,6 @@ export class WorkoutRepository extends BaseRepository<
       )
       .eq('id', id)
       .single();
-    console.log(data);
     if (error) throw error;
     return data;
   }

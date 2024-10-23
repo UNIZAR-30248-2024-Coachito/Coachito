@@ -9,7 +9,10 @@ import { NavigationProps, RootStackParamList } from '@/types/navigation';
 import PopupBaseModal from '@/components/shared/PopupBaseModal';
 import { ExerciseResumeRef } from '@/components/exercise/DetailsExerciseResume';
 import { ScrollView } from 'react-native';
-import { useCreateWorkout, useFetchDetailsWorkout } from '@/hooks/workoutHook';
+import {
+  useCreateWorkout,
+  useFetchDetailsLastWorkout,
+} from '@/hooks/workoutHook';
 import { ExerciseResume } from '@/components/detailsRoutine/ExerciseResume';
 import DetailsExerciseWorkoutResumeComponent from '@/components/workout/DetailsExerciseWorkoutResume';
 import Timer from '@/components/workout/Timer';
@@ -28,11 +31,11 @@ const EditRoutine: React.FC = () => {
   const [duration, setDuration] = useState(0);
 
   const fetchExercises = async () => {
-    const { myRoutineResume, error: errorRoutines } =
-      await useFetchDetailsWorkout(route.params.routineId!);
+    const { exercisesResumes, error: errorRoutines } =
+      await useFetchDetailsLastWorkout(route.params.routineId!);
 
     if (!errorRoutines) {
-      setSelectedExercises(myRoutineResume!);
+      setSelectedExercises(exercisesResumes!);
     }
   };
 

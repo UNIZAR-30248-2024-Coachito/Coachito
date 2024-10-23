@@ -6,10 +6,10 @@ export const mapToExerciseProportions = (
 ): ExerciseProportion[] => {
   const groupedExercises: { [key: string]: number } = exerciseResumes.reduce(
     (acc, exercise) => {
-      if (acc[exercise.primary_muscle]) {
-        acc[exercise.primary_muscle] += exercise.series.length;
+      if (acc[exercise.primaryMuscleGroup]) {
+        acc[exercise.primaryMuscleGroup] += exercise.sets.length;
       } else {
-        acc[exercise.primary_muscle] = exercise.series.length;
+        acc[exercise.primaryMuscleGroup] = exercise.sets.length;
       }
       return acc;
     },
