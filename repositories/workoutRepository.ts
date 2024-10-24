@@ -36,6 +36,7 @@ export interface WorkoutExerciseDB {
 }
 
 export interface ExerciseDB {
+  id: number;
   name: string;
   muscle_groups: MuscleGroupDB;
   exercise_image_url: string;
@@ -87,7 +88,6 @@ export class WorkoutRepository extends BaseRepository<
       )
       .eq('id', id)
       .single();
-    console.log(data);
     if (error) throw error;
     return data;
   }

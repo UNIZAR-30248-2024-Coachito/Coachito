@@ -55,7 +55,7 @@ const useDeleteTemplateWorkoutGroupById = async (id: number) => {
   const { execute } = useCRUD(() => workoutTemplateGroupRepository.delete(id));
 
   const { data, error } = await execute();
-  console.log(data);
+
   return { data, error };
 };
 

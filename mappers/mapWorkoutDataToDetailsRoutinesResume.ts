@@ -1,7 +1,7 @@
 import { WorkoutDataDB } from '@/repositories/workoutRepository';
 import {
   ExerciseResume,
-  SeriesExerciseResume,
+  SetsExerciseResume,
 } from '../components/detailsRoutine/ExerciseResume';
 
 const convertRestTime = (restTime: string): string => {
@@ -29,24 +29,25 @@ export const mapWorkoutDataToExerciseResumeArray = (
 
       if (!acc[exerciseKey]) {
         acc[exerciseKey] = {
+          id: exercise.exercises.id,
           name: exercise.exercises.name,
           thumbnailUrl: exercise.exercises.exercise_thumbnail_url,
           restTime: convertRestTime(exercise.rest_time ?? '00:00:00'),
           notes: exercise.notes ?? '',
-          series: [],
-          primary_muscle: exercise.exercises.muscle_groups.name,
+          primaryMuscleGroup: exercise.exercises.muscle_groups.name,
+          sets: [],
         };
       }
 
-      const newSeries: SeriesExerciseResume[] = Array.from({
+      const newSeries: SetsExerciseResume[] = Array.from({
         length: exercise.sets,
       }).map((_, index) => ({
-        serie: acc[exerciseKey].series.length + index + 1,
+        serie: acc[exerciseKey].sets.length + index + 1,
         weight: exercise.weight ?? 0,
         reps: exercise.reps,
       }));
 
-      acc[exerciseKey].series.push(...newSeries);
+      acc[exerciseKey].sets.push(...newSeries);
 
       return acc;
     }, {});

@@ -14,19 +14,19 @@ import { Avatar, AvatarFallbackText, AvatarImage } from '../ui/avatar';
 import { Pressable } from 'react-native';
 import { Timer } from 'lucide-react-native';
 
-export interface SeriesExerciseResume {
-  serie: number;
+export interface SetsExerciseResume {
   weight: number;
   reps: number;
 }
 
 export interface ExerciseResume {
+  id: number;
   name: string;
   thumbnailUrl: string;
-  restTime: string;
+  restTime: string | null;
   notes: string;
-  series: SeriesExerciseResume[];
-  primary_muscle: string;
+  primaryMuscleGroup: string;
+  sets: SetsExerciseResume[];
 }
 
 const ExerciseResumeComponent: React.FC<ExerciseResume> = ({
@@ -34,13 +34,10 @@ const ExerciseResumeComponent: React.FC<ExerciseResume> = ({
   thumbnailUrl,
   restTime,
   notes,
-  series,
+  sets,
 }) => {
   return (
-    <Pressable
-      className="bg-zinc-900 p-4 mb-4 rounded-lg"
-      //onPress={() => navigation.navigate('DetailsRoutine', { templateId, myRoutineName })}
-    >
+    <Pressable className="bg-zinc-900 p-4 mb-4 rounded-lg">
       <HStack className="items-center gap-4">
         <Avatar>
           <AvatarFallbackText>{name}</AvatarFallbackText>
@@ -57,14 +54,14 @@ const ExerciseResumeComponent: React.FC<ExerciseResume> = ({
 
       <Text>{notes}</Text>
 
-      <HStack className="gap-2">
+      <HStack className="gap-2 mb-4">
         <Timer color="#3b82f6" />
         <Text className="text-blue-500">
           Temporizador de descanso: {restTime}
         </Text>
       </HStack>
 
-      <Table className="w-full mb-8">
+      <Table className="w-full">
         <TableHeader>
           <TableRow>
             <TableHead>SERIE</TableHead>
@@ -73,7 +70,7 @@ const ExerciseResumeComponent: React.FC<ExerciseResume> = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {series.map((serie, index) => (
+          {sets.map((set, index) => (
             <TableRow
               key={index}
               className={
@@ -82,9 +79,9 @@ const ExerciseResumeComponent: React.FC<ExerciseResume> = ({
                   : 'border-b-0 bg-background-0'
               }
             >
-              <TableData>{serie.serie}</TableData>
-              <TableData>{serie.weight}</TableData>
-              <TableData>{serie.reps}</TableData>
+              <TableData>{index + 1}</TableData>
+              <TableData>{set.weight}</TableData>
+              <TableData>{set.reps}</TableData>
             </TableRow>
           ))}
         </TableBody>

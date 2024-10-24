@@ -39,7 +39,7 @@ export default function BottomBar() {
           <Text
             className={`text-xs ${isRoutineActive ? 'text-blue-500' : 'text-gray-400'}`}
           >
-            Entrenamiento
+            Rutinas
           </Text>
         </VStack>
       </Pressable>

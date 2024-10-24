@@ -54,12 +54,16 @@ const Routine: React.FC = () => {
     const routineRenamedListener = emitter.addListener('routineRenamed', () => {
       fetchRoutinesAndGroups();
     });
+    const routineAddedListener = emitter.addListener('routineAdded', () => {
+      fetchRoutinesAndGroups();
+    });
 
     fetchRoutinesAndGroups();
 
     return () => {
       routineDeletedListener.remove();
       routineRenamedListener.remove();
+      routineAddedListener.remove();
     };
   }, [navigation]);
 
@@ -116,7 +120,12 @@ const Routine: React.FC = () => {
         <HStack className="mb-4">
           <Button
             className="bg-zinc-900"
-            onPress={() => navigation.navigate('AddRoutine')}
+            onPress={() =>
+              navigation.navigate('AddRoutine', {
+                exercises: [],
+                groupId: 0,
+              })
+            }
           >
             <ClipboardList color="white" />
             <Text className="text-white ml-2">Nueva Rutina</Text>

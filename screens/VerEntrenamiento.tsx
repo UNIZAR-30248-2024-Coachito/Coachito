@@ -10,8 +10,7 @@ import { ScrollView } from 'react-native';
 
 import { useFetchDetailsWorkout } from '@/hooks/workoutHook';
 
-import { ArrowLeft, MoreHorizontal, Pencil } from 'lucide-react-native';
-import SlideUpBaseModal from '@/components/shared/SlideUpBaseModal';
+import { ArrowLeft } from 'lucide-react-native';
 import ExerciseResumeComponent, {
   ExerciseResume,
 } from '@/components/detailsRoutine/ExerciseResume';
@@ -34,14 +33,12 @@ const VerEntrenamiento: React.FC = () => {
   const [workoutResume, setWorkoutResume] = useState<WorkoutResume | null>(
     null
   );
-  const [isSlideUpModalVisible, setIsSlideUpModalVisible] = useState(false);
 
   const fetchExercises = async () => {
     const { exercisesResumes, error: errorRoutines } =
       await useFetchDetailsWorkout(workoutId);
 
     if (!errorRoutines) {
-      console.log(exercisesResumes!);
       setWorkoutResume(exercisesResumes!);
     }
   };
@@ -49,17 +46,6 @@ const VerEntrenamiento: React.FC = () => {
   useEffect(() => {
     fetchExercises();
   }, [workoutId]);
-
-  const buttonsSlideUpModal: React.ReactNode[] = [
-    <Button
-      key="2"
-      className="bg-transparent mt-4"
-      onPress={() => navigation.navigate('Dashboard')}
-    >
-      <Pencil color="white" />
-      <Text className="text-white ml-4">Editar entrenamiento</Text>
-    </Button>,
-  ];
 
   return (
     <ScrollView className="flex-1">
@@ -76,14 +62,6 @@ const VerEntrenamiento: React.FC = () => {
           <Text className="text-xl font-bold text-white">
             Detalles de entrenamiento
           </Text>
-          <Button
-            className="bg-transparent"
-            onPress={() => {
-              setIsSlideUpModalVisible(true);
-            }}
-          >
-            <MoreHorizontal color="white" />
-          </Button>
         </HStack>
 
         {workoutResume && (
@@ -104,36 +82,20 @@ const VerEntrenamiento: React.FC = () => {
           </>
         )}
 
-        <HStack className="justify-between mb-4">
-          <Text className="text-gray-400 mt-4">Ejercicios</Text>
-          <Button
-            className="bg-transparent"
-            //onPress={() => navigation.navigate('EditRoutine')}
-          >
-            <Text className="text-blue-500">Editar rutina</Text>
-          </Button>
-        </HStack>
+        <Text className="text-gray-400 mt-4 mb-4">Ejercicios</Text>
 
         {workoutResume?.exercises!.map((exercise, index) => (
           <ExerciseResumeComponent
             key={index}
+            id={exercise.id}
             name={exercise.name}
             thumbnailUrl={exercise.thumbnailUrl}
             restTime={exercise.restTime}
             notes={exercise.notes}
-            series={exercise.series}
-            primary_muscle={exercise.primary_muscle}
+            sets={exercise.sets}
+            primaryMuscleGroup={exercise.primaryMuscleGroup}
           />
         ))}
-
-        <SlideUpBaseModal
-          buttons={buttonsSlideUpModal}
-          title={
-            workoutResume !== null ? workoutResume!.header.workoutName : ''
-          }
-          isVisible={isSlideUpModalVisible}
-          setIsModalVisible={setIsSlideUpModalVisible}
-        />
       </VStack>
     </ScrollView>
   );

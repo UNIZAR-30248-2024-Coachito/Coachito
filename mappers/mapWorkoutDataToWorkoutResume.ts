@@ -8,8 +8,6 @@ import { mapWorkoutDataToExerciseResumeArray } from './mapWorkoutDataToDetailsRo
 export const mapWorkoutDataToWorkoutResume = (
   workoutDataDB: WorkoutDataDB
 ): WorkoutResume => {
-  console.log(workoutDataDB);
-
   const workoutHeaderResume: WorkoutHeaderResume = {
     workoutId: workoutDataDB.id,
     workoutName: workoutDataDB.workout_templates.name,

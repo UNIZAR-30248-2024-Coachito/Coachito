@@ -43,7 +43,13 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
     <Button
       key="1"
       className="bg-transparent gap-2"
-      //onPress={() => navigation.navigate('EditRoutine')}
+      onPress={() => {
+        navigation.navigate('EditRoutine', {
+          routineId: routineCardResume.templateId,
+          routineName: routineCardResume.myRoutineName,
+          exercises: [],
+        });
+      }}
     >
       <Pencil color="white" />
       <Text className="text-white">Editar Rutina</Text>
@@ -117,7 +123,12 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
 
       <Button
         className="bg-blue-500 rounded-lg"
-        //onPress={() => navigation.navigate('StartRoutine')}
+        onPress={() =>
+          navigation.navigate('StartWorkout', {
+            routineId: routineCardResume.templateId,
+            routineName: routineCardResume.myRoutineName,
+          })
+        }
       >
         <Text className="text-white">Empezar Rutina</Text>
       </Button>

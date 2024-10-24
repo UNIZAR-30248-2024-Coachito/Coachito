@@ -17,11 +17,14 @@ import ExercisesListCardResume from '@/components/exercise/ExercisesListCardResu
 import { SearchIcon } from 'lucide-react-native';
 import { ExerciseResume } from '@/components/detailsRoutine/ExerciseResume';
 
-type AddExerciseRouteProp = RouteProp<RootStackParamList, 'AddExercise'>;
+type AddExerciseEditRouteProp = RouteProp<
+  RootStackParamList,
+  'AddExerciseEdit'
+>;
 
-const AddExercise: React.FC = () => {
+const AddExerciseEdit: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
-  const route = useRoute<AddExerciseRouteProp>();
+  const route = useRoute<AddExerciseEditRouteProp>();
 
   const [exercises, setExercises] = useState<ExerciseResume[]>([]);
   const [selectedExercises, setSelectedExercises] = useState<ExerciseResume[]>(
@@ -64,9 +67,10 @@ const AddExercise: React.FC = () => {
           <Button
             className="bg-transparent rounded-lg"
             onPress={() => {
-              navigation.navigate('AddRoutine', {
+              navigation.navigate('EditRoutine', {
                 exercises: selectedExercisesInit,
-                groupId: route.params.groupId,
+                routineId: route.params.routineId,
+                routineName: route.params.routineName,
               });
               setSelectedExercises(selectedExercisesInit);
             }}
@@ -98,7 +102,7 @@ const AddExercise: React.FC = () => {
               }}
             >
               <HStack
-                className={`${selectedExercises.includes(exercise) ? 'bg-blue-500' : 'bg-transparent'}`}
+                className={`${selectedExercises.some((e) => e.id === exercise.id) ? 'bg-blue-500' : 'bg-transparent'}`}
               >
                 <ExercisesListCardResume
                   key="1"
@@ -119,9 +123,10 @@ const AddExercise: React.FC = () => {
           <Button
             className="w-full bg-blue-500 rounded-lg"
             onPress={() => {
-              navigation.navigate('AddRoutine', {
+              navigation.navigate('EditRoutine', {
                 exercises: selectedExercises,
-                groupId: route.params.groupId,
+                routineId: route.params.routineId,
+                routineName: route.params.routineName,
               });
             }}
           >
@@ -133,4 +138,4 @@ const AddExercise: React.FC = () => {
   );
 };
 
-export default AddExercise;
+export default AddExerciseEdit;

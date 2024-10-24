@@ -123,7 +123,12 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
     <Button
       key="2"
       className="bg-transparent gap-2"
-      onPress={() => navigation.navigate('AddRoutine')}
+      onPress={() =>
+        navigation.navigate('AddRoutine', {
+          exercises: [],
+          groupId: groupedRoutine.groupId,
+        })
+      }
     >
       <Plus color="white" />
       <Text className="text-white">Agregar nueva rutina</Text>
