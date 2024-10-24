@@ -7,13 +7,13 @@ export type RootStackParamList = {
   DetailsRoutine: { templateId: number; myRoutineName: string };
   Profile: undefined;
   Exercises: undefined;
-  AddExercise: { selectedExercises: ExerciseResume[] };
+  AddExercise: { selectedExercises: ExerciseResume[]; groupId: number };
   AddExerciseEdit: {
     selectedExercises: ExerciseResume[];
     routineId: number;
     routineName: string;
   };
-  AddRoutine: { exercises: ExerciseResume[] };
+  AddRoutine: { exercises: ExerciseResume[]; groupId: number };
   ExerciseResume: undefined;
   EditRoutine: {
     routineId: number;

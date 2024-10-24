@@ -19,12 +19,17 @@ const workoutTemplateRepo = new WorkoutTemplateRepository(supabase);
 const workoutsRepo = new WorkoutRepository(supabase);
 const workoutExercisesRepo = new WorkoutExerciseRepository(supabase);
 
-const useCreateRoutine = async (name: string, exercises: ExerciseResume[]) => {
+const useCreateRoutine = async (
+  name: string,
+  exercises: ExerciseResume[],
+  groupId: number
+) => {
   const newWorkoutTemplateEntity = {
     id: undefined,
     name: name,
     deleted: false,
     user_id: 1,
+    group_id: groupId === 0 ? null : groupId,
   } as WorkoutTemplateInsert;
 
   const { execute: executeWorkoutTemplateInsert } = useCRUD(() =>

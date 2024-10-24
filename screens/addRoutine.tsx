@@ -85,7 +85,11 @@ const AddRoutine: React.FC = () => {
       ref!.getExerciseData()
     );
 
-    const { error } = await useCreateRoutine(routineTitle, allExerciseData);
+    const { error } = await useCreateRoutine(
+      routineTitle,
+      allExerciseData,
+      route.params.groupId
+    );
 
     resetState();
     if (!error) {
@@ -157,6 +161,7 @@ const AddRoutine: React.FC = () => {
           onPress={() =>
             navigation.navigate('AddExercise', {
               selectedExercises,
+              groupId: route.params.groupId,
             })
           }
         >

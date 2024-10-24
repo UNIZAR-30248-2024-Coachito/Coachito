@@ -126,6 +126,7 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
       onPress={() =>
         navigation.navigate('AddRoutine', {
           exercises: [],
+          groupId: groupedRoutine.groupId,
         })
       }
     >

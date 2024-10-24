@@ -123,6 +123,7 @@ const Routine: React.FC = () => {
             onPress={() =>
               navigation.navigate('AddRoutine', {
                 exercises: [],
+                groupId: 0,
               })
             }
           >

@@ -66,6 +66,7 @@ const AddExercise: React.FC = () => {
             onPress={() => {
               navigation.navigate('AddRoutine', {
                 exercises: selectedExercisesInit,
+                groupId: route.params.groupId,
               });
               setSelectedExercises(selectedExercisesInit);
             }}
@@ -120,6 +121,7 @@ const AddExercise: React.FC = () => {
             onPress={() => {
               navigation.navigate('AddRoutine', {
                 exercises: selectedExercises,
+                groupId: route.params.groupId,
               });
             }}
           >
