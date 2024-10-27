@@ -13,7 +13,7 @@ import {
   useCreateWorkout,
   useFetchDetailsLastWorkout,
 } from '@/hooks/workoutHook';
-import { ExerciseResume } from '@/components/detailsRoutine/ExerciseResume';
+import { ExerciseResume } from '@/components/routine/ExerciseResume';
 import DetailsExerciseWorkoutResumeComponent from '@/components/workout/DetailsExerciseWorkoutResume';
 import Timer from '@/components/workout/Timer';
 

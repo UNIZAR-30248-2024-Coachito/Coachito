@@ -171,4 +171,25 @@ export class WorkoutRepository extends BaseRepository<
     if (error) throw error;
     return data;
   }
+
+  async getRoutineWorkouts(templateId: number): Promise<WorkoutDataDB[]> {
+    const query = this.supabase
+      .from(this.table)
+      .select(
+        `
+        *,
+        workout_exercises (
+          sets,
+          reps
+        )
+      `
+      )
+      .eq('template_id', templateId)
+      .eq('template', 'FALSE');
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+    return data;
+  }
 }

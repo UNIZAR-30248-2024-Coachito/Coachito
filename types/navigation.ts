@@ -1,4 +1,4 @@
-import { ExerciseResume } from '@/components/detailsRoutine/ExerciseResume';
+import { ExerciseResume } from '@/components/routine/ExerciseResume';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type RootStackParamList = {

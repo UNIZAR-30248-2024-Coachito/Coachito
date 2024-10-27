@@ -15,7 +15,7 @@ import { Pressable, ScrollView } from 'react-native';
 import { useFetchExercisesList } from '@/hooks/exerciseHook';
 import ExercisesListCardResume from '@/components/exercise/ExercisesListCardResume';
 import { SearchIcon } from 'lucide-react-native';
-import { ExerciseResume } from '@/components/detailsRoutine/ExerciseResume';
+import { ExerciseResume } from '@/components/routine/ExerciseResume';
 
 type AddExerciseRouteProp = RouteProp<RootStackParamList, 'AddExercise'>;
 

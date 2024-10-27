@@ -2,7 +2,7 @@ import { WorkoutDataDB } from '@/repositories/workoutRepository';
 import {
   ExerciseResume,
   SetsExerciseResume,
-} from '../components/detailsRoutine/ExerciseResume';
+} from '../components/routine/ExerciseResume';
 
 const convertRestTime = (restTime: string): string => {
   const timeParts = restTime.split(':').map(Number);
