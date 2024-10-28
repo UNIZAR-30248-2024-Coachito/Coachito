@@ -18,7 +18,6 @@ export type RootStackParamList = {
   EditRoutine: {
     routineId: number;
     routineName: string;
-    exercises: ExerciseResume[];
   };
   StartWorkout: {
     routineId: number;

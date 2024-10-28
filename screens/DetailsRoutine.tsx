@@ -48,18 +48,16 @@ const DetailsRoutine: React.FC = () => {
     }
   };
 
+  const navigateToEditRoutine = () => {
+    // Emitir el evento para que EditRoutine haga un fetch solo cuando se navegue
+    navigation.navigate('EditRoutine', {
+      routineId: templateId,
+      routineName: myRoutineName,
+    });
+  };
+
   const buttonsSlideUpModal: React.ReactNode[] = [
-    <Button
-      key="2"
-      className="bg-transparent"
-      onPress={() =>
-        navigation.navigate('EditRoutine', {
-          routineId: templateId,
-          routineName: myRoutineName,
-          exercises,
-        })
-      }
-    >
+    <Button key="2" className="bg-transparent" onPress={navigateToEditRoutine}>
       <Pencil color="white" />
       <Text className="text-white ml-4">Editar rutina</Text>
     </Button>,
@@ -136,7 +134,6 @@ const DetailsRoutine: React.FC = () => {
               navigation.navigate('EditRoutine', {
                 routineId: templateId,
                 routineName: myRoutineName,
-                exercises,
               })
             }
           >

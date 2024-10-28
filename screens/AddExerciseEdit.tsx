@@ -16,6 +16,7 @@ import { useFetchExercisesList } from '@/hooks/exerciseHook';
 import ExercisesListCardResume from '@/components/exercise/ExercisesListCardResume';
 import { SearchIcon } from 'lucide-react-native';
 import { ExerciseResume } from '@/components/detailsRoutine/ExerciseResume';
+import { emitter } from '@/utils/emitter';
 
 type AddExerciseEditRouteProp = RouteProp<
   RootStackParamList,
@@ -28,17 +29,16 @@ const AddExerciseEdit: React.FC = () => {
 
   const [exercises, setExercises] = useState<ExerciseResume[]>([]);
   const [selectedExercises, setSelectedExercises] = useState<ExerciseResume[]>(
-    route.params?.selectedExercises
+    route.params?.selectedExercises || []
   );
-  const selectedExercisesInit = route.params?.selectedExercises;
 
   const handleSelectExercise = (exercise: ExerciseResume) => {
     setSelectedExercises((prevSelected) => {
       const exists = prevSelected.find((e) => e.id === exercise.id);
       if (exists) {
-        return prevSelected.filter((e) => e.id !== exercise.id);
+        return prevSelected.filter((e) => e.id !== exercise.id); // Deselect if already selected
       } else {
-        return [...prevSelected, exercise];
+        return [...prevSelected, exercise]; // Select if not selected
       }
     });
   };
@@ -46,7 +46,6 @@ const AddExerciseEdit: React.FC = () => {
   const fetchExercises = async () => {
     const { exercisesResume, error: errorExercises } =
       await useFetchExercisesList();
-
     if (!errorExercises) {
       setExercises(exercisesResume!);
     }
@@ -54,10 +53,10 @@ const AddExerciseEdit: React.FC = () => {
 
   useEffect(() => {
     fetchExercises();
-  }, []);
+  }, []); // Fetch exercises only once on mount
 
   useEffect(() => {
-    setSelectedExercises(route.params?.selectedExercises || []);
+    setSelectedExercises(route.params?.selectedExercises || []); // Initialize selected exercises from route params
   }, [route.params?.selectedExercises]);
 
   return (
@@ -68,11 +67,9 @@ const AddExerciseEdit: React.FC = () => {
             className="bg-transparent rounded-lg"
             onPress={() => {
               navigation.navigate('EditRoutine', {
-                exercises: selectedExercisesInit,
                 routineId: route.params.routineId,
                 routineName: route.params.routineName,
               });
-              setSelectedExercises(selectedExercisesInit);
             }}
           >
             <Text className="text-blue-500">Cancelar</Text>
@@ -93,38 +90,33 @@ const AddExerciseEdit: React.FC = () => {
           <InputField className="text-white" placeholder="Buscar Ejercicio" />
         </Input>
 
-        {exercises.map((exercise, index) => {
-          return (
-            <Pressable
-              key={index}
-              onPress={() => {
-                handleSelectExercise(exercise);
-              }}
+        {exercises.map((exercise) => (
+          <Pressable
+            key={exercise.id} // Use unique id as key
+            onPress={() => handleSelectExercise(exercise)}
+          >
+            <HStack
+              className={`${selectedExercises.some((e) => e.id === exercise.id) ? 'bg-blue-500' : 'bg-transparent'}`}
             >
-              <HStack
-                className={`${selectedExercises.some((e) => e.id === exercise.id) ? 'bg-blue-500' : 'bg-transparent'}`}
-              >
-                <ExercisesListCardResume
-                  key="1"
-                  id={exercise.id}
-                  name={exercise.name}
-                  thumbnailUrl={exercise.thumbnailUrl}
-                  notes={exercise.notes}
-                  primaryMuscleGroup={exercise.primaryMuscleGroup}
-                  restTime={exercise.restTime}
-                  sets={exercise.sets}
-                />
-              </HStack>
-            </Pressable>
-          );
-        })}
+              <ExercisesListCardResume
+                id={exercise.id}
+                name={exercise.name}
+                thumbnailUrl={exercise.thumbnailUrl}
+                notes={exercise.notes}
+                primaryMuscleGroup={exercise.primaryMuscleGroup}
+                restTime={exercise.restTime}
+                sets={exercise.sets}
+              />
+            </HStack>
+          </Pressable>
+        ))}
 
         {selectedExercises.length > 0 && (
           <Button
             className="w-full bg-blue-500 rounded-lg"
             onPress={() => {
+              emitter.emit('exercisesUpdated', selectedExercises);
               navigation.navigate('EditRoutine', {
-                exercises: selectedExercises,
                 routineId: route.params.routineId,
                 routineName: route.params.routineName,
               });

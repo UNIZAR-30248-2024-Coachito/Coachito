@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useEffect, useCallback } from 'react';
 import '../styles.css';
 import { HStack } from '../components/ui/hstack';
 import { VStack } from '../components/ui/vstack';
@@ -7,12 +7,7 @@ import { Button } from '../components/ui/button';
 import { InputField, Input } from '../components/ui/input';
 import { Plus } from 'lucide-react-native';
 import { Dumbbell } from 'lucide-react-native';
-import {
-  RouteProp,
-  useNavigation,
-  useRoute,
-  useFocusEffect,
-} from '@react-navigation/native';
+import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NavigationProps, RootStackParamList } from '@/types/navigation';
 import PopupBaseModal from '@/components/shared/PopupBaseModal';
 import ExerciseResumeComponent, {
@@ -37,7 +32,7 @@ const EditRoutine: React.FC = () => {
   const [isCancelRoutineModalVisible, setIsCancelRoutineModalVisible] =
     useState(false);
 
-  const fetchExercises = async () => {
+  const fetchExercises = useCallback(async () => {
     const { exercisesResumes, error: errorRoutines } =
       await useFetchDetailsLastWorkout(route.params.routineId!);
 
@@ -45,14 +40,25 @@ const EditRoutine: React.FC = () => {
       exerciseRefs.current = [];
       setSelectedExercises(exercisesResumes!);
     }
-  };
+  }, [route.params.routineId]);
 
-  useFocusEffect(
-    React.useCallback(() => {
-      setRoutineTitleInputValue(route.params.routineName);
-      fetchExercises();
-    }, [route.params.routineId])
-  );
+  const updateExercises = useCallback((exercises: ExerciseResume[]) => {
+    console.log('Ejercicios actualizados desde AddExerciseEdit:', exercises);
+    setSelectedExercises(exercises);
+  }, []);
+
+  useEffect(() => {
+    setRoutineTitleInputValue(route.params.routineName);
+    fetchExercises();
+    const exercisesUpdateListener = emitter.addListener(
+      'exercisesUpdated',
+      updateExercises
+    );
+
+    return () => {
+      exercisesUpdateListener.remove();
+    };
+  }, [fetchExercises, updateExercises, route.params.routineId]);
 
   const componentsCancelRoutinePopUpModal: React.ReactNode[] = [
     <Text key="1" className="text-xl font-bold text-center text-white pb-8">
