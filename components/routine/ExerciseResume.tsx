@@ -13,6 +13,9 @@ import '../../styles.css';
 import { Avatar, AvatarFallbackText, AvatarImage } from '../ui/avatar';
 import { Pressable } from 'react-native';
 import { Timer } from 'lucide-react-native';
+import { useNavigation } from '@react-navigation/native';
+import { NavigationProps } from '@/types/navigation';
+import { Box } from '../ui/box';
 
 export interface SetsExerciseResume {
   weight: number;
@@ -30,27 +33,38 @@ export interface ExerciseResume {
 }
 
 const ExerciseResumeComponent: React.FC<ExerciseResume> = ({
+  id,
   name,
   thumbnailUrl,
   restTime,
   notes,
   sets,
 }) => {
+  const navigation = useNavigation<NavigationProps>();
+
   return (
-    <Pressable className="bg-zinc-900 p-4 mb-4 rounded-lg">
-      <HStack className="items-center gap-4">
-        <Avatar>
-          <AvatarFallbackText>{name}</AvatarFallbackText>
-          <AvatarImage
-            source={{
-              uri: thumbnailUrl,
-            }}
-          />
-        </Avatar>
-        <Text className="flex-1 text-white" bold>
-          {name}
-        </Text>
-      </HStack>
+    <Box className="bg-zinc-900 p-4 mb-4 rounded-lg">
+      <Pressable
+        onPress={() =>
+          navigation.navigate('DetailsExercise', {
+            exerciseId: id,
+          })
+        }
+      >
+        <HStack className="items-center gap-4">
+          <Avatar>
+            <AvatarFallbackText>{name}</AvatarFallbackText>
+            <AvatarImage
+              source={{
+                uri: thumbnailUrl,
+              }}
+            />
+          </Avatar>
+          <Text className="flex-1 text-white" bold>
+            {name}
+          </Text>
+        </HStack>
+      </Pressable>
 
       <Text>{notes}</Text>
 
@@ -86,7 +100,7 @@ const ExerciseResumeComponent: React.FC<ExerciseResume> = ({
           ))}
         </TableBody>
       </Table>
-    </Pressable>
+    </Box>
   );
 };
 

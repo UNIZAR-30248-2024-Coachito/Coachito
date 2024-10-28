@@ -13,7 +13,7 @@ import { useFetchDetailsWorkout } from '@/hooks/workoutHook';
 import { ArrowLeft } from 'lucide-react-native';
 import ExerciseResumeComponent, {
   ExerciseResume,
-} from '@/components/detailsRoutine/ExerciseResume';
+} from '@/components/routine/ExerciseResume';
 import WorkoutHeaderResumeComponent, {
   WorkoutHeaderResume,
 } from '@/components/workout/WorkoutHeaderResume';

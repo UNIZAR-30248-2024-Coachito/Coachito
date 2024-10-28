@@ -1,5 +1,5 @@
-import { GroupedRoutines } from '@/components/myRoutines/GroupedRoutinesResume';
-import { MyRoutinesCardResume } from '@/components/myRoutines/MyRoutinesCardResume';
+import { GroupedRoutines } from '@/components/routine/GroupedRoutinesResume';
+import { MyRoutinesCardResume } from '@/components/routine/MyRoutinesCardResume';
 import { WorkoutDataDB } from '@/repositories/workoutRepository';
 
 export const mapWorkoutDataToGroupedRoutinesResume = (

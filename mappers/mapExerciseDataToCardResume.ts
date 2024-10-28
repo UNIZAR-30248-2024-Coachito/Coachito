@@ -1,4 +1,4 @@
-import { ExerciseResume } from '@/components/detailsRoutine/ExerciseResume';
+import { ExerciseResume } from '@/components/routine/ExerciseResume';
 import { ExercisesListDB } from '@/repositories/exerciseRepository';
 
 export const mapExercisesToExerciseCardResume = (

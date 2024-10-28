@@ -5,26 +5,53 @@ import { ScrollView } from '@/components/ui/scroll-view';
 import { VStack } from '@/components/ui/vstack';
 import { NavigationProps, RootStackParamList } from '@/types/navigation';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
-import { useFetchDetailsLastWorkout } from '@/hooks/workoutHook';
+import {
+  useFetchDetailsLastWorkout,
+  useFetchRoutineWorkouts,
+} from '@/hooks/workoutHook';
 import { HStack } from '@/components/ui/hstack';
 import ExerciseResumeComponent, {
   ExerciseResume,
-} from '@/components/detailsRoutine/ExerciseResume';
+} from '@/components/routine/ExerciseResume';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal, Pencil, Trash } from 'lucide-react-native';
 import SlideUpBaseModal from '@/components/shared/SlideUpBaseModal';
 import PopupBaseModal from '@/components/shared/PopupBaseModal';
 import { useDeleteWorkoutTemplate } from '@/hooks/workoutTemplateHook';
 import { emitter } from '@/utils/emitter';
+import AreaChart, {
+  DataChartProps,
+  DataPoint,
+} from '@/components/shared/AreaChart';
 
 const DetailsRoutine: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute<RouteProp<RootStackParamList, 'DetailsRoutine'>>();
   const { templateId, myRoutineName } = route.params;
 
+  const [chartDetailsWorkout, setChartDetailsWorkout] = useState<
+    DataChartProps[]
+  >([]);
+  const [dataChartTotal, setDataChartTotal] = useState<string>('');
+  const [dataChartPoints, setDataChartPoints] = useState<DataPoint[]>([]);
   const [exercises, setExercises] = useState<ExerciseResume[]>([]);
   const [isSlideUpModalVisible, setIsSlideUpModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const [activeButton, setActiveButton] = useState('volumen');
+
+  const fetchRoutineChartDetailsWorkout = async () => {
+    const { chartDetailsWorkout, error: errorChartDetailsWorkout } =
+      await useFetchRoutineWorkouts(templateId);
+
+    if (!errorChartDetailsWorkout) {
+      setChartDetailsWorkout(chartDetailsWorkout!);
+
+      if (chartDetailsWorkout && chartDetailsWorkout.length > 0) {
+        setDataChartPoints(chartDetailsWorkout[0].dataPoints);
+        setDataChartTotal(chartDetailsWorkout[0].dataTotal);
+      }
+    }
+  };
 
   const fetchExercises = async () => {
     const { exercisesResumes, error: errorRoutines } =
@@ -36,6 +63,7 @@ const DetailsRoutine: React.FC = () => {
   };
 
   useEffect(() => {
+    fetchRoutineChartDetailsWorkout();
     fetchExercises();
   }, [templateId]);
 
@@ -127,6 +155,52 @@ const DetailsRoutine: React.FC = () => {
         >
           <Text className="text-white">Empezar Rutina</Text>
         </Button>
+
+        <AreaChart dataPoints={dataChartPoints} dataTotal={dataChartTotal} />
+        <HStack className="justify-between mb-4">
+          <Button
+            className={
+              activeButton === 'volumen'
+                ? 'rounded-lg bg-blue-500'
+                : 'rounded-lg bg-background-50'
+            }
+            onPress={() => {
+              setActiveButton('volumen');
+              setDataChartPoints(chartDetailsWorkout[0].dataPoints);
+              setDataChartTotal(chartDetailsWorkout[0].dataTotal);
+            }}
+          >
+            <Text className="text-white">Volumen</Text>
+          </Button>
+          <Button
+            className={
+              activeButton === 'repeticiones'
+                ? 'rounded-lg bg-blue-500'
+                : 'rounded-lg bg-background-50'
+            }
+            onPress={() => {
+              setActiveButton('repeticiones');
+              setDataChartPoints(chartDetailsWorkout[1].dataPoints);
+              setDataChartTotal(chartDetailsWorkout[1].dataTotal);
+            }}
+          >
+            <Text className="text-white">Repeticiones</Text>
+          </Button>
+          <Button
+            className={
+              activeButton === 'duracion'
+                ? 'rounded-lg bg-blue-500'
+                : 'rounded-lg bg-background-50'
+            }
+            onPress={() => {
+              setActiveButton('duracion');
+              setDataChartPoints(chartDetailsWorkout[2].dataPoints);
+              setDataChartTotal(chartDetailsWorkout[2].dataTotal);
+            }}
+          >
+            <Text className="text-white">Duración</Text>
+          </Button>
+        </HStack>
 
         <HStack className="justify-between mb-4">
           <Text className="text-gray-400 mt-4">Ejercicios</Text>

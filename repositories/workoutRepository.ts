@@ -23,6 +23,7 @@ export interface WorkoutTemplateDB {
 }
 
 export interface WorkoutExerciseDB {
+  id: number;
   reps: number;
   sets: number;
   notes: string | null;
@@ -165,6 +166,27 @@ export class WorkoutRepository extends BaseRepository<
         .is('workout_templates.deleted', 'FALSE')
         .not('workout_templates', 'is', null);
     }
+
+    const { data, error } = await query;
+
+    if (error) throw error;
+    return data;
+  }
+
+  async getRoutineWorkouts(templateId: number): Promise<WorkoutDataDB[]> {
+    const query = this.supabase
+      .from(this.table)
+      .select(
+        `
+        *,
+        workout_exercises (
+          sets,
+          reps
+        )
+      `
+      )
+      .eq('template_id', templateId)
+      .eq('template', 'FALSE');
 
     const { data, error } = await query;
 
