@@ -41,6 +41,7 @@ const Routine: React.FC = () => {
 
     if (!errorRoutines) {
       setRoutines(exercisesResumes!);
+      console.log(routines[2]);
     }
 
     if (!errorGroups) {

@@ -108,11 +108,12 @@ const useUpdateRoutine = async (
   name: string,
   exercises: ExerciseResume[]
 ) => {
+  // Primero, marcaremos la rutina anterior como eliminada.
   const workoutTemplateEntity = {
-    id: undefined,
-    name: name,
-    deleted: false,
-    user_id: 1,
+    id: undefined, // ID de la rutina que queremos actualizar
+    name: name, // Usaremos el nuevo nombre
+    deleted: true, // Marcamos como eliminada
+    user_id: 1, // ID del usuario, ajustar según tu lógica
   } as WorkoutTemplateUpdate;
 
   const { execute: executeWorkoutTemplateUpdate } = useCRUD(() =>
@@ -126,10 +127,32 @@ const useUpdateRoutine = async (
     return { error: errorWorkoutTemplateUpdate };
   }
 
+  // Ahora creamos una nueva plantilla con los cambios aplicados
+  const newWorkoutTemplateEntity = {
+    id: undefined, // Un ID nuevo para la nueva rutina
+    name: name, // El nuevo nombre
+    deleted: false, // Esta plantilla no está eliminada
+    user_id: 1, // ID del usuario, ajustar según tu lógica
+  } as WorkoutTemplateInsert;
+
+  const { execute: executeNewWorkoutTemplateInsert } = useCRUD(() =>
+    workoutTemplateRepo.create(newWorkoutTemplateEntity)
+  );
+
+  const {
+    data: dataNewWorkoutTemplateInsert,
+    error: errorNewWorkoutTemplateInsert,
+  } = await executeNewWorkoutTemplateInsert();
+
+  if (errorNewWorkoutTemplateInsert) {
+    return { error: errorNewWorkoutTemplateInsert };
+  }
+
+  // Ahora, creamos un nuevo workout asociado a la nueva plantilla
   const newWorkoutsEntity = {
-    id: undefined,
-    template_id: templateId,
-    template: true,
+    id: undefined, // Un ID nuevo para el nuevo workout
+    template_id: dataNewWorkoutTemplateInsert?.id, // Usamos el ID de la nueva plantilla
+    template: true, // Indica que es una plantilla
   } as WorkoutInsert;
 
   const { execute: executeWorkoutsInsert } = useCRUD(() =>
@@ -140,23 +163,25 @@ const useUpdateRoutine = async (
     await executeWorkoutsInsert();
 
   if (errorWorkoutsInsert) {
-    return { errorWorkoutsInsert };
+    return { error: errorWorkoutsInsert };
   }
 
+  // Ahora, agregamos los ejercicios a la nueva rutina
   for (const exercise of exercises) {
     const newWorkoutExerciseEntity = {
-      id: undefined,
-      workout_id: dataWorkoutsInsert?.id,
-      exercise_id: exercise.id,
+      id: undefined, // Un ID nuevo para el nuevo ejercicio
+      workout_id: dataWorkoutsInsert?.id, // Usamos el ID del nuevo workout
+      exercise_id: exercise.id, // ID del ejercicio existente
       notes: exercise.notes,
       rest_time: exercise.restTime,
     } as WorkoutExerciseInsert;
 
+    // Agregamos sets si existen
     if (exercise.sets.length > 0) {
       for (const set of exercise.sets) {
-        newWorkoutExerciseEntity.reps = set.reps;
-        newWorkoutExerciseEntity.sets = 1;
-        newWorkoutExerciseEntity.weight = set.weight;
+        newWorkoutExerciseEntity.reps = set.reps; // Asignamos reps
+        newWorkoutExerciseEntity.sets = 1; // Asignamos número de sets, ajusta si necesario
+        newWorkoutExerciseEntity.weight = set.weight; // Asignamos peso
 
         const { execute: executeWorkoutExerciseInsert } = useCRUD(() =>
           workoutExercisesRepo.create(newWorkoutExerciseEntity)
@@ -170,6 +195,7 @@ const useUpdateRoutine = async (
         }
       }
     } else {
+      // Si no hay sets, simplemente creamos el ejercicio
       const { execute: executeWorkoutExerciseInsert } = useCRUD(() =>
         workoutExercisesRepo.create(newWorkoutExerciseEntity)
       );
@@ -182,7 +208,8 @@ const useUpdateRoutine = async (
       }
     }
   }
-  return { error: null };
+
+  return { error: null }; // Retornamos sin errores
 };
 
 export { useCreateRoutine, useUpdateRoutine };

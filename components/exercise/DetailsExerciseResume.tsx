@@ -71,6 +71,17 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
       }),
     }));
 
+    useEffect(() => {
+      setExerciseSets(sets);
+      setExerciseRestTimeString(restTime);
+      setExerciseNotes(notes);
+      setExerciseRestTimeNumber(
+        convertIntervalToSeconds(
+          convertStringToInterval(restTime ? restTime : '0')
+        )
+      );
+    }, [sets, restTime, notes]);
+
     const handleSetChange = (
       index: number,
       field: keyof SetsExerciseResume,
