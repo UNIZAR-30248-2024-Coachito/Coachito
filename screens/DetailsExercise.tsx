@@ -7,19 +7,13 @@ import { RootStackParamList } from '@/types/navigation';
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { useFetchExerciseDetails } from '@/hooks/exerciseHook';
 import { HStack } from '@/components/ui/hstack';
-import { Award, Table } from 'lucide-react-native';
-import {
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableData,
-} from '@/components/ui/table';
+import { Award } from 'lucide-react-native';
 import AreaChart, {
   DataChartProps,
   DataPoint,
 } from '@/components/shared/AreaChart';
 import { Button } from '@/components/ui/button';
+import { Image } from 'react-native';
 
 export interface SerieRecords {
   reps: number;
@@ -65,7 +59,11 @@ const DetailsExercise: React.FC<ExerciseDetails> = () => {
   return (
     <ScrollView className="flex-1">
       <VStack className="p-4">
-        {/* Imagen ejercicio */}
+        <Image
+          style={{ width: 365, height: 200 }}
+          source={{ uri: exercisesDetails!.imageUrl }}
+          className="mb-4"
+        />
 
         <Text size="2xl" bold>
           {exercisesDetails?.name}
@@ -176,23 +174,6 @@ const DetailsExercise: React.FC<ExerciseDetails> = () => {
             </HStack>
           ))}
         </VStack>
-
-        <Table className="w-full">
-          <TableHeader>
-            <TableRow>
-              <TableHead>Reps</TableHead>
-              <TableHead>Mejor Marca Personal</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {exercisesDetails?.serieRecords.map((exercise, index) => (
-              <TableRow key={index}>
-                <TableData>{exercise.reps}</TableData>
-                <TableData>{exercise.personalBest} kg</TableData>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
       </VStack>
     </ScrollView>
   );
