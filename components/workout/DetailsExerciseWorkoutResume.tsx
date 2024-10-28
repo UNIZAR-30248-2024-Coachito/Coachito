@@ -17,10 +17,7 @@ import { Input, InputField } from '../ui/input';
 import { Button } from '../ui/button';
 import { Textarea, TextareaInput } from '../ui/textarea';
 import { Box } from '../ui/box';
-import {
-  ExerciseResume,
-  SetsExerciseResume,
-} from '../detailsRoutine/ExerciseResume';
+import { ExerciseResume, SetsExerciseResume } from '../routine/ExerciseResume';
 import {
   convertIntervalToSeconds,
   convertStringToInterval,

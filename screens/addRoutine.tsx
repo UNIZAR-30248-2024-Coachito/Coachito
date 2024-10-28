@@ -16,7 +16,7 @@ import ExerciseResumeComponent, {
 import { useCreateRoutine } from '@/hooks/routineHook';
 import { ScrollView } from 'react-native';
 import { emitter } from '@/utils/emitter';
-import { ExerciseResume } from '@/components/detailsRoutine/ExerciseResume';
+import { ExerciseResume } from '@/components/routine/ExerciseResume';
 
 const AddRoutine: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();

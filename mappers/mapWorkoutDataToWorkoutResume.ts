@@ -1,4 +1,4 @@
-import { ExerciseResume } from '@/components/detailsRoutine/ExerciseResume';
+import { ExerciseResume } from '@/components/routine/ExerciseResume';
 import { WorkoutHeaderResume } from '@/components/workout/WorkoutHeaderResume';
 import { WorkoutDataDB } from '@/repositories/workoutRepository';
 import { WorkoutResume } from '@/screens/VerEntrenamiento';

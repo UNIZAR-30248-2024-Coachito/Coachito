@@ -20,10 +20,7 @@ import SlideUpBaseModal from '../shared/SlideUpBaseModal';
 import { VStack } from '../ui/vstack';
 import { Box } from '../ui/box';
 import Slider from '@react-native-assets/slider';
-import {
-  ExerciseResume,
-  SetsExerciseResume,
-} from '../detailsRoutine/ExerciseResume';
+import { ExerciseResume, SetsExerciseResume } from '../routine/ExerciseResume';
 import {
   convertIntervalToSeconds,
   convertStringToInterval,

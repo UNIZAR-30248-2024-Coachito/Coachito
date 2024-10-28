@@ -5,12 +5,13 @@ import {
 } from '@/repositories/workoutRepository';
 import useCRUD from './useCRUD';
 import { mapWorkoutDataToExerciseResumeArray } from '@/mappers/mapWorkoutDataToDetailsRoutinesResume';
-import { ExerciseResume } from '@/components/detailsRoutine/ExerciseResume';
+import { ExerciseResume } from '@/components/routine/ExerciseResume';
 import {
   WorkoutExerciseInsert,
   WorkoutExerciseRepository,
 } from '@/repositories/workoutExerciseRepository';
 import { mapWorkoutDataToWorkoutResume } from '@/mappers/mapWorkoutDataToWorkoutResume';
+import { mapWorkoutDataToRoutineChart } from '@/mappers/mapWorkoutDataToRoutineChart';
 
 const workoutRepository = new WorkoutRepository(supabase);
 const workoutExercisesRepo = new WorkoutExerciseRepository(supabase);
@@ -109,4 +110,22 @@ const useCreateWorkout = async (
   return { error: null };
 };
 
-export { useFetchDetailsLastWorkout, useFetchDetailsWorkout, useCreateWorkout };
+const useFetchRoutineWorkouts = async (id: number) => {
+  const { execute } = useCRUD(() => workoutRepository.getRoutineWorkouts(id));
+
+  const { data, error } = await execute();
+
+  let chartDetailsWorkout = null;
+  if (!error) {
+    chartDetailsWorkout = mapWorkoutDataToRoutineChart(data!);
+  }
+
+  return { chartDetailsWorkout, error };
+};
+
+export {
+  useFetchDetailsLastWorkout,
+  useFetchDetailsWorkout,
+  useCreateWorkout,
+  useFetchRoutineWorkouts,
+};

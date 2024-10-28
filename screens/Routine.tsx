@@ -11,7 +11,7 @@ import { useFetchTemplateWorkouts } from '@/hooks/workoutTemplateHook';
 import { HStack } from '@/components/ui/hstack';
 import GroupedRoutinesResumeComponent, {
   GroupedRoutines,
-} from '@/components/myRoutines/GroupedRoutinesResume';
+} from '@/components/routine/GroupedRoutinesResume';
 import PopupBaseModal from '@/components/shared/PopupBaseModal';
 import { Input, InputField } from '@/components/ui/input';
 import {
