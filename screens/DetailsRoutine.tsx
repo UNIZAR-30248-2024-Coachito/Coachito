@@ -22,7 +22,7 @@ import { emitter } from '@/utils/emitter';
 import RoutineChart, {
   DataChartProps,
   DataPoint,
-} from '@/components/routine/RoutineChart';
+} from '@/components/shared/AreaChart';
 
 const DetailsRoutine: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
@@ -45,6 +45,11 @@ const DetailsRoutine: React.FC = () => {
 
     if (!errorChartDetailsWorkout) {
       setChartDetailsWorkout(chartDetailsWorkout!);
+
+      if (chartDetailsWorkout && chartDetailsWorkout.length > 0) {
+        setDataChartPoints(chartDetailsWorkout[0].dataPoints);
+        setDataChartTotal(chartDetailsWorkout[0].dataTotal);
+      }
     }
   };
 

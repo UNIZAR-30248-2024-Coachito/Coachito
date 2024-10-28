@@ -1,4 +1,4 @@
-import { DataChartProps, DataPoint } from '@/components/routine/RoutineChart';
+import { DataChartProps, DataPoint } from '@/components/shared/AreaChart';
 import { WorkoutDataDB } from '@/repositories/workoutRepository';
 
 export const mapWorkoutDataToRoutineChart = (

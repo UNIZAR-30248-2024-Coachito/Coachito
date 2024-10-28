@@ -3,6 +3,7 @@ import '../../styles.css';
 import { LineChart } from 'react-native-gifted-charts';
 import { HStack } from '../ui/hstack';
 import { Text } from '../ui/text';
+import { Dimensions } from 'react-native';
 
 export interface DataPoint {
   value: number;
@@ -16,6 +17,8 @@ export interface DataChartProps {
 
 const RoutineChart: React.FC<DataChartProps> = ({ dataPoints, dataTotal }) => {
   const xAxisLabels = dataPoints.map((point) => point.label);
+  const screenWidth = Dimensions.get('window').width;
+  const spacing = screenWidth / Math.max(dataPoints.length, 1);
 
   return (
     <>
@@ -39,6 +42,8 @@ const RoutineChart: React.FC<DataChartProps> = ({ dataPoints, dataTotal }) => {
         yAxisThickness={1}
         rulesColor="rgba(255, 255, 255, 0.2)"
         rulesType="solid"
+        spacing={spacing}
+        width={screenWidth - 90}
       />
     </>
   );

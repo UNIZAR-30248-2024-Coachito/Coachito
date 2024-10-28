@@ -118,7 +118,6 @@ const useFetchRoutineWorkouts = async (id: number) => {
   let chartDetailsWorkout = null;
   if (!error) {
     chartDetailsWorkout = mapWorkoutDataToRoutineChart(data!);
-    console.log(chartDetailsWorkout);
   }
 
   return { chartDetailsWorkout, error };
