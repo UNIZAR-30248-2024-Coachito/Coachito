@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { Alert } from 'react-native';
 import '../styles.css';
 import { Text } from '../components/ui/text';
 import { Button } from '../components/ui/button';
@@ -47,15 +48,27 @@ const Routine: React.FC = () => {
     }
   };
 
+  const showAlert = (title: string, message: string) => {
+    Alert.alert(title, message, [
+      { text: 'Aceptar', onPress: () => console.log('OK Pressed') },
+    ]);
+  };
+
   useEffect(() => {
     const routineDeletedListener = emitter.addListener('routineDeleted', () => {
       fetchRoutinesAndGroups();
+      showAlert(
+        '¡Rutina Eliminada!',
+        'Se ha eliminado la rutina correctamente.'
+      );
     });
     const routineRenamedListener = emitter.addListener('routineRenamed', () => {
       fetchRoutinesAndGroups();
+      showAlert('¡Rutina Editada!', 'Se ha editado la rutina correctamente.');
     });
     const routineAddedListener = emitter.addListener('routineAdded', () => {
       fetchRoutinesAndGroups();
+      showAlert('¡Rutina Creada!', 'Se ha creado la rutina correctamente.');
     });
 
     fetchRoutinesAndGroups();

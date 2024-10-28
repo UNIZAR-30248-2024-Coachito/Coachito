@@ -26,6 +26,7 @@ const AddRoutine: React.FC = () => {
   const [selectedExercises, setSelectedExercises] = useState<ExerciseResume[]>(
     route.params.exercises
   );
+
   const [isCancelRoutineModalVisible, setIsCancelRoutineModalVisible] =
     useState(false);
   const exerciseRefs = useRef<(ExerciseResumeRef | null)[]>([]);

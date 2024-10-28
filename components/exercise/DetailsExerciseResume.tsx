@@ -1,4 +1,9 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useState,
+  useEffect,
+} from 'react';
 import { Text } from '../ui/text';
 import {
   Table,
@@ -134,6 +139,12 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
         <Text className="text-white">Confirmar</Text>
       </Button>,
     ];
+
+    useEffect(() => {
+      if (!exerciseSets || exerciseSets.length === 0) {
+        addNewSet();
+      }
+    }, [exerciseSets]);
 
     return (
       <>

@@ -32,7 +32,7 @@ const WorkoutDivisionComponent: React.FC<WorkoutDivision> = ({
               size="md"
               orientation="horizontal"
               style={{
-                width: `${exerciseProportion.proportion}%`,
+                width: `${exerciseProportion.proportion * 0.9}%`,
               }}
             >
               <ProgressFilledTrack className="bg-blue-500 rounded-lg" />
