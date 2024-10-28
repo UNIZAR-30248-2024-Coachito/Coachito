@@ -16,6 +16,7 @@ import AddRoutine from './AddRoutine';
 import EditRoutine from './EditRoutine';
 import AddExerciseEdit from './AddExerciseEdit';
 import StartWorkout from './StartWorkout';
+import DetailsExercise from './DetailsExercise';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -105,6 +106,13 @@ export default function App() {
             {() => (
               <Template>
                 <VerEntrenamiento />
+              </Template>
+            )}
+          </Tab.Screen>
+          <Tab.Screen name="DetailsExercise">
+            {() => (
+              <Template>
+                <DetailsExercise />
               </Template>
             )}
           </Tab.Screen>

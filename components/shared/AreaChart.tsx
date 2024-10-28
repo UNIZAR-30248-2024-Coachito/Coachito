@@ -15,7 +15,7 @@ export interface DataChartProps {
   dataTotal: string;
 }
 
-const RoutineChart: React.FC<DataChartProps> = ({ dataPoints, dataTotal }) => {
+const AreaChart: React.FC<DataChartProps> = ({ dataPoints, dataTotal }) => {
   const xAxisLabels = dataPoints.map((point) => point.label);
   const screenWidth = Dimensions.get('window').width;
   const spacing = screenWidth / Math.max(dataPoints.length, 1);
@@ -49,4 +49,4 @@ const RoutineChart: React.FC<DataChartProps> = ({ dataPoints, dataTotal }) => {
   );
 };
 
-export default RoutineChart;
+export default AreaChart;

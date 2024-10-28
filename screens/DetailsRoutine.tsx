@@ -19,7 +19,7 @@ import SlideUpBaseModal from '@/components/shared/SlideUpBaseModal';
 import PopupBaseModal from '@/components/shared/PopupBaseModal';
 import { useDeleteWorkoutTemplate } from '@/hooks/workoutTemplateHook';
 import { emitter } from '@/utils/emitter';
-import RoutineChart, {
+import AreaChart, {
   DataChartProps,
   DataPoint,
 } from '@/components/shared/AreaChart';
@@ -156,7 +156,7 @@ const DetailsRoutine: React.FC = () => {
           <Text className="text-white">Empezar Rutina</Text>
         </Button>
 
-        <RoutineChart dataPoints={dataChartPoints} dataTotal={dataChartTotal} />
+        <AreaChart dataPoints={dataChartPoints} dataTotal={dataChartTotal} />
         <HStack className="justify-between mb-4">
           <Button
             className={

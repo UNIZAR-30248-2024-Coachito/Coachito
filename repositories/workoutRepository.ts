@@ -23,6 +23,7 @@ export interface WorkoutTemplateDB {
 }
 
 export interface WorkoutExerciseDB {
+  id: number;
   reps: number;
   sets: number;
   notes: string | null;
