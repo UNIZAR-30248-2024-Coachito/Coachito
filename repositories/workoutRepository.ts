@@ -19,6 +19,7 @@ export interface WorkoutDataDB {
 
 export interface WorkoutTemplateDB {
   name: string;
+  users: UsersDB;
   workout_templates_group: WorkoutTemplateGroupDB;
 }
 
@@ -46,6 +47,11 @@ export interface ExerciseDB {
 
 export interface MuscleGroupDB {
   name: string;
+}
+
+export interface UsersDB {
+  id: number;
+  username: string;
 }
 
 export interface WorkoutTemplateGroupDB {
@@ -189,6 +195,26 @@ export class WorkoutRepository extends BaseRepository<
       .eq('template', 'FALSE');
 
     const { data, error } = await query;
+
+    if (error) throw error;
+    return data;
+  }
+
+  async getUserWorkouts(userId: number): Promise<WorkoutDataDB[]> {
+    const { data, error } = await this.supabase
+      .from(this.table)
+      .select(
+        `
+        *,
+        workout_exercises (reps),
+        workout_templates!fk_workouts_template_id (
+          user_id,
+          users (username)
+        )
+      `
+      )
+      .eq('workout_templates.user_id', userId)
+      .eq('template', false);
 
     if (error) throw error;
     return data;

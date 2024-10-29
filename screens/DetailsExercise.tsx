@@ -33,7 +33,7 @@ export interface ExerciseDetails {
   dataPoints: DataChartProps[];
 }
 
-const DetailsExercise: React.FC<ExerciseDetails> = () => {
+const DetailsExercise: React.FC = () => {
   const route = useRoute<RouteProp<RootStackParamList, 'DetailsExercise'>>();
   const { exerciseId } = route.params;
   const [exercisesDetails, setExercisesDetails] = useState<ExerciseDetails>();

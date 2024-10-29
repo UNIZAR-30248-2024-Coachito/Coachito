@@ -5,8 +5,7 @@ export type RootStackParamList = {
   Dashboard: undefined;
   Routine: undefined;
   DetailsRoutine: { templateId: number; myRoutineName: string };
-  Profile: undefined;
-  Exercises: undefined;
+  Profile: { userId: number };
   AddExercise: { selectedExercises: ExerciseResume[]; groupId: number };
   AddExerciseEdit: {
     selectedExercises: ExerciseResume[];

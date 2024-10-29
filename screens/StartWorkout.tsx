@@ -17,9 +17,9 @@ import { ExerciseResume } from '@/components/routine/ExerciseResume';
 import DetailsExerciseWorkoutResumeComponent from '@/components/workout/DetailsExerciseWorkoutResume';
 import Timer from '@/components/workout/Timer';
 
-const EditRoutine: React.FC = () => {
+const StartWorkout: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
-  const route = useRoute<RouteProp<RootStackParamList, 'EditRoutine'>>();
+  const route = useRoute<RouteProp<RootStackParamList, 'StartWorkout'>>();
   const exerciseRefs = useRef<(ExerciseResumeRef | null)[]>([]);
   const [selectedExercises, setSelectedExercises] = useState<ExerciseResume[]>(
     []
@@ -159,4 +159,4 @@ const EditRoutine: React.FC = () => {
   );
 };
 
-export default EditRoutine;
+export default StartWorkout;

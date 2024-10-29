@@ -37,6 +37,7 @@ const AreaChart: React.FC<DataChartProps> = ({ dataPoints, dataTotal }) => {
         xAxisColor="gray"
         xAxisThickness={1}
         xAxisLabelTexts={xAxisLabels}
+        xAxisLabelTextStyle={{ color: 'gray' }}
         yAxisColor="gray"
         yAxisTextStyle={{ color: 'gray' }}
         yAxisThickness={1}
