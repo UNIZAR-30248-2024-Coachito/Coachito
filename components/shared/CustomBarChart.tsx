@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import '../../styles.css';
 import { BarChart } from 'react-native-gifted-charts';
 import { HStack } from '../ui/hstack';
@@ -6,26 +6,19 @@ import { Text } from '../ui/text';
 import { Dimensions } from 'react-native';
 import { VStack } from '../ui/vstack';
 import CustomChartButtons from './CustomChartButtons';
-
-export interface DataPoint {
-  value: number;
-  label: string;
-}
-
-export interface DataChartProps {
-  dataPoints: DataPoint[];
-  dataTotal: string;
-}
-
-export interface CustomDataChartProps {
-  data: DataChartProps[];
-  buttons: string[];
-}
+import { CustomDataChartProps, DataPoint } from './CustomAreaChart';
 
 const CustomBarChart: React.FC<CustomDataChartProps> = ({ data, buttons }) => {
   const [dataChartPoints, setDataChartPoints] = useState<DataPoint[]>([]);
   const [dataChartTotal, setDataChartTotal] = useState<string>('0');
   const screenWidth = Dimensions.get('window').width;
+
+  useEffect(() => {
+    if (data && data.length > 0) {
+      setDataChartPoints(data[0].dataPoints);
+      setDataChartTotal(data[0].dataTotal);
+    }
+  }, [data]);
 
   return (
     <VStack className="gap-4">
@@ -49,7 +42,7 @@ const CustomBarChart: React.FC<CustomDataChartProps> = ({ data, buttons }) => {
         rulesType="solid"
         rulesColor="rgba(255, 255, 255, 0.2)"
         spacing={30}
-        width={screenWidth - 60}
+        width={screenWidth - 90}
       />
 
       <CustomChartButtons

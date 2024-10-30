@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Button } from '../ui/button';
 import { HStack } from '../ui/hstack';
 import { Text } from '../ui/text';
-import { DataChartProps, DataPoint } from './CustomBarChart';
+import { DataChartProps, DataPoint } from './CustomAreaChart';
+import { ScrollView } from '../ui/scroll-view';
 
 export interface CustomChartButtonsProps {
   names: string[];
@@ -20,13 +21,13 @@ const CustomChartButtons: React.FC<CustomChartButtonsProps> = ({
   const [activeButton, setActiveButton] = useState('button1');
 
   return (
-    <>
+    <ScrollView horizontal showsHorizontalScrollIndicator={false}>
       <HStack className="justify-between gap-4">
         <Button
           className={
             activeButton === 'button1'
-              ? 'flex-1 rounded-lg bg-blue-500'
-              : 'flex-1 rounded-lg bg-background-50'
+              ? 'rounded-lg bg-blue-500'
+              : 'rounded-lg bg-background-50'
           }
           onPress={() => {
             setActiveButton('button1');
@@ -39,8 +40,8 @@ const CustomChartButtons: React.FC<CustomChartButtonsProps> = ({
         <Button
           className={
             activeButton === 'button2'
-              ? 'flex-1 rounded-lg bg-blue-500'
-              : 'flex-1 rounded-lg bg-background-50'
+              ? 'rounded-lg bg-blue-500'
+              : 'rounded-lg bg-background-50'
           }
           onPress={() => {
             setActiveButton('button2');
@@ -53,8 +54,8 @@ const CustomChartButtons: React.FC<CustomChartButtonsProps> = ({
         <Button
           className={
             activeButton === 'button3'
-              ? 'flex-1 rounded-lg bg-blue-500'
-              : 'flex-1 rounded-lg bg-background-50'
+              ? 'rounded-lg bg-blue-500'
+              : 'rounded-lg bg-background-50'
           }
           onPress={() => {
             setActiveButton('button3');
@@ -65,7 +66,7 @@ const CustomChartButtons: React.FC<CustomChartButtonsProps> = ({
           <Text className="text-white">{names[2]}</Text>
         </Button>
       </HStack>
-    </>
+    </ScrollView>
   );
 };
 

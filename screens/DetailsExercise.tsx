@@ -8,11 +8,9 @@ import { useRoute, RouteProp } from '@react-navigation/native';
 import { useFetchExerciseDetails } from '@/hooks/exerciseHook';
 import { HStack } from '@/components/ui/hstack';
 import { Award } from 'lucide-react-native';
-import AreaChart, {
+import CustomAreaChart, {
   DataChartProps,
-  DataPoint,
-} from '@/components/shared/AreaChart';
-import { Button } from '@/components/ui/button';
+} from '@/components/shared/CustomAreaChart';
 import { Image } from 'react-native';
 
 export interface SerieRecords {
@@ -37,9 +35,7 @@ const DetailsExercise: React.FC = () => {
   const route = useRoute<RouteProp<RootStackParamList, 'DetailsExercise'>>();
   const { exerciseId } = route.params;
   const [exercisesDetails, setExercisesDetails] = useState<ExerciseDetails>();
-  const [activeButton, setActiveButton] = useState('peso');
-  const [dataChartPoints, setDataChartPoints] = useState<DataPoint[]>([]);
-  const [dataChartTotal, setDataChartTotal] = useState<string>('');
+  const buttons = ['Mayor Peso', 'One Rep Max', 'Mejor Volumen'];
 
   const fetchExercisesDetails = async () => {
     const { exerciseDetails, error: errorRoutines } =
@@ -47,8 +43,6 @@ const DetailsExercise: React.FC = () => {
 
     if (!errorRoutines) {
       setExercisesDetails(exerciseDetails!);
-      setDataChartPoints(exerciseDetails!.dataPoints[0].dataPoints);
-      setDataChartTotal(exerciseDetails!.dataPoints[0].dataTotal);
     }
   };
 
@@ -59,11 +53,11 @@ const DetailsExercise: React.FC = () => {
   return (
     <ScrollView className="flex-1">
       <VStack className="p-4">
-        <Image
+        {/*<Image
           style={{ width: 365, height: 200 }}
           source={{ uri: exercisesDetails!.imageUrl }}
           className="mb-4"
-        />
+        />*/}
 
         <Text size="2xl" bold>
           {exercisesDetails?.name}
@@ -73,59 +67,14 @@ const DetailsExercise: React.FC = () => {
           Primario: {exercisesDetails?.primaryMuscleGroup}
         </Text>
 
-        <AreaChart dataPoints={dataChartPoints} dataTotal={dataChartTotal} />
-        <ScrollView
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          className="mb-4"
-        >
-          <HStack className="gap-4">
-            <Button
-              className={
-                activeButton === 'peso'
-                  ? 'rounded-lg bg-blue-500'
-                  : 'rounded-lg bg-background-50'
-              }
-              onPress={() => {
-                setActiveButton('peso');
-                setDataChartPoints(exercisesDetails!.dataPoints[0].dataPoints);
-                setDataChartTotal(exercisesDetails!.dataPoints[0].dataTotal);
-              }}
-            >
-              <Text className="text-white">Mayor Peso</Text>
-            </Button>
-            <Button
-              className={
-                activeButton === '1rm'
-                  ? 'rounded-lg bg-blue-500'
-                  : 'rounded-lg bg-background-50'
-              }
-              onPress={() => {
-                setActiveButton('1rm');
-                setDataChartPoints(exercisesDetails!.dataPoints[1].dataPoints);
-                setDataChartTotal(exercisesDetails!.dataPoints[1].dataTotal);
-              }}
-            >
-              <Text className="text-white">One Rep Max</Text>
-            </Button>
-            <Button
-              className={
-                activeButton === 'volumen'
-                  ? 'rounded-lg bg-blue-500'
-                  : 'rounded-lg bg-background-50'
-              }
-              onPress={() => {
-                setActiveButton('volumen');
-                setDataChartPoints(exercisesDetails!.dataPoints[2].dataPoints);
-                setDataChartTotal(exercisesDetails!.dataPoints[2].dataTotal);
-              }}
-            >
-              <Text className="text-white">Mejor Volumen</Text>
-            </Button>
-          </HStack>
-        </ScrollView>
+        {exercisesDetails && (
+          <CustomAreaChart
+            data={exercisesDetails!.dataPoints}
+            buttons={buttons}
+          />
+        )}
 
-        <VStack className="gap-4 mb-4">
+        <VStack className="gap-4 mt-4 mb-4">
           <HStack className="gap-2">
             <Award color="yellow" />
             <Text className="text-gray-400">Records Personales</Text>

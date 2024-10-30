@@ -1,6 +1,6 @@
 import { WorkoutExerciseDB } from '@/repositories/workoutRepository';
 import { ExerciseDetails, SerieRecords } from '@/screens/DetailsExercise';
-import { DataPoint } from '@/components/shared/AreaChart';
+import { DataPoint } from '@/components/shared/CustomAreaChart';
 
 export const mapExerciseDataToExerciseDetails = (
   rows: WorkoutExerciseDB[]
@@ -97,8 +97,8 @@ export const mapExerciseDataToExerciseDetails = (
     const { date, higherWeight, best1rm, bestVolume } = workoutsMap[workoutId];
 
     const options: Intl.DateTimeFormatOptions = {
-      month: 'short',
-      day: 'numeric',
+      day: '2-digit',
+      month: '2-digit',
     };
     const formattedDate = date
       .toLocaleDateString('es-ES', options)

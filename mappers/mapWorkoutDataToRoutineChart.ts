@@ -1,4 +1,4 @@
-import { DataChartProps, DataPoint } from '@/components/shared/AreaChart';
+import { DataChartProps, DataPoint } from '@/components/shared/CustomAreaChart';
 import { WorkoutDataDB } from '@/repositories/workoutRepository';
 
 export const mapWorkoutDataToRoutineChart = (
@@ -20,7 +20,10 @@ export const mapWorkoutDataToRoutineChart = (
     };
     const formattedDate = date
       .toLocaleDateString('es-ES', options)
-      .replace('.', '');
+      .replace('.', '')
+      .split('/')
+      .slice(0, 2)
+      .join('/');
 
     volumeData.push({ label: formattedDate, value: workout.volume });
     totalVolume += workout.volume;

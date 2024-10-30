@@ -50,7 +50,7 @@ const VerEntrenamiento: React.FC = () => {
   return (
     <ScrollView className="flex-1">
       <VStack className="p-4">
-        <HStack className="justify-between">
+        <HStack className="gap-4 mb-4">
           <Button
             className="bg-transparent"
             onPress={() => {
