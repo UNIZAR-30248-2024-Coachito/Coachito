@@ -1,45 +1,23 @@
-import { supabase } from '@/api/supabaseClient';
-import { WorkoutRepository } from '@/repositories/workoutRepository';
+import supabaseClient from '@/api/supabaseClient';
 import useCRUD from './useCRUD';
-import { mapWorkoutDataToGroupedRoutinesResume } from '@/mappers/mapWorkoutDataToGroupedRoutinesResume';
-import { WorkoutTemplateRepository } from '@/repositories/workoutTemplateRepository';
-
-const workoutRepository = new WorkoutRepository(supabase);
-const workoutTemplateRepository = new WorkoutTemplateRepository(supabase);
-
-const useFetchWorkoutTemplateById = (id: number) => {
-  const { execute, ...rest } = useCRUD(() =>
-    workoutTemplateRepository.getById(id)
-  );
-  return { execute, ...rest };
-};
 
 const useDeleteWorkoutTemplate = async (id: number) => {
-  const { execute } = useCRUD(() => workoutTemplateRepository.delete(id));
+  /*const { execute } = useCRUD(() => workoutTemplateRepository.delete(id));
 
   const { data, error } = await execute();
 
-  return { data, error };
+  return { data, error };*/
 };
 
 const useFetchTemplateWorkouts = async () => {
   const { execute } = useCRUD(() =>
-    workoutRepository.getWorkoutsWithExercises(true)
+    supabaseClient.get('/rpc/get_routines_details')
   );
 
   const { data, error } = await execute();
+  console.log(data);
 
-  let exercisesResumes = null;
-
-  if (!error) {
-    exercisesResumes = mapWorkoutDataToGroupedRoutinesResume(data!);
-  }
-
-  return { exercisesResumes, error };
+  return { data, error };
 };
 
-export {
-  useFetchWorkoutTemplateById,
-  useDeleteWorkoutTemplate,
-  useFetchTemplateWorkouts,
-};
+export { useDeleteWorkoutTemplate, useFetchTemplateWorkouts };

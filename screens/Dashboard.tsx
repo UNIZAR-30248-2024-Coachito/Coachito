@@ -14,11 +14,10 @@ const Dashboard: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
 
   const fetchWorkouts = async () => {
-    const { workoutResumes, error: errorRoutines } =
-      await useFetchDashboardWorkouts();
+    const { data, error } = await useFetchDashboardWorkouts();
 
-    if (!errorRoutines) {
-      setWorkouts(workoutResumes!);
+    if (!error) {
+      setWorkouts(data);
     }
   };
 
@@ -32,11 +31,11 @@ const Dashboard: React.FC = () => {
         {workouts!.map((workout, index) => (
           <WorkoutCardResumeComponent
             key={index}
-            workoutHeaderResume={workout.workoutHeaderResume}
-            workoutExercisesResume={workout.workoutExercisesResume}
+            workout_header_resume={workout.workout_header_resume}
+            workout_exercises_resume={workout.workout_exercises_resume}
             onPress={() =>
               navigation.navigate('VerEntrenamiento', {
-                workoutId: workout.workoutHeaderResume.workoutId,
+                workoutId: workout.workout_header_resume.workoutId,
               })
             }
           />

@@ -9,14 +9,14 @@ import WorkoutHeaderResumeComponent, {
 } from './WorkoutHeaderResume';
 
 export interface WorkoutCardResume {
-  workoutHeaderResume: WorkoutHeaderResume;
-  workoutExercisesResume: WorkoutExercisesResume;
+  workout_header_resume: WorkoutHeaderResume;
+  workout_exercises_resume: WorkoutExercisesResume;
   onPress?: () => void;
 }
 
 const WorkoutCardResumeComponent: React.FC<WorkoutCardResume> = ({
-  workoutHeaderResume,
-  workoutExercisesResume,
+  workout_header_resume: workoutHeaderResume,
+  workout_exercises_resume: workoutExercisesResume,
   onPress,
 }) => {
   return (

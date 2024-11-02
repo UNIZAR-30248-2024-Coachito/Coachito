@@ -44,8 +44,8 @@ describe('WorkoutCardResumeComponent', () => {
   it('should render the WorkoutCardResumeComponent correctly', () => {
     const { getByText } = render(
       <WorkoutCardResumeComponent
-        workoutHeaderResume={mockHeaderResume}
-        workoutExercisesResume={mockExercisesResume}
+        workout_header_resume={mockHeaderResume}
+        workout_exercises_resume={mockExercisesResume}
       />
     );
 

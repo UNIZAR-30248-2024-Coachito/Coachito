@@ -14,10 +14,7 @@ import GroupedRoutinesResumeComponent, {
 } from '@/components/routine/GroupedRoutinesResume';
 import PopupBaseModal from '@/components/shared/PopupBaseModal';
 import { Input, InputField } from '@/components/ui/input';
-import {
-  useCreateTemplateWorkoutGroup,
-  useFetchTemplateWorkoutGroups,
-} from '@/hooks/workoutTemplateGroupHook';
+import { useCreateTemplateWorkoutGroup } from '@/hooks/workoutTemplateGroupHook';
 import { emitter } from '@/utils/emitter';
 
 export interface Group {
@@ -28,22 +25,14 @@ export interface Group {
 const Routine: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
   const [routines, setRoutines] = useState<GroupedRoutines[]>([]);
-  const [groups, setGroups] = useState<Group[]>([]);
   const [isNewGroupModalVisible, setIsNewGroupModalVisible] = useState(false);
   const [newFolderInputValue, setNewFolderInputValue] = useState('');
 
   const fetchRoutinesAndGroups = async () => {
-    const { exercisesResumes, error: errorRoutines } =
-      await useFetchTemplateWorkouts();
-    const { groups, error: errorGroups } =
-      await useFetchTemplateWorkoutGroups();
+    const { data, error } = await useFetchTemplateWorkouts();
 
-    if (!errorRoutines) {
-      setRoutines(exercisesResumes!);
-    }
-
-    if (!errorGroups) {
-      setGroups(groups!);
+    if (!error) {
+      setRoutines(data!);
     }
   };
 
@@ -150,24 +139,6 @@ const Routine: React.FC = () => {
             groupedRoutine={routine}
           />
         ))}
-
-        {groups
-          .filter(
-            (group) =>
-              !routines.some(
-                (groupedRoutine) => groupedRoutine.groupId === group.id
-              )
-          )!
-          .map((group, index) => (
-            <GroupedRoutinesResumeComponent
-              key={index}
-              groupedRoutine={{
-                groupId: group.id,
-                groupName: group.name,
-                routines: [],
-              }}
-            />
-          ))}
 
         <PopupBaseModal
           components={newFolderComponentsPopUpModal}

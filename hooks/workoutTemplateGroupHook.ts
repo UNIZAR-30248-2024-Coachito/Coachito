@@ -1,35 +1,22 @@
-import { supabase } from '@/api/supabaseClient';
+import supabaseClient from '@/api/supabaseClient';
 import useCRUD from './useCRUD';
-import {
-  WorkoutTemplateGroupRepository,
-  WorkoutTemplateGroupInsert,
-  WorkoutTemplateGroupUpdate,
-} from '@/repositories/workoutTemplateGroupRepository';
-import { mapWorkoutTemplateGroupRowsToGroups } from '@/mappers/mapWorkoutTemplateGroupRowsToGroups';
-
-const workoutTemplateGroupRepository = new WorkoutTemplateGroupRepository(
-  supabase
-);
 
 const useFetchTemplateWorkoutGroups = async () => {
-  const { execute } = useCRUD(() => workoutTemplateGroupRepository.getAll());
+  const { execute } = useCRUD(() =>
+    supabaseClient.get('/rpc/get_template_workout_groups')
+  );
 
   const { data, error } = await execute();
+  console.log(data);
 
-  let groups = null;
-
-  if (!error) {
-    groups = mapWorkoutTemplateGroupRowsToGroups(data!);
-  }
-
-  return { groups, error };
+  return { data, error };
 };
 
 const useCreateTemplateWorkoutGroup = async (name: string) => {
-  const newEntity = { id: undefined, name: name } as WorkoutTemplateGroupInsert;
-
   const { execute } = useCRUD(() =>
-    workoutTemplateGroupRepository.create(newEntity)
+    supabaseClient.post('/workout_templates_group', {
+      name: name,
+    })
   );
 
   const { data, error } = await execute();
@@ -38,12 +25,18 @@ const useCreateTemplateWorkoutGroup = async (name: string) => {
 };
 
 const useEditTemplateWorkoutGroup = async (id: number, name: string) => {
-  const updatedEntity = {
-    name: name,
-  } as unknown as WorkoutTemplateGroupUpdate;
-
   const { execute } = useCRUD(() =>
-    workoutTemplateGroupRepository.update(id, updatedEntity)
+    supabaseClient.patch(
+      '/workout_templates_group',
+      {
+        name: name,
+      },
+      {
+        params: {
+          id: `eq.${id}`,
+        },
+      }
+    )
   );
 
   const { data, error } = await execute();
@@ -52,7 +45,13 @@ const useEditTemplateWorkoutGroup = async (id: number, name: string) => {
 };
 
 const useDeleteTemplateWorkoutGroupById = async (id: number) => {
-  const { execute } = useCRUD(() => workoutTemplateGroupRepository.delete(id));
+  const { execute } = useCRUD(() =>
+    supabaseClient.delete('/workout_templates_group', {
+      params: {
+        id: `eq.${id}`,
+      },
+    })
+  );
 
   const { data, error } = await execute();
 

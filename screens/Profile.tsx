@@ -9,10 +9,12 @@ import { useFetchUserWorkouts } from '@/hooks/userHook';
 import { HStack } from '@/components/ui/hstack';
 import CustomBarChart from '@/components/shared/CustomBarChart';
 import { DataChartProps } from '@/components/shared/CustomAreaChart';
+import { convertIntervalToMinutes } from '@/utils/interval';
+import { formatToChartLabel } from '@/utils/date';
 
 export interface UserWorkouts {
   workoutId: number;
-  duration: number;
+  duration: string;
   repsCount: number;
   volumen: number;
   created_at: string;
@@ -31,27 +33,26 @@ const Profile: React.FC = () => {
   const [chartData, setChartData] = useState<DataChartProps[]>([]);
 
   const fetchUserProfile = async () => {
-    const { userWorkouts, error: errorUserWorkouts } =
-      await useFetchUserWorkouts(userId);
+    const { data, error } = await useFetchUserWorkouts(userId);
 
-    if (!errorUserWorkouts) {
-      setWorkoutsDetails(userWorkouts!);
+    if (!error) {
+      setWorkoutsDetails(data!);
       const durationData =
-        userWorkouts?.workouts.map((workout) => ({
-          value: workout.duration,
-          label: workout.created_at,
+        data!.workouts.map((workout) => ({
+          value: convertIntervalToMinutes(workout.duration),
+          label: formatToChartLabel(workout.created_at),
         })) || [];
 
       const repsData =
-        userWorkouts?.workouts.map((workout) => ({
+        data!.workouts.map((workout) => ({
           value: workout.repsCount,
-          label: workout.created_at,
+          label: formatToChartLabel(workout.created_at),
         })) || [];
 
       const volumenData =
-        userWorkouts?.workouts.map((workout) => ({
+        data!.workouts.map((workout) => ({
           value: workout.volumen,
-          label: workout.created_at,
+          label: formatToChartLabel(workout.created_at),
         })) || [];
 
       setChartData([

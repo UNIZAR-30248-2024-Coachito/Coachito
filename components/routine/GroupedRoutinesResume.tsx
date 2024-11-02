@@ -186,11 +186,12 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
             <ChevronRight color="gray" />
           )}
           <Text className="text-gray-400 ml-2">
-            {groupedRoutine.groupName} ({groupedRoutine.routines?.length || 0})
+            {groupedRoutine.groupName ?? 'Mis Rutinas'} (
+            {groupedRoutine.routines?.length || 0})
           </Text>
         </Button>
 
-        {groupedRoutine.groupName !== 'Mis Rutinas' && (
+        {groupedRoutine.groupName && (
           <Button
             className="bg-transparent"
             onPress={() => {

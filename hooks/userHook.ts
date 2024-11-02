@@ -1,22 +1,19 @@
-import { supabase } from '@/api/supabaseClient';
+import supabaseClient from '@/api/supabaseClient';
 import useCRUD from './useCRUD';
-import { WorkoutRepository } from '@/repositories/workoutRepository';
-import { mapWorkoutDataToProfileresume } from '@/mappers/mapWorkoutDataToProfileResume';
-
-const workoutRepo = new WorkoutRepository(supabase);
+import { UserWorkoutsDetails } from '@/screens/Profile';
 
 const useFetchUserWorkouts = async (userId: number) => {
-  const { execute } = useCRUD(() => workoutRepo.getUserWorkouts(userId));
+  const { execute } = useCRUD<UserWorkoutsDetails>(() =>
+    supabaseClient.get('/rpc/get_user_workouts', {
+      params: {
+        user_id: userId,
+      },
+    })
+  );
 
   const { data, error } = await execute();
 
-  let userWorkouts = null;
-
-  if (!error) {
-    userWorkouts = mapWorkoutDataToProfileresume(data!);
-  }
-
-  return { userWorkouts, error };
+  return { data, error };
 };
 
 export { useFetchUserWorkouts };
