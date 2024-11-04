@@ -18,10 +18,7 @@ import { Button } from '../ui/button';
 import { Textarea, TextareaInput } from '../ui/textarea';
 import { Box } from '../ui/box';
 import { ExerciseResume, SetsExerciseResume } from '../routine/ExerciseResume';
-import {
-  convertIntervalToSeconds,
-  convertStringToInterval,
-} from '@/utils/interval';
+import { convertIntervalToSeconds } from '@/utils/interval';
 import PopupBaseModal from '../shared/PopupBaseModal';
 import CountdownTimer from './CountDownTimer';
 
@@ -41,11 +38,9 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
     const [exerciseId] = useState(id);
     const [exerciseName] = useState(name);
     const [exerciseRestTimeNumber] = useState(
-      convertIntervalToSeconds(
-        convertStringToInterval(restTime ? restTime : '0')
-      )
+      restTime ? convertIntervalToSeconds(restTime) : 0
     );
-    const [exerciseRestTimeString] = useState(restTime);
+    const [exerciseRestTimeString] = useState(restTime ?? '0');
     const [exerciseNotes, setExerciseNotes] = useState(notes);
     const [exercisePrimaryMuscleGroup] = useState(primaryMuscleGroup);
     const [exerciseSets, setExerciseSets] =
@@ -126,11 +121,11 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
               Temporizador de descanso:{' '}
               {exerciseRestTimeNumber > 0
                 ? exerciseRestTimeString
-                : 'Desactivado'}
+                : 'DESACTIVADO'}
             </Text>
           </HStack>
 
-          <Table className="w-[350px]">
+          <Table className="w-[340px]">
             <TableHeader>
               <TableRow className="border-b-0 bg-background-0 hover:bg-background-0">
                 <TableHead>SERIE</TableHead>
@@ -148,7 +143,7 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
                   <TableData>
                     <Input className="w-full text-center" variant="underlined">
                       <InputField
-                        placeholder={set.weight.toString()}
+                        placeholder={set.weight ? set.weight.toString() : '0'}
                         onChangeText={(value) =>
                           handleSetChange(index, 'weight', value)
                         }
@@ -158,7 +153,7 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
                   <TableData>
                     <Input className="w-full text-center" variant="underlined">
                       <InputField
-                        placeholder={set.reps.toString()}
+                        placeholder={set.reps ? set.reps.toString() : '0'}
                         onChangeText={(value) =>
                           handleSetChange(index, 'reps', value)
                         }

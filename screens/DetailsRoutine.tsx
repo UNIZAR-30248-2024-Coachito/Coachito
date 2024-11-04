@@ -37,20 +37,18 @@ const DetailsRoutine: React.FC = () => {
   const buttons = ['Volumen', 'Repeticiones', 'Duración'];
 
   const fetchRoutineChartDetailsWorkout = async () => {
-    const { chartDetailsWorkout, error: errorChartDetailsWorkout } =
-      await useFetchRoutineWorkouts(templateId);
+    const { data, error } = await useFetchRoutineWorkouts(templateId);
 
-    if (!errorChartDetailsWorkout) {
-      setChartDetailsWorkout(chartDetailsWorkout!);
+    if (!error) {
+      setChartDetailsWorkout(data);
     }
   };
 
   const fetchExercises = async () => {
-    const { exercisesResumes, error: errorRoutines } =
-      await useFetchDetailsLastWorkout(templateId);
+    const { data, error } = await useFetchDetailsLastWorkout(templateId);
 
-    if (!errorRoutines) {
-      setExercises(exercisesResumes!);
+    if (!error) {
+      setExercises(data);
     }
   };
 
@@ -68,16 +66,17 @@ const DetailsRoutine: React.FC = () => {
     }
   };
 
-  const navigateToEditRoutine = () => {
-    // Emitir el evento para que EditRoutine haga un fetch solo cuando se navegue
-    navigation.navigate('EditRoutine', {
-      routineId: templateId,
-      routineName: myRoutineName,
-    });
-  };
-
   const buttonsSlideUpModal: React.ReactNode[] = [
-    <Button key="2" className="bg-transparent" onPress={navigateToEditRoutine}>
+    <Button
+      key="2"
+      className="bg-transparent"
+      onPress={() => {
+        navigation.navigate('EditRoutine', {
+          routineId: templateId,
+          routineName: myRoutineName,
+        });
+      }}
+    >
       <Pencil color="white" />
       <Text className="text-white ml-4">Editar rutina</Text>
     </Button>,

@@ -43,10 +43,8 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
   ) => {
     const [exerciseId] = useState(id);
     const [exerciseName] = useState(name);
-    const [exerciseRestTimeNumber, setExerciseRestTimeNumber] = useState(
-      convertIntervalToSeconds(
-        convertStringToInterval(restTime ? restTime : '0')
-      )
+    const [exerciseRestTimeSeconds, setExerciseRestTimeSeconds] = useState(
+      convertIntervalToSeconds(restTime)
     );
     const [exerciseRestTimeString, setExerciseRestTimeString] =
       useState(restTime);
@@ -61,7 +59,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
         id: exerciseId,
         name: exerciseName,
         thumbnailUrl,
-        restTime: exerciseRestTimeNumber > 0 ? exerciseRestTimeString : '0',
+        restTime: exerciseRestTimeSeconds > 0 ? exerciseRestTimeString : '0',
         notes: exerciseNotes,
         primaryMuscleGroup: exercisePrimaryMuscleGroup,
         sets: exerciseSets,
@@ -72,7 +70,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
       setExerciseSets(sets);
       setExerciseRestTimeString(restTime);
       setExerciseNotes(notes);
-      setExerciseRestTimeNumber(
+      setExerciseRestTimeSeconds(
         convertIntervalToSeconds(
           convertStringToInterval(restTime ? restTime : '0')
         )
@@ -108,16 +106,16 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
     const componentsTemporizadorPopUpModal: React.ReactNode[] = [
       <VStack key="1" className="gap-4 p-4">
         <Text className="text-center">
-          {exerciseRestTimeNumber === 0
+          {exerciseRestTimeSeconds === 0
             ? '0 min 0 s'
-            : `${convertSecondsToString(exerciseRestTimeNumber)}`}
+            : `${convertSecondsToString(exerciseRestTimeSeconds)}`}
         </Text>
         <Slider
           minimumValue={0}
           maximumValue={300}
           step={15}
-          value={exerciseRestTimeNumber}
-          onValueChange={(value) => setExerciseRestTimeNumber(value)}
+          value={exerciseRestTimeSeconds}
+          onValueChange={(value) => setExerciseRestTimeSeconds(value)}
           slideOnTap={true}
           thumbSize={20}
           trackHeight={6}
@@ -140,7 +138,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
         onPress={() => {
           setIsSlideUpModalVisible(false);
           setExerciseRestTimeString(
-            convertSecondsToString(exerciseRestTimeNumber)
+            convertSecondsToString(exerciseRestTimeSeconds)
           );
         }}
       >
@@ -184,9 +182,9 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
             <Timer color="#3b82f6" />
             <Text className="text-blue-500">
               Temporizador de descanso:{' '}
-              {exerciseRestTimeNumber > 0
+              {exerciseRestTimeSeconds > 0
                 ? exerciseRestTimeString
-                : 'Desactivado'}
+                : 'DESACTIVADO'}
             </Text>
           </Button>
 
@@ -206,7 +204,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
                   <TableData>
                     <Input className="w-full text-center" variant="underlined">
                       <InputField
-                        value={set.weight.toString()}
+                        value={set.weight ? set.weight.toString() : '0'}
                         onChangeText={(value) =>
                           handleSetChange(index, 'weight', value)
                         }
@@ -216,7 +214,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
                   <TableData>
                     <Input className="w-full text-center" variant="underlined">
                       <InputField
-                        value={set.reps.toString()}
+                        value={set.reps ? set.reps.toString() : '0'}
                         onChangeText={(value) =>
                           handleSetChange(index, 'reps', value)
                         }

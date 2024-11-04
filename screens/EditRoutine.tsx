@@ -13,11 +13,11 @@ import PopupBaseModal from '@/components/shared/PopupBaseModal';
 import ExerciseResumeComponent, {
   ExerciseResumeRef,
 } from '@/components/exercise/DetailsExerciseResume';
-import { useUpdateRoutine } from '@/hooks/routineHook';
 import { ScrollView, Alert } from 'react-native';
 import { useFetchDetailsLastWorkout } from '@/hooks/workoutHook';
 import { ExerciseResume } from '@/components/routine/ExerciseResume';
 import { emitter } from '@/utils/emitter';
+import { useUpdateRoutine } from '@/hooks/workoutTemplateHook';
 
 const EditRoutine: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
@@ -33,17 +33,18 @@ const EditRoutine: React.FC = () => {
     useState(false);
 
   const fetchExercises = useCallback(async () => {
-    const { exercisesResumes, error: errorRoutines } =
-      await useFetchDetailsLastWorkout(route.params.routineId!);
+    const { data, error } = await useFetchDetailsLastWorkout(
+      route.params.routineId!
+    );
 
-    if (!errorRoutines) {
+    if (!error) {
       exerciseRefs.current = [];
-      setSelectedExercises(exercisesResumes!);
+      console.log(data);
+      setSelectedExercises(data);
     }
   }, [route.params.routineId]);
 
   const updateExercises = useCallback((exercises: ExerciseResume[]) => {
-    console.log('Ejercicios actualizados desde AddExerciseEdit:', exercises);
     setSelectedExercises(exercises);
   }, []);
 
@@ -160,7 +161,7 @@ const EditRoutine: React.FC = () => {
         ) : (
           selectedExercises.map((exercise, index) => (
             <ExerciseResumeComponent
-              key={exercise.id}
+              key={index}
               ref={(el) => (exerciseRefs.current[index] = el)}
               id={exercise.id}
               name={exercise.name}

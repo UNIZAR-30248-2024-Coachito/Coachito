@@ -9,6 +9,7 @@ const supabaseClient = axios.create({
   headers: {
     'Content-Type': 'application/json',
     apiKey: SUPABASE_ANON_KEY,
+    Prefer: 'return=representation',
   },
 });
 

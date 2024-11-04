@@ -7,15 +7,17 @@ import { Button } from '../components/ui/button';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NavigationProps, RootStackParamList } from '@/types/navigation';
 import PopupBaseModal from '@/components/shared/PopupBaseModal';
-import { ExerciseResumeRef } from '@/components/exercise/DetailsExerciseResume';
 import { ScrollView } from 'react-native';
 import {
   useCreateWorkout,
   useFetchDetailsLastWorkout,
 } from '@/hooks/workoutHook';
 import { ExerciseResume } from '@/components/routine/ExerciseResume';
-import DetailsExerciseWorkoutResumeComponent from '@/components/workout/DetailsExerciseWorkoutResume';
+import DetailsExerciseWorkoutResumeComponent, {
+  ExerciseResumeRef,
+} from '@/components/workout/DetailsExerciseWorkoutResume';
 import Timer from '@/components/workout/Timer';
+import { emitter } from '@/utils/emitter';
 
 const StartWorkout: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
@@ -31,11 +33,12 @@ const StartWorkout: React.FC = () => {
   const [duration, setDuration] = useState(0);
 
   const fetchExercises = async () => {
-    const { exercisesResumes, error: errorRoutines } =
-      await useFetchDetailsLastWorkout(route.params.routineId!);
+    const { data, error } = await useFetchDetailsLastWorkout(
+      route.params.routineId!
+    );
 
-    if (!errorRoutines) {
-      setSelectedExercises(exercisesResumes!);
+    if (!error) {
+      setSelectedExercises(data);
     }
   };
 
@@ -68,7 +71,8 @@ const StartWorkout: React.FC = () => {
     );
 
     if (!error) {
-      navigation.navigate('Routine');
+      emitter.emit('workoutFinished');
+      navigation.navigate('Dashboard');
     } else {
       alert('Se ha producido un error al guardar el entrenamiento.');
     }
@@ -102,39 +106,39 @@ const StartWorkout: React.FC = () => {
   ];
 
   return (
-    <ScrollView className="flex-1">
-      <VStack className="p-4 gap-4 items-center">
-        <Text className="text-xl text-white" bold>
-          {route.params.routineName}
-        </Text>
-        <HStack className="w-full flex-1 justify-between gap-6">
-          <Button
-            className="bg-red-800 rounded-lg"
-            onPress={() => {
-              handleStopTimer();
-              setIsCancelWorkoutModalVisible(true);
-            }}
-          >
-            <Text className="text-white">Descartar</Text>
-          </Button>
-          <Button
-            className="bg-blue-500 rounded-lg"
-            onPress={() => {
-              handleStopTimer();
-              handleResetTimer();
-              saveWorkout();
-              navigation.navigate('Routine');
-            }}
-          >
-            <Text className="text-white">Terminar</Text>
-          </Button>
-        </HStack>
-        <Timer
-          key={timerKey}
-          active={timerActive}
-          onTimeUpdate={handleDurationUpdate}
-        />
+    <VStack className="flex-1 p-4 gap-2 items-center">
+      <Text className="text-2xl text-white" bold>
+        {route.params.routineName}
+      </Text>
 
+      <Timer
+        key={timerKey}
+        active={timerActive}
+        onTimeUpdate={handleDurationUpdate}
+      />
+
+      <HStack className="w-full gap-6">
+        <Button
+          className="bg-red-800 rounded-lg flex-1"
+          onPress={() => {
+            handleStopTimer();
+            setIsCancelWorkoutModalVisible(true);
+          }}
+        >
+          <Text className="text-white">Descartar</Text>
+        </Button>
+        <Button
+          className="bg-blue-500 rounded-lg flex-1"
+          onPress={() => {
+            handleResetTimer();
+            saveWorkout();
+          }}
+        >
+          <Text className="text-white">Terminar</Text>
+        </Button>
+      </HStack>
+
+      <ScrollView className="w-full mb-20">
         {selectedExercises.map((exercise, index) => (
           <DetailsExerciseWorkoutResumeComponent
             key={index}
@@ -148,14 +152,14 @@ const StartWorkout: React.FC = () => {
             sets={exercise.sets}
           />
         ))}
+      </ScrollView>
 
-        <PopupBaseModal
-          components={componentsCancelRoutinePopUpModal}
-          isVisible={isCancelRoutineModalVisible}
-          setIsModalVisible={setIsCancelWorkoutModalVisible}
-        />
-      </VStack>
-    </ScrollView>
+      <PopupBaseModal
+        components={componentsCancelRoutinePopUpModal}
+        isVisible={isCancelRoutineModalVisible}
+        setIsModalVisible={setIsCancelWorkoutModalVisible}
+      />
+    </VStack>
   );
 };
 

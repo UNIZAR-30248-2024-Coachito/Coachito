@@ -10,13 +10,13 @@ import { Dumbbell } from 'lucide-react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NavigationProps, RootStackParamList } from '@/types/navigation';
 import PopupBaseModal from '@/components/shared/PopupBaseModal';
-import ExerciseResumeComponent, {
-  ExerciseResumeRef,
-} from '@/components/exercise/DetailsExerciseResume';
-import { useCreateRoutine } from '@/hooks/routineHook';
+import { useCreateRoutine } from '@/hooks/workoutTemplateHook';
 import { ScrollView } from 'react-native';
 import { emitter } from '@/utils/emitter';
 import { ExerciseResume } from '@/components/routine/ExerciseResume';
+import ExerciseResumeComponent, {
+  ExerciseResumeRef,
+} from '@/components/exercise/DetailsExerciseResume';
 
 const AddRoutine: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();

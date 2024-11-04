@@ -13,6 +13,11 @@ import CustomAreaChart, {
 } from '@/components/shared/CustomAreaChart';
 import { Image } from 'react-native';
 
+export interface repsWeight {
+  reps: number;
+  weight: number;
+}
+
 export interface SerieRecords {
   reps: number;
   personalBest: number;
@@ -25,7 +30,7 @@ export interface ExerciseDetails {
   primaryMuscleGroup: string;
   higherWeight: number;
   best1rm: number;
-  bestSerieVolume: string;
+  bestSerieVolume: repsWeight;
   bestTotalVolume: number;
   serieRecords: SerieRecords[];
   dataPoints: DataChartProps[];
@@ -38,11 +43,10 @@ const DetailsExercise: React.FC = () => {
   const buttons = ['Mayor Peso', 'One Rep Max', 'Mejor Volumen'];
 
   const fetchExercisesDetails = async () => {
-    const { exerciseDetails, error: errorRoutines } =
-      await useFetchExerciseDetails(exerciseId);
+    const { data, error } = await useFetchExerciseDetails(exerciseId);
 
-    if (!errorRoutines) {
-      setExercisesDetails(exerciseDetails!);
+    if (!error) {
+      setExercisesDetails(data);
     }
   };
 
@@ -97,7 +101,8 @@ const DetailsExercise: React.FC = () => {
           <HStack className="justify-between">
             <Text>Mejor volumen (serie)</Text>
             <Text className="text-blue-500">
-              {exercisesDetails?.bestSerieVolume}
+              {exercisesDetails?.bestSerieVolume.reps} x{' '}
+              {exercisesDetails?.bestSerieVolume.weight} kg
             </Text>
           </HStack>
 

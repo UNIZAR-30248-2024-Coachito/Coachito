@@ -44,10 +44,9 @@ const AddExerciseEdit: React.FC = () => {
   };
 
   const fetchExercises = async () => {
-    const { exercisesResume, error: errorExercises } =
-      await useFetchExercisesList();
+    const { data, error: errorExercises } = await useFetchExercisesList();
     if (!errorExercises) {
-      setExercises(exercisesResume!);
+      setExercises(data);
     }
   };
 

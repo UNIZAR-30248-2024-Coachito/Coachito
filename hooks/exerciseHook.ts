@@ -1,41 +1,29 @@
-import { supabase } from '@/api/supabaseClient';
-import { ExerciseRepository } from '@/repositories/exerciseRepository';
+import supabaseClient from '@/api/supabaseClient';
 import useCRUD from './useCRUD';
-import { mapExercisesToExerciseCardResume } from '@/mappers/mapExerciseDataToCardResume';
-import { WorkoutExerciseRepository } from '@/repositories/workoutExerciseRepository';
-import { mapExerciseDataToExerciseDetails } from '@/mappers/mapExerciseDataToExerciseDetails';
-
-const exerciseRepo = new ExerciseRepository(supabase);
-const workoutExerciseRepo = new WorkoutExerciseRepository(supabase);
 
 const useFetchExercisesList = async () => {
-  const { execute } = useCRUD(() => exerciseRepo.getExercisesListData());
-
-  const { data, error } = await execute();
-
-  let exercisesResume = null;
-
-  if (!error) {
-    exercisesResume = mapExercisesToExerciseCardResume(data!);
-  }
-
-  return { exercisesResume, error };
-};
-
-const useFetchExerciseDetails = async (exerciseId: number) => {
   const { execute } = useCRUD(() =>
-    workoutExerciseRepo.getExerciseDetails(exerciseId)
+    supabaseClient.get('/rpc/get_exercises_list')
   );
 
   const { data, error } = await execute();
 
-  let exerciseDetails = null;
+  return { data, error };
+};
 
-  if (!error) {
-    exerciseDetails = mapExerciseDataToExerciseDetails(data!);
-  }
+const useFetchExerciseDetails = async (exerciseId: number) => {
+  const { execute } = useCRUD(() =>
+    supabaseClient.get('/rpc/get_exercise_details', {
+      params: {
+        exercise_id: exerciseId,
+      },
+    })
+  );
 
-  return { exerciseDetails, error };
+  const { data, error } = await execute();
+  console.log(data);
+
+  return { data, error };
 };
 
 export { useFetchExercisesList, useFetchExerciseDetails };

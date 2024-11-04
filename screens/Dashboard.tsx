@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { ScrollView } from 'react-native';
+import { Alert, ScrollView } from 'react-native';
 import { VStack } from '../components/ui/vstack';
 import '../styles.css';
 import WorkoutCardResumeComponent, {
@@ -8,6 +8,7 @@ import WorkoutCardResumeComponent, {
 import { useFetchDashboardWorkouts } from '@/hooks/dashboardHook';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '@/types/navigation';
+import { emitter } from '@/utils/emitter';
 
 const Dashboard: React.FC = () => {
   const [workouts, setWorkouts] = useState<WorkoutCardResume[]>([]);
@@ -24,6 +25,22 @@ const Dashboard: React.FC = () => {
   useEffect(() => {
     fetchWorkouts();
   }, []);
+
+  useEffect(() => {
+    const routineDeletedListener = emitter.addListener(
+      'workoutFinished',
+      () => {
+        fetchWorkouts();
+        Alert.alert('¡Entrenamiento completado!', '', [{ text: 'Aceptar' }]);
+      }
+    );
+
+    fetchWorkouts();
+
+    return () => {
+      routineDeletedListener.remove();
+    };
+  }, [navigation]);
 
   return (
     <ScrollView className="flex-1">

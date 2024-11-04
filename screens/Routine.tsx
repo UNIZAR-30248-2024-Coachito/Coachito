@@ -38,9 +38,7 @@ const Routine: React.FC = () => {
   };
 
   const showAlert = (title: string, message: string) => {
-    Alert.alert(title, message, [
-      { text: 'Aceptar', onPress: () => console.log('OK Pressed') },
-    ]);
+    Alert.alert(title, message, [{ text: 'Aceptar' }]);
   };
 
   useEffect(() => {
