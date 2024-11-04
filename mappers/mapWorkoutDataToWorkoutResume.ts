@@ -1,7 +1,7 @@
 import { ExerciseResume } from '@/components/routine/ExerciseResume';
 import { WorkoutHeaderResume } from '@/components/workout/WorkoutHeaderResume';
 import { WorkoutDataDB } from '@/repositories/workoutRepository';
-import { WorkoutResume } from '@/screens/VerEntrenamiento';
+import { WorkoutResume } from '@/screens/DetailsWorkout';
 import { convertIntervalToMinutes } from '@/utils/interval';
 import { mapWorkoutDataToExerciseResumeArray } from './mapWorkoutDataToDetailsRoutinesResume';
 

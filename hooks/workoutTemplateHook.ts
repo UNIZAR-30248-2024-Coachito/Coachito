@@ -2,11 +2,23 @@ import supabaseClient from '@/api/supabaseClient';
 import useCRUD from './useCRUD';
 
 const useDeleteWorkoutTemplate = async (id: number) => {
-  /*const { execute } = useCRUD(() => workoutTemplateRepository.delete(id));
+  const { execute } = useCRUD(() =>
+    supabaseClient.patch(
+      '/workout_templates',
+      {
+        deleted: true,
+      },
+      {
+        params: {
+          id: `eq.${id}`,
+        },
+      }
+    )
+  );
 
   const { data, error } = await execute();
 
-  return { data, error };*/
+  return { data, error };
 };
 
 const useFetchTemplateWorkouts = async () => {
@@ -15,7 +27,6 @@ const useFetchTemplateWorkouts = async () => {
   );
 
   const { data, error } = await execute();
-  console.log(data);
 
   return { data, error };
 };

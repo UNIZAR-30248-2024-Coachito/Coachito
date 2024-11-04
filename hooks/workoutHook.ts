@@ -1,23 +1,9 @@
-import { supabase } from '@/api/supabaseClient';
-import {
-  WorkoutInsert,
-  WorkoutRepository,
-} from '@/repositories/workoutRepository';
+import supabaseClient from '@/api/supabaseClient';
 import useCRUD from './useCRUD';
-import { mapWorkoutDataToExerciseResumeArray } from '@/mappers/mapWorkoutDataToDetailsRoutinesResume';
 import { ExerciseResume } from '@/components/routine/ExerciseResume';
-import {
-  WorkoutExerciseInsert,
-  WorkoutExerciseRepository,
-} from '@/repositories/workoutExerciseRepository';
-import { mapWorkoutDataToWorkoutResume } from '@/mappers/mapWorkoutDataToWorkoutResume';
-import { mapWorkoutDataToRoutineChart } from '@/mappers/mapWorkoutDataToRoutineChart';
-
-const workoutRepository = new WorkoutRepository(supabase);
-const workoutExercisesRepo = new WorkoutExerciseRepository(supabase);
 
 const useFetchDetailsLastWorkout = async (templateId: number) => {
-  const { execute } = useCRUD(() =>
+  /*const { execute } = useCRUD(() =>
     workoutRepository.getDetailsLastWorkout(templateId)
   );
 
@@ -28,20 +14,21 @@ const useFetchDetailsLastWorkout = async (templateId: number) => {
     exercisesResumes = mapWorkoutDataToExerciseResumeArray(data!);
   }
 
-  return { exercisesResumes, error };
+  return { exercisesResumes, error };*/
 };
 
 const useFetchDetailsWorkout = async (id: number) => {
-  const { execute } = useCRUD(() => workoutRepository.getDetailsWorkout(id));
+  const { execute } = useCRUD(() =>
+    supabaseClient.get('/rpc/get_workout_details', {
+      params: {
+        w_id: id,
+      },
+    })
+  );
 
   const { data, error } = await execute();
 
-  let exercisesResumes = null;
-  if (!error) {
-    exercisesResumes = mapWorkoutDataToWorkoutResume(data!);
-  }
-
-  return { exercisesResumes, error };
+  return { data, error };
 };
 
 const useCreateWorkout = async (
@@ -49,7 +36,7 @@ const useCreateWorkout = async (
   duration: number,
   exercises: ExerciseResume[]
 ) => {
-  const newWorkoutEntity = {
+  /*const newWorkoutEntity = {
     id: undefined,
     template_id: templateId,
     template: false,
@@ -107,11 +94,11 @@ const useCreateWorkout = async (
     }
   }
 
-  return { error: null };
+  return { error: null };*/
 };
 
 const useFetchRoutineWorkouts = async (id: number) => {
-  const { execute } = useCRUD(() => workoutRepository.getRoutineWorkouts(id));
+  /*const { execute } = useCRUD(() => workoutRepository.getRoutineWorkouts(id));
 
   const { data, error } = await execute();
 
@@ -120,7 +107,7 @@ const useFetchRoutineWorkouts = async (id: number) => {
     chartDetailsWorkout = mapWorkoutDataToRoutineChart(data!);
   }
 
-  return { chartDetailsWorkout, error };
+  return { chartDetailsWorkout, error };*/
 };
 
 export {

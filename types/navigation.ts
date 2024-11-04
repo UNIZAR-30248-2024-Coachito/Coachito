@@ -23,7 +23,7 @@ export type RootStackParamList = {
     routineId: number;
     routineName: string;
   };
-  VerEntrenamiento: { workoutId: number };
+  DetailsWorkout: { workoutId: number };
   DetailsExercise: { exerciseId: number };
 };
 

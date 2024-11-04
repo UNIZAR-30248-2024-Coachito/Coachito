@@ -1,16 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Text } from '../components/ui/text';
 import { VStack } from '../components/ui/vstack';
-import { Button } from '../components/ui/button';
-import { useNavigation } from '@react-navigation/native';
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '@/types/navigation';
-import { NavigationProps } from '@/types/navigation';
 import { ScrollView } from 'react-native';
-
 import { useFetchDetailsWorkout } from '@/hooks/workoutHook';
-
-import { ArrowLeft } from 'lucide-react-native';
 import ExerciseResumeComponent, {
   ExerciseResume,
 } from '@/components/routine/ExerciseResume';
@@ -18,28 +12,24 @@ import WorkoutHeaderResumeComponent, {
   WorkoutHeaderResume,
 } from '@/components/workout/WorkoutHeaderResume';
 import WorkoutDivisionComponent from '@/components/workout/WorkoutDivision';
-import { HStack } from '@/components/ui/hstack';
 import { mapToExerciseProportions } from '@/mappers/mapExerciseResumeToExerciseProportion';
+import { Box } from '@/components/ui/box';
 
 export interface WorkoutResume {
-  header: WorkoutHeaderResume;
-  exercises: ExerciseResume[];
+  workout_header_resume: WorkoutHeaderResume;
+  exercise_resume: ExerciseResume[];
 }
 
-const VerEntrenamiento: React.FC = () => {
-  const route = useRoute<RouteProp<RootStackParamList, 'VerEntrenamiento'>>();
-  const navigation = useNavigation<NavigationProps>();
+const DetailsWorkout: React.FC = () => {
+  const route = useRoute<RouteProp<RootStackParamList, 'DetailsWorkout'>>();
   const { workoutId } = route.params;
-  const [workoutResume, setWorkoutResume] = useState<WorkoutResume | null>(
-    null
-  );
+  const [workoutResume, setWorkoutResume] = useState<WorkoutResume>();
 
   const fetchExercises = async () => {
-    const { exercisesResumes, error: errorRoutines } =
-      await useFetchDetailsWorkout(workoutId);
+    const { data, error } = await useFetchDetailsWorkout(workoutId);
 
-    if (!errorRoutines) {
-      setWorkoutResume(exercisesResumes!);
+    if (!error) {
+      setWorkoutResume(data);
     }
   };
 
@@ -49,42 +39,34 @@ const VerEntrenamiento: React.FC = () => {
 
   return (
     <ScrollView className="flex-1">
-      <VStack className="p-4">
-        <HStack className="gap-4 mb-4">
-          <Button
-            className="bg-transparent"
-            onPress={() => {
-              navigation.navigate('Dashboard');
-            }}
-          >
-            <ArrowLeft color="white" />
-          </Button>
-          <Text className="text-xl font-bold text-white">
+      <VStack className="p-4 gap-4">
+        <Box className="flex justify-center">
+          <Text className="text-xl font-bold text-white text-center">
             Detalles de entrenamiento
           </Text>
-        </HStack>
+        </Box>
 
         {workoutResume && (
           <>
             <WorkoutHeaderResumeComponent
-              workoutId={workoutResume.header.workoutId}
-              workoutName={workoutResume.header.workoutName}
-              workoutDate={workoutResume.header.workoutDate}
-              workoutTime={workoutResume.header.workoutTime}
-              workoutVolume={workoutResume.header.workoutVolume}
-              workoutSeries={workoutResume.header.workoutSeries}
+              workoutId={workoutResume.workout_header_resume.workoutId}
+              workoutName={workoutResume.workout_header_resume.workoutName}
+              workoutDate={workoutResume.workout_header_resume.workoutDate}
+              workoutTime={workoutResume.workout_header_resume.workoutTime}
+              workoutVolume={workoutResume.workout_header_resume.workoutVolume}
+              workoutSeries={workoutResume.workout_header_resume.workoutSeries}
             />
             <WorkoutDivisionComponent
               exercisesProportion={mapToExerciseProportions(
-                workoutResume?.exercises
+                workoutResume?.exercise_resume
               )}
             />
           </>
         )}
 
-        <Text className="text-gray-400 mt-4 mb-4">Ejercicios</Text>
+        <Text className="text-gray-400">Ejercicios</Text>
 
-        {workoutResume?.exercises!.map((exercise, index) => (
+        {workoutResume?.exercise_resume!.map((exercise, index) => (
           <ExerciseResumeComponent
             key={index}
             id={exercise.id}
@@ -101,4 +83,4 @@ const VerEntrenamiento: React.FC = () => {
   );
 };
 
-export default VerEntrenamiento;
+export default DetailsWorkout;

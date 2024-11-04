@@ -16,6 +16,7 @@ import { Timer } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '@/types/navigation';
 import { Box } from '../ui/box';
+import { convertIntervalToMinutesAndSeconds } from '@/utils/interval';
 
 export interface SetsExerciseResume {
   weight: number;
@@ -26,7 +27,7 @@ export interface ExerciseResume {
   id: number;
   name: string;
   thumbnailUrl: string;
-  restTime: string | null;
+  restTime: string;
   notes: string;
   primaryMuscleGroup: string;
   sets: SetsExerciseResume[];
@@ -41,6 +42,7 @@ const ExerciseResumeComponent: React.FC<ExerciseResume> = ({
   sets,
 }) => {
   const navigation = useNavigation<NavigationProps>();
+  const formattedRestTime = convertIntervalToMinutesAndSeconds(restTime);
 
   return (
     <Box className="bg-zinc-900 p-4 mb-4 rounded-lg">
@@ -71,7 +73,7 @@ const ExerciseResumeComponent: React.FC<ExerciseResume> = ({
       <HStack className="gap-2 mb-4">
         <Timer color="#3b82f6" />
         <Text className="text-blue-500">
-          Temporizador de descanso: {restTime}
+          Temporizador de descanso: {formattedRestTime}
         </Text>
       </HStack>
 

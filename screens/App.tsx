@@ -5,7 +5,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Dashboard from './Dashboard';
 import Routine from './Routine';
 import Profile from './Profile';
-import VerEntrenamiento from './VerEntrenamiento';
+import DetailsWorkout from './DetailsWorkout';
 import { RootStackParamList } from '@/types/navigation';
 import Template from '@/components/shared/Template';
 import '../styles.css';
@@ -94,10 +94,10 @@ export default function App() {
               </Template>
             )}
           </Tab.Screen>
-          <Tab.Screen name="VerEntrenamiento">
+          <Tab.Screen name="DetailsWorkout">
             {() => (
               <Template>
-                <VerEntrenamiento />
+                <DetailsWorkout />
               </Template>
             )}
           </Tab.Screen>

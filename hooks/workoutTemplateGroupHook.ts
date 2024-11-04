@@ -1,17 +1,6 @@
 import supabaseClient from '@/api/supabaseClient';
 import useCRUD from './useCRUD';
 
-const useFetchTemplateWorkoutGroups = async () => {
-  const { execute } = useCRUD(() =>
-    supabaseClient.get('/rpc/get_template_workout_groups')
-  );
-
-  const { data, error } = await execute();
-  console.log(data);
-
-  return { data, error };
-};
-
 const useCreateTemplateWorkoutGroup = async (name: string) => {
   const { execute } = useCRUD(() =>
     supabaseClient.post('/workout_templates_group', {
@@ -59,7 +48,6 @@ const useDeleteTemplateWorkoutGroupById = async (id: number) => {
 };
 
 export {
-  useFetchTemplateWorkoutGroups,
   useCreateTemplateWorkoutGroup,
   useEditTemplateWorkoutGroup,
   useDeleteTemplateWorkoutGroupById,

@@ -1,30 +1,11 @@
-import { supabase } from '@/api/supabaseClient';
-import useCRUD from './useCRUD';
-import {
-  WorkoutTemplateInsert,
-  WorkoutTemplateUpdate,
-} from '@/repositories/workoutTemplateRepository';
-import { WorkoutTemplateRepository } from '@/repositories/workoutTemplateRepository';
-import {
-  WorkoutInsert,
-  WorkoutRepository,
-} from '@/repositories/workoutRepository';
-import {
-  WorkoutExerciseInsert,
-  WorkoutExerciseRepository,
-} from '@/repositories/workoutExerciseRepository';
 import { ExerciseResume } from '@/components/routine/ExerciseResume';
-
-const workoutTemplateRepo = new WorkoutTemplateRepository(supabase);
-const workoutsRepo = new WorkoutRepository(supabase);
-const workoutExercisesRepo = new WorkoutExerciseRepository(supabase);
 
 const useCreateRoutine = async (
   name: string,
   exercises: ExerciseResume[],
   groupId: number
 ) => {
-  const newWorkoutTemplateEntity = {
+  /*const newWorkoutTemplateEntity = {
     id: undefined,
     name: name,
     deleted: false,
@@ -100,7 +81,7 @@ const useCreateRoutine = async (
     }
   }
 
-  return { error: null };
+  return { error: null };*/
 };
 
 const useUpdateRoutine = async (
@@ -108,7 +89,7 @@ const useUpdateRoutine = async (
   name: string,
   exercises: ExerciseResume[]
 ) => {
-  const workoutTemplateEntity = {
+  /*const workoutTemplateEntity = {
     id: undefined,
     name: name,
     deleted: false,
@@ -182,7 +163,7 @@ const useUpdateRoutine = async (
       }
     }
   }
-  return { error: null };
+  return { error: null };*/
 };
 
 export { useCreateRoutine, useUpdateRoutine };
