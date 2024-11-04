@@ -1,4 +1,9 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import React, {
+  forwardRef,
+  useImperativeHandle,
+  useState,
+  useEffect,
+} from 'react';
 import { Text } from '../ui/text';
 import {
   Table,
@@ -62,6 +67,17 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
         sets: exerciseSets,
       }),
     }));
+
+    useEffect(() => {
+      setExerciseSets(sets);
+      setExerciseRestTimeString(restTime);
+      setExerciseNotes(notes);
+      setExerciseRestTimeNumber(
+        convertIntervalToSeconds(
+          convertStringToInterval(restTime ? restTime : '0')
+        )
+      );
+    }, [sets, restTime, notes]);
 
     const handleSetChange = (
       index: number,
@@ -131,6 +147,12 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
         <Text className="text-white">Confirmar</Text>
       </Button>,
     ];
+
+    useEffect(() => {
+      if (!exerciseSets || exerciseSets.length === 0) {
+        addNewSet();
+      }
+    }, [exerciseSets]);
 
     return (
       <>
