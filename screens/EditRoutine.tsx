@@ -12,10 +12,10 @@ import { NavigationProps, RootStackParamList } from '@/types/navigation';
 import PopupBaseModal from '@/components/shared/PopupBaseModal';
 import ExerciseResumeComponent, {
   ExerciseResumeRef,
-} from '@/components/exercise/DetailsExerciseResume';
+} from '@/components/exercise/ExerciseResume';
 import { ScrollView, Alert } from 'react-native';
 import { useFetchDetailsLastWorkout } from '@/hooks/workoutHook';
-import { ExerciseResume } from '@/components/routine/ExerciseResume';
+import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 import { emitter } from '@/utils/emitter';
 import { useUpdateRoutine } from '@/hooks/workoutTemplateHook';
 
@@ -39,7 +39,6 @@ const EditRoutine: React.FC = () => {
 
     if (!error) {
       exerciseRefs.current = [];
-      console.log(data);
       setSelectedExercises(data);
     }
   }, [route.params.routineId]);
@@ -110,7 +109,6 @@ const EditRoutine: React.FC = () => {
     );
 
     if (error) {
-      console.error('Error al actualizar la rutina:', error);
       Alert.alert('Error', 'Se ha producido un error al guardar la rutina.');
     } else {
       emitter.emit('routineRenamed');
@@ -151,7 +149,7 @@ const EditRoutine: React.FC = () => {
           />
         </Input>
 
-        {selectedExercises.length === 0 ? (
+        {!selectedExercises || selectedExercises.length === 0 ? (
           <>
             <Dumbbell color="gray" />
             <Text className="text-gray-400">

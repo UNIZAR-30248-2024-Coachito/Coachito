@@ -3,7 +3,7 @@ import { VStack } from '../ui/vstack';
 import { Avatar, AvatarFallbackText, AvatarImage } from '../ui/avatar';
 import { Text } from '../ui/text';
 import { HStack } from '../ui/hstack';
-import { ExerciseResume } from '../routine/ExerciseResume';
+import { ExerciseResume } from '../routine/ExercisesRoutineResume';
 
 const ExercisesListCardResume: React.FC<ExerciseResume> = ({
   name,

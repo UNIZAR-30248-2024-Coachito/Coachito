@@ -13,10 +13,10 @@ import PopupBaseModal from '@/components/shared/PopupBaseModal';
 import { useCreateRoutine } from '@/hooks/workoutTemplateHook';
 import { ScrollView } from 'react-native';
 import { emitter } from '@/utils/emitter';
-import { ExerciseResume } from '@/components/routine/ExerciseResume';
+import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 import ExerciseResumeComponent, {
   ExerciseResumeRef,
-} from '@/components/exercise/DetailsExerciseResume';
+} from '@/components/exercise/ExerciseResume';
 
 const AddRoutine: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
@@ -64,10 +64,10 @@ const AddRoutine: React.FC = () => {
   ];
 
   useEffect(() => {
-    if (route.params?.exercises) {
+    if (route.params!.exercises) {
       setSelectedExercises(route.params.exercises);
     }
-  }, [route.params?.exercises]);
+  }, [route.params!.exercises]);
 
   const createRoutine = async () => {
     const routineTitle = routineTitleInputValue.trim();

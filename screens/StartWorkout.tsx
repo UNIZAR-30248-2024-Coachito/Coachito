@@ -12,7 +12,7 @@ import {
   useCreateWorkout,
   useFetchDetailsLastWorkout,
 } from '@/hooks/workoutHook';
-import { ExerciseResume } from '@/components/routine/ExerciseResume';
+import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 import DetailsExerciseWorkoutResumeComponent, {
   ExerciseResumeRef,
 } from '@/components/workout/DetailsExerciseWorkoutResume';
@@ -138,7 +138,7 @@ const StartWorkout: React.FC = () => {
         </Button>
       </HStack>
 
-      <ScrollView className="w-full mb-20">
+      <ScrollView className="w-full">
         {selectedExercises.map((exercise, index) => (
           <DetailsExerciseWorkoutResumeComponent
             key={index}

@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
 import '../../styles.css';
 import { LineChart } from 'react-native-gifted-charts';
@@ -36,7 +37,7 @@ const CustomAreaChart: React.FC<CustomDataChartProps> = ({ data, buttons }) => {
 
   return (
     <VStack className="gap-4">
-      <HStack className="justify-between mb-2">
+      <HStack className="justify-between">
         <Text bold>{dataChartTotal}</Text>
         <Text>Últimos 3 meses</Text>
       </HStack>
@@ -56,14 +57,14 @@ const CustomAreaChart: React.FC<CustomDataChartProps> = ({ data, buttons }) => {
         yAxisThickness={1}
         rulesColor="rgba(255, 255, 255, 0.2)"
         rulesType="solid"
-        spacing={50}
+        spacing={60}
         width={screenWidth - 90}
         isAnimated
         animateOnDataChange
       />
 
       <CustomChartButtons
-        names={buttons}
+        buttons={buttons}
         data={data}
         onDataChartPointsChange={setDataChartPoints}
         onDataChartTotalChange={setDataChartTotal}

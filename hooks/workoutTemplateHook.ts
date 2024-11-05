@@ -1,6 +1,6 @@
 import supabaseClient from '@/api/supabaseClient';
 import useCRUD from './useCRUD';
-import { ExerciseResume } from '@/components/routine/ExerciseResume';
+import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 
 const useDeleteWorkoutTemplate = async (id: number) => {
   const { execute } = useCRUD(() =>
@@ -128,7 +128,7 @@ const useUpdateRoutine = async (
       },
       {
         params: {
-          id: templateId,
+          id: `eq.${templateId}`,
         },
       }
     )

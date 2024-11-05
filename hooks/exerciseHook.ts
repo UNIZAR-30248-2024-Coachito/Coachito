@@ -15,13 +15,12 @@ const useFetchExerciseDetails = async (exerciseId: number) => {
   const { execute } = useCRUD(() =>
     supabaseClient.get('/rpc/get_exercise_details', {
       params: {
-        exercise_id: exerciseId,
+        ex_id: exerciseId,
       },
     })
   );
 
   const { data, error } = await execute();
-  console.log(data);
 
   return { data, error };
 };

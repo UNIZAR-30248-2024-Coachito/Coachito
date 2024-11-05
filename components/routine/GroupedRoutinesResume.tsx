@@ -187,7 +187,7 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
           )}
           <Text className="text-gray-400 ml-2">
             {groupedRoutine.groupName ?? 'Mis Rutinas'} (
-            {groupedRoutine.routines?.length || 0})
+            {groupedRoutine.routines!.length || 0})
           </Text>
         </Button>
 

@@ -10,9 +10,9 @@ import {
   useFetchRoutineWorkouts,
 } from '@/hooks/workoutHook';
 import { HStack } from '@/components/ui/hstack';
-import ExerciseResumeComponent, {
+import ExercisesRoutineResumeComponent, {
   ExerciseResume,
-} from '@/components/routine/ExerciseResume';
+} from '@/components/routine/ExercisesRoutineResume';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal, Pencil, Trash } from 'lucide-react-native';
 import SlideUpBaseModal from '@/components/shared/SlideUpBaseModal';
@@ -120,7 +120,7 @@ const DetailsRoutine: React.FC = () => {
 
   return (
     <ScrollView className="flex-1">
-      <VStack className="p-4">
+      <VStack className="p-4 gap-4">
         <HStack className="justify-between">
           <Text className="text-xl font-bold text-white">{myRoutineName}</Text>
           <Button
@@ -134,7 +134,7 @@ const DetailsRoutine: React.FC = () => {
         </HStack>
 
         <Button
-          className="bg-blue-500 rounded-lg w-full mb-4"
+          className="bg-blue-500 rounded-lg w-full"
           onPress={() =>
             navigation.navigate('StartWorkout', {
               routineId: templateId,
@@ -147,8 +147,8 @@ const DetailsRoutine: React.FC = () => {
 
         <CustomAreaChart data={chartDetailsWorkout} buttons={buttons} />
 
-        <HStack className="justify-between mb-4">
-          <Text className="text-gray-400 mt-4">Ejercicios</Text>
+        <HStack className="justify-between items-center">
+          <Text className="text-gray-400">Ejercicios</Text>
           <Button
             className="bg-transparent"
             onPress={() =>
@@ -163,7 +163,7 @@ const DetailsRoutine: React.FC = () => {
         </HStack>
 
         {exercises!.map((exercise, index) => (
-          <ExerciseResumeComponent
+          <ExercisesRoutineResumeComponent
             key={index}
             id={exercise.id}
             name={exercise.name}

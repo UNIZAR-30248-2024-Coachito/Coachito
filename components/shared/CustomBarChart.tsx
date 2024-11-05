@@ -1,3 +1,4 @@
+/* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
 import '../../styles.css';
 import { BarChart } from 'react-native-gifted-charts';
@@ -46,7 +47,7 @@ const CustomBarChart: React.FC<CustomDataChartProps> = ({ data, buttons }) => {
       />
 
       <CustomChartButtons
-        names={buttons}
+        buttons={buttons}
         data={data}
         onDataChartPointsChange={setDataChartPoints}
         onDataChartTotalChange={setDataChartTotal}

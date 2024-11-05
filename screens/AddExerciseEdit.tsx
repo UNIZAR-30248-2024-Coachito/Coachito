@@ -15,7 +15,7 @@ import { Pressable, ScrollView } from 'react-native';
 import { useFetchExercisesList } from '@/hooks/exerciseHook';
 import ExercisesListCardResume from '@/components/exercise/ExercisesListCardResume';
 import { SearchIcon } from 'lucide-react-native';
-import { ExerciseResume } from '@/components/routine/ExerciseResume';
+import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 import { emitter } from '@/utils/emitter';
 
 type AddExerciseEditRouteProp = RouteProp<
@@ -29,16 +29,16 @@ const AddExerciseEdit: React.FC = () => {
 
   const [exercises, setExercises] = useState<ExerciseResume[]>([]);
   const [selectedExercises, setSelectedExercises] = useState<ExerciseResume[]>(
-    route.params?.selectedExercises || []
+    route.params!.selectedExercises || []
   );
 
   const handleSelectExercise = (exercise: ExerciseResume) => {
     setSelectedExercises((prevSelected) => {
       const exists = prevSelected.find((e) => e.id === exercise.id);
       if (exists) {
-        return prevSelected.filter((e) => e.id !== exercise.id); // Deselect if already selected
+        return prevSelected.filter((e) => e.id !== exercise.id);
       } else {
-        return [...prevSelected, exercise]; // Select if not selected
+        return [...prevSelected, exercise];
       }
     });
   };
@@ -52,11 +52,11 @@ const AddExerciseEdit: React.FC = () => {
 
   useEffect(() => {
     fetchExercises();
-  }, []); // Fetch exercises only once on mount
+  }, []);
 
   useEffect(() => {
-    setSelectedExercises(route.params?.selectedExercises || []); // Initialize selected exercises from route params
-  }, [route.params?.selectedExercises]);
+    setSelectedExercises(route.params!.selectedExercises || []);
+  }, [route.params!.selectedExercises]);
 
   return (
     <ScrollView className="flex-1">
@@ -89,11 +89,8 @@ const AddExerciseEdit: React.FC = () => {
           <InputField className="text-white" placeholder="Buscar Ejercicio" />
         </Input>
 
-        {exercises.map((exercise) => (
-          <Pressable
-            key={exercise.id} // Use unique id as key
-            onPress={() => handleSelectExercise(exercise)}
-          >
+        {exercises.map((exercise, index) => (
+          <Pressable key={index} onPress={() => handleSelectExercise(exercise)}>
             <HStack
               className={`${selectedExercises.some((e) => e.id === exercise.id) ? 'bg-blue-500' : 'bg-transparent'}`}
             >

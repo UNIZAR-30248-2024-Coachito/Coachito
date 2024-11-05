@@ -33,7 +33,7 @@ export interface ExerciseResume {
   sets: SetsExerciseResume[];
 }
 
-const ExerciseResumeComponent: React.FC<ExerciseResume> = ({
+const ExercisesRoutineResumeComponent: React.FC<ExerciseResume> = ({
   id,
   name,
   thumbnailUrl,
@@ -86,24 +86,25 @@ const ExerciseResumeComponent: React.FC<ExerciseResume> = ({
           </TableRow>
         </TableHeader>
         <TableBody>
-          {sets.map((set, index) => (
-            <TableRow
-              key={index}
-              className={
-                index % 2 === 0
-                  ? 'border-b-0 bg-background-50'
-                  : 'border-b-0 bg-background-0'
-              }
-            >
-              <TableData>{index + 1}</TableData>
-              <TableData>{set.weight}</TableData>
-              <TableData>{set.reps}</TableData>
-            </TableRow>
-          ))}
+          {sets &&
+            sets.map((set, index) => (
+              <TableRow
+                key={index}
+                className={
+                  index % 2 === 0
+                    ? 'border-b-0 bg-background-50'
+                    : 'border-b-0 bg-background-0'
+                }
+              >
+                <TableData>{index + 1}</TableData>
+                <TableData>{set.weight}</TableData>
+                <TableData>{set.reps}</TableData>
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
     </Box>
   );
 };
 
-export default ExerciseResumeComponent;
+export default ExercisesRoutineResumeComponent;

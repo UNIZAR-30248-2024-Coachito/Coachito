@@ -1,4 +1,4 @@
-import { ExerciseResume } from '@/components/routine/ExerciseResume';
+import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 import { ExerciseProportion } from '@/components/workout/WorkoutDivision';
 
 export const mapToExerciseProportions = (

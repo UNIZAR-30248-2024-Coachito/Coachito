@@ -37,20 +37,26 @@ const Profile: React.FC = () => {
 
     if (!error) {
       setWorkoutsDetails(data!);
+
+      const sortedWorkouts = [...data!.workouts].sort(
+        (a, b) =>
+          new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+      );
+
       const durationData =
-        data!.workouts.map((workout) => ({
+        sortedWorkouts.map((workout) => ({
           value: convertIntervalToMinutes(workout.duration),
           label: formatToChartLabel(workout.created_at),
         })) || [];
 
       const repsData =
-        data!.workouts.map((workout) => ({
+        sortedWorkouts.map((workout) => ({
           value: workout.repsCount,
           label: formatToChartLabel(workout.created_at),
         })) || [];
 
       const volumenData =
-        data!.workouts.map((workout) => ({
+        sortedWorkouts.map((workout) => ({
           value: workout.volumen,
           label: formatToChartLabel(workout.created_at),
         })) || [];

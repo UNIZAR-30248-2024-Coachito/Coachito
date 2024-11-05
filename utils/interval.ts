@@ -6,7 +6,7 @@ export const convertIntervalToMinutes = (interval: string): number => {
 export const convertIntervalToMinutesAndSeconds = (
   interval: string
 ): string => {
-  if (!interval) {
+  if (!interval || interval === '0') {
     return 'DESACTIVADO';
   }
 

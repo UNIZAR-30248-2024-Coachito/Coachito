@@ -15,7 +15,7 @@ import { Pressable, ScrollView } from 'react-native';
 import { useFetchExercisesList } from '@/hooks/exerciseHook';
 import ExercisesListCardResume from '@/components/exercise/ExercisesListCardResume';
 import { SearchIcon } from 'lucide-react-native';
-import { ExerciseResume } from '@/components/routine/ExerciseResume';
+import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 
 type AddExerciseRouteProp = RouteProp<RootStackParamList, 'AddExercise'>;
 
@@ -25,9 +25,9 @@ const AddExercise: React.FC = () => {
 
   const [exercises, setExercises] = useState<ExerciseResume[]>([]);
   const [selectedExercises, setSelectedExercises] = useState<ExerciseResume[]>(
-    route.params?.selectedExercises
+    route.params!.selectedExercises
   );
-  const selectedExercisesInit = route.params?.selectedExercises;
+  const selectedExercisesInit = route.params!.selectedExercises;
 
   const handleSelectExercise = (exercise: ExerciseResume) => {
     setSelectedExercises((prevSelected) => {
@@ -53,8 +53,8 @@ const AddExercise: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    setSelectedExercises(route.params?.selectedExercises || []);
-  }, [route.params?.selectedExercises]);
+    setSelectedExercises(route.params!.selectedExercises || []);
+  }, [route.params!.selectedExercises]);
 
   return (
     <ScrollView className="flex-1">

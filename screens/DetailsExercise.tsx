@@ -57,11 +57,12 @@ const DetailsExercise: React.FC = () => {
   return (
     <ScrollView className="flex-1">
       <VStack className="p-4">
-        {/*<Image
+        <Image
+          // eslint-disable-next-line react-native/no-inline-styles
           style={{ width: 365, height: 200 }}
-          source={{ uri: exercisesDetails!.imageUrl }}
+          source={{ uri: exercisesDetails?.imageUrl }}
           className="mb-4"
-        />*/}
+        />
 
         <Text size="2xl" bold>
           {exercisesDetails?.name}
@@ -73,7 +74,7 @@ const DetailsExercise: React.FC = () => {
 
         {exercisesDetails && (
           <CustomAreaChart
-            data={exercisesDetails!.dataPoints}
+            data={exercisesDetails?.dataPoints}
             buttons={buttons}
           />
         )}

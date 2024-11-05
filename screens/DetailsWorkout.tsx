@@ -5,9 +5,9 @@ import { useRoute, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '@/types/navigation';
 import { ScrollView } from 'react-native';
 import { useFetchDetailsWorkout } from '@/hooks/workoutHook';
-import ExerciseResumeComponent, {
+import ExercisesRoutineResumeComponent, {
   ExerciseResume,
-} from '@/components/routine/ExerciseResume';
+} from '@/components/routine/ExercisesRoutineResume';
 import WorkoutHeaderResumeComponent, {
   WorkoutHeaderResume,
 } from '@/components/workout/WorkoutHeaderResume';
@@ -66,8 +66,8 @@ const DetailsWorkout: React.FC = () => {
 
         <Text className="text-gray-400">Ejercicios</Text>
 
-        {workoutResume?.exercise_resume!.map((exercise, index) => (
-          <ExerciseResumeComponent
+        {workoutResume?.exercise_resume.map((exercise, index) => (
+          <ExercisesRoutineResumeComponent
             key={index}
             id={exercise.id}
             name={exercise.name}

@@ -25,7 +25,10 @@ import SlideUpBaseModal from '../shared/SlideUpBaseModal';
 import { VStack } from '../ui/vstack';
 import { Box } from '../ui/box';
 import Slider from '@react-native-assets/slider';
-import { ExerciseResume, SetsExerciseResume } from '../routine/ExerciseResume';
+import {
+  ExerciseResume,
+  SetsExerciseResume,
+} from '../routine/ExercisesRoutineResume';
 import {
   convertIntervalToSeconds,
   convertStringToInterval,
@@ -50,8 +53,9 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
       useState(restTime);
     const [exerciseNotes, setExerciseNotes] = useState(notes);
     const [exercisePrimaryMuscleGroup] = useState(primaryMuscleGroup);
-    const [exerciseSets, setExerciseSets] =
-      useState<SetsExerciseResume[]>(sets);
+    const [exerciseSets, setExerciseSets] = useState<SetsExerciseResume[]>(
+      sets ?? []
+    );
     const [isSlideUpModalVisible, setIsSlideUpModalVisible] = useState(false);
 
     useImperativeHandle(ref, () => ({

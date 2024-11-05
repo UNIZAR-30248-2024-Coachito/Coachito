@@ -1,6 +1,6 @@
 import supabaseClient from '@/api/supabaseClient';
 import useCRUD from './useCRUD';
-import { ExerciseResume } from '@/components/routine/ExerciseResume';
+import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 
 const useFetchDetailsLastWorkout = async (templateId: number) => {
   const { execute } = useCRUD(() =>
@@ -69,8 +69,7 @@ const useCreateWorkout = async (
             reps: set.reps,
             weight: set.weight,
             notes: exercise.notes,
-            rest_time:
-              exercise.restTime === '00:00:00' ? null : exercise.restTime,
+            rest_time: exercise.restTime === '0' ? null : exercise.restTime,
           })
         );
 
@@ -107,7 +106,7 @@ const useFetchRoutineWorkouts = async (id: number) => {
   const { execute } = useCRUD(() =>
     supabaseClient.get('/rpc/get_routine_chart_data', {
       params: {
-        template_id: id,
+        templ_id: id,
       },
     })
   );
