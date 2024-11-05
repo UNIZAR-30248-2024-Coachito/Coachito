@@ -4,16 +4,16 @@ export const convertIntervalToMinutes = (interval: string): number => {
 };
 
 export const convertIntervalToMinutesAndSeconds = (
-  interval: string
+  interval: string | null
 ): string => {
-  if (!interval || interval === '0') {
+  if (!interval || interval === '0' || interval === '00:00:00') {
     return 'DESACTIVADO';
   }
 
   const [hours, minutes, seconds] = interval.split(':').map(Number);
   const totalMinutes = hours * 60 + minutes;
-  const minutesPart = totalMinutes > 0 ? `${totalMinutes} min` : '';
-  const secondsPart = seconds > 0 ? `${seconds} s` : '';
+  const minutesPart = totalMinutes > 0 ? `${totalMinutes}min` : '';
+  const secondsPart = seconds > 0 ? `${seconds}s` : '';
   return [minutesPart, secondsPart].filter(Boolean).join(' y ');
 };
 
@@ -23,7 +23,7 @@ export const convertIntervalToSeconds = (restTimeStr: string | null) => {
   return hours * 3600 + minutes * 60 + seconds;
 };
 
-export const convertStringToInterval = (time: string | null): string => {
+export const convertStringToInterval = (time: string): string => {
   let minutes = 0;
   let seconds = 0;
 

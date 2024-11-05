@@ -22,6 +22,12 @@ describe('App Navigation', () => {
     expect(queryByText('Exercises')).toBeNull();
     expect(queryByText('AddExercise')).toBeNull();
     expect(queryByText('AddRoutine')).toBeNull();
+    expect(queryByText('DetailsRoutine')).toBeNull();
+    expect(queryByText('EditRoutine')).toBeNull();
+    expect(queryByText('AddExerciseEdit')).toBeNull();
+    expect(queryByText('StartWorkout')).toBeNull();
+    expect(queryByText('DetailsWorkout')).toBeNull();
+    expect(queryByText('DetailsEsercise')).toBeNull();
 
     // Simula la navegación a la pestaña Routine
     fireEvent.press(getByText('Routine'));
@@ -31,12 +37,27 @@ describe('App Navigation', () => {
     expect(queryByText('Exercises')).toBeNull();
     expect(queryByText('AddExercise')).toBeNull();
     expect(queryByText('AddRoutine')).toBeNull();
+    expect(queryByText('DetailsRoutine')).toBeNull();
+    expect(queryByText('EditRoutine')).toBeNull();
+    expect(queryByText('AddExerciseEdit')).toBeNull();
+    expect(queryByText('StartWorkout')).toBeNull();
+    expect(queryByText('DetailsWorkout')).toBeNull();
+    expect(queryByText('DetailsEsercise')).toBeNull();
 
     // Simula la navegación a la pestaña Profile
     fireEvent.press(getByText('Profile'));
     expect(getByText('Profile')).toBeTruthy();
     expect(queryByText('Routine')).toBeNull();
     expect(queryByText('Dashboard')).toBeNull();
+    expect(queryByText('Exercises')).toBeNull();
+    expect(queryByText('AddExercise')).toBeNull();
+    expect(queryByText('AddRoutine')).toBeNull();
+    expect(queryByText('DetailsRoutine')).toBeNull();
+    expect(queryByText('EditRoutine')).toBeNull();
+    expect(queryByText('AddExerciseEdit')).toBeNull();
+    expect(queryByText('StartWorkout')).toBeNull();
+    expect(queryByText('DetailsWorkout')).toBeNull();
+    expect(queryByText('DetailsEsercise')).toBeNull();
 
     // Simula la navegación a la pestaña Exercises
     fireEvent.press(getByText('Exercises'));

@@ -27,7 +27,7 @@ export interface ExerciseResume {
   id: number;
   name: string;
   thumbnailUrl: string;
-  restTime: string;
+  restTime: string | null;
   notes: string;
   primaryMuscleGroup: string;
   sets: SetsExerciseResume[];
