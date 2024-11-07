@@ -44,6 +44,7 @@ describe('GroupedRoutinesResumeComponent', () => {
   };
 
   beforeEach(() => {
+    jest.clearAllMocks();
     (useNavigation as jest.Mock).mockReturnValue({ navigate: jest.fn() });
     (useDeleteTemplateWorkoutGroupById as jest.Mock).mockResolvedValue({
       error: null,
@@ -80,11 +81,11 @@ describe('GroupedRoutinesResumeComponent', () => {
     const mockNavigate = jest.fn();
     (useNavigation as jest.Mock).mockReturnValue({ navigate: mockNavigate });
 
-    const { getByTestId, getByText } = render(
+    const { getAllByTestId, getByText } = render(
       <GroupedRoutinesResumeComponent groupedRoutine={mockGroupedRoutine} />
     );
 
-    const moreButton = getByTestId('slideup-modal');
+    const moreButton = getAllByTestId('slideup-modal')[0];
     fireEvent.press(moreButton);
 
     const addButton = getByText('Agregar nueva rutina');
@@ -97,11 +98,11 @@ describe('GroupedRoutinesResumeComponent', () => {
   });
 
   it('debería mostrar el modal para renombrar la carpeta', () => {
-    const { getByTestId, getByText } = render(
+    const { getAllByTestId, getByText } = render(
       <GroupedRoutinesResumeComponent groupedRoutine={mockGroupedRoutine} />
     );
 
-    const moreButton = getByTestId('slideup-modal');
+    const moreButton = getAllByTestId('slideup-modal')[0];
     fireEvent.press(moreButton);
 
     const renameButton = getByText('Renombrar Carpeta');
@@ -111,11 +112,11 @@ describe('GroupedRoutinesResumeComponent', () => {
   });
 
   it('debería mostrar el modal para eliminar la carpeta', () => {
-    const { getByTestId, getByText } = render(
+    const { getAllByTestId, getByText } = render(
       <GroupedRoutinesResumeComponent groupedRoutine={mockGroupedRoutine} />
     );
 
-    const moreButton = getByTestId('slideup-modal');
+    const moreButton = getAllByTestId('slideup-modal')[0];
     fireEvent.press(moreButton);
 
     const deleteButton = getByText('Eliminar Carpeta');
@@ -127,11 +128,11 @@ describe('GroupedRoutinesResumeComponent', () => {
   });
 
   it('debería eliminar el grupo cuando se confirma en el modal de eliminación', async () => {
-    const { getByTestId, getByText } = render(
+    const { getAllByTestId, getByText } = render(
       <GroupedRoutinesResumeComponent groupedRoutine={mockGroupedRoutine} />
     );
 
-    const moreButton = getByTestId('slideup-modal');
+    const moreButton = getAllByTestId('slideup-modal')[0];
     fireEvent.press(moreButton);
 
     const deleteButton = getByText('Eliminar Carpeta');
@@ -149,11 +150,11 @@ describe('GroupedRoutinesResumeComponent', () => {
   });
 
   it('debería renombrar el grupo cuando se guarda el nuevo nombre', async () => {
-    const { getByTestId, getByText, getByPlaceholderText } = render(
+    const { getAllByTestId, getByText, getByPlaceholderText } = render(
       <GroupedRoutinesResumeComponent groupedRoutine={mockGroupedRoutine} />
     );
 
-    const moreButton = getByTestId('slideup-modal');
+    const moreButton = getAllByTestId('slideup-modal')[0];
     fireEvent.press(moreButton);
 
     const renameButton = getByText('Renombrar Carpeta');
@@ -178,11 +179,11 @@ describe('GroupedRoutinesResumeComponent', () => {
     const alertMock = jest.fn();
     global.alert = alertMock;
 
-    const { getByTestId, getByText, getByPlaceholderText } = render(
+    const { getAllByTestId, getByText, getByPlaceholderText } = render(
       <GroupedRoutinesResumeComponent groupedRoutine={mockGroupedRoutine} />
     );
 
-    const moreButton = getByTestId('slideup-modal');
+    const moreButton = getAllByTestId('slideup-modal')[0];
     fireEvent.press(moreButton);
 
     const renameButton = getByText('Renombrar Carpeta');
@@ -202,11 +203,11 @@ describe('GroupedRoutinesResumeComponent', () => {
   });
 
   it('debería cerrar el modal de renombrar cuando se presiona el botón Cancelar', async () => {
-    const { getByTestId, getByText, getByPlaceholderText } = render(
+    const { getAllByTestId, getByText, getByPlaceholderText } = render(
       <GroupedRoutinesResumeComponent groupedRoutine={mockGroupedRoutine} />
     );
 
-    const moreButton = getByTestId('slideup-modal');
+    const moreButton = getAllByTestId('slideup-modal')[0];
     fireEvent.press(moreButton);
 
     const renameButton = getByText('Renombrar Carpeta');
@@ -222,11 +223,11 @@ describe('GroupedRoutinesResumeComponent', () => {
   });
 
   it('debería cerrar el modal de eliminación cuando se presiona el botón Cancelar', async () => {
-    const { getByTestId, getByText } = render(
+    const { getAllByTestId, getByText } = render(
       <GroupedRoutinesResumeComponent groupedRoutine={mockGroupedRoutine} />
     );
 
-    const moreButton = getByTestId('slideup-modal');
+    const moreButton = getAllByTestId('slideup-modal')[0];
     fireEvent.press(moreButton);
 
     const renameButton = getByText('Eliminar Carpeta');

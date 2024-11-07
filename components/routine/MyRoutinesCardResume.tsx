@@ -107,6 +107,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
         </Text>
 
         <Button
+          testID="slideup-modal"
           className="bg-transparent"
           onPress={() => {
             setIsSlideUpModalVisible(true);
@@ -129,7 +130,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
           })
         }
       >
-        <Text className="text-white">Empezar Rutina</Text>
+        <Text className="text-white">Empezar Entrenamiento</Text>
       </Button>
 
       <SlideUpBaseModal

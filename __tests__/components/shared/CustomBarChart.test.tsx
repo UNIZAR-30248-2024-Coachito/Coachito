@@ -1,10 +1,10 @@
 import CustomBarChart from '@/components/shared/CustomBarChart';
-import { render, screen } from '@testing-library/react-native';
+import { render } from '@testing-library/react-native';
 import React from 'react';
 
 jest.mock('../../../styles.css', () => ({}));
 jest.mock('react-native-gifted-charts', () => ({
-  BarChart: jest.fn(() => <div>Mock BarChart</div>), // Mocked version
+  BarChart: jest.fn(() => <div>Mock BarChart</div>),
 }));
 
 describe('CustomBarChart', () => {
@@ -21,13 +21,15 @@ describe('CustomBarChart', () => {
   const sampleButtons = ['Button 1', 'Button 2', 'Button 3'];
 
   it('debería renderizar el gráfico y los botones correctamente', () => {
-    render(<CustomBarChart data={sampleData} buttons={sampleButtons} />);
+    const { getByTestId, getByText } = render(
+      <CustomBarChart data={sampleData} buttons={sampleButtons} />
+    );
 
-    expect(screen.getByText('60')).toBeTruthy();
-    expect(screen.getByText('Últimos 3 meses')).toBeTruthy();
-    expect(screen.getByTestId('bar-chart')).toBeTruthy();
+    expect(getByText('60')).toBeTruthy();
+    expect(getByText('Últimos 3 meses')).toBeTruthy();
+    expect(getByTestId('bar-chart')).toBeTruthy();
     sampleButtons.forEach((buttonText) => {
-      expect(screen.getByText(buttonText)).toBeTruthy();
+      expect(getByText(buttonText)).toBeTruthy();
     });
   });
 
