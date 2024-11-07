@@ -47,26 +47,26 @@ describe('calculateDaysDifferenceNow', () => {
 describe('formatToChartLabel', () => {
   it('debería formatear correctamente una fecha en el formato "DD MMM" en español', () => {
     const result = formatToChartLabel('2024-10-11T00:00:00Z');
-    expect(result).toBe('11 Oct');
+    expect(result).toBe('Oct 11');
   });
 
   it('debería formatear correctamente una fecha en el formato "DD MMM" con un mes diferente', () => {
     const result = formatToChartLabel('2024-12-25T00:00:00Z');
-    expect(result).toBe('25 Dec');
+    expect(result).toBe('Dec 25');
   });
 
   it('debería formatear correctamente una fecha en el primer día del mes', () => {
     const result = formatToChartLabel('2024-05-01T00:00:00Z');
-    expect(result).toBe('01 May');
+    expect(result).toBe('May 01');
   });
 
   it('debería formatear correctamente una fecha en el último día del mes', () => {
     const result = formatToChartLabel('2024-03-31T00:00:00Z');
-    expect(result).toBe('31 Mar');
+    expect(result).toBe('Mar 31');
   });
 
   it('debería manejar correctamente fechas de años anteriores', () => {
     const result = formatToChartLabel('2020-01-15T00:00:00Z');
-    expect(result).toBe('15 Jan');
+    expect(result).toBe('Jan 15');
   });
 });

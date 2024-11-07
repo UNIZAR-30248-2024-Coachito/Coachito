@@ -20,6 +20,7 @@ const SlideUpBaseModal: React.FC<SlideUpModalProps> = ({
 }) => {
   return (
     <Modal
+      testID="modal"
       visible={isVisible}
       transparent={true}
       animationType="slide"
@@ -28,13 +29,17 @@ const SlideUpBaseModal: React.FC<SlideUpModalProps> = ({
       }}
     >
       <TouchableOpacity
+        testID="modal-touchable"
         className="flex-1 bg-black/75"
         onPress={() => {
           setIsModalVisible(false);
         }}
         activeOpacity={1}
       >
-        <Box className="absolute bottom-0 w-full bg-zinc-950 rounded-t-2xl shadow-lg items-center">
+        <Box
+          testID="modal-content"
+          className="absolute bottom-0 w-full bg-zinc-950 rounded-t-2xl shadow-lg items-center"
+        >
           <Minus color="grey" />
           <Text className="text-xl font-bold text-center text-white py-4">
             {title}
@@ -44,7 +49,7 @@ const SlideUpBaseModal: React.FC<SlideUpModalProps> = ({
               <React.Fragment key={index}>
                 {button}
                 {index < buttons.length - 1 ? (
-                  <Divider className="my-0.5 bg-zinc-700" />
+                  <Divider testID="divider" className="my-0.5 bg-zinc-700" />
                 ) : (
                   <></>
                 )}

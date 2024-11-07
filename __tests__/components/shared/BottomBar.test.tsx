@@ -34,9 +34,7 @@ describe('BottomBar Component', () => {
       )
     ).toBeDefined();
 
-    expect(getByText('Entrenamiento').props.className).toContain(
-      'text-gray-400'
-    );
+    expect(getByText('Rutinas').props.className).toContain('text-gray-400');
     expect(
       getAllByTestId('entrenamiento-icon').find(
         (icon) => icon.props.stroke === 'white'
@@ -63,9 +61,7 @@ describe('BottomBar Component', () => {
       )
     ).toBeDefined();
 
-    expect(getByText('Entrenamiento').props.className).toContain(
-      'text-blue-500'
-    );
+    expect(getByText('Rutinas').props.className).toContain('text-blue-500');
     expect(
       getAllByTestId('entrenamiento-icon').find(
         (icon) => icon.props.stroke === 'rgb(59 130 246)'
@@ -92,9 +88,7 @@ describe('BottomBar Component', () => {
       )
     ).toBeDefined();
 
-    expect(getByText('Entrenamiento').props.className).toContain(
-      'text-gray-400'
-    );
+    expect(getByText('Rutinas').props.className).toContain('text-gray-400');
     expect(
       getAllByTestId('entrenamiento-icon').find(
         (icon) => icon.props.stroke === 'white'
@@ -124,7 +118,7 @@ describe('BottomBar Component', () => {
 
     const { getByText } = render(<BottomBar />);
 
-    fireEvent.press(getByText('Entrenamiento'));
+    fireEvent.press(getByText('Rutinas'));
 
     expect(mockNavigate).toHaveBeenCalledWith('Routine');
   });
@@ -136,6 +130,6 @@ describe('BottomBar Component', () => {
 
     fireEvent.press(getByText('Perfil'));
 
-    expect(mockNavigate).toHaveBeenCalledWith('Profile');
+    expect(mockNavigate).toHaveBeenCalledWith('Profile', { userId: 1 });
   });
 });

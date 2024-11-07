@@ -31,6 +31,7 @@ import {
 } from '../routine/ExercisesRoutineResume';
 import {
   convertIntervalToSeconds,
+  convertSecondsToString,
   convertStringToInterval,
 } from '@/utils/interval';
 
@@ -71,7 +72,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
     }));
 
     useEffect(() => {
-      setExerciseSets(sets);
+      setExerciseSets(sets ?? []);
       setExerciseRestTimeString(restTime);
       setExerciseNotes(notes);
       setExerciseRestTimeSeconds(
@@ -101,12 +102,6 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
       setExerciseSets(updatedSets);
     };
 
-    const convertSecondsToString = (seconds: number) => {
-      const minutes = Math.floor(seconds / 60);
-      const remainingSeconds = seconds % 60;
-      return `${minutes} min ${remainingSeconds} s`;
-    };
-
     const componentsTemporizadorPopUpModal: React.ReactNode[] = [
       <VStack key="1" className="gap-4 p-4">
         <Text className="text-center">
@@ -115,6 +110,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
             : `${convertSecondsToString(exerciseRestTimeSeconds)}`}
         </Text>
         <Slider
+          testID="slider"
           minimumValue={0}
           maximumValue={300}
           step={15}
@@ -173,6 +169,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
 
           <Textarea className="w-100">
             <TextareaInput
+              testID="text-area-input"
               placeholder="Notas..."
               value={exerciseNotes}
               onChangeText={(value) => setExerciseNotes(value)}
@@ -180,6 +177,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
           </Textarea>
 
           <Button
+            testID="temporizador"
             className="gap-2 bg-transparent"
             onPress={() => setIsSlideUpModalVisible(true)}
           >
@@ -203,11 +201,16 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
             </TableHeader>
             <TableBody>
               {exerciseSets.map((set, index) => (
-                <TableRow key={index} className="border-b-0 bg-background-50">
+                <TableRow
+                  testID="table-row"
+                  key={index}
+                  className="border-b-0 bg-background-50"
+                >
                   <TableData>{index + 1}</TableData>
                   <TableData>
                     <Input className="w-full text-center" variant="underlined">
                       <InputField
+                        testID="weight"
                         value={set.weight ? set.weight.toString() : '0'}
                         onChangeText={(value) =>
                           handleSetChange(index, 'weight', value)
@@ -218,6 +221,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
                   <TableData>
                     <Input className="w-full text-center" variant="underlined">
                       <InputField
+                        testID="reps"
                         value={set.reps ? set.reps.toString() : '0'}
                         onChangeText={(value) =>
                           handleSetChange(index, 'reps', value)
@@ -227,6 +231,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
                   </TableData>
                   <TableData>
                     <Button
+                      testID="trash"
                       className="bg-transparent"
                       onPress={() => deleteSet(index)}
                     >

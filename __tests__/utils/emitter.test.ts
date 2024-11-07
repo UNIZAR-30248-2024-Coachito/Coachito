@@ -1,3 +1,4 @@
+import { emitter } from '@/utils/emitter';
 import { NativeEventEmitter } from 'react-native';
 
 jest.mock('react-native', () => {
@@ -9,5 +10,6 @@ jest.mock('react-native', () => {
 describe('NativeEventEmitter instance creation', () => {
   it('debería llamar a NativeEventEmitter constructor', () => {
     expect(NativeEventEmitter).toHaveBeenCalledTimes(1);
+    expect(emitter).toBeInstanceOf(NativeEventEmitter);
   });
 });

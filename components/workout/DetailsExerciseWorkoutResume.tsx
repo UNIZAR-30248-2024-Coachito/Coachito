@@ -26,7 +26,10 @@ import {
   ExerciseResume,
   SetsExerciseResume,
 } from '../routine/ExercisesRoutineResume';
-import { convertIntervalToSeconds } from '@/utils/interval';
+import {
+  convertIntervalToMinutesAndSeconds,
+  convertIntervalToSeconds,
+} from '@/utils/interval';
 import PopupBaseModal from '../shared/PopupBaseModal';
 import CountdownTimer from './CountDownTimer';
 
@@ -48,7 +51,8 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
     const [exerciseRestTimeNumber] = useState(
       convertIntervalToSeconds(restTime)
     );
-    const [exerciseRestTimeString] = useState(restTime ?? '0');
+    const [exerciseRestTimeString] =
+      convertIntervalToMinutesAndSeconds(restTime);
     const [exerciseNotes, setExerciseNotes] = useState(notes);
     const [exercisePrimaryMuscleGroup] = useState(primaryMuscleGroup);
     const [exerciseSets, setExerciseSets] = useState<SetsExerciseResume[]>(
@@ -124,6 +128,7 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
 
           <Textarea className="w-100">
             <TextareaInput
+              testID="text-area-input"
               placeholder="Notas..."
               value={exerciseNotes}
               onChangeText={(value) => setExerciseNotes(value)}
@@ -154,7 +159,11 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
             <TableBody>
               {exerciseSets &&
                 exerciseSets.map((set, index) => (
-                  <TableRow key={index} className="border-b-0 bg-background-50">
+                  <TableRow
+                    testID="table-row"
+                    key={index}
+                    className="border-b-0 bg-background-50"
+                  >
                     <TableData>{index + 1}</TableData>
                     <TableData>
                       <Input
@@ -162,7 +171,9 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
                         variant="underlined"
                       >
                         <InputField
+                          testID="weight"
                           placeholder={set.weight ? set.weight.toString() : '0'}
+                          value={set.weight ? set.weight.toString() : '0'}
                           onChangeText={(value) =>
                             handleSetChange(index, 'weight', value)
                           }
@@ -175,7 +186,9 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
                         variant="underlined"
                       >
                         <InputField
+                          testID="reps"
                           placeholder={set.reps ? set.reps.toString() : '0'}
+                          value={set.reps ? set.reps.toString() : '0'}
                           onChangeText={(value) =>
                             handleSetChange(index, 'reps', value)
                           }
@@ -183,7 +196,11 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
                       </Input>
                     </TableData>
                     <TableData>
-                      <Button className="bg-gray-400" onPress={startRestTimer}>
+                      <Button
+                        testID="check"
+                        className="bg-gray-400"
+                        onPress={startRestTimer}
+                      >
                         <Check color="white" />
                       </Button>
                     </TableData>

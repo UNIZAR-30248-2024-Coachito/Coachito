@@ -24,9 +24,10 @@ jest.mock(
 
 describe('WorkoutCardResumeComponent', () => {
   const mockHeaderResume = {
+    workoutId: 1,
     workoutName: 'Test Workout',
-    workoutDate: new Date('2024-10-13'),
-    workoutTime: 30,
+    workoutDate: '2024-11-05T12:27:23.909629+00:00',
+    workoutTime: '01:00:38',
     workoutVolume: 1500,
     workoutSeries: 3,
   };

@@ -36,7 +36,7 @@ const CustomAreaChart: React.FC<CustomDataChartProps> = ({ data, buttons }) => {
   }, [data]);
 
   return (
-    <VStack className="gap-4">
+    <VStack testID="area-chart" className="gap-4">
       <HStack className="justify-between">
         <Text bold>{dataChartTotal}</Text>
         <Text>Últimos 3 meses</Text>

@@ -15,6 +15,7 @@ const PopupBaseModal: React.FC<PopupBaseModalProps> = ({
 }) => {
   return (
     <Modal
+      testID="modal"
       visible={isVisible}
       transparent={true}
       onRequestClose={() => {
@@ -22,13 +23,17 @@ const PopupBaseModal: React.FC<PopupBaseModalProps> = ({
       }}
     >
       <TouchableOpacity
+        testID="modal-touchable"
         className="flex-1 bg-black/75 justify-center items-center"
         onPress={() => {
           setIsModalVisible(false);
         }}
         activeOpacity={1}
       >
-        <Box className="bg-zinc-800 rounded-lg items-center p-4 mx-8 self-center">
+        <Box
+          testID="modal-content"
+          className="bg-zinc-800 rounded-lg items-center p-4 mx-8 self-center"
+        >
           {components.map((component) => component)}
         </Box>
       </TouchableOpacity>

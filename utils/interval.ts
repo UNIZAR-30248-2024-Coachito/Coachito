@@ -43,3 +43,9 @@ export const convertStringToInterval = (time: string): string => {
 
   return `00:${formattedMinutes}:${formattedSeconds}`;
 };
+
+export const convertSecondsToString = (seconds: number) => {
+  const minutes = Math.floor(seconds / 60);
+  const remainingSeconds = seconds % 60;
+  return `${minutes} min ${remainingSeconds} s`;
+};

@@ -30,7 +30,7 @@ export interface ExerciseResume {
   restTime: string | null;
   notes: string;
   primaryMuscleGroup: string;
-  sets: SetsExerciseResume[];
+  sets: SetsExerciseResume[] | null;
 }
 
 const ExercisesRoutineResumeComponent: React.FC<ExerciseResume> = ({
@@ -47,6 +47,7 @@ const ExercisesRoutineResumeComponent: React.FC<ExerciseResume> = ({
   return (
     <Box className="bg-zinc-900 p-4 mb-4 rounded-lg">
       <Pressable
+        testID="ver-detalles"
         onPress={() =>
           navigation.navigate('DetailsExercise', {
             exerciseId: id,

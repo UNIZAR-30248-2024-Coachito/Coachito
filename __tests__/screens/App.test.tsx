@@ -1,7 +1,6 @@
-// App.test.tsx
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import App from '../../screens/App'; // Asegúrate de que la ruta sea correcta
+import App from '../../screens/App';
 import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
 
 jest.mock('../../styles.css', () => ({}));

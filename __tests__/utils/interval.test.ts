@@ -2,6 +2,7 @@ import {
   convertIntervalToMinutes,
   convertIntervalToMinutesAndSeconds,
   convertIntervalToSeconds,
+  convertSecondsToString,
   convertStringToInterval,
 } from '../../utils/interval';
 
@@ -150,5 +151,31 @@ describe('convertStringToInterval', () => {
   it('debería ignorar valores que no contengan minutos o segundos válidos', () => {
     const result = convertStringToInterval('hour');
     expect(result).toBe('00:00:00'); // Sin minutos ni segundos válidos
+  });
+
+  describe('convertSecondsToString', () => {
+    it('debería convertir 0 segundos a "0 min 0 s"', () => {
+      expect(convertSecondsToString(0)).toBe('0 min 0 s');
+    });
+
+    it('debería convertir 59 segundos a "0 min 59 s"', () => {
+      expect(convertSecondsToString(59)).toBe('0 min 59 s');
+    });
+
+    it('debería convertir 60 segundos a "1 min 0 s"', () => {
+      expect(convertSecondsToString(60)).toBe('1 min 0 s');
+    });
+
+    it('debería convertir 120 segundos a "2 min 0 s"', () => {
+      expect(convertSecondsToString(120)).toBe('2 min 0 s');
+    });
+
+    it('debería convertir 125 segundos a "2 min 5 s"', () => {
+      expect(convertSecondsToString(125)).toBe('2 min 5 s');
+    });
+
+    it('debería convertir 300 segundos a "5 min 0 s"', () => {
+      expect(convertSecondsToString(300)).toBe('5 min 0 s');
+    });
   });
 });

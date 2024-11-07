@@ -35,7 +35,10 @@ const WorkoutDivisionComponent: React.FC<WorkoutDivision> = ({
                 width: `${exerciseProportion.proportion * 0.9}%`,
               }}
             >
-              <ProgressFilledTrack className="bg-blue-500 rounded-lg" />
+              <ProgressFilledTrack
+                testID="progress-bar"
+                className="bg-blue-500 rounded-lg"
+              />
             </Progress>
             <Text className="text-l text-gray-400 ml-2">
               {exerciseProportion.proportion}%

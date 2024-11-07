@@ -28,7 +28,7 @@ import { emitter } from '@/utils/emitter';
 
 export interface GroupedRoutines {
   groupId: number;
-  groupName: string;
+  groupName: string | null;
   routines: MyRoutinesCardResume[];
 }
 
@@ -45,7 +45,9 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [isRenameGroupModalVisible, setIsRenameGroupModalVisible] =
     useState(false);
-  const [newFolderName, setNewFolderName] = useState(groupedRoutine.groupName);
+  const [newFolderName, setNewFolderName] = useState(
+    groupedRoutine.groupName ?? ''
+  );
 
   const deleteGroup = async () => {
     const { error } = await useDeleteTemplateWorkoutGroupById(
@@ -75,7 +77,7 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
       setNewFolderName(folderName);
       emitter.emit('routineRenamed');
     } else {
-      setNewFolderName(groupedRoutine.groupName);
+      setNewFolderName(groupedRoutine.groupName!);
     }
   };
 
@@ -193,6 +195,7 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
 
         {groupedRoutine.groupName && (
           <Button
+            testID="slideup-modal"
             className="bg-transparent"
             onPress={() => {
               setIsSlideUpModalVisible(true);
@@ -213,7 +216,7 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
 
       <SlideUpBaseModal
         buttons={buttonsSlideUpModal}
-        title={groupedRoutine.groupName}
+        title={groupedRoutine.groupName!}
         isVisible={isSlideUpModalVisible}
         setIsModalVisible={setIsSlideUpModalVisible}
       />

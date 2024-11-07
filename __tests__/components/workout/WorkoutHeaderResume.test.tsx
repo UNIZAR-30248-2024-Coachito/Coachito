@@ -1,5 +1,3 @@
-// __tests__/components/workout/WorkoutHeaderResumeComponent.test.tsx
-
 import React from 'react';
 import { render } from '@testing-library/react-native';
 import WorkoutHeaderResumeComponent, {
@@ -15,19 +13,20 @@ jest.mock('@/utils/date', () => ({
 
 describe('WorkoutHeaderResumeComponent', () => {
   const mockProps: WorkoutHeaderResume = {
+    workoutId: 1,
     workoutName: 'Test Workout',
-    workoutDate: new Date('2024-10-10'),
-    workoutTime: 30,
+    workoutDate: '2024-11-05T12:27:23.909629+00:00',
+    workoutTime: '01:00:38',
     workoutVolume: 1500,
     workoutSeries: 3,
   };
 
   beforeEach(() => {
-    (calculateDaysDifferenceNow as jest.Mock).mockClear(); // Limpia los mocks antes de cada prueba
+    (calculateDaysDifferenceNow as jest.Mock).mockClear();
   });
 
   it('should render workout name correctly', () => {
-    (calculateDaysDifferenceNow as jest.Mock).mockReturnValue(3); // Simula el retorno de la función
+    (calculateDaysDifferenceNow as jest.Mock).mockReturnValue(3);
 
     const { getByText } = render(
       <WorkoutHeaderResumeComponent {...mockProps} />
@@ -38,14 +37,14 @@ describe('WorkoutHeaderResumeComponent', () => {
   });
 
   it('should render workout time, volume, and series correctly', () => {
-    (calculateDaysDifferenceNow as jest.Mock).mockReturnValue(1); // Simula el retorno de la función
+    (calculateDaysDifferenceNow as jest.Mock).mockReturnValue(1);
 
     const { getByText } = render(
       <WorkoutHeaderResumeComponent {...mockProps} />
     );
 
     expect(getByText('Tiempo')).toBeTruthy();
-    expect(getByText('30 min')).toBeTruthy();
+    expect(getByText('60 min')).toBeTruthy();
     expect(getByText('Volumen')).toBeTruthy();
     expect(getByText('1500 Kg')).toBeTruthy();
     expect(getByText('Series')).toBeTruthy();
