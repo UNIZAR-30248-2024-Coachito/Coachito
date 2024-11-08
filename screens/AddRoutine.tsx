@@ -53,6 +53,7 @@ const AddRoutine: React.FC = () => {
       <Text className="text-white">Descartar rutina</Text>
     </Button>,
     <Button
+      testID="cancel-cancel-routine-modal"
       key="3"
       className="bg-zinc-700 rounded-lg"
       onPress={() => {
@@ -106,6 +107,7 @@ const AddRoutine: React.FC = () => {
       <VStack className="p-4 gap-2 items-center">
         <HStack className="w-full gap-6 mb-4">
           <Button
+            testID="cancel-routine"
             className="bg-transparent rounded-lg"
             onPress={() => {
               setIsCancelRoutineModalVisible(true);

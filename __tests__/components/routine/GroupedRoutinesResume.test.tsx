@@ -7,7 +7,7 @@ import {
 } from '@/hooks/workoutTemplateGroupHook';
 import { emitter } from '@/utils/emitter';
 import { useNavigation } from '@react-navigation/native';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import React from 'react';
 
 jest.mock('../../../styles.css', () => ({}));
@@ -24,6 +24,8 @@ jest.mock('@/hooks/workoutTemplateGroupHook', () => ({
 jest.mock('@/utils/emitter', () => ({
   emitter: { emit: jest.fn() },
 }));
+
+global.alert = jest.fn();
 
 describe('GroupedRoutinesResumeComponent', () => {
   const mockGroupedRoutine: GroupedRoutines = {
@@ -175,10 +177,8 @@ describe('GroupedRoutinesResumeComponent', () => {
     expect(emitter.emit).toHaveBeenCalledWith('routineRenamed');
   });
 
-  it('debería mostrar un alert si el nombre de la carpeta está vacío', () => {
-    const alertMock = jest.fn();
-    global.alert = alertMock;
-
+  it('debería mostrar un alert si el nombre de la carpeta está vacío', async () => {
+    const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => {});
     const { getAllByTestId, getByText, getByPlaceholderText } = render(
       <GroupedRoutinesResumeComponent groupedRoutine={mockGroupedRoutine} />
     );
@@ -193,13 +193,13 @@ describe('GroupedRoutinesResumeComponent', () => {
     fireEvent.changeText(input, '');
 
     const saveButton = getByText('Guardar');
-    fireEvent.press(saveButton);
+    await act(async () => {
+      fireEvent.press(saveButton);
+    });
 
     expect(alertMock).toHaveBeenCalledWith(
       'Por favor, introduce un nombre para la nueva carpeta.'
     );
-
-    global.alert = jest.fn();
   });
 
   it('debería cerrar el modal de renombrar cuando se presiona el botón Cancelar', async () => {
@@ -230,8 +230,8 @@ describe('GroupedRoutinesResumeComponent', () => {
     const moreButton = getAllByTestId('slideup-modal')[0];
     fireEvent.press(moreButton);
 
-    const renameButton = getByText('Eliminar Carpeta');
-    fireEvent.press(renameButton);
+    const deleteButton = getByText('Eliminar Carpeta');
+    fireEvent.press(deleteButton);
 
     const cancelButton = getByText('Cancelar');
     fireEvent.press(cancelButton);
@@ -251,5 +251,66 @@ describe('GroupedRoutinesResumeComponent', () => {
     );
 
     expect(getByText('Mis Rutinas (0)')).toBeTruthy();
+  });
+
+  it('debería mostrar un error si la eliminación de la carpeta falla', async () => {
+    (useDeleteTemplateWorkoutGroupById as jest.Mock).mockResolvedValue({
+      error: 'Some error',
+    });
+    const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => {});
+
+    const { getAllByTestId, getByText, getByTestId } = render(
+      <GroupedRoutinesResumeComponent groupedRoutine={mockGroupedRoutine} />
+    );
+
+    const moreButton = getAllByTestId('slideup-modal')[0];
+    fireEvent.press(moreButton);
+
+    const deleteButton = getByText('Eliminar Carpeta');
+    fireEvent.press(deleteButton);
+
+    const finalDeleteButton = getByTestId('delete-button');
+    await act(async () => {
+      fireEvent.press(finalDeleteButton);
+    });
+
+    expect(alertMock).toHaveBeenCalledWith(
+      'Se ha producido un error eliminando la carpeta.'
+    );
+
+    alertMock.mockRestore();
+  });
+
+  it('debería mostrar un error si el renombrar la carpeta falla', async () => {
+    (useEditTemplateWorkoutGroup as jest.Mock).mockResolvedValue({
+      error: 'Some error',
+    });
+    const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => {});
+
+    const { getAllByTestId, getByText, getByPlaceholderText } = render(
+      <GroupedRoutinesResumeComponent groupedRoutine={mockGroupedRoutine} />
+    );
+
+    const moreButton = getAllByTestId('slideup-modal')[0];
+    fireEvent.press(moreButton);
+
+    const renameButton = getByText('Renombrar Carpeta');
+    fireEvent.press(renameButton);
+
+    const input = getByPlaceholderText('Nuevo nombre');
+    fireEvent.changeText(input, 'Nuevo Grupo');
+
+    const saveButton = getByText('Guardar');
+    await act(async () => {
+      fireEvent.press(saveButton);
+    });
+
+    expect(alertMock).toHaveBeenCalledWith(
+      'Se ha producido un error al renombrar la carpeta.'
+    );
+
+    expect(mockGroupedRoutine.groupName).toBe('Mi Grupo');
+
+    alertMock.mockRestore();
   });
 });

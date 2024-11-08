@@ -36,6 +36,8 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
 
     if (!error) {
       emitter.emit('routineDeleted');
+    } else {
+      alert('Se ha producido un error al eliminar la rutina.');
     }
   };
 
@@ -71,6 +73,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
       ¿Está seguro de que quiere eliminar la rutina?
     </Text>,
     <Button
+      testID="delete-button"
       key="2"
       className="bg-red-800 rounded-lg mb-4"
       onPress={() => {

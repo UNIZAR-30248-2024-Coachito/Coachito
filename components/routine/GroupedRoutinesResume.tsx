@@ -56,6 +56,8 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
 
     if (!error) {
       emitter.emit('routineDeleted');
+    } else {
+      alert('Se ha producido un error eliminando la carpeta.');
     }
   };
 
@@ -78,6 +80,7 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
       emitter.emit('routineRenamed');
     } else {
       setNewFolderName(groupedRoutine.groupName!);
+      alert('Se ha producido un error al renombrar la carpeta.');
     }
   };
 
@@ -153,6 +156,7 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
       ¿Está seguro de que quiere eliminar la carpeta?
     </Text>,
     <Button
+      testID="delete-button"
       key="2"
       className="bg-red-800 rounded-lg mb-4"
       onPress={() => {

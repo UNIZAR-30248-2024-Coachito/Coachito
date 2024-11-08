@@ -1,12 +1,13 @@
 import React from 'react';
-import { render, fireEvent, waitFor } from '@testing-library/react-native';
+import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import MyRoutinesCardResumeComponent from '@/components/routine/MyRoutinesCardResume';
 import { emitter } from '@/utils/emitter';
+import { useDeleteWorkoutTemplate } from '@/hooks/workoutTemplateHook';
 
 jest.mock('../../../styles.css', () => ({}));
 
 jest.mock('@/hooks/workoutTemplateHook', () => ({
-  useDeleteWorkoutTemplate: jest.fn().mockResolvedValue({ error: null }),
+  useDeleteWorkoutTemplate: jest.fn(),
 }));
 
 jest.mock('@/utils/emitter', () => ({
@@ -22,6 +23,8 @@ jest.mock('@react-navigation/native', () => ({
   }),
 }));
 
+global.alert = jest.fn();
+
 describe('MyRoutinesCardResumeComponent', () => {
   const routineCardResume = {
     templateId: 1,
@@ -31,6 +34,9 @@ describe('MyRoutinesCardResumeComponent', () => {
 
   beforeEach(() => {
     jest.clearAllMocks();
+    (useDeleteWorkoutTemplate as jest.Mock).mockResolvedValue({
+      error: null,
+    });
   });
 
   it('debería navegar a la pantalla de detalles de la rutina al presionar el card', () => {
@@ -139,5 +145,33 @@ describe('MyRoutinesCardResumeComponent', () => {
       routineId: routineCardResume.templateId,
       routineName: routineCardResume.myRoutineName,
     });
+  });
+
+  it('debería mostrar un error si la eliminación de la rutina falla', async () => {
+    (useDeleteWorkoutTemplate as jest.Mock).mockResolvedValue({
+      error: 'Some error',
+    });
+    const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => {});
+
+    const { getByText, getByTestId } = render(
+      <MyRoutinesCardResumeComponent routineCardResume={routineCardResume} />
+    );
+
+    const moreButton = getByTestId('slideup-modal');
+    fireEvent.press(moreButton);
+
+    const deleteButton = getByText('Eliminar Rutina');
+    fireEvent.press(deleteButton);
+
+    const finalDeleteButton = getByTestId('delete-button');
+    await act(async () => {
+      fireEvent.press(finalDeleteButton);
+    });
+
+    expect(alertMock).toHaveBeenCalledWith(
+      'Se ha producido un error al eliminar la rutina.'
+    );
+
+    alertMock.mockRestore();
   });
 });
