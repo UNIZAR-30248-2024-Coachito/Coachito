@@ -1,9 +1,9 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import WorkoutCardResumeComponent from '../../../components/workout/WorkoutCardResume';
+import WorkoutCardResumeComponent from '@/components/workout/WorkoutCardResume';
 import { WorkoutExercisesResume } from '@/components/workout/WorkoutExerciseResume';
 import { WorkoutHeaderResume } from '@/components/workout/WorkoutHeaderResume';
-import { Text } from '../../../components/ui/text';
+import { Text } from '@/components/ui/text';
 
 const mockTextElement = (text: string) => {
   return <Text>{text}</Text>;

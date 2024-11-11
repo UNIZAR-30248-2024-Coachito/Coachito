@@ -4,7 +4,7 @@ import {
   convertIntervalToSeconds,
   convertSecondsToString,
   convertStringToInterval,
-} from '../../utils/interval';
+} from '@/utils/interval';
 
 describe('convertIntervalToMinutes', () => {
   it('debería convertir un intervalo de horas, minutos y segundos correctamente', () => {

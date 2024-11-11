@@ -3,6 +3,7 @@ import { render, act } from '@testing-library/react-native';
 import CountdownTimer from '@/components/workout/CountDownTimer';
 
 jest.mock('../../../styles.css', () => ({}));
+
 jest.useFakeTimers();
 
 describe('CountdownTimer', () => {

@@ -1,7 +1,7 @@
 import React from 'react';
 import PopupBaseModal from '@/components/shared/PopupBaseModal';
 import { render, fireEvent } from '@testing-library/react-native';
-import { Text } from '../../../components/ui/text';
+import { Text } from '@/components/ui/text';
 
 const mockSetIsModalVisible = jest.fn();
 

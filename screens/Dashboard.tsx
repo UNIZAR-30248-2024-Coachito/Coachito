@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, ScrollView } from 'react-native';
+import { ScrollView } from 'react-native';
 import { VStack } from '../components/ui/vstack';
 import '../styles.css';
 import WorkoutCardResumeComponent, {
@@ -19,6 +19,8 @@ const Dashboard: React.FC = () => {
 
     if (!error) {
       setWorkouts(data);
+    } else {
+      alert('Se ha producido un error al obtener los entrenamientos.');
     }
   };
 
@@ -31,7 +33,7 @@ const Dashboard: React.FC = () => {
       'workoutFinished',
       () => {
         fetchWorkouts();
-        Alert.alert('¡Entrenamiento completado!', '', [{ text: 'Aceptar' }]);
+        alert('¡Entrenamiento completado!');
       }
     );
 

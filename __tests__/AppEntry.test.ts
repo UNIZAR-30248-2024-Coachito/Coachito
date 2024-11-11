@@ -1,6 +1,6 @@
 import { registerRootComponent } from 'expo';
-import App from '../screens/App';
-import '../AppEntry';
+import App from '@/screens/App';
+import '@/AppEntry';
 
 jest.mock('expo', () => ({
   registerRootComponent: jest.fn(),

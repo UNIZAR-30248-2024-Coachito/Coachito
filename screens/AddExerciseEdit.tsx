@@ -47,6 +47,8 @@ const AddExerciseEdit: React.FC = () => {
     const { data, error: errorExercises } = await useFetchExercisesList();
     if (!errorExercises) {
       setExercises(data);
+    } else {
+      alert('Se ha producido un error obteniendo los ejercicios.');
     }
   };
 

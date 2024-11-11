@@ -16,7 +16,7 @@ jest.mock('@/hooks/userHook', () => ({
 
 jest.mock('../../components/shared/CustomBarChart', () => 'CustomBarChart');
 
-describe('Profile Screen', () => {
+describe('Profile', () => {
   const mockUseRoute = useRoute as jest.Mock;
   const mockUseFetchUserWorkouts = useFetchUserWorkouts as jest.Mock;
 

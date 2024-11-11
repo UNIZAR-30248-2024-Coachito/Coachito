@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { SUPABASE_URL, SUPABASE_ANON_KEY } from '../../api/supabaseClient';
+import { SUPABASE_URL, SUPABASE_ANON_KEY } from '@/api/supabaseClient';
 
 jest.mock('axios');
 

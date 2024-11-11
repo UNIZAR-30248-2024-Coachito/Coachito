@@ -1,150 +1,133 @@
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import React from 'react';
-import {
-  render,
-  fireEvent,
-  waitFor,
-  screen,
-  act,
-} from '@testing-library/react-native';
 import Dashboard from '@/screens/Dashboard';
 import { useFetchDashboardWorkouts } from '@/hooks/dashboardHook';
-import { emitter } from '@/utils/emitter';
-import { Alert } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 
 jest.mock('../../styles.css', () => ({}));
-
-jest.mock('@react-navigation/native', () => ({
-  useNavigation: jest.fn(),
-}));
 
 jest.mock('@/hooks/dashboardHook', () => ({
   useFetchDashboardWorkouts: jest.fn(),
 }));
 
+jest.mock('@react-navigation/native', () => ({
+  useNavigation: jest.fn(),
+}));
+
 jest.mock('@/utils/emitter', () => ({
   emitter: {
-    addListener: jest.fn(),
-    removeListener: jest.fn(),
-    emit: jest.fn(),
+    addListener: jest.fn().mockImplementation((event, callback) => {
+      if (event === 'workoutFinished') {
+        callback();
+      }
+    }),
   },
 }));
 
+global.alert = jest.fn();
+
 describe('Dashboard', () => {
-  const mockUseFetchDashboardWorkouts = useFetchDashboardWorkouts as jest.Mock;
+  const mockWorkouts = [
+    {
+      workout_header_resume: {
+        workoutId: 1,
+        workoutDate: '2024-11-05T12:27:23.909629+00:00',
+        workoutName: 'Rutina 1',
+        workoutTime: '01:00:38',
+        workoutSeries: 6,
+        workoutVolume: 119,
+      },
+      workout_exercises_resume: {
+        exercises: [
+          {
+            series: 1,
+            exerciseName: 'Flexiones',
+            exerciseThumbnailUrl: 'https://example.com/image.png',
+          },
+          {
+            series: 2,
+            exerciseName: 'Sentadillas',
+            exerciseThumbnailUrl: 'https://example.com/image.png',
+          },
+        ],
+      },
+    },
+    {
+      workout_header_resume: {
+        workoutId: 2,
+        workoutDate: '2024-11-05T12:27:23.909629+00:00',
+        workoutName: 'Rutina 2',
+        workoutTime: '01:00:38',
+        workoutSeries: 6,
+        workoutVolume: 119,
+      },
+      workout_exercises_resume: {
+        exercises: [
+          {
+            series: 1,
+            exerciseName: 'Flexiones',
+            exerciseThumbnailUrl: 'https://example.com/image.png',
+          },
+          {
+            series: 2,
+            exerciseName: 'Sentadillas',
+            exerciseThumbnailUrl: 'https://example.com/image.png',
+          },
+        ],
+      },
+    },
+  ];
 
   beforeEach(() => {
-    jest.clearAllMocks();
-  });
-
-  it('debería cargar y renderizar los entrenamientos correctamente', async () => {
-    const mockData = [
-      {
-        workout_header_resume: { workoutId: 1, title: 'Entrenamiento 1' },
-        workout_exercises_resume: [{ name: 'Ejercicio 1' }],
-      },
-      {
-        workout_header_resume: { workoutId: 2, title: 'Entrenamiento 2' },
-        workout_exercises_resume: [{ name: 'Ejercicio 2' }],
-      },
-    ];
-    mockUseFetchDashboardWorkouts.mockResolvedValue({
-      data: mockData,
+    (useFetchDashboardWorkouts as jest.Mock).mockResolvedValue({
+      data: mockWorkouts,
       error: null,
     });
+
+    (useNavigation as jest.Mock).mockReturnValue({
+      navigate: jest.fn(),
+    });
+  });
+
+  it('debería mostrar los entrenamientos después de obtener los datos', async () => {
+    const { getByText } = render(<Dashboard />);
+
+    await waitFor(() => {
+      expect(getByText('Rutina 1')).toBeTruthy();
+      expect(getByText('Rutina 2')).toBeTruthy();
+    });
+  });
+
+  it('debería navegar a la pantalla de detalles del entrenamiento cuando se presione un entrenamiento', async () => {
+    const navigateMock = jest.fn();
+    (useNavigation as jest.Mock).mockReturnValue({ navigate: navigateMock });
 
     const { getByText } = render(<Dashboard />);
 
-    await waitFor(() =>
-      expect(useFetchDashboardWorkouts).toHaveBeenCalledTimes(2)
-    );
-
-    expect(getByText('Entrenamiento 1')).toBeTruthy();
-    expect(getByText('Entrenamiento 2')).toBeTruthy();
-  });
-
-  /*it('debería manejar el caso cuando no hay entrenamientos disponibles', async () => {
-    // Simulamos que useFetchDashboardWorkouts devuelve una respuesta sin datos
-    useFetchDashboardWorkouts.mockResolvedValue({ data: [], error: null });
-
-    render(<Dashboard />);
-
-    // Esperamos a que se cargue
-    await waitFor(() =>
-      expect(useFetchDashboardWorkouts).toHaveBeenCalledTimes(1)
-    );
-
-    // Verificamos que no haya entrenamientos renderizados
-    expect(screen.queryByText('Entrenamiento 1')).toBeNull();
-    expect(screen.queryByText('Entrenamiento 2')).toBeNull();
-  });
-
-  it('debería navegar a los detalles del entrenamiento al presionar en un entrenamiento', async () => {
-    const mockData = [
-      {
-        workout_header_resume: { workoutId: 1, title: 'Entrenamiento 1' },
-        workout_exercises_resume: [{ name: 'Ejercicio 1' }],
-      },
-    ];
-
-    // Mockeamos la navegación
-    const navigateMock = jest.fn();
-    jest
-      .spyOn(require('@react-navigation/native'), 'useNavigation')
-      .mockReturnValue({ navigate: navigateMock });
-
-    useFetchDashboardWorkouts.mockResolvedValue({
-      data: mockData,
-      error: null,
-    });
-
-    render(<Dashboard />);
-
-    // Esperamos a que los datos sean cargados
-    await waitFor(() =>
-      expect(useFetchDashboardWorkouts).toHaveBeenCalledTimes(1)
-    );
-
-    // Simulamos presionar en el primer entrenamiento
-    fireEvent.press(screen.getByText('Entrenamiento 1'));
-
-    // Verificamos si la navegación ocurrió correctamente
-    expect(navigateMock).toHaveBeenCalledWith('DetailsWorkout', {
-      workoutId: 1,
+    await waitFor(() => {
+      fireEvent.press(getByText('Rutina 1'));
+      expect(navigateMock).toHaveBeenCalledWith('DetailsWorkout', {
+        workoutId: 1,
+      });
     });
   });
 
-  it('debería mostrar un alert cuando se emite el evento "workoutFinished"', async () => {
-    const mockData = [
-      {
-        workout_header_resume: { workoutId: 1, title: 'Entrenamiento 1' },
-        workout_exercises_resume: [{ name: 'Ejercicio 1' }],
-      },
-    ];
-
-    useFetchDashboardWorkouts.mockResolvedValue({
-      data: mockData,
-      error: null,
+  it('debería mostrar un mensaje de error si ocurre un error al obtener los entrenamientos', async () => {
+    (useFetchDashboardWorkouts as jest.Mock).mockResolvedValueOnce({
+      data: null,
+      error: 'Some error',
     });
+
+    const alertSpy = jest.spyOn(global, 'alert').mockImplementation(() => {});
 
     render(<Dashboard />);
 
-    // Disparamos el evento 'workoutFinished'
-    act(() => {
-      emitter.emit('workoutFinished');
-    });
-
-    // Verificamos que el alert fue mostrado
     await waitFor(() =>
-      expect(Alert.alert).toHaveBeenCalledWith(
-        '¡Entrenamiento completado!',
-        '',
-        [{ text: 'Aceptar' }]
+      expect(alertSpy).toHaveBeenCalledWith(
+        'Se ha producido un error al obtener los entrenamientos.'
       )
     );
 
-    // Verificamos que los datos fueron recargados
-    await waitFor(() =>
-      expect(useFetchDashboardWorkouts).toHaveBeenCalledTimes(2)
-    );
-  });*/
+    alertSpy.mockRestore();
+  });
 });

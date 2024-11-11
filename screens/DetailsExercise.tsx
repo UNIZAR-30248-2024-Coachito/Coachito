@@ -47,6 +47,10 @@ const DetailsExercise: React.FC = () => {
 
     if (!error) {
       setExercisesDetails(data);
+    } else {
+      alert(
+        'Se ha producido un error al obtener la información del ejercicio.'
+      );
     }
   };
 

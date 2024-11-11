@@ -118,7 +118,7 @@ describe('ExerciseResumeComponent', () => {
     expect(textareaInput.props.value).toBe('Otras notas');
   });
 
-  it('debe exponer correctamente los datos del ejercicio a través de la referencia cuando hay restTime', () => {
+  it('debería exponer correctamente los datos del ejercicio a través de la referencia cuando hay restTime', () => {
     const mockDataWithRestTime = {
       ...mockData,
       restTime: '2min',
@@ -142,7 +142,7 @@ describe('ExerciseResumeComponent', () => {
     });
   });
 
-  it('debe exponer correctamente los datos del ejercicio a través de la referencia cuando no hay restTime', () => {
+  it('debería exponer correctamente los datos del ejercicio a través de la referencia cuando no hay restTime', () => {
     render(<ExerciseResumeComponent ref={mockRef} {...mockData} />);
 
     const exerciseData = mockRef.current?.getExerciseData();

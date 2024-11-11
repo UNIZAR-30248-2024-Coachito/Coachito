@@ -21,7 +21,9 @@ jest.mock('@/utils/emitter', () => ({
   },
 }));
 
-describe('AddExerciseEdit Component', () => {
+global.alert = jest.fn();
+
+describe('AddExerciseEdit', () => {
   const navigateMock = jest.fn();
   const routeMock = {
     key: 'test-key',
@@ -200,5 +202,24 @@ describe('AddExerciseEdit Component', () => {
       routineId: routeMock.params.routineId,
       routineName: routeMock.params.routineName,
     });
+  });
+
+  it('debería mostrar un error si la obtención de los ejercicios falla', async () => {
+    (useFetchExercisesList as jest.Mock).mockResolvedValueOnce({
+      data: null,
+      error: 'Some error',
+    });
+
+    const alertSpy = jest.spyOn(global, 'alert').mockImplementation(() => {});
+
+    render(<AddExerciseEdit />);
+
+    await waitFor(() =>
+      expect(alertSpy).toHaveBeenCalledWith(
+        'Se ha producido un error obteniendo los ejercicios.'
+      )
+    );
+
+    alertSpy.mockRestore();
   });
 });

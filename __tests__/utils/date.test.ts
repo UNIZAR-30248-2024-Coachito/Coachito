@@ -1,7 +1,4 @@
-import {
-  calculateDaysDifferenceNow,
-  formatToChartLabel,
-} from '../../utils/date';
+import { calculateDaysDifferenceNow, formatToChartLabel } from '@/utils/date';
 
 describe('calculateDaysDifferenceNow', () => {
   beforeAll(() => {

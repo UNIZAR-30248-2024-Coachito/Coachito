@@ -55,7 +55,7 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
     );
 
     if (!error) {
-      emitter.emit('routineDeleted');
+      emitter.emit('groupDeleted');
     } else {
       alert('Se ha producido un error eliminando la carpeta.');
     }
@@ -77,7 +77,7 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
 
     if (!error) {
       setNewFolderName(folderName);
-      emitter.emit('routineRenamed');
+      emitter.emit('groupRenamed');
     } else {
       setNewFolderName(groupedRoutine.groupName!);
       alert('Se ha producido un error al renombrar la carpeta.');

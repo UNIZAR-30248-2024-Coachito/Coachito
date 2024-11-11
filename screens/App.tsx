@@ -8,7 +8,7 @@ import Profile from './Profile';
 import DetailsWorkout from './DetailsWorkout';
 import { RootStackParamList } from '@/types/navigation';
 import Template from '@/components/shared/Template';
-import '../styles.css';
+import '@/styles.css';
 import DetailsRoutine from './DetailsRoutine';
 import AddExercise from './AddExercise';
 import AddRoutine from './AddRoutine';

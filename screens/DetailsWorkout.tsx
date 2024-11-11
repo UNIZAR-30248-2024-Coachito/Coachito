@@ -30,6 +30,8 @@ const DetailsWorkout: React.FC = () => {
 
     if (!error) {
       setWorkoutResume(data);
+    } else {
+      alert('Se ha producido un error al obtener los datos.');
     }
   };
 

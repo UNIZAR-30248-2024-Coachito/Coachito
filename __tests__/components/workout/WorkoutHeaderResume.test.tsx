@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import WorkoutHeaderResumeComponent, {
   WorkoutHeaderResume,
-} from '../../../components/workout/WorkoutHeaderResume';
+} from '@/components/workout/WorkoutHeaderResume';
 import { calculateDaysDifferenceNow } from '@/utils/date';
 
 jest.mock('../../../styles.css', () => ({}));

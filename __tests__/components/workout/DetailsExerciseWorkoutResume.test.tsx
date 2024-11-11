@@ -3,7 +3,7 @@ import DetailsExerciseWorkoutResumeComponent, {
 } from '@/components/workout/DetailsExerciseWorkoutResume';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import React from 'react';
-import { Text } from '../../../components/ui/text';
+import { Text } from '@/components/ui/text';
 
 const mockTimerElement = () => {
   return <Text>Temporizador Simulado</Text>;
@@ -11,6 +11,7 @@ const mockTimerElement = () => {
 jest.useFakeTimers();
 
 jest.mock('../../../styles.css', () => ({}));
+
 jest.mock('../../../components/workout/CountDownTimer', () => {
   return jest.fn(() => mockTimerElement());
 });
@@ -117,7 +118,7 @@ describe('DetailsExerciseWorkoutResumeComponent', () => {
     expect(textareaInput.props.value).toBe('Otras notas');
   });
 
-  it('debe exponer correctamente los datos del ejercicio a través de la referencia cuando hay restTime', () => {
+  it('debería exponer correctamente los datos del ejercicio a través de la referencia cuando hay restTime', () => {
     const mockDataWithRestTime = {
       ...mockData,
       restTime: '00:01:00',
@@ -146,7 +147,7 @@ describe('DetailsExerciseWorkoutResumeComponent', () => {
     });
   });
 
-  it('debe exponer correctamente los datos del ejercicio a través de la referencia cuando no hay restTime', () => {
+  it('debería exponer correctamente los datos del ejercicio a través de la referencia cuando no hay restTime', () => {
     render(
       <DetailsExerciseWorkoutResumeComponent ref={mockRef} {...mockData} />
     );

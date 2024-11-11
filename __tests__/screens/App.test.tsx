@@ -1,155 +1,141 @@
-/*
+/* eslint-disable @typescript-eslint/no-require-imports */
+// App.test.tsx
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
-import App from '../../screens/App';
+import { render } from '@testing-library/react-native';
+import App from '@/screens/App';
 
 jest.mock('../../styles.css', () => ({}));
 
+// Mock de los componentes importados
 jest.mock('../../screens/Dashboard', () => {
-  const MockComponent = () => <div>Dashboard</div>;
-  MockComponent.displayName = 'Dashboard';
-  return MockComponent;
+  const { Text } = require('react-native');
+  const Dashboard = () => <Text>Dashboard</Text>;
+  Dashboard.displayName = 'Dashboard';
+  return Dashboard;
 });
 
 jest.mock('../../screens/Routine', () => {
-  const MockComponent = () => <div>Routine</div>;
-  MockComponent.displayName = 'Routine';
-  return MockComponent;
+  const { Text } = require('react-native');
+  const Routine = () => <Text>Routine</Text>;
+  Routine.displayName = 'Routine';
+  return Routine;
 });
 
 jest.mock('../../screens/Profile', () => {
-  const MockComponent = () => <div>Profile</div>;
-  MockComponent.displayName = 'Profile';
-  return MockComponent;
+  const { Text } = require('react-native');
+  const Profile = () => <Text>Profile</Text>;
+  Profile.displayName = 'Profile';
+  return Profile;
 });
 
 jest.mock('../../screens/DetailsWorkout', () => {
-  const MockComponent = () => <div>DetailsWorkout</div>;
-  MockComponent.displayName = 'DetailsWorkout';
-  return MockComponent;
+  const { Text } = require('react-native');
+  const DetailsWorkout = () => <Text>DetailsWorkout</Text>;
+  DetailsWorkout.displayName = 'DetailsWorkout';
+  return DetailsWorkout;
 });
 
 jest.mock('../../screens/DetailsRoutine', () => {
-  const MockComponent = () => <div>DetailsRoutine</div>;
-  MockComponent.displayName = 'DetailsRoutine';
-  return MockComponent;
+  const { Text } = require('react-native');
+  const DetailsRoutine = () => <Text>DetailsRoutine</Text>;
+  DetailsRoutine.displayName = 'DetailsRoutine';
+  return DetailsRoutine;
 });
 
 jest.mock('../../screens/AddExercise', () => {
-  const MockComponent = () => <div>AddExercise</div>;
-  MockComponent.displayName = 'AddExercise';
-  return MockComponent;
+  const { Text } = require('react-native');
+  const AddExercise = () => <Text>AddExercise</Text>;
+  AddExercise.displayName = 'AddExercise';
+  return AddExercise;
 });
 
 jest.mock('../../screens/AddRoutine', () => {
-  const MockComponent = () => <div>AddRoutine</div>;
-  MockComponent.displayName = 'AddRoutine';
-  return MockComponent;
+  const { Text } = require('react-native');
+  const AddRoutine = () => <Text>AddRoutine</Text>;
+  AddRoutine.displayName = 'AddRoutine';
+  return AddRoutine;
 });
 
 jest.mock('../../screens/EditRoutine', () => {
-  const MockComponent = () => <div>EditRoutine</div>;
-  MockComponent.displayName = 'EditRoutine';
-  return MockComponent;
+  const { Text } = require('react-native');
+  const EditRoutine = () => <Text>EditRoutine</Text>;
+  EditRoutine.displayName = 'EditRoutine';
+  return EditRoutine;
 });
 
 jest.mock('../../screens/AddExerciseEdit', () => {
-  const MockComponent = () => <div>AddExerciseEdit</div>;
-  MockComponent.displayName = 'AddExerciseEdit';
-  return MockComponent;
+  const { Text } = require('react-native');
+  const AddExerciseEdit = () => <Text>AddExerciseEdit</Text>;
+  AddExerciseEdit.displayName = 'AddExerciseEdit';
+  return AddExerciseEdit;
 });
 
 jest.mock('../../screens/StartWorkout', () => {
-  const MockComponent = () => <div>StartWorkout</div>;
-  MockComponent.displayName = 'StartWorkout';
-  return MockComponent;
+  const { Text } = require('react-native');
+  const StartWorkout = () => <Text>StartWorkout</Text>;
+  StartWorkout.displayName = 'StartWorkout';
+  return StartWorkout;
 });
 
 jest.mock('../../screens/DetailsExercise', () => {
-  const MockComponent = () => <div>DetailsExercise</div>;
-  MockComponent.displayName = 'DetailsExercise';
-  return MockComponent;
+  const { Text } = require('react-native');
+  const DetailsExercise = () => <Text>DetailsExercise</Text>;
+  DetailsExercise.displayName = 'DetailsExercise';
+  return DetailsExercise;
 });
 
-describe('App Navigation', () => {
-  it('debería renderizar la pantalla de Dashboard correctamente', () => {
+jest.mock('@/components/ui/gluestack-ui-provider', () => ({
+  GluestackUIProvider: ({ children }: { children: React.ReactNode }) =>
+    children,
+}));
+
+jest.mock('@react-navigation/native', () => {
+  const actualNav = jest.requireActual('@react-navigation/native');
+  return {
+    ...actualNav,
+    NavigationContainer: ({ children }: { children: React.ReactNode }) =>
+      children,
+    useNavigation: () => ({
+      navigate: jest.fn(),
+    }),
+  };
+});
+
+jest.mock('@react-navigation/bottom-tabs', () => {
+  return {
+    createBottomTabNavigator: jest.fn().mockReturnValue({
+      Navigator: ({ children }: { children: React.ReactNode }) => (
+        <>{children}</>
+      ),
+      Screen: ({
+        children,
+      }: {
+        name: string;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        children: React.ReactNode | ((props: any) => React.ReactNode);
+      }) => {
+        if (typeof children === 'function') {
+          return <>{children({})}</>;
+        }
+        return <>{children}</>;
+      },
+    }),
+  };
+});
+
+jest.mock('@/components/shared/Template', () => {
+  const Children = ({ children }: { children: React.ReactNode }) => (
+    <>{children}</>
+  );
+
+  return Children;
+});
+
+describe('App', () => {
+  it('debe renderizar el componente App sin errores y mostrar la pantalla Dashboard por defecto', () => {
     const { getByText } = render(<App />);
 
-    fireEvent.press(getByText('Dashboard'));
-
+    // Verificamos que el componente Dashboard (mockeado) se renderiza
     expect(getByText('Dashboard')).toBeTruthy();
   });
-
-  it('debería renderizar la pantalla de Routine correctamente', () => {
-    const { getByText } = render(<App />);
-
-    fireEvent.press(getByText('Dashboard'));
-
-    fireEvent.press(getByText('Routine'));
-  });
-
-  it('debería renderizar la pantalla de Profile correctamente', () => {
-    const { getByText } = render(<App />);
-
-    fireEvent.press(getByText('Profile'));
-
-    expect(getByText('Profile')).toBeTruthy();
-  });
-
-  it('debería renderizar la pantalla de DetailsRoutine correctamente', () => {
-    const { getByText } = render(<App />);
-
-    fireEvent.press(getByText('DetailsRoutine'));
-
-    expect(getByText('DetailsRoutine')).toBeTruthy();
-  });
-
-  it('debería renderizar la pantalla de AddExercise correctamente', () => {
-    const { getByText } = render(<App />);
-
-    fireEvent.press(getByText('AddExercise'));
-
-    expect(getByText('AddExercise')).toBeTruthy();
-  });
-
-  it('debería renderizar la pantalla de AddRoutine correctamente', () => {
-    const { getByText } = render(<App />);
-
-    fireEvent.press(getByText('AddRoutine'));
-
-    expect(getByText('AddRoutine')).toBeTruthy();
-  });
-
-  it('debería renderizar la pantalla de EditRoutine correctamente', () => {
-    const { getByText } = render(<App />);
-
-    fireEvent.press(getByText('EditRoutine'));
-
-    expect(getByText('EditRoutine')).toBeTruthy();
-  });
-
-  it('debería renderizar la pantalla de StartWorkout correctamente', () => {
-    const { getByText } = render(<App />);
-
-    fireEvent.press(getByText('StartWorkout'));
-
-    expect(getByText('StartWorkout')).toBeTruthy();
-  });
-
-  it('debería renderizar la pantalla de DetailsWorkout correctamente', () => {
-    const { getByText } = render(<App />);
-
-    fireEvent.press(getByText('DetailsWorkout'));
-
-    expect(getByText('DetailsWorkout')).toBeTruthy();
-  });
-
-  it('debería renderizar la pantalla de DetailsExercise correctamente', () => {
-    const { getByText } = render(<App />);
-
-    fireEvent.press(getByText('DetailsExercise'));
-
-    expect(getByText('DetailsExercise')).toBeTruthy();
-  });
 });
-*/

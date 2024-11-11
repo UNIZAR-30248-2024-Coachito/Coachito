@@ -36,7 +36,7 @@ const useCreateWorkout = async (
   exercises: ExerciseResume[]
 ) => {
   const totalVolume = exercises.reduce((acc, exercise) => {
-    const exerciseVolume = exercise.sets.reduce((setAcc, set) => {
+    const exerciseVolume = exercise.sets!.reduce((setAcc, set) => {
       return setAcc + set.reps * set.weight;
     }, 0);
     return acc + exerciseVolume;
@@ -59,8 +59,8 @@ const useCreateWorkout = async (
   }
 
   for (const exercise of exercises) {
-    if (exercise.sets.length > 0) {
-      for (const set of exercise.sets) {
+    if (exercise.sets!.length > 0) {
+      for (const set of exercise.sets!) {
         const { execute: executeWorkoutExerciseInsert } = useCRUD(() =>
           supabaseClient.post('/workout_exercises', {
             workout_id: dataWorkoutInsert[0].id,

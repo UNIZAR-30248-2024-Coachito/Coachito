@@ -20,7 +20,7 @@ jest.mock('@/hooks/exerciseHook', () => ({
   useFetchExercisesList: jest.fn(),
 }));
 
-describe('AddExercise Component', () => {
+describe('AddExercise', () => {
   const navigateMock = jest.fn();
   const routeMock = {
     key: 'test-key',

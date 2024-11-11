@@ -39,6 +39,8 @@ const StartWorkout: React.FC = () => {
 
     if (!error) {
       setSelectedExercises(data);
+    } else {
+      alert('Se ha producido un error obteniendo los ejercicios.');
     }
   };
 

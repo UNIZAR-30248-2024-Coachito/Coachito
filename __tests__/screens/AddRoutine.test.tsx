@@ -28,7 +28,7 @@ jest.mock('@/components/exercise/ExerciseResume', () => {
   ));
 });
 
-describe('AddRoutine Component', () => {
+describe('AddRoutine', () => {
   const navigateMock = jest.fn();
   const mockRouteParams = {
     groupId: 'groupId',

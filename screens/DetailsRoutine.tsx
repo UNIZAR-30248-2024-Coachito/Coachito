@@ -41,6 +41,8 @@ const DetailsRoutine: React.FC = () => {
 
     if (!error) {
       setChartDetailsWorkout(data);
+    } else {
+      alert('Se ha producido un error obteniendo los datos de la gráfica.');
     }
   };
 
@@ -49,6 +51,8 @@ const DetailsRoutine: React.FC = () => {
 
     if (!error) {
       setExercises(data);
+    } else {
+      alert('Se ha producido un error obteniendo los ejercicios.');
     }
   };
 
@@ -63,6 +67,8 @@ const DetailsRoutine: React.FC = () => {
     if (!error) {
       emitter.emit('routineDeleted');
       navigation.navigate('Routine');
+    } else {
+      alert('Se ha producido un error al eliminar la rutina.');
     }
   };
 
@@ -98,6 +104,7 @@ const DetailsRoutine: React.FC = () => {
       ¿Está seguro de que quiere borrar la rutina?
     </Text>,
     <Button
+      testID="delete-button"
       key="2"
       className="bg-red-800 rounded-lg mb-4"
       onPress={() => {
@@ -124,6 +131,7 @@ const DetailsRoutine: React.FC = () => {
         <HStack className="justify-between">
           <Text className="text-xl font-bold text-white">{myRoutineName}</Text>
           <Button
+            testID="modal-button"
             className="bg-transparent"
             onPress={() => {
               setIsSlideUpModalVisible(true);

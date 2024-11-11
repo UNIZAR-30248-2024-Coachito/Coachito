@@ -70,9 +70,9 @@ describe('mapToExerciseProportions', () => {
 
     const result = mapToExerciseProportions(exerciseResumes);
     expect(result).toEqual([
-      { name: 'Pectorales', proportion: 33.33333333333333 },
-      { name: 'Abdominales', proportion: 33.33333333333333 },
-      { name: 'Glúteos', proportion: 33.33333333333333 },
+      { name: 'Pectorales', proportion: 33.33 },
+      { name: 'Abdominales', proportion: 33.33 },
+      { name: 'Glúteos', proportion: 33.33 },
     ]);
   });
 
@@ -121,9 +121,9 @@ describe('mapToExerciseProportions', () => {
 
     const result = mapToExerciseProportions(exerciseResumes);
     expect(result).toEqual([
-      { name: 'Pectorales', proportion: 22.22222222222222 },
-      { name: 'Abdominales', proportion: 33.33333333333333 },
-      { name: 'Glúteos', proportion: 44.44444444444444 },
+      { name: 'Pectorales', proportion: 22.22 },
+      { name: 'Abdominales', proportion: 33.33 },
+      { name: 'Glúteos', proportion: 44.44 },
     ]);
   });
 

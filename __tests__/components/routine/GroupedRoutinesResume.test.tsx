@@ -148,7 +148,7 @@ describe('GroupedRoutinesResumeComponent', () => {
         mockGroupedRoutine.groupId
       )
     );
-    expect(emitter.emit).toHaveBeenCalledWith('routineDeleted');
+    expect(emitter.emit).toHaveBeenCalledWith('groupDeleted');
   });
 
   it('debería renombrar el grupo cuando se guarda el nuevo nombre', async () => {
@@ -174,7 +174,7 @@ describe('GroupedRoutinesResumeComponent', () => {
         'Nuevo Grupo'
       )
     );
-    expect(emitter.emit).toHaveBeenCalledWith('routineRenamed');
+    expect(emitter.emit).toHaveBeenCalledWith('groupRenamed');
   });
 
   it('debería mostrar un alert si el nombre de la carpeta está vacío', async () => {

@@ -2,7 +2,7 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import WorkoutExercisesResumeComponent, {
   WorkoutExercisesResume,
-} from '../../../components/workout/WorkoutExerciseResume';
+} from '@/components/workout/WorkoutExerciseResume';
 
 jest.mock('../../../styles.css', () => ({}));
 
@@ -59,7 +59,6 @@ describe('WorkoutExercisesResumeComponent', () => {
     expect(getByText('4 series Squat')).toBeTruthy();
     expect(getByText('2 series Deadlift')).toBeTruthy();
 
-    // Asegurarse de que el cuarto ejercicio no se renderiza
     expect(() => getByText('5 series Bench Press')).toThrow();
   });
 
@@ -89,6 +88,6 @@ describe('WorkoutExercisesResumeComponent', () => {
       />
     );
 
-    expect(queryByText('Ver')).toBeNull(); // No debe existir el texto "Ver"
+    expect(queryByText('Ver')).toBeNull();
   });
 });

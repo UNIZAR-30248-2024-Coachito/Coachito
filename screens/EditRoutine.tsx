@@ -13,7 +13,7 @@ import PopupBaseModal from '@/components/shared/PopupBaseModal';
 import ExerciseResumeComponent, {
   ExerciseResumeRef,
 } from '@/components/exercise/ExerciseResume';
-import { ScrollView, Alert } from 'react-native';
+import { ScrollView } from 'react-native';
 import { useFetchDetailsLastWorkout } from '@/hooks/workoutHook';
 import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 import { emitter } from '@/utils/emitter';
@@ -40,6 +40,8 @@ const EditRoutine: React.FC = () => {
     if (!error) {
       exerciseRefs.current = [];
       setSelectedExercises(data);
+    } else {
+      alert('Se ha producido un error al obtener los ejercicios.');
     }
   }, [route.params.routineId]);
 
@@ -75,6 +77,7 @@ const EditRoutine: React.FC = () => {
       <Text className="text-white">Descartar cambios</Text>
     </Button>,
     <Button
+      testID="cancel-button-modal"
       key="3"
       className="bg-zinc-700 rounded-lg"
       onPress={() => {
@@ -89,12 +92,12 @@ const EditRoutine: React.FC = () => {
     const routineTitle = routineTitleInputValue!.trim();
 
     if (routineTitle === '') {
-      Alert.alert('Error', 'Por favor, introduce un nombre para la rutina.');
+      alert('Por favor, introduce un nombre para la rutina.');
       return;
     }
 
     if (selectedExercises.length === 0) {
-      Alert.alert('Error', 'La rutina debe contener mínimo un ejercicio.');
+      alert('La rutina debe contener mínimo un ejercicio.');
       return;
     }
 
@@ -109,7 +112,7 @@ const EditRoutine: React.FC = () => {
     );
 
     if (error) {
-      Alert.alert('Error', 'Se ha producido un error al guardar la rutina.');
+      alert('Se ha producido un error al guardar la rutina.');
     } else {
       emitter.emit('routineRenamed');
       navigation.navigate('Routine');

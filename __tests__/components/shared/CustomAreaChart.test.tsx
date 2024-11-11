@@ -6,6 +6,7 @@ import CustomAreaChart, {
 } from '@/components/shared/CustomAreaChart';
 
 jest.mock('../../../styles.css', () => ({}));
+
 jest.mock('react-native-gifted-charts', () => ({
   LineChart: () => <div>Mock LineChart</div>,
 }));

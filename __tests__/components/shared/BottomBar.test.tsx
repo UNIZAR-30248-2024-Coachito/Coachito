@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import BottomBar from '../../../components/shared/BottomBar';
+import BottomBar from '@/components/shared/BottomBar';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 jest.mock('@react-navigation/native', () => ({
@@ -8,7 +8,7 @@ jest.mock('@react-navigation/native', () => ({
   useRoute: jest.fn(),
 }));
 
-describe('BottomBar Component', () => {
+describe('BottomBar', () => {
   let mockNavigate: jest.Mock;
 
   beforeEach(() => {

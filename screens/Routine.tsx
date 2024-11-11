@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Alert } from 'react-native';
 import '../styles.css';
 import { Text } from '../components/ui/text';
 import { Button } from '../components/ui/button';
@@ -34,28 +33,36 @@ const Routine: React.FC = () => {
 
     if (!error) {
       setRoutines(data!);
+    } else {
+      alert('Se ha producido un error al obtener las rutinas.');
     }
-  };
-
-  const showAlert = (title: string, message: string) => {
-    Alert.alert(title, message, [{ text: 'Aceptar' }]);
   };
 
   useEffect(() => {
     const routineDeletedListener = emitter.addListener('routineDeleted', () => {
       fetchRoutinesAndGroups();
-      showAlert(
-        '¡Rutina Eliminada!',
-        'Se ha eliminado la rutina correctamente.'
-      );
+      alert('¡Rutina eliminada correctamente!');
     });
     const routineRenamedListener = emitter.addListener('routineRenamed', () => {
       fetchRoutinesAndGroups();
-      showAlert('¡Rutina Editada!', 'Se ha editado la rutina correctamente.');
+      alert('¡Rutina editada correctamente!');
     });
     const routineAddedListener = emitter.addListener('routineAdded', () => {
       fetchRoutinesAndGroups();
-      showAlert('¡Rutina Creada!', 'Se ha creado la rutina correctamente.');
+      alert('¡Rutina creada correctamente!');
+    });
+
+    const groupCreatedListener = emitter.addListener('groupCreated', () => {
+      fetchRoutinesAndGroups();
+      alert('Carpeta creada correctamente!');
+    });
+    const groupRenamedListener = emitter.addListener('groupRenamed', () => {
+      fetchRoutinesAndGroups();
+      alert('Carpeta editada correctamente!');
+    });
+    const groupDeletedListener = emitter.addListener('groupDeleted', () => {
+      fetchRoutinesAndGroups();
+      alert('Carpeta eliminada correctamente!');
     });
 
     fetchRoutinesAndGroups();
@@ -64,6 +71,9 @@ const Routine: React.FC = () => {
       routineDeletedListener.remove();
       routineRenamedListener.remove();
       routineAddedListener.remove();
+      groupCreatedListener.remove();
+      groupRenamedListener.remove();
+      groupDeletedListener.remove();
     };
   }, [navigation]);
 
@@ -80,6 +90,9 @@ const Routine: React.FC = () => {
     const { error } = await useCreateTemplateWorkoutGroup(folderName);
     if (!error) {
       fetchRoutinesAndGroups();
+      emitter.emit('groupCreated');
+    } else {
+      alert('Se ha producido un error al crear el nuevo grupo.');
     }
   };
 

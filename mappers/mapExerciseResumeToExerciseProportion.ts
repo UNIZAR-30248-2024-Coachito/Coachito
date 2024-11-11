@@ -7,9 +7,9 @@ export const mapToExerciseProportions = (
   const groupedExercises: { [key: string]: number } = exerciseResumes.reduce(
     (acc, exercise) => {
       if (acc[exercise.primaryMuscleGroup]) {
-        acc[exercise.primaryMuscleGroup] += exercise.sets.length;
+        acc[exercise.primaryMuscleGroup] += exercise.sets!.length;
       } else {
-        acc[exercise.primaryMuscleGroup] = exercise.sets.length;
+        acc[exercise.primaryMuscleGroup] = exercise.sets!.length;
       }
       return acc;
     },
@@ -24,6 +24,8 @@ export const mapToExerciseProportions = (
   return Object.keys(groupedExercises).map((name) => ({
     name,
     proportion:
-      totalSeries > 0 ? (groupedExercises[name] / totalSeries) * 100 : 0,
+      totalSeries > 0
+        ? parseFloat(((groupedExercises[name] / totalSeries) * 100).toFixed(2))
+        : 0,
   }));
 };
