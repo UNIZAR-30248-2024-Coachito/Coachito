@@ -7,7 +7,7 @@
     "android": "DARK_MODE=media expo start --android",
     "ios": "DARK_MODE=media expo start --ios",
     "web": "DARK_MODE=class expo start --web",
-    "test": "jest --passWithNoTests"
+    "test": "jest --passWithNoTests --verbose"
   },
   "dependencies": {
     "@expo/html-elements": "^0.4.2",
