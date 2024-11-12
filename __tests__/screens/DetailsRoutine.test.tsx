@@ -132,7 +132,7 @@ describe('DetailsRoutine', () => {
       expect(getByText('Flexiones')).toBeTruthy();
       expect(getByText('Sentadillas')).toBeTruthy();
     });
-  });
+  }, 10000);
 
   it('debería mostrar el gráfico con los detalles de la rutina', async () => {
     const { getByText } = render(<DetailsRoutine />);

@@ -49,28 +49,34 @@ describe('BottomBar', () => {
     ).toBeDefined();
   });
 
-  it('debería marcar "Routine" como activo cuando la ruta es "Routine"', () => {
+  it('debería marcar "Routine" como activo cuando la ruta es "Routine"', async () => {
     (useRoute as jest.Mock).mockReturnValue({ name: 'Routine' });
 
-    const { getByText, getAllByTestId } = render(<BottomBar />);
+    const { findByText, findAllByTestId } = render(<BottomBar />);
 
-    expect(getByText('Inicio').props.className).toContain('text-gray-400');
+    expect((await findByText('Inicio')).props.className).toContain(
+      'text-gray-400'
+    );
     expect(
-      getAllByTestId('inicio-icon').find(
+      (await findAllByTestId('inicio-icon')).find(
         (icon) => icon.props.stroke === 'white'
       )
     ).toBeDefined();
 
-    expect(getByText('Rutinas').props.className).toContain('text-blue-500');
+    expect((await findByText('Rutinas')).props.className).toContain(
+      'text-blue-500'
+    );
     expect(
-      getAllByTestId('entrenamiento-icon').find(
+      (await findAllByTestId('entrenamiento-icon')).find(
         (icon) => icon.props.stroke === 'rgb(59 130 246)'
       )
     ).toBeDefined();
 
-    expect(getByText('Perfil').props.className).toContain('text-gray-400');
+    expect((await findByText('Perfil')).props.className).toContain(
+      'text-gray-400'
+    );
     expect(
-      getAllByTestId('perfil-icon').find(
+      (await findAllByTestId('perfil-icon')).find(
         (icon) => icon.props.stroke === 'white'
       )
     ).toBeDefined();
