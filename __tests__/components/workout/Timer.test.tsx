@@ -13,13 +13,23 @@ describe('Timer', () => {
   it('debería incrementar el tiempo cada segundo cuando la propiedad active es true', () => {
     const { getByText } = render(<Timer active={true} />);
 
+    // Verifica el estado inicial
     expect(getByText('0s')).toBeTruthy();
 
+    // Avanza el temporizador por 1 segundo
     act(() => {
       jest.advanceTimersByTime(1000);
     });
 
+    // Verifica que se haya incrementado a 1 segundo
     expect(getByText('1s')).toBeTruthy();
+
+    // Avanza otro segundo y verifica
+    act(() => {
+      jest.advanceTimersByTime(1000);
+    });
+
+    expect(getByText('2s')).toBeTruthy();
   });
 
   it('debería llamar a onTimeUpdate con el tiempo correcto', () => {
