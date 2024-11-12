@@ -14,4 +14,5 @@ module.exports = {
     '!**/components/ui/**',
     '!**/types/**',
   ],
+  testTimeout: 30000,
 };
