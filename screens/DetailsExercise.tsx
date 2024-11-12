@@ -63,9 +63,10 @@ const DetailsExercise: React.FC = () => {
       <VStack className="p-4">
         <Image
           // eslint-disable-next-line react-native/no-inline-styles
-          style={{ width: 365, height: 200 }}
+          style={{ height: 300 }}
           source={{ uri: exercisesDetails?.imageUrl }}
-          className="mb-4"
+          className="mb-4 w-100"
+          resizeMode="cover"
         />
 
         <Text size="2xl" bold>
