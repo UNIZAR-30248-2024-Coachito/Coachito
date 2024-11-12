@@ -83,7 +83,9 @@ describe('DetailsWorkout', () => {
   it('debería llamar al hook useFetchDetailsWorkout al montar el componente', async () => {
     render(<DetailsWorkout />);
 
-    expect(useFetchDetailsWorkout).toHaveBeenCalledWith(1);
+    await waitFor(() => {
+      expect(useFetchDetailsWorkout).toHaveBeenCalledWith(1);
+    });
   });
 
   it('debería mostrar el resumen del entrenamiento cuando los datos se cargan', async () => {
