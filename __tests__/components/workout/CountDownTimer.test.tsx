@@ -16,22 +16,22 @@ describe('CountdownTimer', () => {
   it('debería decrementar el tiempo cada segundo', () => {
     const { getByText } = render(<CountdownTimer initialTime={3} />);
 
+    // Avanzamos el temporizador por 1 segundo
     act(() => {
       jest.advanceTimersByTime(1000);
     });
-
     expect(getByText('Tiempo restante: 2 segundos')).toBeTruthy();
 
+    // Avanzamos otro segundo
     act(() => {
       jest.advanceTimersByTime(1000);
     });
-
     expect(getByText('Tiempo restante: 1 segundos')).toBeTruthy();
 
+    // Avanzamos otro segundo
     act(() => {
       jest.advanceTimersByTime(1000);
     });
-
     expect(getByText('Tiempo restante: 0 segundos')).toBeTruthy();
   });
 
