@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, waitFor } from '@testing-library/react-native';
+import { act, render, waitFor } from '@testing-library/react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useFetchDetailsWorkout } from '@/hooks/workoutHook';
 import DetailsWorkout from '@/screens/DetailsWorkout';
@@ -70,18 +70,20 @@ describe('DetailsWorkout', () => {
   });
 
   it('deberíaría renderizar correctamente el componente', async () => {
-    const { getByText, findByText } = render(<DetailsWorkout />);
+    const { getByText } = render(<DetailsWorkout />);
 
     expect(getByText('Detalles de entrenamiento')).toBeTruthy();
 
     await waitFor(() => {
-      expect(findByText('Flexiones')).toBeTruthy();
-      expect(findByText('Sentadillas')).toBeTruthy();
+      expect(getByText('Flexiones')).toBeTruthy();
+      expect(getByText('Sentadillas')).toBeTruthy();
     });
   });
 
   it('debería llamar al hook useFetchDetailsWorkout al montar el componente', async () => {
-    render(<DetailsWorkout />);
+    await act(async () => {
+      render(<DetailsWorkout />);
+    });
 
     await waitFor(() => {
       expect(useFetchDetailsWorkout).toHaveBeenCalledWith(1);
