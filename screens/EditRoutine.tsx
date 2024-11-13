@@ -58,7 +58,7 @@ const EditRoutine: React.FC = () => {
     );
 
     return () => {
-      exercisesUpdateListener.remove();
+      exercisesUpdateListener?.remove();
     };
   }, [fetchExercises, updateExercises, route.params.routineId]);
 

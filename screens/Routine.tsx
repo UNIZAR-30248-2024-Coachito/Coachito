@@ -68,12 +68,12 @@ const Routine: React.FC = () => {
     fetchRoutinesAndGroups();
 
     return () => {
-      routineDeletedListener.remove();
-      routineRenamedListener.remove();
-      routineAddedListener.remove();
-      groupCreatedListener.remove();
-      groupRenamedListener.remove();
-      groupDeletedListener.remove();
+      routineDeletedListener?.remove();
+      routineRenamedListener?.remove();
+      routineAddedListener?.remove();
+      groupCreatedListener?.remove();
+      groupRenamedListener?.remove();
+      groupDeletedListener?.remove();
     };
   }, [navigation]);
 

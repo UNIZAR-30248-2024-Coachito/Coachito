@@ -40,7 +40,7 @@ const Dashboard: React.FC = () => {
     fetchWorkouts();
 
     return () => {
-      routineDeletedListener.remove();
+      routineDeletedListener?.remove();
     };
   }, [navigation]);
 
