@@ -1,5 +1,5 @@
 import React from 'react';
-import { act, render, waitFor } from '@testing-library/react-native';
+import { render, waitFor } from '@testing-library/react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useFetchDetailsWorkout } from '@/hooks/workoutHook';
 import DetailsWorkout from '@/screens/DetailsWorkout';
