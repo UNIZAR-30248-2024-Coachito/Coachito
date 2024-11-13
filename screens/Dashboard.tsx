@@ -8,17 +8,19 @@ import WorkoutCardResumeComponent, {
 import { useFetchDashboardWorkouts } from '@/hooks/dashboardHook';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '@/types/navigation';
+import { emitter } from '@/utils/emitter';
 
 const Dashboard: React.FC = () => {
   const [workouts, setWorkouts] = useState<WorkoutCardResume[]>([]);
   const navigation = useNavigation<NavigationProps>();
 
   const fetchWorkouts = async () => {
-    const { workoutResumes, error: errorRoutines } =
-      await useFetchDashboardWorkouts();
+    const { data, error } = await useFetchDashboardWorkouts();
 
-    if (!errorRoutines) {
-      setWorkouts(workoutResumes!);
+    if (!error) {
+      setWorkouts(data);
+    } else {
+      alert('Se ha producido un error al obtener los entrenamientos.');
     }
   };
 
@@ -26,17 +28,33 @@ const Dashboard: React.FC = () => {
     fetchWorkouts();
   }, []);
 
+  useEffect(() => {
+    const routineDeletedListener = emitter.addListener(
+      'workoutFinished',
+      () => {
+        fetchWorkouts();
+        alert('¡Entrenamiento completado!');
+      }
+    );
+
+    fetchWorkouts();
+
+    return () => {
+      routineDeletedListener?.remove();
+    };
+  }, [navigation]);
+
   return (
     <ScrollView className="flex-1">
       <VStack className="p-4">
         {workouts!.map((workout, index) => (
           <WorkoutCardResumeComponent
             key={index}
-            workoutHeaderResume={workout.workoutHeaderResume}
-            workoutExercisesResume={workout.workoutExercisesResume}
+            workout_header_resume={workout.workout_header_resume}
+            workout_exercises_resume={workout.workout_exercises_resume}
             onPress={() =>
-              navigation.navigate('VerEntrenamiento', {
-                workoutId: workout.workoutHeaderResume.workoutId,
+              navigation.navigate('DetailsWorkout', {
+                workoutId: workout.workout_header_resume.workoutId,
               })
             }
           />

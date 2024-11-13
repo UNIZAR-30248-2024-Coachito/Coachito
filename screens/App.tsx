@@ -5,17 +5,17 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Dashboard from './Dashboard';
 import Routine from './Routine';
 import Profile from './Profile';
-import Exercises from './Exercises';
-import VerEntrenamiento from './VerEntrenamiento';
+import DetailsWorkout from './DetailsWorkout';
 import { RootStackParamList } from '@/types/navigation';
 import Template from '@/components/shared/Template';
-import '../styles.css';
+import '@/styles.css';
 import DetailsRoutine from './DetailsRoutine';
 import AddExercise from './AddExercise';
 import AddRoutine from './AddRoutine';
 import EditRoutine from './EditRoutine';
 import AddExerciseEdit from './AddExerciseEdit';
 import StartWorkout from './StartWorkout';
+import DetailsExercise from './DetailsExercise';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -59,13 +59,6 @@ export default function App() {
               </Template>
             )}
           </Tab.Screen>
-          <Tab.Screen name="Exercises">
-            {() => (
-              <Template>
-                <Exercises />
-              </Template>
-            )}
-          </Tab.Screen>
           <Tab.Screen name="AddExercise">
             {() => (
               <Template>
@@ -101,10 +94,17 @@ export default function App() {
               </Template>
             )}
           </Tab.Screen>
-          <Tab.Screen name="VerEntrenamiento">
+          <Tab.Screen name="DetailsWorkout">
             {() => (
               <Template>
-                <VerEntrenamiento />
+                <DetailsWorkout />
+              </Template>
+            )}
+          </Tab.Screen>
+          <Tab.Screen name="DetailsExercise">
+            {() => (
+              <Template>
+                <DetailsExercise />
               </Template>
             )}
           </Tab.Screen>

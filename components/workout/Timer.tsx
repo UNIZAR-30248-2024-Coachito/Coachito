@@ -29,11 +29,21 @@ const Timer: React.FC<TimerProps> = ({ active, onTimeUpdate }) => {
     };
   }, [active, onTimeUpdate]);
 
-  return (
-    <>
-      <Text className="text-white mb-4 text-md">Tiempo: {time} segundos</Text>
-    </>
-  );
+  const formatTime = (timeInSeconds: number) => {
+    const hours = Math.floor(timeInSeconds / 3600);
+    const minutes = Math.floor((timeInSeconds % 3600) / 60);
+    const seconds = timeInSeconds % 60;
+
+    if (hours > 0) {
+      return `${hours}h ${minutes}min y ${seconds}s`;
+    } else if (minutes > 0) {
+      return `${minutes}min y ${seconds}s`;
+    } else {
+      return `${seconds}s`;
+    }
+  };
+
+  return <Text className="text-white mb-4 text-xl">{formatTime(time)}</Text>;
 };
 
 export default Timer;

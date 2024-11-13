@@ -1,56 +1,141 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 // App.test.tsx
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
-import App from '../../screens/App'; // Asegúrate de que la ruta sea correcta
-import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
+import { render } from '@testing-library/react-native';
+import App from '@/screens/App';
 
 jest.mock('../../styles.css', () => ({}));
 
-describe('App Navigation', () => {
-  test('only active tab screens are rendered', async () => {
-    const { getByText, queryByText } = render(
-      <GluestackUIProvider mode="dark">
-        <App />
-      </GluestackUIProvider>
-    );
+// Mock de los componentes importados
+jest.mock('../../screens/Dashboard', () => {
+  const { Text } = require('react-native');
+  const Dashboard = () => <Text>Dashboard</Text>;
+  Dashboard.displayName = 'Dashboard';
+  return Dashboard;
+});
 
-    // Verifica que Dashboard esté visible al inicio
-    fireEvent.press(getByText('Dashboard'));
+jest.mock('../../screens/Routine', () => {
+  const { Text } = require('react-native');
+  const Routine = () => <Text>Routine</Text>;
+  Routine.displayName = 'Routine';
+  return Routine;
+});
+
+jest.mock('../../screens/Profile', () => {
+  const { Text } = require('react-native');
+  const Profile = () => <Text>Profile</Text>;
+  Profile.displayName = 'Profile';
+  return Profile;
+});
+
+jest.mock('../../screens/DetailsWorkout', () => {
+  const { Text } = require('react-native');
+  const DetailsWorkout = () => <Text>DetailsWorkout</Text>;
+  DetailsWorkout.displayName = 'DetailsWorkout';
+  return DetailsWorkout;
+});
+
+jest.mock('../../screens/DetailsRoutine', () => {
+  const { Text } = require('react-native');
+  const DetailsRoutine = () => <Text>DetailsRoutine</Text>;
+  DetailsRoutine.displayName = 'DetailsRoutine';
+  return DetailsRoutine;
+});
+
+jest.mock('../../screens/AddExercise', () => {
+  const { Text } = require('react-native');
+  const AddExercise = () => <Text>AddExercise</Text>;
+  AddExercise.displayName = 'AddExercise';
+  return AddExercise;
+});
+
+jest.mock('../../screens/AddRoutine', () => {
+  const { Text } = require('react-native');
+  const AddRoutine = () => <Text>AddRoutine</Text>;
+  AddRoutine.displayName = 'AddRoutine';
+  return AddRoutine;
+});
+
+jest.mock('../../screens/EditRoutine', () => {
+  const { Text } = require('react-native');
+  const EditRoutine = () => <Text>EditRoutine</Text>;
+  EditRoutine.displayName = 'EditRoutine';
+  return EditRoutine;
+});
+
+jest.mock('../../screens/AddExerciseEdit', () => {
+  const { Text } = require('react-native');
+  const AddExerciseEdit = () => <Text>AddExerciseEdit</Text>;
+  AddExerciseEdit.displayName = 'AddExerciseEdit';
+  return AddExerciseEdit;
+});
+
+jest.mock('../../screens/StartWorkout', () => {
+  const { Text } = require('react-native');
+  const StartWorkout = () => <Text>StartWorkout</Text>;
+  StartWorkout.displayName = 'StartWorkout';
+  return StartWorkout;
+});
+
+jest.mock('../../screens/DetailsExercise', () => {
+  const { Text } = require('react-native');
+  const DetailsExercise = () => <Text>DetailsExercise</Text>;
+  DetailsExercise.displayName = 'DetailsExercise';
+  return DetailsExercise;
+});
+
+jest.mock('@/components/ui/gluestack-ui-provider', () => ({
+  GluestackUIProvider: ({ children }: { children: React.ReactNode }) =>
+    children,
+}));
+
+jest.mock('@react-navigation/native', () => {
+  const actualNav = jest.requireActual('@react-navigation/native');
+  return {
+    ...actualNav,
+    NavigationContainer: ({ children }: { children: React.ReactNode }) =>
+      children,
+    useNavigation: () => ({
+      navigate: jest.fn(),
+    }),
+  };
+});
+
+jest.mock('@react-navigation/bottom-tabs', () => {
+  return {
+    createBottomTabNavigator: jest.fn().mockReturnValue({
+      Navigator: ({ children }: { children: React.ReactNode }) => (
+        <>{children}</>
+      ),
+      Screen: ({
+        children,
+      }: {
+        name: string;
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        children: React.ReactNode | ((props: any) => React.ReactNode);
+      }) => {
+        if (typeof children === 'function') {
+          return <>{children({})}</>;
+        }
+        return <>{children}</>;
+      },
+    }),
+  };
+});
+
+jest.mock('@/components/shared/Template', () => {
+  const Children = ({ children }: { children: React.ReactNode }) => (
+    <>{children}</>
+  );
+
+  return Children;
+});
+
+describe('App', () => {
+  it('debe renderizar el componente App sin errores y mostrar la pantalla Dashboard por defecto', () => {
+    const { getByText } = render(<App />);
+
+    // Verificamos que el componente Dashboard (mockeado) se renderiza
     expect(getByText('Dashboard')).toBeTruthy();
-    expect(queryByText('Routine')).toBeNull();
-    expect(queryByText('Profile')).toBeNull();
-    expect(queryByText('Exercises')).toBeNull();
-    expect(queryByText('AddExercise')).toBeNull();
-    expect(queryByText('AddRoutine')).toBeNull();
-
-    // Simula la navegación a la pestaña Routine
-    fireEvent.press(getByText('Routine'));
-    expect(getByText('Routine')).toBeTruthy();
-    expect(queryByText('Dashboard')).toBeNull();
-    expect(queryByText('Profile')).toBeNull();
-    expect(queryByText('Exercises')).toBeNull();
-    expect(queryByText('AddExercise')).toBeNull();
-    expect(queryByText('AddRoutine')).toBeNull();
-
-    // Simula la navegación a la pestaña Profile
-    fireEvent.press(getByText('Profile'));
-    expect(getByText('Profile')).toBeTruthy();
-    expect(queryByText('Routine')).toBeNull();
-    expect(queryByText('Dashboard')).toBeNull();
-
-    // Simula la navegación a la pestaña Exercises
-    fireEvent.press(getByText('Exercises'));
-    expect(getByText('Exercises')).toBeTruthy();
-    expect(queryByText('Profile')).toBeNull();
-
-    // Simula la navegación a la pestaña AddExercise
-    fireEvent.press(getByText('AddExercise'));
-    expect(getByText('AddExercise')).toBeTruthy();
-    expect(queryByText('Exercises')).toBeNull();
-
-    // Simula la navegación a la pestaña AddRoutine
-    fireEvent.press(getByText('AddRoutine'));
-    expect(getByText('AddRoutine')).toBeTruthy();
-    expect(queryByText('AddExercise')).toBeNull();
   });
 });

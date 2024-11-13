@@ -1,12 +1,11 @@
-import { ExerciseResume } from '@/components/detailsRoutine/ExerciseResume';
+import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type RootStackParamList = {
   Dashboard: undefined;
   Routine: undefined;
   DetailsRoutine: { templateId: number; myRoutineName: string };
-  Profile: undefined;
-  Exercises: undefined;
+  Profile: { userId: number };
   AddExercise: { selectedExercises: ExerciseResume[]; groupId: number };
   AddExerciseEdit: {
     selectedExercises: ExerciseResume[];
@@ -18,13 +17,13 @@ export type RootStackParamList = {
   EditRoutine: {
     routineId: number;
     routineName: string;
-    exercises: ExerciseResume[];
   };
   StartWorkout: {
     routineId: number;
     routineName: string;
   };
-  VerEntrenamiento: { workoutId: number };
+  DetailsWorkout: { workoutId: number };
+  DetailsExercise: { exerciseId: number };
 };
 
 export type NavigationProps = NativeStackNavigationProp<RootStackParamList>;

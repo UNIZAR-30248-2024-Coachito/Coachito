@@ -5,12 +5,13 @@ import { HStack } from '../ui/hstack';
 import { VStack } from '../ui/vstack';
 import '../../styles.css';
 import { calculateDaysDifferenceNow } from '@/utils/date';
+import { convertIntervalToMinutes } from '@/utils/interval';
 
 export interface WorkoutHeaderResume {
   workoutId: number;
   workoutName: string;
-  workoutDate: Date;
-  workoutTime: number;
+  workoutDate: string;
+  workoutTime: string;
   workoutVolume: number;
   workoutSeries: number;
 }
@@ -23,6 +24,7 @@ const WorkoutHeaderResumeComponent: React.FC<WorkoutHeaderResume> = ({
   workoutSeries,
 }) => {
   const daysOffset = calculateDaysDifferenceNow(workoutDate);
+  const timeInMin = convertIntervalToMinutes(workoutTime);
 
   return (
     <Box>
@@ -39,7 +41,7 @@ const WorkoutHeaderResumeComponent: React.FC<WorkoutHeaderResume> = ({
       <HStack className="justify-between gap-x-8 mb-4">
         <VStack>
           <Text className="text-gray-400">Tiempo</Text>
-          <Text className="text-white">{workoutTime} min</Text>
+          <Text className="text-white">{timeInMin} min</Text>
         </VStack>
         <VStack>
           <Text className="text-gray-400">Volumen</Text>

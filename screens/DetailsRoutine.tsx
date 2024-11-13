@@ -5,37 +5,59 @@ import { ScrollView } from '@/components/ui/scroll-view';
 import { VStack } from '@/components/ui/vstack';
 import { NavigationProps, RootStackParamList } from '@/types/navigation';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
-import { useFetchDetailsLastWorkout } from '@/hooks/workoutHook';
+import {
+  useFetchDetailsLastWorkout,
+  useFetchRoutineWorkouts,
+} from '@/hooks/workoutHook';
 import { HStack } from '@/components/ui/hstack';
-import ExerciseResumeComponent, {
+import ExercisesRoutineResumeComponent, {
   ExerciseResume,
-} from '@/components/detailsRoutine/ExerciseResume';
+} from '@/components/routine/ExercisesRoutineResume';
 import { Button } from '@/components/ui/button';
 import { MoreHorizontal, Pencil, Trash } from 'lucide-react-native';
 import SlideUpBaseModal from '@/components/shared/SlideUpBaseModal';
 import PopupBaseModal from '@/components/shared/PopupBaseModal';
 import { useDeleteWorkoutTemplate } from '@/hooks/workoutTemplateHook';
 import { emitter } from '@/utils/emitter';
+import CustomAreaChart, {
+  DataChartProps,
+} from '@/components/shared/CustomAreaChart';
 
 const DetailsRoutine: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute<RouteProp<RootStackParamList, 'DetailsRoutine'>>();
   const { templateId, myRoutineName } = route.params;
 
+  const [chartDetailsWorkout, setChartDetailsWorkout] = useState<
+    DataChartProps[]
+  >([]);
   const [exercises, setExercises] = useState<ExerciseResume[]>([]);
   const [isSlideUpModalVisible, setIsSlideUpModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
+  const buttons = ['Volumen', 'Repeticiones', 'Duración'];
+
+  const fetchRoutineChartDetailsWorkout = async () => {
+    const { data, error } = await useFetchRoutineWorkouts(templateId);
+
+    if (!error) {
+      setChartDetailsWorkout(data);
+    } else {
+      alert('Se ha producido un error obteniendo los datos de la gráfica.');
+    }
+  };
 
   const fetchExercises = async () => {
-    const { exercisesResumes, error: errorRoutines } =
-      await useFetchDetailsLastWorkout(templateId);
+    const { data, error } = await useFetchDetailsLastWorkout(templateId);
 
-    if (!errorRoutines) {
-      setExercises(exercisesResumes!);
+    if (!error) {
+      setExercises(data);
+    } else {
+      alert('Se ha producido un error obteniendo los ejercicios.');
     }
   };
 
   useEffect(() => {
+    fetchRoutineChartDetailsWorkout();
     fetchExercises();
   }, [templateId]);
 
@@ -45,6 +67,8 @@ const DetailsRoutine: React.FC = () => {
     if (!error) {
       emitter.emit('routineDeleted');
       navigation.navigate('Routine');
+    } else {
+      alert('Se ha producido un error al eliminar la rutina.');
     }
   };
 
@@ -52,13 +76,12 @@ const DetailsRoutine: React.FC = () => {
     <Button
       key="2"
       className="bg-transparent"
-      onPress={() =>
+      onPress={() => {
         navigation.navigate('EditRoutine', {
           routineId: templateId,
           routineName: myRoutineName,
-          exercises,
-        })
-      }
+        });
+      }}
     >
       <Pencil color="white" />
       <Text className="text-white ml-4">Editar rutina</Text>
@@ -81,6 +104,7 @@ const DetailsRoutine: React.FC = () => {
       ¿Está seguro de que quiere borrar la rutina?
     </Text>,
     <Button
+      testID="delete-button"
       key="2"
       className="bg-red-800 rounded-lg mb-4"
       onPress={() => {
@@ -103,10 +127,11 @@ const DetailsRoutine: React.FC = () => {
 
   return (
     <ScrollView className="flex-1">
-      <VStack className="p-4">
+      <VStack className="p-4 gap-4">
         <HStack className="justify-between">
           <Text className="text-xl font-bold text-white">{myRoutineName}</Text>
           <Button
+            testID="modal-button"
             className="bg-transparent"
             onPress={() => {
               setIsSlideUpModalVisible(true);
@@ -117,7 +142,7 @@ const DetailsRoutine: React.FC = () => {
         </HStack>
 
         <Button
-          className="bg-blue-500 rounded-lg w-full mb-4"
+          className="bg-blue-500 rounded-lg w-full"
           onPress={() =>
             navigation.navigate('StartWorkout', {
               routineId: templateId,
@@ -128,15 +153,16 @@ const DetailsRoutine: React.FC = () => {
           <Text className="text-white">Empezar Rutina</Text>
         </Button>
 
-        <HStack className="justify-between mb-4">
-          <Text className="text-gray-400 mt-4">Ejercicios</Text>
+        <CustomAreaChart data={chartDetailsWorkout} buttons={buttons} />
+
+        <HStack className="justify-between items-center">
+          <Text className="text-gray-400">Ejercicios</Text>
           <Button
             className="bg-transparent"
             onPress={() =>
               navigation.navigate('EditRoutine', {
                 routineId: templateId,
                 routineName: myRoutineName,
-                exercises,
               })
             }
           >
@@ -145,7 +171,7 @@ const DetailsRoutine: React.FC = () => {
         </HStack>
 
         {exercises!.map((exercise, index) => (
-          <ExerciseResumeComponent
+          <ExercisesRoutineResumeComponent
             key={index}
             id={exercise.id}
             name={exercise.name}

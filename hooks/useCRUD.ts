@@ -1,24 +1,25 @@
-import { PostgrestError } from '@supabase/postgrest-js/src/types';
+import { AxiosResponse } from 'axios';
 
 interface UseCRUDReturn<DataType> {
   execute: () => Promise<{
     data: DataType | null;
-    error: PostgrestError | null;
+    error: string | null;
   }>;
 }
 
 const useCRUD = <DataType>(
-  asyncFunc: () => Promise<DataType>
+  asyncFunc: () => Promise<AxiosResponse<DataType>>
 ): UseCRUDReturn<DataType> => {
   const execute = async () => {
-    let data = null;
-    let error = null;
+    let data: DataType | null = null;
+    let error: string | null = null;
 
     try {
-      data = await asyncFunc();
+      const response = await asyncFunc();
+      data = response.data;
     } catch (e: unknown) {
-      error = e as PostgrestError;
-      console.error(error);
+      error = e instanceof Error ? e.message : 'An unknown error occurred';
+      console.error('Error executing async function:', error);
     }
 
     return { data, error };

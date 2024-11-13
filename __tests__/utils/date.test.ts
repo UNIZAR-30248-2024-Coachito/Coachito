@@ -1,4 +1,4 @@
-import { calculateDaysDifferenceNow } from '../../utils/date';
+import { calculateDaysDifferenceNow, formatToChartLabel } from '@/utils/date';
 
 describe('calculateDaysDifferenceNow', () => {
   beforeAll(() => {
@@ -11,32 +11,59 @@ describe('calculateDaysDifferenceNow', () => {
   });
 
   it('debería devolver 0 si la fecha es hoy', () => {
-    const today = new Date();
+    const today = '2024-10-11';
     const result = calculateDaysDifferenceNow(today);
     expect(result).toBe(0);
   });
 
   it('debería devolver la diferencia correcta cuando la fecha es en el pasado', () => {
-    const pastDate = new Date('2024-10-01');
+    const pastDate = '2024-10-01';
     const result = calculateDaysDifferenceNow(pastDate);
     expect(result).toBe(10); // 10 días de diferencia entre 2024-10-01 y 2024-10-11
   });
 
   it('debería devolver la diferencia correcta cuando la fecha es en el futuro', () => {
-    const futureDate = new Date('2024-10-20');
+    const futureDate = '2024-10-20';
     const result = calculateDaysDifferenceNow(futureDate);
     expect(result).toBe(-9); // 9 días en el futuro desde 2024-10-11
   });
 
   it('debería devolver la diferencia correcta para una fecha en el pasado lejano', () => {
-    const oldDate = new Date('2020-10-11');
+    const oldDate = '2020-10-11';
     const result = calculateDaysDifferenceNow(oldDate);
     expect(result).toBe(1461); // Diferencia de 4 años completos (incluye un año bisiesto)
   });
 
   it('debería devolver la diferencia correcta para una fecha en el futuro lejano', () => {
-    const futureOldDate = new Date('2030-10-11');
+    const futureOldDate = '2030-10-11';
     const result = calculateDaysDifferenceNow(futureOldDate);
     expect(result).toBe(-2191); // Diferencia de 6 años completos (incluye un año bisiesto)
+  });
+});
+
+describe('formatToChartLabel', () => {
+  it('debería formatear correctamente una fecha en el formato "DD MMM" en español', () => {
+    const result = formatToChartLabel('2024-10-11T00:00:00Z');
+    expect(result).toBe('Oct 11');
+  });
+
+  it('debería formatear correctamente una fecha en el formato "DD MMM" con un mes diferente', () => {
+    const result = formatToChartLabel('2024-12-25T00:00:00Z');
+    expect(result).toBe('Dec 25');
+  });
+
+  it('debería formatear correctamente una fecha en el primer día del mes', () => {
+    const result = formatToChartLabel('2024-05-01T00:00:00Z');
+    expect(result).toBe('May 01');
+  });
+
+  it('debería formatear correctamente una fecha en el último día del mes', () => {
+    const result = formatToChartLabel('2024-03-31T00:00:00Z');
+    expect(result).toBe('Mar 31');
+  });
+
+  it('debería manejar correctamente fechas de años anteriores', () => {
+    const result = formatToChartLabel('2020-01-15T00:00:00Z');
+    expect(result).toBe('Jan 15');
   });
 });

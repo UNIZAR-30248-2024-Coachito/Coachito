@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import '../styles.css';
 import { Text } from '../components/ui/text';
 import { Button } from '../components/ui/button';
@@ -11,13 +11,10 @@ import { useFetchTemplateWorkouts } from '@/hooks/workoutTemplateHook';
 import { HStack } from '@/components/ui/hstack';
 import GroupedRoutinesResumeComponent, {
   GroupedRoutines,
-} from '@/components/myRoutines/GroupedRoutinesResume';
+} from '@/components/routine/GroupedRoutinesResume';
 import PopupBaseModal from '@/components/shared/PopupBaseModal';
 import { Input, InputField } from '@/components/ui/input';
-import {
-  useCreateTemplateWorkoutGroup,
-  useFetchTemplateWorkoutGroups,
-} from '@/hooks/workoutTemplateGroupHook';
+import { useCreateTemplateWorkoutGroup } from '@/hooks/workoutTemplateGroupHook';
 import { emitter } from '@/utils/emitter';
 
 export interface Group {
@@ -28,42 +25,55 @@ export interface Group {
 const Routine: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
   const [routines, setRoutines] = useState<GroupedRoutines[]>([]);
-  const [groups, setGroups] = useState<Group[]>([]);
   const [isNewGroupModalVisible, setIsNewGroupModalVisible] = useState(false);
   const [newFolderInputValue, setNewFolderInputValue] = useState('');
 
   const fetchRoutinesAndGroups = async () => {
-    const { exercisesResumes, error: errorRoutines } =
-      await useFetchTemplateWorkouts();
-    const { groups, error: errorGroups } =
-      await useFetchTemplateWorkoutGroups();
+    const { data, error } = await useFetchTemplateWorkouts();
 
-    if (!errorRoutines) {
-      setRoutines(exercisesResumes!);
-    }
-
-    if (!errorGroups) {
-      setGroups(groups!);
+    if (!error) {
+      setRoutines(data!);
+    } else {
+      alert('Se ha producido un error al obtener las rutinas.');
     }
   };
 
   useEffect(() => {
     const routineDeletedListener = emitter.addListener('routineDeleted', () => {
       fetchRoutinesAndGroups();
+      alert('¡Rutina eliminada correctamente!');
     });
     const routineRenamedListener = emitter.addListener('routineRenamed', () => {
       fetchRoutinesAndGroups();
+      alert('¡Rutina editada correctamente!');
     });
     const routineAddedListener = emitter.addListener('routineAdded', () => {
       fetchRoutinesAndGroups();
+      alert('¡Rutina creada correctamente!');
+    });
+
+    const groupCreatedListener = emitter.addListener('groupCreated', () => {
+      fetchRoutinesAndGroups();
+      alert('Carpeta creada correctamente!');
+    });
+    const groupRenamedListener = emitter.addListener('groupRenamed', () => {
+      fetchRoutinesAndGroups();
+      alert('Carpeta editada correctamente!');
+    });
+    const groupDeletedListener = emitter.addListener('groupDeleted', () => {
+      fetchRoutinesAndGroups();
+      alert('Carpeta eliminada correctamente!');
     });
 
     fetchRoutinesAndGroups();
 
     return () => {
-      routineDeletedListener.remove();
-      routineRenamedListener.remove();
-      routineAddedListener.remove();
+      routineDeletedListener?.remove();
+      routineRenamedListener?.remove();
+      routineAddedListener?.remove();
+      groupCreatedListener?.remove();
+      groupRenamedListener?.remove();
+      groupDeletedListener?.remove();
     };
   }, [navigation]);
 
@@ -80,6 +90,9 @@ const Routine: React.FC = () => {
     const { error } = await useCreateTemplateWorkoutGroup(folderName);
     if (!error) {
       fetchRoutinesAndGroups();
+      emitter.emit('groupCreated');
+    } else {
+      alert('Se ha producido un error al crear el nuevo grupo.');
     }
   };
 
@@ -150,24 +163,6 @@ const Routine: React.FC = () => {
             groupedRoutine={routine}
           />
         ))}
-
-        {groups
-          .filter(
-            (group) =>
-              !routines.some(
-                (groupedRoutine) => groupedRoutine.groupId === group.id
-              )
-          )!
-          .map((group, index) => (
-            <GroupedRoutinesResumeComponent
-              key={index}
-              groupedRoutine={{
-                groupId: group.id,
-                groupName: group.name,
-                routines: [],
-              }}
-            />
-          ))}
 
         <PopupBaseModal
           components={newFolderComponentsPopUpModal}

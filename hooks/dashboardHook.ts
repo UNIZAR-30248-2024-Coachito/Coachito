@@ -1,22 +1,14 @@
-import { supabase } from '@/api/supabaseClient';
+import supabaseClient from '@/api/supabaseClient';
 import useCRUD from './useCRUD';
-import { WorkoutRepository } from '@/repositories/workoutRepository';
-import { mapWorkoutDataToCardResume } from '@/mappers/mapWorkoutDataToCardResume';
-
-const workoutRepository = new WorkoutRepository(supabase);
 
 const useFetchDashboardWorkouts = async () => {
   const { execute } = useCRUD(() =>
-    workoutRepository.getWorkoutsWithExercises(false)
+    supabaseClient.get('/rpc/get_dashboard_details')
   );
 
   const { data, error } = await execute();
 
-  let workoutResumes = null;
-  if (!error) {
-    workoutResumes = mapWorkoutDataToCardResume(data!);
-  }
-
-  return { workoutResumes, error };
+  return { data, error };
 };
+
 export { useFetchDashboardWorkouts };

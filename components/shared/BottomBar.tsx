@@ -43,7 +43,7 @@ export default function BottomBar() {
           </Text>
         </VStack>
       </Pressable>
-      <Pressable onPress={() => navigation.navigate('Profile')}>
+      <Pressable onPress={() => navigation.navigate('Profile', { userId: 1 })}>
         <VStack className="items-center">
           <User
             testID="perfil-icon"

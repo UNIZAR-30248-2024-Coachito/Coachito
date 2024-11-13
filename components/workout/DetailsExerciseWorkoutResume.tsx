@@ -1,4 +1,9 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import React, {
+  forwardRef,
+  useEffect,
+  useImperativeHandle,
+  useState,
+} from 'react';
 import { Text } from '../ui/text';
 import {
   Table,
@@ -20,10 +25,10 @@ import { Box } from '../ui/box';
 import {
   ExerciseResume,
   SetsExerciseResume,
-} from '../detailsRoutine/ExerciseResume';
+} from '../routine/ExercisesRoutineResume';
 import {
+  convertIntervalToMinutesAndSeconds,
   convertIntervalToSeconds,
-  convertStringToInterval,
 } from '@/utils/interval';
 import PopupBaseModal from '../shared/PopupBaseModal';
 import CountdownTimer from './CountDownTimer';
@@ -44,15 +49,15 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
     const [exerciseId] = useState(id);
     const [exerciseName] = useState(name);
     const [exerciseRestTimeNumber] = useState(
-      convertIntervalToSeconds(
-        convertStringToInterval(restTime ? restTime : '0')
-      )
+      convertIntervalToSeconds(restTime)
     );
-    const [exerciseRestTimeString] = useState(restTime);
+    const [exerciseRestTimeString] =
+      convertIntervalToMinutesAndSeconds(restTime);
     const [exerciseNotes, setExerciseNotes] = useState(notes);
     const [exercisePrimaryMuscleGroup] = useState(primaryMuscleGroup);
-    const [exerciseSets, setExerciseSets] =
-      useState<SetsExerciseResume[]>(sets);
+    const [exerciseSets, setExerciseSets] = useState<SetsExerciseResume[]>(
+      sets ?? []
+    );
     const [restTimerModalVisible, setRestTimerModalVisible] = useState(false);
 
     useImperativeHandle(ref, () => ({
@@ -92,6 +97,12 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
       setRestTimerModalVisible(false);
     };
 
+    useEffect(() => {
+      if (!exerciseSets || exerciseSets.length === 0) {
+        addNewSet();
+      }
+    }, [exerciseSets]);
+
     const componentsTimerPopUpModal: React.ReactNode[] = [
       <CountdownTimer
         key="1"
@@ -117,6 +128,7 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
 
           <Textarea className="w-100">
             <TextareaInput
+              testID="text-area-input"
               placeholder="Notas..."
               value={exerciseNotes}
               onChangeText={(value) => setExerciseNotes(value)}
@@ -129,11 +141,11 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
               Temporizador de descanso:{' '}
               {exerciseRestTimeNumber > 0
                 ? exerciseRestTimeString
-                : 'Desactivado'}
+                : 'DESACTIVADO'}
             </Text>
           </HStack>
 
-          <Table className="w-[350px]">
+          <Table className="w-[340px]">
             <TableHeader>
               <TableRow className="border-b-0 bg-background-0 hover:bg-background-0">
                 <TableHead>SERIE</TableHead>
@@ -145,36 +157,55 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
               </TableRow>
             </TableHeader>
             <TableBody>
-              {exerciseSets.map((set, index) => (
-                <TableRow key={index} className="border-b-0 bg-background-50">
-                  <TableData>{index + 1}</TableData>
-                  <TableData>
-                    <Input className="w-full text-center" variant="underlined">
-                      <InputField
-                        placeholder={set.weight.toString()}
-                        onChangeText={(value) =>
-                          handleSetChange(index, 'weight', value)
-                        }
-                      />
-                    </Input>
-                  </TableData>
-                  <TableData>
-                    <Input className="w-full text-center" variant="underlined">
-                      <InputField
-                        placeholder={set.reps.toString()}
-                        onChangeText={(value) =>
-                          handleSetChange(index, 'reps', value)
-                        }
-                      />
-                    </Input>
-                  </TableData>
-                  <TableData>
-                    <Button className="bg-gray-400" onPress={startRestTimer}>
-                      <Check color="white" />
-                    </Button>
-                  </TableData>
-                </TableRow>
-              ))}
+              {exerciseSets &&
+                exerciseSets.map((set, index) => (
+                  <TableRow
+                    testID="table-row"
+                    key={index}
+                    className="border-b-0 bg-background-50"
+                  >
+                    <TableData>{index + 1}</TableData>
+                    <TableData>
+                      <Input
+                        className="w-full text-center"
+                        variant="underlined"
+                      >
+                        <InputField
+                          testID="weight"
+                          placeholder={set.weight ? set.weight.toString() : '0'}
+                          value={set.weight ? set.weight.toString() : '0'}
+                          onChangeText={(value) =>
+                            handleSetChange(index, 'weight', value)
+                          }
+                        />
+                      </Input>
+                    </TableData>
+                    <TableData>
+                      <Input
+                        className="w-full text-center"
+                        variant="underlined"
+                      >
+                        <InputField
+                          testID="reps"
+                          placeholder={set.reps ? set.reps.toString() : '0'}
+                          value={set.reps ? set.reps.toString() : '0'}
+                          onChangeText={(value) =>
+                            handleSetChange(index, 'reps', value)
+                          }
+                        />
+                      </Input>
+                    </TableData>
+                    <TableData>
+                      <Button
+                        testID="check"
+                        className="bg-gray-400"
+                        onPress={startRestTimer}
+                      >
+                        <Check color="white" />
+                      </Button>
+                    </TableData>
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
 

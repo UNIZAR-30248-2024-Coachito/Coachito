@@ -1,7 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import Template from '../../../components/shared/Template';
-import { Text } from '../../../components/ui/text';
+import Template from '@/components/shared/Template';
+import { Text } from '@/components/ui/text';
 
 const mockBottomBarComponent = <Text>Mocked BottomBar</Text>;
 
@@ -10,7 +10,7 @@ jest.mock('../../../components/shared/BottomBar', () => {
   return mockBottomBar;
 });
 
-describe('Template Component', () => {
+describe('Template', () => {
   it('debería renderizar el componente Template correctamente', () => {
     const { getByText } = render(
       <Template>

@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
-import BottomBar from '../../../components/shared/BottomBar';
+import BottomBar from '@/components/shared/BottomBar';
 import { useNavigation, useRoute } from '@react-navigation/native';
 
 jest.mock('@react-navigation/native', () => ({
@@ -8,7 +8,7 @@ jest.mock('@react-navigation/native', () => ({
   useRoute: jest.fn(),
 }));
 
-describe('BottomBar Component', () => {
+describe('BottomBar', () => {
   let mockNavigate: jest.Mock;
 
   beforeEach(() => {
@@ -34,9 +34,7 @@ describe('BottomBar Component', () => {
       )
     ).toBeDefined();
 
-    expect(getByText('Entrenamiento').props.className).toContain(
-      'text-gray-400'
-    );
+    expect(getByText('Rutinas').props.className).toContain('text-gray-400');
     expect(
       getAllByTestId('entrenamiento-icon').find(
         (icon) => icon.props.stroke === 'white'
@@ -51,30 +49,34 @@ describe('BottomBar Component', () => {
     ).toBeDefined();
   });
 
-  it('debería marcar "Routine" como activo cuando la ruta es "Routine"', () => {
+  it('debería marcar "Routine" como activo cuando la ruta es "Routine"', async () => {
     (useRoute as jest.Mock).mockReturnValue({ name: 'Routine' });
 
-    const { getByText, getAllByTestId } = render(<BottomBar />);
+    const { findByText, findAllByTestId } = render(<BottomBar />);
 
-    expect(getByText('Inicio').props.className).toContain('text-gray-400');
+    expect((await findByText('Inicio')).props.className).toContain(
+      'text-gray-400'
+    );
     expect(
-      getAllByTestId('inicio-icon').find(
+      (await findAllByTestId('inicio-icon')).find(
         (icon) => icon.props.stroke === 'white'
       )
     ).toBeDefined();
 
-    expect(getByText('Entrenamiento').props.className).toContain(
+    expect((await findByText('Rutinas')).props.className).toContain(
       'text-blue-500'
     );
     expect(
-      getAllByTestId('entrenamiento-icon').find(
+      (await findAllByTestId('entrenamiento-icon')).find(
         (icon) => icon.props.stroke === 'rgb(59 130 246)'
       )
     ).toBeDefined();
 
-    expect(getByText('Perfil').props.className).toContain('text-gray-400');
+    expect((await findByText('Perfil')).props.className).toContain(
+      'text-gray-400'
+    );
     expect(
-      getAllByTestId('perfil-icon').find(
+      (await findAllByTestId('perfil-icon')).find(
         (icon) => icon.props.stroke === 'white'
       )
     ).toBeDefined();
@@ -92,9 +94,7 @@ describe('BottomBar Component', () => {
       )
     ).toBeDefined();
 
-    expect(getByText('Entrenamiento').props.className).toContain(
-      'text-gray-400'
-    );
+    expect(getByText('Rutinas').props.className).toContain('text-gray-400');
     expect(
       getAllByTestId('entrenamiento-icon').find(
         (icon) => icon.props.stroke === 'white'
@@ -124,7 +124,7 @@ describe('BottomBar Component', () => {
 
     const { getByText } = render(<BottomBar />);
 
-    fireEvent.press(getByText('Entrenamiento'));
+    fireEvent.press(getByText('Rutinas'));
 
     expect(mockNavigate).toHaveBeenCalledWith('Routine');
   });
@@ -136,6 +136,6 @@ describe('BottomBar Component', () => {
 
     fireEvent.press(getByText('Perfil'));
 
-    expect(mockNavigate).toHaveBeenCalledWith('Profile');
+    expect(mockNavigate).toHaveBeenCalledWith('Profile', { userId: 1 });
   });
 });

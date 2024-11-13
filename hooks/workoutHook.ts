@@ -1,46 +1,33 @@
-import { supabase } from '@/api/supabaseClient';
-import {
-  WorkoutInsert,
-  WorkoutRepository,
-} from '@/repositories/workoutRepository';
+import supabaseClient from '@/api/supabaseClient';
 import useCRUD from './useCRUD';
-import { mapWorkoutDataToExerciseResumeArray } from '@/mappers/mapWorkoutDataToDetailsRoutinesResume';
-import { ExerciseResume } from '@/components/detailsRoutine/ExerciseResume';
-import {
-  WorkoutExerciseInsert,
-  WorkoutExerciseRepository,
-} from '@/repositories/workoutExerciseRepository';
-import { mapWorkoutDataToWorkoutResume } from '@/mappers/mapWorkoutDataToWorkoutResume';
-
-const workoutRepository = new WorkoutRepository(supabase);
-const workoutExercisesRepo = new WorkoutExerciseRepository(supabase);
+import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 
 const useFetchDetailsLastWorkout = async (templateId: number) => {
   const { execute } = useCRUD(() =>
-    workoutRepository.getDetailsLastWorkout(templateId)
+    supabaseClient.get('/rpc/get_last_workout_details', {
+      params: {
+        templ_id: templateId,
+      },
+    })
   );
 
   const { data, error } = await execute();
 
-  let exercisesResumes = null;
-  if (!error) {
-    exercisesResumes = mapWorkoutDataToExerciseResumeArray(data!);
-  }
-
-  return { exercisesResumes, error };
+  return { data, error };
 };
 
 const useFetchDetailsWorkout = async (id: number) => {
-  const { execute } = useCRUD(() => workoutRepository.getDetailsWorkout(id));
+  const { execute } = useCRUD(() =>
+    supabaseClient.get('/rpc/get_workout_details', {
+      params: {
+        w_id: id,
+      },
+    })
+  );
 
   const { data, error } = await execute();
 
-  let exercisesResumes = null;
-  if (!error) {
-    exercisesResumes = mapWorkoutDataToWorkoutResume(data!);
-  }
-
-  return { exercisesResumes, error };
+  return { data, error };
 };
 
 const useCreateWorkout = async (
@@ -48,15 +35,20 @@ const useCreateWorkout = async (
   duration: number,
   exercises: ExerciseResume[]
 ) => {
-  const newWorkoutEntity = {
-    id: undefined,
-    template_id: templateId,
-    template: false,
-    duration: duration,
-  } as WorkoutInsert;
+  const totalVolume = exercises.reduce((acc, exercise) => {
+    const exerciseVolume = exercise.sets!.reduce((setAcc, set) => {
+      return setAcc + set.reps * set.weight;
+    }, 0);
+    return acc + exerciseVolume;
+  }, 0);
 
   const { execute: executeWorkoutInsert } = useCRUD(() =>
-    workoutRepository.create(newWorkoutEntity)
+    supabaseClient.post('/workouts', {
+      template_id: templateId,
+      volume: totalVolume,
+      duration: duration,
+      template: false,
+    })
   );
 
   const { data: dataWorkoutInsert, error: errorWorkoutInsert } =
@@ -67,22 +59,18 @@ const useCreateWorkout = async (
   }
 
   for (const exercise of exercises) {
-    const newWorkoutExerciseEntity = {
-      id: undefined,
-      workout_id: dataWorkoutInsert?.id,
-      exercise_id: exercise.id,
-      notes: exercise.notes,
-      rest_time: exercise.restTime,
-    } as WorkoutExerciseInsert;
-
-    if (exercise.sets.length > 0) {
-      for (const set of exercise.sets) {
-        newWorkoutExerciseEntity.reps = set.reps;
-        newWorkoutExerciseEntity.sets = 1;
-        newWorkoutExerciseEntity.weight = set.weight;
-
+    if (exercise.sets!.length > 0) {
+      for (const set of exercise.sets!) {
         const { execute: executeWorkoutExerciseInsert } = useCRUD(() =>
-          workoutExercisesRepo.create(newWorkoutExerciseEntity)
+          supabaseClient.post('/workout_exercises', {
+            workout_id: dataWorkoutInsert[0].id,
+            exercise_id: exercise.id,
+            sets: 1,
+            reps: set.reps,
+            weight: set.weight,
+            notes: exercise.notes,
+            rest_time: exercise.restTime === '0' ? null : exercise.restTime,
+          })
         );
 
         const { error: errorWorkoutExerciseInsert } =
@@ -94,7 +82,12 @@ const useCreateWorkout = async (
       }
     } else {
       const { execute: executeWorkoutExerciseInsert } = useCRUD(() =>
-        workoutExercisesRepo.create(newWorkoutExerciseEntity)
+        supabaseClient.post('/workout_exercises', {
+          workout_id: dataWorkoutInsert[0].id,
+          exercise_id: exercise.id,
+          notes: exercise.notes,
+          rest_time: exercise.restTime,
+        })
       );
 
       const { error: errorWorkoutExerciseInsert } =
@@ -109,4 +102,23 @@ const useCreateWorkout = async (
   return { error: null };
 };
 
-export { useFetchDetailsLastWorkout, useFetchDetailsWorkout, useCreateWorkout };
+const useFetchRoutineWorkouts = async (id: number) => {
+  const { execute } = useCRUD(() =>
+    supabaseClient.get('/rpc/get_routine_chart_data', {
+      params: {
+        templ_id: id,
+      },
+    })
+  );
+
+  const { data, error } = await execute();
+
+  return { data, error };
+};
+
+export {
+  useFetchDetailsLastWorkout,
+  useFetchDetailsWorkout,
+  useCreateWorkout,
+  useFetchRoutineWorkouts,
+};
