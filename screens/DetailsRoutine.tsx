@@ -150,7 +150,7 @@ const DetailsRoutine: React.FC = () => {
             })
           }
         >
-          <Text className="text-white">Empezar Rutina</Text>
+          <Text className="text-white">Empezar Entrenamiento</Text>
         </Button>
 
         <CustomAreaChart data={chartDetailsWorkout} buttons={buttons} />
