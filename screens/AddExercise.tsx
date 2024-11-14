@@ -28,6 +28,10 @@ const AddExercise: React.FC = () => {
     route.params!.selectedExercises
   );
   const selectedExercisesInit = route.params!.selectedExercises;
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [filteredExercises, setFilteredExercises] = useState<ExerciseResume[]>(
+    []
+  );
 
   const handleSelectExercise = (exercise: ExerciseResume) => {
     setSelectedExercises((prevSelected) => {
@@ -45,6 +49,7 @@ const AddExercise: React.FC = () => {
 
     if (!error) {
       setExercises(data);
+      setFilteredExercises(data);
     }
   };
 
@@ -55,6 +60,15 @@ const AddExercise: React.FC = () => {
   useEffect(() => {
     setSelectedExercises(route.params!.selectedExercises || []);
   }, [route.params!.selectedExercises]);
+
+  useEffect(() => {
+    const lowercasedTerm = searchTerm.toLowerCase();
+    setFilteredExercises(
+      exercises.filter((exercise) =>
+        exercise.name.toLowerCase().includes(lowercasedTerm)
+      )
+    );
+  }, [searchTerm, exercises]);
 
   return (
     <ScrollView className="flex-1">
@@ -85,10 +99,15 @@ const AddExercise: React.FC = () => {
           <InputSlot className="pl-3">
             <InputIcon as={SearchIcon} />
           </InputSlot>
-          <InputField className="text-white" placeholder="Buscar Ejercicio" />
+          <InputField
+            className="text-white"
+            placeholder="Buscar Ejercicio"
+            value={searchTerm}
+            onChangeText={setSearchTerm}
+          />
         </Input>
 
-        {exercises.map((exercise, index) => {
+        {filteredExercises.map((exercise, index) => {
           return (
             <Pressable
               key={index}

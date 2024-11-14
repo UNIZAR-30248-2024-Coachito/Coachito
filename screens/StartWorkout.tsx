@@ -46,7 +46,7 @@ const StartWorkout: React.FC = () => {
 
   useEffect(() => {
     fetchExercises();
-  }, []);
+  }, [route.params.routineId]);
 
   const handleStopTimer = () => {
     setTimerActive(false);
@@ -61,6 +61,14 @@ const StartWorkout: React.FC = () => {
     setDuration(time);
   };
 
+  const resetExerciseSets = () => {
+    exerciseRefs.current.forEach((exerciseRef) => {
+      if (exerciseRef) {
+        exerciseRef.resetToOneSet();
+      }
+    });
+  };
+
   const saveWorkout = async () => {
     const allExerciseData = exerciseRefs.current.map((ref) =>
       ref!.getExerciseData()
@@ -73,6 +81,8 @@ const StartWorkout: React.FC = () => {
     );
 
     if (!error) {
+      handleResetTimer();
+      resetExerciseSets();
       emitter.emit('workoutFinished');
       navigation.navigate('Dashboard');
     } else {
@@ -90,6 +100,7 @@ const StartWorkout: React.FC = () => {
       onPress={() => {
         setIsCancelWorkoutModalVisible(false);
         handleResetTimer();
+        resetExerciseSets();
         navigation.navigate('Routine');
       }}
     >

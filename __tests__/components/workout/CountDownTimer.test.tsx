@@ -10,7 +10,7 @@ describe('CountdownTimer', () => {
   it('debería renderizar el tiempo inicial correctamente', () => {
     const { getByText } = render(<CountdownTimer initialTime={10} />);
 
-    expect(getByText('Tiempo restante: 10 segundos')).toBeTruthy();
+    expect(getByText('10 segundos')).toBeTruthy();
   });
 
   it('debería decrementar el tiempo cada segundo', () => {
@@ -20,19 +20,19 @@ describe('CountdownTimer', () => {
     act(() => {
       jest.advanceTimersByTime(1000);
     });
-    expect(getByText('Tiempo restante: 2 segundos')).toBeTruthy();
+    expect(getByText('2 segundos')).toBeTruthy();
 
     // Avanzamos otro segundo
     act(() => {
       jest.advanceTimersByTime(1000);
     });
-    expect(getByText('Tiempo restante: 1 segundos')).toBeTruthy();
+    expect(getByText('1 segundos')).toBeTruthy();
 
     // Avanzamos otro segundo
     act(() => {
       jest.advanceTimersByTime(1000);
     });
-    expect(getByText('Tiempo restante: 0 segundos')).toBeTruthy();
+    expect(getByText('0 segundos')).toBeTruthy();
   });
 
   it('debería llamar a la función onComplete cuando el tiempo llegue a cero', () => {
@@ -53,13 +53,13 @@ describe('CountdownTimer', () => {
       jest.advanceTimersByTime(3000);
     });
 
-    expect(getByText('Tiempo restante: 0 segundos')).toBeTruthy();
+    expect(getByText('0 segundos')).toBeTruthy();
 
     act(() => {
       jest.advanceTimersByTime(1000);
     });
 
-    expect(getByText('Tiempo restante: 0 segundos')).toBeTruthy();
+    expect(getByText('0 segundos')).toBeTruthy();
   });
 
   it('debería limpiar el temporizador cuando el componente se desmonte', () => {

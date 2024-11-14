@@ -68,8 +68,8 @@ const useCreateRoutine = async (
   }
 
   for (const exercise of exercises) {
-    if (exercise.sets.length > 0) {
-      for (const set of exercise.sets) {
+    if (exercise.sets!.length > 0) {
+      for (const set of exercise.sets!) {
         const newWorkoutExerciseEntity = {
           workout_id: dataWorkoutsInsert[0].id,
           exercise_id: exercise.id,
@@ -156,8 +156,8 @@ const useUpdateRoutine = async (
   }
 
   for (const exercise of exercises) {
-    if (exercise.sets.length > 0) {
-      for (const set of exercise.sets) {
+    if (exercise.sets!.length > 0) {
+      for (const set of exercise.sets!) {
         const newWorkoutExerciseEntity = {
           workout_id: dataWorkoutsUpdate[0].id,
           exercise_id: exercise.id,

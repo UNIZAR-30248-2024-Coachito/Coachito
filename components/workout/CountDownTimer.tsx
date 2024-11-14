@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { VStack } from '../ui/vstack';
 import { Text } from '../ui/text';
+import { Timer } from 'lucide-react-native';
 
 interface CountdownTimerProps {
   initialTime: number;
@@ -30,8 +31,11 @@ const CountdownTimer: React.FC<CountdownTimerProps> = ({
   }, [isActive, timeLeft]);
 
   return (
-    <VStack className="gap-4">
-      <Text className="text-white">Tiempo restante: {timeLeft} segundos</Text>
+    <VStack className="items-center gap-4">
+      <Timer color="white" />
+      <Text bold className="text-white">
+        {timeLeft} segundos
+      </Text>
     </VStack>
   );
 };

@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "AppEntry.js",
   "scripts": {
-    "start": "expo start -c",
+    "start": "expo start",
     "android": "DARK_MODE=media expo start --android",
     "ios": "DARK_MODE=media expo start --ios",
     "web": "DARK_MODE=class expo start --web",

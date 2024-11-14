@@ -79,7 +79,7 @@ describe('DetailsExerciseWorkoutResumeComponent', () => {
       <DetailsExerciseWorkoutResumeComponent {...mockDataWithRestTime} />
     );
 
-    const startButton = getAllByTestId('check')[0];
+    const startButton = getAllByTestId('start-timer')[0];
     fireEvent.press(startButton);
 
     await waitFor(() =>
@@ -137,7 +137,7 @@ describe('DetailsExerciseWorkoutResumeComponent', () => {
       id: 1,
       name: 'Sentadillas',
       thumbnailUrl: 'https://example.com/image.jpg',
-      restTime: '1',
+      restTime: '1min',
       notes: 'Notas',
       primaryMuscleGroup: 'Cuádriceps',
       sets: [

@@ -16,8 +16,8 @@ import {
 import { HStack } from '../ui/hstack';
 import '../../styles.css';
 import { Avatar, AvatarFallbackText, AvatarImage } from '../ui/avatar';
-import { Pressable } from 'react-native';
-import { Check, Plus, Timer } from 'lucide-react-native';
+import { Modal, Pressable, Vibration } from 'react-native';
+import { Play, Plus, Timer } from 'lucide-react-native';
 import { Input, InputField } from '../ui/input';
 import { Button } from '../ui/button';
 import { Textarea, TextareaInput } from '../ui/textarea';
@@ -30,11 +30,11 @@ import {
   convertIntervalToMinutesAndSeconds,
   convertIntervalToSeconds,
 } from '@/utils/interval';
-import PopupBaseModal from '../shared/PopupBaseModal';
 import CountdownTimer from './CountDownTimer';
 
 export interface ExerciseResumeRef {
   getExerciseData: () => ExerciseResume;
+  resetToOneSet: () => void;
 }
 
 // eslint-disable-next-line react/display-name
@@ -51,8 +51,9 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
     const [exerciseRestTimeNumber] = useState(
       convertIntervalToSeconds(restTime)
     );
-    const [exerciseRestTimeString] =
-      convertIntervalToMinutesAndSeconds(restTime);
+    const [exerciseRestTimeString] = useState(
+      convertIntervalToMinutesAndSeconds(restTime)
+    );
     const [exerciseNotes, setExerciseNotes] = useState(notes);
     const [exercisePrimaryMuscleGroup] = useState(primaryMuscleGroup);
     const [exerciseSets, setExerciseSets] = useState<SetsExerciseResume[]>(
@@ -70,6 +71,9 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
         primaryMuscleGroup: exercisePrimaryMuscleGroup,
         sets: exerciseSets,
       }),
+      resetToOneSet() {
+        setExerciseSets([{ reps: 0, weight: 0 }]);
+      },
     }));
 
     const handleSetChange = (
@@ -95,6 +99,7 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
 
     const stopRestTimer = () => {
       setRestTimerModalVisible(false);
+      Vibration.vibrate(2000);
     };
 
     useEffect(() => {
@@ -145,15 +150,23 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
             </Text>
           </HStack>
 
-          <Table className="w-[340px]">
+          {exerciseRestTimeNumber > 0 && !restTimerModalVisible && (
+            <Button
+              testID="start-timer"
+              className="border-2 border-blue-500 bg-transparent rounded-lg gap-2"
+              onPress={startRestTimer}
+            >
+              <Play color="white" />
+              <Text className="text-white">Iniciar</Text>
+            </Button>
+          )}
+
+          <Table className="w-[330px]">
             <TableHeader>
               <TableRow className="border-b-0 bg-background-0 hover:bg-background-0">
                 <TableHead>SERIE</TableHead>
                 <TableHead>KG</TableHead>
                 <TableHead>REPS</TableHead>
-                <TableHead>
-                  <Check color="gray" />
-                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -195,15 +208,6 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
                         />
                       </Input>
                     </TableData>
-                    <TableData>
-                      <Button
-                        testID="check"
-                        className="bg-gray-400"
-                        onPress={startRestTimer}
-                      >
-                        <Check color="white" />
-                      </Button>
-                    </TableData>
                   </TableRow>
                 ))}
             </TableBody>
@@ -215,11 +219,19 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
           </Button>
         </Box>
 
-        <PopupBaseModal
-          components={componentsTimerPopUpModal}
-          isVisible={restTimerModalVisible}
-          setIsModalVisible={setRestTimerModalVisible}
-        />
+        <Modal
+          visible={restTimerModalVisible}
+          transparent={true}
+          onRequestClose={() => {
+            setRestTimerModalVisible(false);
+          }}
+        >
+          <Box className="flex-1 bg-black/75 justify-center items-center">
+            <Box className="bg-zinc-800 rounded-lg items-center p-4 mx-8 self-center">
+              {componentsTimerPopUpModal.map((component) => component)}
+            </Box>
+          </Box>
+        </Modal>
       </>
     );
   }
