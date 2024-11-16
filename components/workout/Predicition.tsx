@@ -51,8 +51,8 @@ const Prediction: React.FC<PredictionProps> = ({ exerciseSets }) => {
         {finalResults.length > 0 ? (
           finalResults.map((set, index) => (
             <Text key={index}>
-              Peso estimado para llegar a las repeticiones deseadas ={' '}
-              {set.finalValue.toFixed(2)}
+              Serie {index + 1}: Peso estimado para llegar a las repeticiones
+              deseadas = {set.finalValue.toFixed(2)}
             </Text>
           ))
         ) : (
