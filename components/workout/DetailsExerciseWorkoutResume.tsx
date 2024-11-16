@@ -32,6 +32,7 @@ import {
 } from '@/utils/interval';
 import PopupBaseModal from '../shared/PopupBaseModal';
 import CountdownTimer from './CountDownTimer';
+import Prediction from './Predicition';
 
 export interface ExerciseResumeRef {
   getExerciseData: () => ExerciseResume;
@@ -110,6 +111,12 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
         onComplete={stopRestTimer}
       />,
     ];
+
+    const processedData = exerciseSets.map((set) => ({
+      ...set,
+      peso: set.weight,
+      reps: set.reps,
+    }));
 
     return (
       <>
@@ -214,6 +221,8 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
             <Text className="text-white">Agregar Serie</Text>
           </Button>
         </Box>
+
+        <Prediction exerciseSets={processedData} />
 
         <PopupBaseModal
           components={componentsTimerPopUpModal}
