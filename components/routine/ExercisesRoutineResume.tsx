@@ -31,6 +31,7 @@ export interface ExerciseResume {
   notes: string;
   primaryMuscleGroup: string;
   sets: SetsExerciseResume[] | null;
+  targetReps?: number;
 }
 
 const ExercisesRoutineResumeComponent: React.FC<ExerciseResume> = ({

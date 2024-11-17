@@ -40,25 +40,16 @@ const Prediction: React.FC<PredictionProps> = ({ exerciseSets }) => {
 
   return (
     <VStack className="p-4">
-      <Input className="mb-4">
-        <InputField
-          placeholder="Introduce tu objetivo de numero de repeticiones"
-          value={newRepsInputValue}
-          onChangeText={setNewRepsInputValue}
-        />
-      </Input>
-      <VStack className="p-4">
-        {finalResults.length > 0 ? (
-          finalResults.map((set, index) => (
-            <Text key={index}>
-              Serie {index + 1}: Peso estimado para llegar a las repeticiones
-              deseadas = {set.finalValue.toFixed(2)}
-            </Text>
-          ))
-        ) : (
-          <Text>No hay sets disponibles para calcular los valores.</Text>
-        )}
-      </VStack>
+      {finalResults.length > 0 ? (
+        finalResults.map((set, index) => (
+          <Text key={index} className="bg-blue-500 rounded-lg w-full">
+            Se recomienda emplear {index + 1} para llegar al número de 5
+            repeticiones objetivo = {set.finalValue.toFixed(2)}
+          </Text>
+        ))
+      ) : (
+        <Text>No hay sets disponibles para calcular los valores.</Text>
+      )}
     </VStack>
   );
 };

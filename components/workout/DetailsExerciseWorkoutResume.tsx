@@ -32,7 +32,6 @@ import {
 } from '@/utils/interval';
 import PopupBaseModal from '../shared/PopupBaseModal';
 import CountdownTimer from './CountDownTimer';
-import Prediction from './Predicition';
 
 export interface ExerciseResumeRef {
   getExerciseData: () => ExerciseResume;
@@ -44,7 +43,16 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
   ExerciseResume
 >(
   (
-    { id, name, thumbnailUrl, restTime, notes, primaryMuscleGroup, sets },
+    {
+      id,
+      name,
+      thumbnailUrl,
+      restTime,
+      notes,
+      primaryMuscleGroup,
+      sets,
+      targetReps,
+    },
     ref
   ) => {
     const [exerciseId] = useState(id);
@@ -60,6 +68,10 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
       sets ?? []
     );
     const [restTimerModalVisible, setRestTimerModalVisible] = useState(false);
+    {
+      /* const [calculated1RM, setCalculated1RM] = useState();
+    const [finalResults, setFinalResults] = useState(); */
+    }
 
     useImperativeHandle(ref, () => ({
       getExerciseData: () => ({
@@ -111,12 +123,6 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
         onComplete={stopRestTimer}
       />,
     ];
-
-    const processedData = exerciseSets.map((set) => ({
-      ...set,
-      peso: set.weight,
-      reps: set.reps,
-    }));
 
     return (
       <>
@@ -222,7 +228,10 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
           </Button>
         </Box>
 
-        <Prediction exerciseSets={processedData} />
+        <Text className="bg-blue-500 rounded-lg w-full">
+          Se recomienda emplear para llegar al número de {targetReps}{' '}
+          repeticiones objetivo.
+        </Text>
 
         <PopupBaseModal
           components={componentsTimerPopUpModal}

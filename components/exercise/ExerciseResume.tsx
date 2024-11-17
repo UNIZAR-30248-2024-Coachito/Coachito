@@ -42,7 +42,16 @@ export interface ExerciseResumeRef {
 // eslint-disable-next-line react/display-name
 const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
   (
-    { id, name, thumbnailUrl, restTime, notes, primaryMuscleGroup, sets },
+    {
+      id,
+      name,
+      thumbnailUrl,
+      restTime,
+      notes,
+      primaryMuscleGroup,
+      sets,
+      targetReps,
+    },
     ref
   ) => {
     const [exerciseId] = useState(id);
@@ -58,6 +67,13 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
       sets ?? []
     );
     const [isSlideUpModalVisible, setIsSlideUpModalVisible] = useState(false);
+    const [targetNumberReps, setTargetNumberReps] = useState<string>(
+      targetReps !== undefined ? targetReps.toString() : ''
+    );
+
+    const handleTargetNumberRepsChange = (value: string) => {
+      setTargetNumberReps(value); // Almacena directamente el valor del InputField
+    };
 
     useImperativeHandle(ref, () => ({
       getExerciseData: () => ({
@@ -68,6 +84,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
         notes: exerciseNotes,
         primaryMuscleGroup: exercisePrimaryMuscleGroup,
         sets: exerciseSets,
+        targetReps: targetReps ? parseInt(targetNumberReps, 10) : undefined,
       }),
     }));
 
@@ -80,7 +97,10 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
           convertStringToInterval(restTime ? restTime : '0')
         )
       );
-    }, [sets, restTime, notes]);
+      setTargetNumberReps(
+        targetReps !== undefined ? targetNumberReps.toString() : ''
+      );
+    }, [sets, restTime, notes, targetReps]);
 
     const handleSetChange = (
       index: number,
@@ -189,6 +209,15 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
                 : 'DESACTIVADO'}
             </Text>
           </Button>
+
+          <Text>Objetivo de repeticiones</Text>
+          <Input className="text-center" variant="underlined">
+            <InputField
+              testID="targetNumberReps"
+              value={targetReps?.toString() ?? ''}
+              onChangeText={handleTargetNumberRepsChange}
+            />
+          </Input>
 
           <Table className="w-[350px]">
             <TableHeader>
