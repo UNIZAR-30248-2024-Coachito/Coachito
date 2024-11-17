@@ -39,6 +39,11 @@ export interface ExerciseResumeRef {
   getExerciseData: () => ExerciseResume;
 }
 
+export const MAX_REPS = 99;
+export const MIN_REPS = 1;
+export const MAX_KG = 499;
+export const MIN_KG = 0;
+
 // eslint-disable-next-line react/display-name
 const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
   (
@@ -82,6 +87,18 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
       );
     }, [sets, restTime, notes]);
 
+    const isInputValid = (field: string, value: number) => {
+      if (field === 'weight' && (value > MAX_KG || value < MIN_KG)) {
+        alert(`El peso debe estar entre ${MIN_KG} y ${MAX_KG} kg`);
+        return false;
+      }
+      if (field === 'reps' && (value > MAX_REPS || value < MIN_REPS)) {
+        alert(`Las repeticiones deben estar entre ${MIN_REPS} y ${MAX_REPS}`);
+        return false;
+      }
+      return true;
+    };
+
     const handleSetChange = (
       index: number,
       field: keyof SetsExerciseResume,
@@ -119,9 +136,9 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
           slideOnTap={true}
           thumbSize={20}
           trackHeight={6}
-          thumbTintColor="white"
+          thumbTintColor="#3b82f6"
           maximumTrackTintColor="grey"
-          minimumTrackTintColor="grey"
+          minimumTrackTintColor="#3b82f6"
           hitSlop={40}
           // eslint-disable-next-line react-native/no-inline-styles
           style={{
@@ -193,9 +210,9 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
           <Table className="w-[350px]">
             <TableHeader>
               <TableRow className="border-b-0 bg-background-0 hover:bg-background-0">
-                <TableHead>SERIE</TableHead>
-                <TableHead>KG</TableHead>
-                <TableHead>REPS</TableHead>
+                <TableHead className="text-sm">SERIE</TableHead>
+                <TableHead className="text-sm">KG</TableHead>
+                <TableHead className="text-sm">REPS</TableHead>
                 <TableHead></TableHead>
               </TableRow>
             </TableHeader>
@@ -211,10 +228,16 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
                     <Input className="w-full text-center" variant="underlined">
                       <InputField
                         testID="weight"
-                        value={set.weight ? set.weight.toString() : '0'}
-                        onChangeText={(value) =>
-                          handleSetChange(index, 'weight', value)
-                        }
+                        placeholder={MIN_KG.toString()}
+                        value={set.weight ? set.weight.toString() : ''}
+                        onChangeText={(value) => {
+                          if (isInputValid('weight', parseInt(value))) {
+                            handleSetChange(index, 'weight', value);
+                          } else {
+                            handleSetChange(index, 'weight', '');
+                          }
+                        }}
+                        keyboardType="numeric"
                       />
                     </Input>
                   </TableData>
@@ -222,31 +245,44 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
                     <Input className="w-full text-center" variant="underlined">
                       <InputField
                         testID="reps"
-                        value={set.reps ? set.reps.toString() : '0'}
-                        onChangeText={(value) =>
-                          handleSetChange(index, 'reps', value)
-                        }
+                        placeholder={MIN_REPS.toString()}
+                        value={set.reps ? set.reps.toString() : ''}
+                        onChangeText={(value) => {
+                          if (isInputValid('reps', parseInt(value))) {
+                            handleSetChange(index, 'reps', value);
+                          } else {
+                            handleSetChange(index, 'reps', '');
+                          }
+                        }}
+                        keyboardType="numeric"
                       />
                     </Input>
                   </TableData>
                   <TableData>
-                    <Button
-                      testID="trash"
-                      className="bg-transparent"
-                      onPress={() => deleteSet(index)}
-                    >
-                      <Trash color="red" />
-                    </Button>
+                    {index !== 0 && (
+                      <Button
+                        testID="trash"
+                        className="bg-transparent"
+                        onPress={() => deleteSet(index)}
+                      >
+                        <Trash color="red" />
+                      </Button>
+                    )}
                   </TableData>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
 
-          <Button className="bg-zinc-800 rounded-lg gap-2" onPress={addNewSet}>
-            <Plus color="gray" />
-            <Text className="text-white">Agregar Serie</Text>
-          </Button>
+          {exerciseSets.length < 10 && (
+            <Button
+              className="bg-zinc-800 rounded-lg gap-2"
+              onPress={addNewSet}
+            >
+              <Plus color="gray" />
+              <Text className="text-white">Agregar Serie</Text>
+            </Button>
+          )}
         </Box>
 
         <SlideUpBaseModal

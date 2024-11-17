@@ -31,6 +31,7 @@ import {
   convertIntervalToSeconds,
 } from '@/utils/interval';
 import CountdownTimer from './CountDownTimer';
+import { MAX_KG, MIN_KG, MAX_REPS, MIN_REPS } from '../exercise/ExerciseResume';
 
 export interface ExerciseResumeRef {
   getExerciseData: () => ExerciseResume;
@@ -75,6 +76,18 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
         setExerciseSets([{ reps: 0, weight: 0 }]);
       },
     }));
+
+    const isInputValid = (field: string, value: number) => {
+      if (field === 'weight' && (value > MAX_KG || value < MIN_KG)) {
+        alert(`El peso debe estar entre ${MIN_KG} y ${MAX_KG} kg`);
+        return false;
+      }
+      if (field === 'reps' && (value > MAX_REPS || value < MIN_REPS)) {
+        alert(`Las repeticiones deben estar entre ${MIN_REPS} y ${MAX_REPS}`);
+        return false;
+      }
+      return true;
+    };
 
     const handleSetChange = (
       index: number,
@@ -185,11 +198,20 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
                       >
                         <InputField
                           testID="weight"
-                          placeholder={set.weight ? set.weight.toString() : '0'}
-                          value={set.weight ? set.weight.toString() : '0'}
-                          onChangeText={(value) =>
-                            handleSetChange(index, 'weight', value)
+                          placeholder={
+                            set.weight
+                              ? set.weight.toString()
+                              : MIN_KG.toString()
                           }
+                          value={set.weight ? set.weight.toString() : ''}
+                          onChangeText={(value) => {
+                            if (isInputValid('weight', parseInt(value))) {
+                              handleSetChange(index, 'weight', value);
+                            } else {
+                              handleSetChange(index, 'weight', '');
+                            }
+                          }}
+                          keyboardType="numeric"
                         />
                       </Input>
                     </TableData>
@@ -200,11 +222,18 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
                       >
                         <InputField
                           testID="reps"
-                          placeholder={set.reps ? set.reps.toString() : '0'}
-                          value={set.reps ? set.reps.toString() : '0'}
-                          onChangeText={(value) =>
-                            handleSetChange(index, 'reps', value)
+                          placeholder={
+                            set.reps ? set.reps.toString() : MIN_REPS.toString()
                           }
+                          value={set.reps ? set.reps.toString() : ''}
+                          onChangeText={(value) => {
+                            if (isInputValid('reps', parseInt(value))) {
+                              handleSetChange(index, 'reps', value);
+                            } else {
+                              handleSetChange(index, 'reps', '');
+                            }
+                          }}
+                          keyboardType="numeric"
                         />
                       </Input>
                     </TableData>
@@ -213,10 +242,15 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
             </TableBody>
           </Table>
 
-          <Button className="bg-zinc-800 rounded-lg gap-2" onPress={addNewSet}>
-            <Plus color="gray" />
-            <Text className="text-white">Agregar Serie</Text>
-          </Button>
+          {exerciseSets.length < 10 && (
+            <Button
+              className="bg-zinc-800 rounded-lg gap-2"
+              onPress={addNewSet}
+            >
+              <Plus color="gray" />
+              <Text className="text-white">Agregar Serie</Text>
+            </Button>
+          )}
         </Box>
 
         <Modal
