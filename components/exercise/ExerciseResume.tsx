@@ -84,7 +84,9 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
         notes: exerciseNotes,
         primaryMuscleGroup: exercisePrimaryMuscleGroup,
         sets: exerciseSets,
-        targetReps: targetReps ? parseInt(targetNumberReps, 10) : undefined,
+        targetReps: targetNumberReps
+          ? parseInt(targetNumberReps, 10)
+          : undefined,
       }),
     }));
 
@@ -97,10 +99,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
           convertStringToInterval(restTime ? restTime : '0')
         )
       );
-      setTargetNumberReps(
-        targetReps !== undefined ? targetNumberReps.toString() : ''
-      );
-    }, [sets, restTime, notes, targetReps]);
+    }, [sets, restTime, notes]);
 
     const handleSetChange = (
       index: number,
@@ -214,7 +213,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
           <Input className="text-center" variant="underlined">
             <InputField
               testID="targetNumberReps"
-              value={targetReps?.toString() ?? ''}
+              value={targetNumberReps}
               onChangeText={handleTargetNumberRepsChange}
             />
           </Input>

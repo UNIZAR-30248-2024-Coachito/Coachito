@@ -55,6 +55,8 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
     },
     ref
   ) => {
+    //console.log('Received targetReps:', targetReps);
+
     const [exerciseId] = useState(id);
     const [exerciseName] = useState(name);
     const [exerciseRestTimeNumber] = useState(
@@ -82,6 +84,7 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
         notes: exerciseNotes,
         primaryMuscleGroup: exercisePrimaryMuscleGroup,
         sets: exerciseSets,
+        targetReps,
       }),
     }));
 
@@ -229,7 +232,7 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
         </Box>
 
         <Text className="bg-blue-500 rounded-lg w-full">
-          Se recomienda emplear para llegar al número de {targetReps}{' '}
+          Se recomienda emplear para llegar al número de {targetReps}
           repeticiones objetivo.
         </Text>
 
