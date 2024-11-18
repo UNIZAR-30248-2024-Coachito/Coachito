@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, fireEvent } from '@testing-library/react-native';
+import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import ExerciseResumeComponent, {
   ExerciseResumeRef,
 } from '@/components/exercise/ExerciseResume';
@@ -66,16 +66,17 @@ describe('ExerciseResumeComponent', () => {
     expect(rows.length).toBe(1);
   });
 
-  it('debería eliminar una serie al presionar el botón de eliminar (trash)', () => {
-    const { getAllByTestId } = render(
+  it('debería eliminar una serie al presionar el botón de eliminar (trash)', async () => {
+    const { getAllByTestId, getByText } = render(
       <ExerciseResumeComponent {...mockData} />
     );
 
-    const setsLength = mockData.sets ? mockData.sets.length : 0;
-    const deleteButton = getAllByTestId('trash')[setsLength - 1];
+    await waitFor(() => fireEvent.press(getByText('Agregar Serie')));
+
+    const deleteButton = getAllByTestId('trash')[0];
     fireEvent.press(deleteButton);
 
-    expect(getAllByTestId('trash').length).toBe(setsLength - 1);
+    expect(getAllByTestId('trash').length).toBe(1);
   });
 
   it('debería mostrar el modal de temporizador cuando se presiona el botón de temporizador', () => {
@@ -190,5 +191,25 @@ describe('ExerciseResumeComponent', () => {
     fireEvent.press(confirmButton);
 
     expect(queryByTestId('slider')).toBeNull();
+  });
+
+  it('debería ajustar el peso a los límites definidos', () => {
+    const { getAllByTestId } = render(
+      <ExerciseResumeComponent {...mockData} />
+    );
+
+    const inputWeight = getAllByTestId('weight')[0];
+    fireEvent.changeText(inputWeight, '600');
+    expect(inputWeight.props.value).toBe('499');
+  });
+
+  it('debería ajustar las repeticiones a los límites definidos', () => {
+    const { getAllByTestId } = render(
+      <ExerciseResumeComponent {...mockData} />
+    );
+
+    const inputReps = getAllByTestId('reps')[0];
+    fireEvent.changeText(inputReps, '150');
+    expect(inputReps.props.value).toBe('99');
   });
 });

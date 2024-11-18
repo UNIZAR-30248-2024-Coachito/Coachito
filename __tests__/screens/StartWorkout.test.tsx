@@ -24,19 +24,7 @@ jest.mock('@/utils/emitter', () => ({
   emitter: { emit: jest.fn() },
 }));
 
-jest.mock('@/components/workout/Timer', () => {
-  // eslint-disable-next-line @typescript-eslint/no-require-imports
-  const { Text } = require('@/components/ui/text');
-  const TimerMock = (props: { active: boolean }) => {
-    return (
-      <Text testID="timer">
-        {props.active ? 'Timer Active' : 'Timer Stopped'}
-      </Text>
-    );
-  };
-  TimerMock.displayName = 'TimerMock';
-  return TimerMock;
-});
+jest.useFakeTimers();
 
 global.alert = jest.fn();
 
@@ -81,17 +69,18 @@ describe('StartWorkout', () => {
   });
 
   it('debería manejar el parar y reinicio del timer', async () => {
-    const { getByText, getByTestId } = render(<StartWorkout />);
+    const { getByText } = render(<StartWorkout />);
 
     await act(async () => {
       fireEvent.press(getByText('Descartar'));
     });
-    expect(getByTestId('timer').props.children).toBe('Timer Stopped');
+    expect(getByText('Tiempo transcurrido: ')).toBeTruthy();
 
     await act(async () => {
       fireEvent.press(getByText('Cancelar'));
     });
-    expect(getByTestId('timer').props.children).toBe('Timer Active');
+    jest.advanceTimersByTime(1000);
+    expect(getByText('Tiempo transcurrido: 1s')).toBeTruthy();
   });
 
   it('debería aparecer el modal de cancelación al pulsar "Descartar"', async () => {
@@ -162,5 +151,25 @@ describe('StartWorkout', () => {
     });
 
     expect(navigateMock).toHaveBeenCalledWith('Routine');
+  });
+
+  it('debería aparecer un alert cuando no se guarda correctamente el entrenamiento', async () => {
+    (useCreateWorkout as jest.Mock).mockResolvedValue({
+      error: 'Some error',
+    });
+
+    render(<StartWorkout />);
+
+    const { getByText } = render(<StartWorkout />);
+
+    await act(async () => {
+      fireEvent.press(getByText('Terminar'));
+    });
+
+    await waitFor(() => {
+      expect(global.alert).toHaveBeenCalledWith(
+        'Se ha producido un error al guardar el entrenamiento.'
+      );
+    });
   });
 });

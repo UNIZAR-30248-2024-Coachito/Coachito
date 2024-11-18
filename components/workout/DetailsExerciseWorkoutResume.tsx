@@ -29,9 +29,16 @@ import {
 import {
   convertIntervalToMinutesAndSeconds,
   convertIntervalToSeconds,
+  convertSecondsToString,
 } from '@/utils/interval';
-import CountdownTimer from './CountDownTimer';
-import { MAX_KG, MIN_KG, MAX_REPS, MIN_REPS } from '../exercise/ExerciseResume';
+import {
+  MAX_KG,
+  MIN_KG,
+  MAX_REPS,
+  MIN_REPS,
+  MAX_LENGHT_NOTES,
+} from '../exercise/ExerciseResume';
+import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 
 export interface ExerciseResumeRef {
   getExerciseData: () => ExerciseResume;
@@ -61,6 +68,7 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
       sets ?? []
     );
     const [restTimerModalVisible, setRestTimerModalVisible] = useState(false);
+    const [timerKey, setTimerKey] = useState(0);
 
     useImperativeHandle(ref, () => ({
       getExerciseData: () => ({
@@ -77,25 +85,24 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
       },
     }));
 
-    const isInputValid = (field: string, value: number) => {
-      if (field === 'weight' && (value > MAX_KG || value < MIN_KG)) {
-        alert(`El peso debe estar entre ${MIN_KG} y ${MAX_KG} kg`);
-        return false;
-      }
-      if (field === 'reps' && (value > MAX_REPS || value < MIN_REPS)) {
-        alert(`Las repeticiones deben estar entre ${MIN_REPS} y ${MAX_REPS}`);
-        return false;
-      }
-      return true;
-    };
-
     const handleSetChange = (
       index: number,
       field: keyof SetsExerciseResume,
       value: string
     ) => {
+      let numericValue = parseInt(value);
+
+      if (field === 'weight') {
+        numericValue = Math.max(MIN_KG, Math.min(MAX_KG, numericValue || 0));
+      } else if (field === 'reps') {
+        numericValue = Math.max(
+          MIN_REPS,
+          Math.min(MAX_REPS, numericValue || 0)
+        );
+      }
+
       const updatedSets = [...exerciseSets];
-      updatedSets[index][field] = Number(value);
+      updatedSets[index][field] = Number(numericValue);
       setExerciseSets(updatedSets);
     };
 
@@ -105,9 +112,8 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
     };
 
     const startRestTimer = () => {
-      if (exerciseRestTimeNumber > 0) {
-        setRestTimerModalVisible(true);
-      }
+      setTimerKey((prev) => prev + 1);
+      setRestTimerModalVisible(true);
     };
 
     const stopRestTimer = () => {
@@ -120,14 +126,6 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
         addNewSet();
       }
     }, [exerciseSets]);
-
-    const componentsTimerPopUpModal: React.ReactNode[] = [
-      <CountdownTimer
-        key="1"
-        initialTime={exerciseRestTimeNumber}
-        onComplete={stopRestTimer}
-      />,
-    ];
 
     return (
       <>
@@ -149,7 +147,9 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
               testID="text-area-input"
               placeholder="Notas..."
               value={exerciseNotes}
-              onChangeText={(value) => setExerciseNotes(value)}
+              onChangeText={(value) =>
+                setExerciseNotes(value.slice(0, MAX_LENGHT_NOTES))
+              }
             />
           </Textarea>
 
@@ -204,13 +204,9 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
                               : MIN_KG.toString()
                           }
                           value={set.weight ? set.weight.toString() : ''}
-                          onChangeText={(value) => {
-                            if (isInputValid('weight', parseInt(value))) {
-                              handleSetChange(index, 'weight', value);
-                            } else {
-                              handleSetChange(index, 'weight', '');
-                            }
-                          }}
+                          onChangeText={(value) =>
+                            handleSetChange(index, 'weight', value)
+                          }
                           keyboardType="numeric"
                         />
                       </Input>
@@ -226,13 +222,9 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
                             set.reps ? set.reps.toString() : MIN_REPS.toString()
                           }
                           value={set.reps ? set.reps.toString() : ''}
-                          onChangeText={(value) => {
-                            if (isInputValid('reps', parseInt(value))) {
-                              handleSetChange(index, 'reps', value);
-                            } else {
-                              handleSetChange(index, 'reps', '');
-                            }
-                          }}
+                          onChangeText={(value) =>
+                            handleSetChange(index, 'reps', value)
+                          }
                           keyboardType="numeric"
                         />
                       </Input>
@@ -254,15 +246,29 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
         </Box>
 
         <Modal
+          testID="modal"
           visible={restTimerModalVisible}
           transparent={true}
-          onRequestClose={() => {
-            setRestTimerModalVisible(false);
-          }}
         >
           <Box className="flex-1 bg-black/75 justify-center items-center">
             <Box className="bg-zinc-800 rounded-lg items-center p-4 mx-8 self-center">
-              {componentsTimerPopUpModal.map((component) => component)}
+              <CountdownCircleTimer
+                key={timerKey}
+                isPlaying
+                duration={exerciseRestTimeNumber}
+                colors={['#1E40AF', '#3b82f6', '#A30000', '#A30000']}
+                colorsTime={[30, 20, 10, 0]}
+                onComplete={() => {
+                  stopRestTimer();
+                  return { shouldRepeat: false };
+                }}
+              >
+                {({ remainingTime }) => (
+                  <Text className="text-white text-xl">
+                    {convertSecondsToString(remainingTime)}
+                  </Text>
+                )}
+              </CountdownCircleTimer>
             </Box>
           </Box>
         </Modal>

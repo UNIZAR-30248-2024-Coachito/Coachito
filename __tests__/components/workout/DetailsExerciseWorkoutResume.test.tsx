@@ -3,18 +3,11 @@ import DetailsExerciseWorkoutResumeComponent, {
 } from '@/components/workout/DetailsExerciseWorkoutResume';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
 import React from 'react';
-import { Text } from '@/components/ui/text';
+import { Vibration } from 'react-native';
 
-const mockTimerElement = () => {
-  return <Text>Temporizador Simulado</Text>;
-};
 jest.useFakeTimers();
 
 jest.mock('../../../styles.css', () => ({}));
-
-jest.mock('../../../components/workout/CountDownTimer', () => {
-  return jest.fn(() => mockTimerElement());
-});
 
 describe('DetailsExerciseWorkoutResumeComponent', () => {
   const mockData = {
@@ -57,13 +50,13 @@ describe('DetailsExerciseWorkoutResumeComponent', () => {
   });
 
   it('debería aparecer un set cuando sets es null', () => {
-    const mockDataWithRestTime = {
+    const mockDataWithoutSets = {
       ...mockData,
       sets: null,
     };
 
     const { getAllByTestId } = render(
-      <DetailsExerciseWorkoutResumeComponent {...mockDataWithRestTime} />
+      <DetailsExerciseWorkoutResumeComponent {...mockDataWithoutSets} />
     );
 
     const rows = getAllByTestId('table-row');
@@ -82,9 +75,7 @@ describe('DetailsExerciseWorkoutResumeComponent', () => {
     const startButton = getAllByTestId('start-timer')[0];
     fireEvent.press(startButton);
 
-    await waitFor(() =>
-      expect(getByText('Temporizador Simulado')).toBeTruthy()
-    );
+    await waitFor(() => expect(getByText('1 min 29 s')).toBeTruthy());
   });
 
   it('debería cambiar el valor de un set cuando se edite el peso o las repeticiones', () => {
@@ -166,5 +157,50 @@ describe('DetailsExerciseWorkoutResumeComponent', () => {
         { weight: 55, reps: 12 },
       ],
     });
+  });
+
+  it('debería resetear los sets a un solo set con peso 0 y repeticiones 0 cuando se llame a resetToOneSet', () => {
+    const { getAllByTestId } = render(
+      <DetailsExerciseWorkoutResumeComponent ref={mockRef} {...mockData} />
+    );
+
+    const rowsBeforeReset = getAllByTestId('table-row');
+    expect(rowsBeforeReset.length).toBe(mockData.sets.length);
+
+    mockRef.current?.resetToOneSet();
+
+    const rowsAfterReset = getAllByTestId('table-row');
+    expect(rowsAfterReset.length).toBe(1);
+
+    const setWeight = getAllByTestId('weight')[0].props.placeholder;
+    const setReps = getAllByTestId('reps')[0].props.placeholder;
+
+    expect(setWeight).toBe('0');
+    expect(setReps).toBe('1');
+  });
+
+  it('debería ocultar el modal y activar la vibración cuando se detiene el temporizador', async () => {
+    const mockDataWithRestTime = {
+      ...mockData,
+      restTime: '00:00:02',
+    };
+    const { getByTestId, queryByTestId } = render(
+      <DetailsExerciseWorkoutResumeComponent {...mockDataWithRestTime} />
+    );
+
+    const startButton = getByTestId('start-timer');
+    fireEvent.press(startButton);
+
+    await waitFor(() => {
+      expect(getByTestId('modal')).toBeTruthy();
+    });
+
+    jest.advanceTimersByTime(2000);
+
+    await waitFor(() => {
+      expect(queryByTestId('modal')).toBeNull();
+    });
+
+    expect(Vibration.vibrate).toHaveBeenCalledTimes(1);
   });
 });

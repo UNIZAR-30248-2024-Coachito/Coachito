@@ -16,7 +16,6 @@ import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 import DetailsExerciseWorkoutResumeComponent, {
   ExerciseResumeRef,
 } from '@/components/workout/DetailsExerciseWorkoutResume';
-import Timer from '@/components/workout/Timer';
 import { emitter } from '@/utils/emitter';
 
 const StartWorkout: React.FC = () => {
@@ -28,9 +27,9 @@ const StartWorkout: React.FC = () => {
   );
   const [isCancelRoutineModalVisible, setIsCancelWorkoutModalVisible] =
     useState(false);
-  const [timerActive, setTimerActive] = useState(true);
-  const [timerKey, setTimerKey] = useState(0);
+  const [timerActive, setTimerActive] = useState(false);
   const [duration, setDuration] = useState(0);
+  const [startTime, setStartTime] = useState<number | null>(null);
 
   const fetchExercises = async () => {
     const { data, error } = await useFetchDetailsLastWorkout(
@@ -39,6 +38,8 @@ const StartWorkout: React.FC = () => {
 
     if (!error) {
       setSelectedExercises(data);
+      setStartTime(Date.now());
+      setTimerActive(true);
     } else {
       alert('Se ha producido un error obteniendo los ejercicios.');
     }
@@ -48,17 +49,31 @@ const StartWorkout: React.FC = () => {
     fetchExercises();
   }, [route.params.routineId]);
 
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+
+    if (timerActive && startTime !== null) {
+      interval = setInterval(() => {
+        const currentDuration = Math.floor((Date.now() - startTime) / 1000);
+        setDuration(currentDuration);
+      }, 1000);
+    } else if (!timerActive) {
+      if (interval) clearInterval(interval);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [timerActive, startTime]);
+
   const handleStopTimer = () => {
     setTimerActive(false);
   };
 
   const handleResetTimer = () => {
-    setTimerKey((prevKey) => prevKey + 1);
+    setStartTime(Date.now());
+    setDuration(0);
     setTimerActive(true);
-  };
-
-  const handleDurationUpdate = (time: number) => {
-    setDuration(time);
   };
 
   const resetExerciseSets = () => {
@@ -118,17 +133,23 @@ const StartWorkout: React.FC = () => {
     </Button>,
   ];
 
+  const formatDuration = (duration: number) => {
+    const hours = Math.floor(duration / 3600);
+    const minutes = Math.floor((duration % 3600) / 60);
+    const seconds = duration % 60;
+
+    return `${hours > 0 ? `${hours}h` : ''} ${minutes > 0 ? `${minutes}min` : ''} ${seconds > 0 ? `${seconds}s` : ''}`.trim();
+  };
+
   return (
     <VStack className="flex-1 p-4 gap-2 items-center">
       <Text className="text-2xl text-white" bold>
         {route.params.routineName}
       </Text>
 
-      <Timer
-        key={timerKey}
-        active={timerActive}
-        onTimeUpdate={handleDurationUpdate}
-      />
+      <Text className="text-white mb-4">
+        Tiempo transcurrido: {formatDuration(duration)}
+      </Text>
 
       <HStack className="w-full gap-6">
         <Button

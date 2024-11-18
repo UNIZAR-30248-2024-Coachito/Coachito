@@ -144,9 +144,9 @@ describe('DetailsRoutine', () => {
     });
   });
 
-  it('debería navegar a la pantalla "StartWorkout" cuando se hace clic en el botón "Empezar Rutina"', async () => {
+  it('debería navegar a la pantalla "StartWorkout" cuando se hace clic en el botón "Empezar Entrenamiento"', async () => {
     const { getByText } = render(<DetailsRoutine />);
-    fireEvent.press(getByText('Empezar Rutina'));
+    fireEvent.press(getByText('Empezar Entrenamiento'));
 
     await waitFor(() => {
       expect(useNavigation().navigate).toHaveBeenCalledWith('StartWorkout', {

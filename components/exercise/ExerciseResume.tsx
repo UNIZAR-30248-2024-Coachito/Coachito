@@ -39,6 +39,7 @@ export interface ExerciseResumeRef {
   getExerciseData: () => ExerciseResume;
 }
 
+export const MAX_LENGHT_NOTES = 4000;
 export const MAX_REPS = 99;
 export const MIN_REPS = 1;
 export const MAX_KG = 499;
@@ -57,6 +58,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
     );
     const [exerciseRestTimeString, setExerciseRestTimeString] =
       useState(restTime);
+    const [tempRestTime, setTempRestTime] = useState(exerciseRestTimeSeconds);
     const [exerciseNotes, setExerciseNotes] = useState(notes);
     const [exercisePrimaryMuscleGroup] = useState(primaryMuscleGroup);
     const [exerciseSets, setExerciseSets] = useState<SetsExerciseResume[]>(
@@ -87,30 +89,29 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
       );
     }, [sets, restTime, notes]);
 
-    const isInputValid = (field: string, value: number) => {
-      if (field === 'weight' && (value > MAX_KG || value < MIN_KG)) {
-        alert(`El peso debe estar entre ${MIN_KG} y ${MAX_KG} kg`);
-        return false;
-      }
-      if (field === 'reps' && (value > MAX_REPS || value < MIN_REPS)) {
-        alert(`Las repeticiones deben estar entre ${MIN_REPS} y ${MAX_REPS}`);
-        return false;
-      }
-      return true;
-    };
-
     const handleSetChange = (
       index: number,
       field: keyof SetsExerciseResume,
       value: string
     ) => {
+      let numericValue = parseInt(value);
+
+      if (field === 'weight') {
+        numericValue = Math.max(MIN_KG, Math.min(MAX_KG, numericValue || 0));
+      } else if (field === 'reps') {
+        numericValue = Math.max(
+          MIN_REPS,
+          Math.min(MAX_REPS, numericValue || 0)
+        );
+      }
+
       const updatedSets = [...exerciseSets];
-      updatedSets[index][field] = Number(value);
+      updatedSets[index][field] = Number(numericValue);
       setExerciseSets(updatedSets);
     };
 
     const addNewSet = () => {
-      const newSet: SetsExerciseResume = { weight: 0, reps: 0 };
+      const newSet: SetsExerciseResume = { weight: MIN_KG, reps: MIN_REPS };
       setExerciseSets([...exerciseSets, newSet]);
     };
 
@@ -122,17 +123,17 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
     const componentsTemporizadorPopUpModal: React.ReactNode[] = [
       <VStack key="1" className="gap-4 p-4">
         <Text className="text-center">
-          {exerciseRestTimeSeconds === 0
+          {tempRestTime === 0
             ? '0 min 0 s'
-            : `${convertSecondsToString(exerciseRestTimeSeconds)}`}
+            : `${convertSecondsToString(tempRestTime)}`}
         </Text>
         <Slider
           testID="slider"
           minimumValue={0}
           maximumValue={300}
           step={15}
-          value={exerciseRestTimeSeconds}
-          onValueChange={(value) => setExerciseRestTimeSeconds(value)}
+          value={tempRestTime}
+          onValueChange={(value) => setTempRestTime(value)}
           slideOnTap={true}
           thumbSize={20}
           trackHeight={6}
@@ -154,9 +155,8 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
         className="bg-blue-500 rounded-lg"
         onPress={() => {
           setIsSlideUpModalVisible(false);
-          setExerciseRestTimeString(
-            convertSecondsToString(exerciseRestTimeSeconds)
-          );
+          setExerciseRestTimeSeconds(tempRestTime);
+          setExerciseRestTimeString(convertSecondsToString(tempRestTime));
         }}
       >
         <Text className="text-white">Confirmar</Text>
@@ -189,7 +189,9 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
               testID="text-area-input"
               placeholder="Notas..."
               value={exerciseNotes}
-              onChangeText={(value) => setExerciseNotes(value)}
+              onChangeText={(value) =>
+                setExerciseNotes(value.slice(0, MAX_LENGHT_NOTES))
+              }
             />
           </Textarea>
 
@@ -230,13 +232,9 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
                         testID="weight"
                         placeholder={MIN_KG.toString()}
                         value={set.weight ? set.weight.toString() : ''}
-                        onChangeText={(value) => {
-                          if (isInputValid('weight', parseInt(value))) {
-                            handleSetChange(index, 'weight', value);
-                          } else {
-                            handleSetChange(index, 'weight', '');
-                          }
-                        }}
+                        onChangeText={(value) =>
+                          handleSetChange(index, 'weight', value)
+                        }
                         keyboardType="numeric"
                       />
                     </Input>
@@ -247,13 +245,9 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
                         testID="reps"
                         placeholder={MIN_REPS.toString()}
                         value={set.reps ? set.reps.toString() : ''}
-                        onChangeText={(value) => {
-                          if (isInputValid('reps', parseInt(value))) {
-                            handleSetChange(index, 'reps', value);
-                          } else {
-                            handleSetChange(index, 'reps', '');
-                          }
-                        }}
+                        onChangeText={(value) =>
+                          handleSetChange(index, 'reps', value)
+                        }
                         keyboardType="numeric"
                       />
                     </Input>
