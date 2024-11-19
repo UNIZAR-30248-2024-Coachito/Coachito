@@ -155,7 +155,7 @@ const AddRoutine: React.FC = () => {
               notes={exercise.notes}
               primaryMuscleGroup={exercise.primaryMuscleGroup}
               sets={exercise.sets}
-              targetReps={0}
+              targetReps={exercise.targetReps ?? 8}
             />
           ))
         )}

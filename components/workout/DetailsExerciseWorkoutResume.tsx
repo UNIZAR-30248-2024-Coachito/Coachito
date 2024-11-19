@@ -70,6 +70,8 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
       sets ?? []
     );
     const [restTimerModalVisible, setRestTimerModalVisible] = useState(false);
+
+    const [calculated1RM, setCalculated1RM] = useState<number | null>(null);
     {
       /* const [calculated1RM, setCalculated1RM] = useState();
     const [finalResults, setFinalResults] = useState(); */
@@ -118,6 +120,33 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
         addNewSet();
       }
     }, [exerciseSets]);
+
+    useEffect(() => {
+      // 1. Seleccionar la serie con mayor volumen de entrenamiento.
+      const maxVolumeSet = exerciseSets.reduce(
+        (prev, current) => {
+          const prevVolume = prev.weight * prev.reps;
+          const currentVolume = current.weight * current.reps;
+          return prevVolume > currentVolume ? prev : current;
+        },
+        { weight: 0, reps: 0 }
+      );
+
+      // 2. Calcular el 1RM basado en la serie seleccionada (usando la fórmula de Epley).
+      const oneRepMax = maxVolumeSet.weight * (1 + maxVolumeSet.reps / 30);
+      setCalculated1RM(Math.round(oneRepMax));
+
+      // 3. Calcular el peso necesario para las repeticiones targetReps
+      if (targetReps !== undefined) {
+        const targetWeight = oneRepMax * (1 - targetReps / 30);
+        setCalculatedTargetWeight(Math.round(targetWeight));
+      }
+    }, [exerciseSets, targetReps]);
+
+    // Definir estado para el peso objetivo basado en targetReps
+    const [calculatedTargetWeight, setCalculatedTargetWeight] = useState<
+      number | null
+    >(null);
 
     const componentsTimerPopUpModal: React.ReactNode[] = [
       <CountdownTimer
@@ -231,9 +260,16 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
           </Button>
         </Box>
 
-        <Text className="bg-blue-500 rounded-lg w-full">
-          Se recomienda emplear para llegar al número de {targetReps}
-          repeticiones objetivo.
+        <Text className="text-blue-500 mt-4">
+          {targetReps !== undefined && calculatedTargetWeight !== null
+            ? `Peso para ${targetReps} repeticiones: ${calculatedTargetWeight} kg`
+            : 'No se ha seleccionado ninguna repetición objetivo aún.'}
+        </Text>
+
+        <Text className="text-blue-500 mt-4">
+          {calculated1RM !== null
+            ? `Máximo peso estimado: ${calculated1RM} kg`
+            : 'No se ha calculado tu máximo aún.'}
         </Text>
 
         <PopupBaseModal
