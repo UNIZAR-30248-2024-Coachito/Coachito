@@ -32,6 +32,8 @@ const StartWorkout: React.FC = () => {
   const [startTime, setStartTime] = useState<number | null>(null);
 
   const fetchExercises = async () => {
+    setSelectedExercises([]);
+
     const { data, error } = await useFetchDetailsLastWorkout(
       route.params.routineId!
     );

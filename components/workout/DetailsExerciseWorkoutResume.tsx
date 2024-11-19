@@ -17,7 +17,7 @@ import { HStack } from '../ui/hstack';
 import '../../styles.css';
 import { Avatar, AvatarFallbackText, AvatarImage } from '../ui/avatar';
 import { Modal, Pressable, Vibration } from 'react-native';
-import { Play, Plus, Timer } from 'lucide-react-native';
+import { InfoIcon, Play, Plus, Timer } from 'lucide-react-native';
 import { Input, InputField } from '../ui/input';
 import { Button } from '../ui/button';
 import { Textarea, TextareaInput } from '../ui/textarea';
@@ -39,6 +39,7 @@ import {
   MAX_LENGHT_NOTES,
 } from '../exercise/ExerciseResume';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
+import { Alert, AlertIcon, AlertText } from '../ui/alert';
 
 export interface ExerciseResumeRef {
   getExerciseData: () => ExerciseResume;
@@ -63,8 +64,6 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
     },
     ref
   ) => {
-    //console.log('Received targetReps:', targetReps);
-
     const [exerciseId] = useState(id);
     const [exerciseName] = useState(name);
     const [exerciseRestTimeNumber] = useState(
@@ -80,8 +79,9 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
     );
     const [restTimerModalVisible, setRestTimerModalVisible] = useState(false);
     const [timerKey, setTimerKey] = useState(0);
-
-    const [calculated1RM, setCalculated1RM] = useState<number | null>(null);
+    const [weightPrediction, setWeightPrediction] = useState<number | null>(
+      null
+    );
 
     useImperativeHandle(ref, () => ({
       getExerciseData: () => ({
@@ -152,17 +152,12 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
       );
 
       const oneRepMax = maxVolumeSet.weight * (1 + maxVolumeSet.reps / 30);
-      setCalculated1RM(Math.round(oneRepMax));
 
       if (targetReps !== undefined) {
         const targetWeight = oneRepMax * (1 - targetReps / 30);
-        setCalculatedTargetWeight(Math.round(targetWeight));
+        setWeightPrediction(Math.round(targetWeight));
       }
     }, [exerciseSets, targetReps]);
-
-    const [calculatedTargetWeight, setCalculatedTargetWeight] = useState<
-      number | null
-    >(null);
 
     return (
       <>
@@ -209,6 +204,16 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
               <Play color="white" />
               <Text className="text-white">Iniciar</Text>
             </Button>
+          )}
+
+          {targetReps !== undefined && weightPrediction !== null && (
+            <Alert action="info" variant="solid">
+              <AlertIcon as={InfoIcon} />
+              <AlertText>
+                Se recomienda emplear {weightPrediction} kg para llegar al
+                número de {targetReps} repeticiones objetivo.
+              </AlertText>
+            </Alert>
           )}
 
           <Table className="w-[330px]">
@@ -281,30 +286,6 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
             </Button>
           )}
         </Box>
-
-        <Text className="text-blue-500 mt-4">
-          {targetReps !== undefined && calculatedTargetWeight !== null
-            ? `Peso para ${targetReps} repeticiones: ${calculatedTargetWeight} kg`
-            : 'No se ha seleccionado ninguna repetición objetivo aún.'}
-        </Text>
-
-        <Text className="text-blue-500 mt-4">
-          {calculated1RM !== null
-            ? `Máximo peso estimado: ${calculated1RM} kg`
-            : 'No se ha calculado tu máximo aún.'}
-        </Text>
-
-        <Text className="text-blue-500 mt-4">
-          {targetReps !== undefined && calculatedTargetWeight !== null
-            ? `Peso para ${targetReps} repeticiones: ${calculatedTargetWeight} kg`
-            : 'No se ha seleccionado ninguna repetición objetivo aún.'}
-        </Text>
-
-        <Text className="text-blue-500 mt-4">
-          {calculated1RM !== null
-            ? `Máximo peso estimado: ${calculated1RM} kg`
-            : 'No se ha calculado tu máximo aún.'}
-        </Text>
 
         <Modal
           testID="modal"

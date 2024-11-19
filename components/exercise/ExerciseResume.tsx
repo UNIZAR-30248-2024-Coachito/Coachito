@@ -41,7 +41,7 @@ export interface ExerciseResumeRef {
 
 export const MAX_LENGHT_NOTES = 4000;
 export const MAX_REPS = 99;
-export const MIN_REPS = 1;
+export const MIN_REPS = 0;
 export const MAX_KG = 499;
 export const MIN_KG = 0;
 
@@ -75,12 +75,8 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
     );
     const [isSlideUpModalVisible, setIsSlideUpModalVisible] = useState(false);
     const [targetNumberReps, setTargetNumberReps] = useState<string>(
-      targetReps !== undefined ? targetReps.toString() : ''
+      targetReps !== undefined ? targetReps.toString() : MIN_REPS.toString()
     );
-
-    const handleTargetNumberRepsChange = (value: string) => {
-      setTargetNumberReps(value); // Almacena directamente el valor del InputField
-    };
 
     useImperativeHandle(ref, () => ({
       getExerciseData: () => ({
@@ -107,6 +103,14 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
         )
       );
     }, [sets, restTime, notes]);
+
+    const handleTargetRepsChange = (value: number) => {
+      value = Math.max(
+        MIN_REPS,
+        Math.min(MAX_REPS, value || 0)
+      );
+      setTargetNumberReps(value.toString())
+    }
 
     const handleSetChange = (
       index: number,
@@ -228,12 +232,16 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
             </Text>
           </Button>
 
-          <Text>Objetivo de repeticiones</Text>
+          <Text>Repeticiones objetivo:</Text>
           <Input className="text-center" variant="underlined">
             <InputField
               testID="targetNumberReps"
+              placeholder={targetNumberReps}
               value={targetNumberReps}
-              onChangeText={handleTargetNumberRepsChange}
+              onChangeText={(value) =>
+                handleTargetRepsChange(parseInt(value))
+              }
+              keyboardType="numeric"
             />
           </Input>
 
