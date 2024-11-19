@@ -74,8 +74,8 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
       sets ?? []
     );
     const [isSlideUpModalVisible, setIsSlideUpModalVisible] = useState(false);
-    const [targetNumberReps, setTargetNumberReps] = useState<string>(
-      targetReps !== undefined ? targetReps.toString() : MIN_REPS.toString()
+    const [targetNumberReps, setTargetNumberReps] = useState(
+      targetReps !== undefined ? targetReps : MIN_REPS
     );
 
     useImperativeHandle(ref, () => ({
@@ -87,9 +87,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
         notes: exerciseNotes,
         primaryMuscleGroup: exercisePrimaryMuscleGroup,
         sets: exerciseSets,
-        targetReps: targetNumberReps
-          ? parseInt(targetNumberReps, 10)
-          : undefined,
+        targetReps: targetNumberReps,
       }),
     }));
 
@@ -105,12 +103,9 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
     }, [sets, restTime, notes]);
 
     const handleTargetRepsChange = (value: number) => {
-      value = Math.max(
-        MIN_REPS,
-        Math.min(MAX_REPS, value || 0)
-      );
-      setTargetNumberReps(value.toString())
-    }
+      value = Math.max(MIN_REPS, Math.min(MAX_REPS, value || 0));
+      setTargetNumberReps(value);
+    };
 
     const handleSetChange = (
       index: number,
@@ -236,11 +231,9 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
           <Input className="text-center" variant="underlined">
             <InputField
               testID="targetNumberReps"
-              placeholder={targetNumberReps}
-              value={targetNumberReps}
-              onChangeText={(value) =>
-                handleTargetRepsChange(parseInt(value))
-              }
+              placeholder={targetNumberReps.toString()}
+              value={targetNumberReps.toString()}
+              onChangeText={(value) => handleTargetRepsChange(parseInt(value))}
               keyboardType="numeric"
             />
           </Input>

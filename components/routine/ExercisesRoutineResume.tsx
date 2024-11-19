@@ -41,12 +41,13 @@ const ExercisesRoutineResumeComponent: React.FC<ExerciseResume> = ({
   restTime,
   notes,
   sets,
+  targetReps,
 }) => {
   const navigation = useNavigation<NavigationProps>();
   const formattedRestTime = convertIntervalToMinutesAndSeconds(restTime);
 
   return (
-    <Box className="bg-zinc-900 p-4 mb-4 rounded-lg">
+    <Box className="bg-zinc-900 p-4 gap-4 rounded-lg">
       <Pressable
         testID="ver-detalles"
         onPress={() =>
@@ -70,14 +71,16 @@ const ExercisesRoutineResumeComponent: React.FC<ExerciseResume> = ({
         </HStack>
       </Pressable>
 
-      <Text>{notes}</Text>
+      {notes && <Text>{notes}</Text>}
 
-      <HStack className="gap-2 mb-4">
+      <HStack className="gap-2">
         <Timer color="#3b82f6" />
         <Text className="text-blue-500">
           Temporizador de descanso: {formattedRestTime}
         </Text>
       </HStack>
+
+      <Text>Repeticiones objetivo: {targetReps}</Text>
 
       <Table className="w-full">
         <TableHeader>
