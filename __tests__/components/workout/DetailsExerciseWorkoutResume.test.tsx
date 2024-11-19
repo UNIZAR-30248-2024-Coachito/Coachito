@@ -176,7 +176,7 @@ describe('DetailsExerciseWorkoutResumeComponent', () => {
     const setReps = getAllByTestId('reps')[0].props.placeholder;
 
     expect(setWeight).toBe('0');
-    expect(setReps).toBe('1');
+    expect(setReps).toBe('0');
   });
 
   it('debería ocultar el modal y activar la vibración cuando se detiene el temporizador', async () => {

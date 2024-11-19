@@ -136,6 +136,7 @@ describe('ExerciseResumeComponent', () => {
       restTime: '2min',
       notes: 'Notas',
       primaryMuscleGroup: 'Cuádriceps',
+      targetReps: 0,
       sets: [
         { weight: 60, reps: 15 },
         { weight: 55, reps: 12 },
@@ -155,6 +156,7 @@ describe('ExerciseResumeComponent', () => {
       restTime: '0',
       notes: 'Notas',
       primaryMuscleGroup: 'Cuádriceps',
+      targetReps: 0,
       sets: [
         { weight: 60, reps: 15 },
         { weight: 55, reps: 12 },
