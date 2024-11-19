@@ -41,7 +41,7 @@ const WorkoutDivisionComponent: React.FC<WorkoutDivision> = ({
               />
             </Progress>
             <Text className="text-l text-gray-400 ml-2">
-              {exerciseProportion.proportion}%
+              {exerciseProportion.proportion.toFixed(0)}%
             </Text>
           </HStack>
         </Box>
