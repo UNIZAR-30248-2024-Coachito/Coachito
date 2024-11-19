@@ -188,6 +188,7 @@ const StartWorkout: React.FC = () => {
             notes={exercise.notes}
             primaryMuscleGroup={exercise.primaryMuscleGroup}
             sets={exercise.sets}
+            targetReps={exercise.targetReps}
           />
         ))}
       </ScrollView>

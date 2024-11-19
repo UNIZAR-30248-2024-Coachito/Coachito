@@ -78,6 +78,7 @@ const useCreateRoutine = async (
           weight: set.weight === 0 ? null : set.weight,
           notes: exercise.notes,
           rest_time: exercise.restTime === '0' ? null : exercise.restTime,
+          target_number_reps: exercise.targetReps,
         };
 
         const { execute: executeWorkoutExerciseInsert } = useCRUD(() =>
@@ -91,6 +92,7 @@ const useCreateRoutine = async (
           return { error: errorWorkoutExerciseInsert };
         }
       }
+      console.log('Numero de reps target: ', exercise.targetReps);
     } else {
       const newWorkoutExerciseEntity = {
         workout_id: dataWorkoutsInsert[0].id,
@@ -111,7 +113,6 @@ const useCreateRoutine = async (
       }
     }
   }
-
   return { error: null };
 };
 

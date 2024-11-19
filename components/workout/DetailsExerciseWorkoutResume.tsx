@@ -51,9 +51,20 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
   ExerciseResume
 >(
   (
-    { id, name, thumbnailUrl, restTime, notes, primaryMuscleGroup, sets },
+    {
+      id,
+      name,
+      thumbnailUrl,
+      restTime,
+      notes,
+      primaryMuscleGroup,
+      sets,
+      targetReps,
+    },
     ref
   ) => {
+    //console.log('Received targetReps:', targetReps);
+
     const [exerciseId] = useState(id);
     const [exerciseName] = useState(name);
     const [exerciseRestTimeNumber] = useState(
@@ -70,6 +81,8 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
     const [restTimerModalVisible, setRestTimerModalVisible] = useState(false);
     const [timerKey, setTimerKey] = useState(0);
 
+    const [calculated1RM, setCalculated1RM] = useState<number | null>(null);
+
     useImperativeHandle(ref, () => ({
       getExerciseData: () => ({
         id: exerciseId,
@@ -79,6 +92,7 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
         notes: exerciseNotes,
         primaryMuscleGroup: exercisePrimaryMuscleGroup,
         sets: exerciseSets,
+        targetReps,
       }),
       resetToOneSet() {
         setExerciseSets([{ reps: 0, weight: 0 }]);
@@ -126,6 +140,29 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
         addNewSet();
       }
     }, [exerciseSets]);
+
+    useEffect(() => {
+      const maxVolumeSet = exerciseSets.reduce(
+        (prev, current) => {
+          const prevVolume = prev.weight * prev.reps;
+          const currentVolume = current.weight * current.reps;
+          return prevVolume > currentVolume ? prev : current;
+        },
+        { weight: 0, reps: 0 }
+      );
+
+      const oneRepMax = maxVolumeSet.weight * (1 + maxVolumeSet.reps / 30);
+      setCalculated1RM(Math.round(oneRepMax));
+
+      if (targetReps !== undefined) {
+        const targetWeight = oneRepMax * (1 - targetReps / 30);
+        setCalculatedTargetWeight(Math.round(targetWeight));
+      }
+    }, [exerciseSets, targetReps]);
+
+    const [calculatedTargetWeight, setCalculatedTargetWeight] = useState<
+      number | null
+    >(null);
 
     return (
       <>
@@ -244,6 +281,30 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
             </Button>
           )}
         </Box>
+
+        <Text className="text-blue-500 mt-4">
+          {targetReps !== undefined && calculatedTargetWeight !== null
+            ? `Peso para ${targetReps} repeticiones: ${calculatedTargetWeight} kg`
+            : 'No se ha seleccionado ninguna repetición objetivo aún.'}
+        </Text>
+
+        <Text className="text-blue-500 mt-4">
+          {calculated1RM !== null
+            ? `Máximo peso estimado: ${calculated1RM} kg`
+            : 'No se ha calculado tu máximo aún.'}
+        </Text>
+
+        <Text className="text-blue-500 mt-4">
+          {targetReps !== undefined && calculatedTargetWeight !== null
+            ? `Peso para ${targetReps} repeticiones: ${calculatedTargetWeight} kg`
+            : 'No se ha seleccionado ninguna repetición objetivo aún.'}
+        </Text>
+
+        <Text className="text-blue-500 mt-4">
+          {calculated1RM !== null
+            ? `Máximo peso estimado: ${calculated1RM} kg`
+            : 'No se ha calculado tu máximo aún.'}
+        </Text>
 
         <Modal
           testID="modal"
