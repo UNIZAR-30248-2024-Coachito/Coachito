@@ -253,4 +253,22 @@ describe('Routine', () => {
 
     (Alert.alert as jest.Mock).mockRestore();
   });
+
+  it('debería limitar el título de la carpeta a 100 caracteres', async () => {
+    const { getByText, getByPlaceholderText } = render(<Routine />);
+
+    const newFolderButton = getByText('Nueva Carpeta');
+    fireEvent.press(newFolderButton);
+
+    const inputField = getByPlaceholderText('Nueva carpeta');
+    const longTitle =
+      'Este es un título de rutina muy largo que definitivamente excede el límite de 100 caracteres porque queremos probar si realmente se corta correctamente.';
+
+    await act(async () => {
+      fireEvent.changeText(inputField, longTitle);
+    });
+
+    expect(inputField.props.value.length).toBeLessThanOrEqual(100);
+    expect(inputField.props.value).toBe(longTitle.slice(0, 100));
+  });
 });

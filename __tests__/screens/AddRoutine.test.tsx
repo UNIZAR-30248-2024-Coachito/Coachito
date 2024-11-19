@@ -171,6 +171,37 @@ describe('AddRoutine', () => {
     expect(navigateMock).toHaveBeenCalledWith('Routine');
   });
 
+  it('debería mostrar un error si ya existe una rutina con el mismo nombre en la carpeta', async () => {
+    jest
+      .mocked(useRoutineTitleExists)
+      .mockResolvedValue({ data: true, error: null });
+    const alertMock = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+
+    const { getByText, getByPlaceholderText } = render(<AddRoutine />);
+
+    const input = getByPlaceholderText('Título de la rutina');
+    await act(async () => {
+      fireEvent.changeText(input, 'Rutina Duplicada');
+    });
+
+    const saveButton = getByText('Guardar');
+    await act(async () => {
+      fireEvent.press(saveButton);
+    });
+
+    expect(useRoutineTitleExists).toHaveBeenCalledWith(
+      'Rutina Duplicada',
+      routeMock.params.groupId
+    );
+    expect(alertMock).toHaveBeenCalledWith(
+      '',
+      'El título introducido ya existe. Por favor, introduzca otro.',
+      [{ text: 'OK' }]
+    );
+
+    alertMock.mockRestore();
+  });
+
   it('debería mostrar un error si el título de la rutina está vacío', async () => {
     const alertMock = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
     const { getByText } = render(<AddRoutine />);
@@ -243,5 +274,20 @@ describe('AddRoutine', () => {
     expect(
       getByText('Empieza agregando un ejercicio a tu rutina')
     ).toBeTruthy();
+  });
+
+  it('debería limitar el título de la rutina a 100 caracteres', async () => {
+    const { getByPlaceholderText } = render(<AddRoutine />);
+
+    const input = getByPlaceholderText('Título de la rutina');
+    const longTitle =
+      'Este es un título de rutina muy largo que definitivamente excede el límite de 100 caracteres porque queremos probar si realmente se corta correctamente.';
+
+    await act(async () => {
+      fireEvent.changeText(input, longTitle);
+    });
+
+    expect(input.props.value.length).toBeLessThanOrEqual(100);
+    expect(input.props.value).toBe(longTitle.slice(0, 100));
   });
 });

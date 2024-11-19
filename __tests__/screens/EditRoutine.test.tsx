@@ -191,4 +191,19 @@ describe('EditRoutine', () => {
       )
     );
   });
+
+  it('debería limitar el título de la rutina a 100 caracteres', async () => {
+    const { getByPlaceholderText } = render(<EditRoutine />);
+
+    const input = getByPlaceholderText('Título de la rutina');
+    const longTitle =
+      'Este es un título de rutina muy largo que definitivamente excede el límite de 100 caracteres porque queremos probar si realmente se corta correctamente.';
+
+    await act(async () => {
+      fireEvent.changeText(input, longTitle);
+    });
+
+    expect(input.props.value.length).toBeLessThanOrEqual(100);
+    expect(input.props.value).toBe(longTitle.slice(0, 100));
+  });
 });

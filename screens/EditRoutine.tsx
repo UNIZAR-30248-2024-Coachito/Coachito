@@ -18,6 +18,7 @@ import { useFetchDetailsLastWorkout } from '@/hooks/workoutHook';
 import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 import { emitter } from '@/utils/emitter';
 import { useUpdateRoutine } from '@/hooks/workoutTemplateHook';
+import { MAX_LENGHT_TITLE } from './AddRoutine';
 
 const EditRoutine: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
@@ -156,7 +157,9 @@ const EditRoutine: React.FC = () => {
           <InputField
             placeholder="Título de la rutina"
             value={routineTitleInputValue!}
-            onChangeText={setRoutineTitleInputValue}
+            onChangeText={(value) =>
+              setRoutineTitleInputValue(value.slice(0, MAX_LENGHT_TITLE))
+            }
           />
         </Input>
 

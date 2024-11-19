@@ -31,6 +31,10 @@ const AddExerciseEdit: React.FC = () => {
   const [selectedExercises, setSelectedExercises] = useState<ExerciseResume[]>(
     route.params!.selectedExercises || []
   );
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [filteredExercises, setFilteredExercises] = useState<ExerciseResume[]>(
+    []
+  );
 
   const handleSelectExercise = (exercise: ExerciseResume) => {
     setSelectedExercises((prevSelected) => {
@@ -53,6 +57,7 @@ const AddExerciseEdit: React.FC = () => {
     const { data, error: errorExercises } = await useFetchExercisesList();
     if (!errorExercises) {
       setExercises(data);
+      setFilteredExercises(data);
     } else {
       Alert.alert('', 'Se ha producido un error obteniendo los ejercicios.', [
         { text: 'OK' },
@@ -67,6 +72,15 @@ const AddExerciseEdit: React.FC = () => {
   useEffect(() => {
     setSelectedExercises(route.params!.selectedExercises || []);
   }, [route.params!.selectedExercises]);
+
+  useEffect(() => {
+    const lowercasedTerm = searchTerm.toLowerCase();
+    setFilteredExercises(
+      exercises.filter((exercise) =>
+        exercise.name.toLowerCase().includes(lowercasedTerm)
+      )
+    );
+  }, [searchTerm, exercises]);
 
   return (
     <ScrollView className="flex-1">
@@ -96,10 +110,15 @@ const AddExerciseEdit: React.FC = () => {
           <InputSlot className="pl-3">
             <InputIcon as={SearchIcon} />
           </InputSlot>
-          <InputField className="text-white" placeholder="Buscar Ejercicio" />
+          <InputField
+            className="text-white"
+            placeholder="Buscar Ejercicio"
+            value={searchTerm}
+            onChangeText={setSearchTerm}
+          />
         </Input>
 
-        {exercises.map((exercise, index) => (
+        {filteredExercises.map((exercise, index) => (
           <Pressable key={index} onPress={() => handleSelectExercise(exercise)}>
             <HStack
               className={`${selectedExercises.some((e) => e.id === exercise.id) ? 'bg-blue-500' : 'bg-transparent'}`}

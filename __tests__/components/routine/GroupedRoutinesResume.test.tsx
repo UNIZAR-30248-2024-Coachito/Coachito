@@ -384,4 +384,28 @@ describe('GroupedRoutinesResumeComponent', () => {
 
     alertMock.mockRestore();
   });
+
+  it('debería limitar el título de la carpeta a 100 caracteres', async () => {
+    const { getByText, getByPlaceholderText, getAllByTestId } = render(
+      <GroupedRoutinesResumeComponent groupedRoutine={mockGroupedRoutine} />
+    );
+
+    const moreButton = getAllByTestId('slideup-modal')[0];
+    fireEvent.press(moreButton);
+
+    const renameButton = getByText('Renombrar Carpeta');
+    fireEvent.press(renameButton);
+
+    const input = getByPlaceholderText('Nuevo nombre');
+    const longTitle =
+      'Este es un título de rutina muy largo que definitivamente excede el límite de 100 caracteres porque queremos probar si realmente se corta correctamente.';
+    fireEvent.changeText(input, longTitle);
+
+    await act(async () => {
+      fireEvent.changeText(input, longTitle);
+    });
+
+    expect(input.props.value.length).toBeLessThanOrEqual(100);
+    expect(input.props.value).toBe(longTitle.slice(0, 100));
+  });
 });

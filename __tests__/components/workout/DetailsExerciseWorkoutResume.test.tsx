@@ -203,4 +203,39 @@ describe('DetailsExerciseWorkoutResumeComponent', () => {
 
     expect(Vibration.vibrate).toHaveBeenCalledTimes(1);
   });
+
+  it('debería ajustar el peso a los límites definidos', () => {
+    const { getAllByTestId } = render(
+      <DetailsExerciseWorkoutResumeComponent {...mockData} />
+    );
+
+    const inputWeight = getAllByTestId('weight')[0];
+    fireEvent.changeText(inputWeight, '600');
+    expect(inputWeight.props.value).toBe('499');
+  });
+
+  it('debería ajustar las repeticiones a los límites definidos', () => {
+    const { getAllByTestId } = render(
+      <DetailsExerciseWorkoutResumeComponent {...mockData} />
+    );
+
+    const inputReps = getAllByTestId('reps')[0];
+    fireEvent.changeText(inputReps, '150');
+    expect(inputReps.props.value).toBe('99');
+  });
+
+  it('debería garantizar que las notas no superen los 4000 caracteres', () => {
+    const { getByTestId } = render(
+      <DetailsExerciseWorkoutResumeComponent {...mockData} />
+    );
+
+    const textareaInput = getByTestId('text-area-input');
+
+    expect(textareaInput.props.value.length).toBeLessThanOrEqual(4000);
+
+    const longText = 'a'.repeat(4001);
+    fireEvent.changeText(textareaInput, longText);
+
+    expect(textareaInput.props.value.length).toBe(4000);
+  });
 });

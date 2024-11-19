@@ -21,7 +21,7 @@ import ExerciseResumeComponent, {
   ExerciseResumeRef,
 } from '@/components/exercise/ExerciseResume';
 
-const MAX_LENGHT_TITLE = 100;
+export const MAX_LENGHT_TITLE = 100;
 
 const AddRoutine: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();

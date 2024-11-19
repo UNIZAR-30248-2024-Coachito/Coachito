@@ -225,4 +225,70 @@ describe('AddExerciseEdit', () => {
 
     alertSpy.mockRestore();
   });
+
+  it('debería filtrar los ejercicios según el término de búsqueda', async () => {
+    const exercisesMock = [
+      {
+        id: 1,
+        name: 'Flexiones',
+        thumbnailUrl: 'https://example.com/image.jpg',
+        notes: '',
+        primaryMuscleGroup: 'Pectorales',
+        restTime: '00:01:30',
+        sets: [],
+      },
+      {
+        id: 2,
+        name: 'Sentadillas',
+        thumbnailUrl: 'https://example.com/image.jpg',
+        notes: '',
+        primaryMuscleGroup: 'Cuádriceps',
+        restTime: null,
+        sets: [],
+      },
+      {
+        id: 3,
+        name: 'Pull-ups',
+        thumbnailUrl: 'https://example.com/image.jpg',
+        notes: '',
+        primaryMuscleGroup: 'Espalda',
+        restTime: '00:02:00',
+        sets: [],
+      },
+    ];
+
+    const mockedUseFetchExercisesList = jest.mocked(useFetchExercisesList);
+    mockedUseFetchExercisesList.mockResolvedValue({
+      data: exercisesMock,
+      error: null,
+    });
+
+    const { getByPlaceholderText, getByText, queryByText } = render(
+      <AddExerciseEdit />
+    );
+
+    await act(async () => {
+      await waitFor(() => {
+        expect(getByText('Flexiones')).toBeTruthy();
+        expect(getByText('Sentadillas')).toBeTruthy();
+        expect(getByText('Pull-ups')).toBeTruthy();
+      });
+    });
+
+    const searchInput = getByPlaceholderText('Buscar Ejercicio');
+
+    fireEvent.changeText(searchInput, 'Flex');
+    await waitFor(() => {
+      expect(getByText('Flexiones')).toBeTruthy();
+      expect(queryByText('Sentadillas')).toBeNull();
+      expect(queryByText('Pull-ups')).toBeNull();
+    });
+
+    fireEvent.changeText(searchInput, 'Espalda');
+    await waitFor(() => {
+      expect(queryByText('Flexiones')).toBeNull();
+      expect(queryByText('Sentadillas')).toBeNull();
+      expect(queryByText('Pull-ups')).toBeNull();
+    });
+  });
 });
