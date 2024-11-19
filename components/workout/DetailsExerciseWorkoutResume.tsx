@@ -16,8 +16,8 @@ import {
 import { HStack } from '../ui/hstack';
 import '../../styles.css';
 import { Avatar, AvatarFallbackText, AvatarImage } from '../ui/avatar';
-import { Pressable } from 'react-native';
-import { Check, Plus, Timer } from 'lucide-react-native';
+import { Modal, Pressable, Vibration } from 'react-native';
+import { InfoIcon, Play, Plus, Timer } from 'lucide-react-native';
 import { Input, InputField } from '../ui/input';
 import { Button } from '../ui/button';
 import { Textarea, TextareaInput } from '../ui/textarea';
@@ -29,12 +29,21 @@ import {
 import {
   convertIntervalToMinutesAndSeconds,
   convertIntervalToSeconds,
+  convertSecondsToString,
 } from '@/utils/interval';
-import PopupBaseModal from '../shared/PopupBaseModal';
-import CountdownTimer from './CountDownTimer';
+import {
+  MAX_KG,
+  MIN_KG,
+  MAX_REPS,
+  MIN_REPS,
+  MAX_LENGHT_NOTES,
+} from '../exercise/ExerciseResume';
+import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
+import { Alert, AlertIcon, AlertText } from '../ui/alert';
 
 export interface ExerciseResumeRef {
   getExerciseData: () => ExerciseResume;
+  resetToOneSet: () => void;
 }
 
 // eslint-disable-next-line react/display-name
@@ -43,7 +52,16 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
   ExerciseResume
 >(
   (
-    { id, name, thumbnailUrl, restTime, notes, primaryMuscleGroup, sets },
+    {
+      id,
+      name,
+      thumbnailUrl,
+      restTime,
+      notes,
+      primaryMuscleGroup,
+      sets,
+      targetReps,
+    },
     ref
   ) => {
     const [exerciseId] = useState(id);
@@ -51,14 +69,19 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
     const [exerciseRestTimeNumber] = useState(
       convertIntervalToSeconds(restTime)
     );
-    const [exerciseRestTimeString] =
-      convertIntervalToMinutesAndSeconds(restTime);
+    const [exerciseRestTimeString] = useState(
+      convertIntervalToMinutesAndSeconds(restTime)
+    );
     const [exerciseNotes, setExerciseNotes] = useState(notes);
     const [exercisePrimaryMuscleGroup] = useState(primaryMuscleGroup);
     const [exerciseSets, setExerciseSets] = useState<SetsExerciseResume[]>(
       sets ?? []
     );
     const [restTimerModalVisible, setRestTimerModalVisible] = useState(false);
+    const [timerKey, setTimerKey] = useState(0);
+    const [weightPrediction, setWeightPrediction] = useState<number | null>(
+      null
+    );
 
     useImperativeHandle(ref, () => ({
       getExerciseData: () => ({
@@ -69,7 +92,11 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
         notes: exerciseNotes,
         primaryMuscleGroup: exercisePrimaryMuscleGroup,
         sets: exerciseSets,
+        targetReps,
       }),
+      resetToOneSet() {
+        setExerciseSets([{ reps: 0, weight: 0 }]);
+      },
     }));
 
     const handleSetChange = (
@@ -77,8 +104,19 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
       field: keyof SetsExerciseResume,
       value: string
     ) => {
+      let numericValue = parseInt(value);
+
+      if (field === 'weight') {
+        numericValue = Math.max(MIN_KG, Math.min(MAX_KG, numericValue || 0));
+      } else if (field === 'reps') {
+        numericValue = Math.max(
+          MIN_REPS,
+          Math.min(MAX_REPS, numericValue || 0)
+        );
+      }
+
       const updatedSets = [...exerciseSets];
-      updatedSets[index][field] = Number(value);
+      updatedSets[index][field] = Number(numericValue);
       setExerciseSets(updatedSets);
     };
 
@@ -88,13 +126,13 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
     };
 
     const startRestTimer = () => {
-      if (exerciseRestTimeNumber > 0) {
-        setRestTimerModalVisible(true);
-      }
+      setTimerKey((prev) => prev + 1);
+      setRestTimerModalVisible(true);
     };
 
     const stopRestTimer = () => {
       setRestTimerModalVisible(false);
+      Vibration.vibrate(2000);
     };
 
     useEffect(() => {
@@ -103,13 +141,23 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
       }
     }, [exerciseSets]);
 
-    const componentsTimerPopUpModal: React.ReactNode[] = [
-      <CountdownTimer
-        key="1"
-        initialTime={exerciseRestTimeNumber}
-        onComplete={stopRestTimer}
-      />,
-    ];
+    useEffect(() => {
+      const maxVolumeSet = exerciseSets.reduce(
+        (prev, current) => {
+          const prevVolume = prev.weight * prev.reps;
+          const currentVolume = current.weight * current.reps;
+          return prevVolume > currentVolume ? prev : current;
+        },
+        { weight: 0, reps: 0 }
+      );
+
+      const oneRepMax = maxVolumeSet.weight * (1 + maxVolumeSet.reps / 30);
+
+      if (targetReps !== undefined) {
+        const targetWeight = oneRepMax * (1 - targetReps / 30);
+        setWeightPrediction(Math.round(targetWeight));
+      }
+    }, [exerciseSets, targetReps]);
 
     return (
       <>
@@ -131,7 +179,9 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
               testID="text-area-input"
               placeholder="Notas..."
               value={exerciseNotes}
-              onChangeText={(value) => setExerciseNotes(value)}
+              onChangeText={(value) =>
+                setExerciseNotes(value.slice(0, MAX_LENGHT_NOTES))
+              }
             />
           </Textarea>
 
@@ -145,15 +195,33 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
             </Text>
           </HStack>
 
-          <Table className="w-[340px]">
+          {exerciseRestTimeNumber > 0 && !restTimerModalVisible && (
+            <Button
+              testID="start-timer"
+              className="border-2 border-blue-500 bg-transparent rounded-lg gap-2"
+              onPress={startRestTimer}
+            >
+              <Play color="white" />
+              <Text className="text-white">Iniciar</Text>
+            </Button>
+          )}
+
+          {targetReps !== undefined && weightPrediction !== null && (
+            <Alert action="info" variant="solid">
+              <AlertIcon as={InfoIcon} />
+              <AlertText>
+                Se recomienda emplear {weightPrediction} kg para llegar al
+                número de {targetReps} repeticiones objetivo.
+              </AlertText>
+            </Alert>
+          )}
+
+          <Table className="w-[330px]">
             <TableHeader>
               <TableRow className="border-b-0 bg-background-0 hover:bg-background-0">
                 <TableHead>SERIE</TableHead>
                 <TableHead>KG</TableHead>
                 <TableHead>REPS</TableHead>
-                <TableHead>
-                  <Check color="gray" />
-                </TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -172,11 +240,16 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
                       >
                         <InputField
                           testID="weight"
-                          placeholder={set.weight ? set.weight.toString() : '0'}
-                          value={set.weight ? set.weight.toString() : '0'}
+                          placeholder={
+                            set.weight
+                              ? set.weight.toString()
+                              : MIN_KG.toString()
+                          }
+                          value={set.weight ? set.weight.toString() : ''}
                           onChangeText={(value) =>
                             handleSetChange(index, 'weight', value)
                           }
+                          keyboardType="numeric"
                         />
                       </Input>
                     </TableData>
@@ -187,39 +260,60 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
                       >
                         <InputField
                           testID="reps"
-                          placeholder={set.reps ? set.reps.toString() : '0'}
-                          value={set.reps ? set.reps.toString() : '0'}
+                          placeholder={
+                            set.reps ? set.reps.toString() : MIN_REPS.toString()
+                          }
+                          value={set.reps ? set.reps.toString() : ''}
                           onChangeText={(value) =>
                             handleSetChange(index, 'reps', value)
                           }
+                          keyboardType="numeric"
                         />
                       </Input>
-                    </TableData>
-                    <TableData>
-                      <Button
-                        testID="check"
-                        className="bg-gray-400"
-                        onPress={startRestTimer}
-                      >
-                        <Check color="white" />
-                      </Button>
                     </TableData>
                   </TableRow>
                 ))}
             </TableBody>
           </Table>
 
-          <Button className="bg-zinc-800 rounded-lg gap-2" onPress={addNewSet}>
-            <Plus color="gray" />
-            <Text className="text-white">Agregar Serie</Text>
-          </Button>
+          {exerciseSets.length < 10 && (
+            <Button
+              className="bg-zinc-800 rounded-lg gap-2"
+              onPress={addNewSet}
+            >
+              <Plus color="gray" />
+              <Text className="text-white">Agregar Serie</Text>
+            </Button>
+          )}
         </Box>
 
-        <PopupBaseModal
-          components={componentsTimerPopUpModal}
-          isVisible={restTimerModalVisible}
-          setIsModalVisible={setRestTimerModalVisible}
-        />
+        <Modal
+          testID="modal"
+          visible={restTimerModalVisible}
+          transparent={true}
+        >
+          <Box className="flex-1 bg-black/75 justify-center items-center">
+            <Box className="bg-zinc-800 rounded-lg items-center p-4 mx-8 self-center">
+              <CountdownCircleTimer
+                key={timerKey}
+                isPlaying
+                duration={exerciseRestTimeNumber}
+                colors={['#1E40AF', '#3b82f6', '#A30000', '#A30000']}
+                colorsTime={[30, 20, 10, 0]}
+                onComplete={() => {
+                  stopRestTimer();
+                  return { shouldRepeat: false };
+                }}
+              >
+                {({ remainingTime }) => (
+                  <Text className="text-white text-xl">
+                    {convertSecondsToString(remainingTime)}
+                  </Text>
+                )}
+              </CountdownCircleTimer>
+            </Box>
+          </Box>
+        </Modal>
       </>
     );
   }

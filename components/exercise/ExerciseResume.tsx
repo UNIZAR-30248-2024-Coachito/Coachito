@@ -39,10 +39,25 @@ export interface ExerciseResumeRef {
   getExerciseData: () => ExerciseResume;
 }
 
+export const MAX_LENGHT_NOTES = 4000;
+export const MAX_REPS = 99;
+export const MIN_REPS = 0;
+export const MAX_KG = 499;
+export const MIN_KG = 0;
+
 // eslint-disable-next-line react/display-name
 const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
   (
-    { id, name, thumbnailUrl, restTime, notes, primaryMuscleGroup, sets },
+    {
+      id,
+      name,
+      thumbnailUrl,
+      restTime,
+      notes,
+      primaryMuscleGroup,
+      sets,
+      targetReps,
+    },
     ref
   ) => {
     const [exerciseId] = useState(id);
@@ -52,12 +67,16 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
     );
     const [exerciseRestTimeString, setExerciseRestTimeString] =
       useState(restTime);
+    const [tempRestTime, setTempRestTime] = useState(exerciseRestTimeSeconds);
     const [exerciseNotes, setExerciseNotes] = useState(notes);
     const [exercisePrimaryMuscleGroup] = useState(primaryMuscleGroup);
     const [exerciseSets, setExerciseSets] = useState<SetsExerciseResume[]>(
       sets ?? []
     );
     const [isSlideUpModalVisible, setIsSlideUpModalVisible] = useState(false);
+    const [targetNumberReps, setTargetNumberReps] = useState(
+      targetReps !== undefined ? targetReps : MIN_REPS
+    );
 
     useImperativeHandle(ref, () => ({
       getExerciseData: () => ({
@@ -68,6 +87,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
         notes: exerciseNotes,
         primaryMuscleGroup: exercisePrimaryMuscleGroup,
         sets: exerciseSets,
+        targetReps: targetNumberReps,
       }),
     }));
 
@@ -82,18 +102,34 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
       );
     }, [sets, restTime, notes]);
 
+    const handleTargetRepsChange = (value: number) => {
+      value = Math.max(MIN_REPS, Math.min(MAX_REPS, value || 0));
+      setTargetNumberReps(value);
+    };
+
     const handleSetChange = (
       index: number,
       field: keyof SetsExerciseResume,
       value: string
     ) => {
+      let numericValue = parseInt(value);
+
+      if (field === 'weight') {
+        numericValue = Math.max(MIN_KG, Math.min(MAX_KG, numericValue || 0));
+      } else if (field === 'reps') {
+        numericValue = Math.max(
+          MIN_REPS,
+          Math.min(MAX_REPS, numericValue || 0)
+        );
+      }
+
       const updatedSets = [...exerciseSets];
-      updatedSets[index][field] = Number(value);
+      updatedSets[index][field] = Number(numericValue);
       setExerciseSets(updatedSets);
     };
 
     const addNewSet = () => {
-      const newSet: SetsExerciseResume = { weight: 0, reps: 0 };
+      const newSet: SetsExerciseResume = { weight: MIN_KG, reps: MIN_REPS };
       setExerciseSets([...exerciseSets, newSet]);
     };
 
@@ -105,23 +141,23 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
     const componentsTemporizadorPopUpModal: React.ReactNode[] = [
       <VStack key="1" className="gap-4 p-4">
         <Text className="text-center">
-          {exerciseRestTimeSeconds === 0
+          {tempRestTime === 0
             ? '0 min 0 s'
-            : `${convertSecondsToString(exerciseRestTimeSeconds)}`}
+            : `${convertSecondsToString(tempRestTime)}`}
         </Text>
         <Slider
           testID="slider"
           minimumValue={0}
           maximumValue={300}
           step={15}
-          value={exerciseRestTimeSeconds}
-          onValueChange={(value) => setExerciseRestTimeSeconds(value)}
+          value={tempRestTime}
+          onValueChange={(value) => setTempRestTime(value)}
           slideOnTap={true}
           thumbSize={20}
           trackHeight={6}
-          thumbTintColor="white"
+          thumbTintColor="#3b82f6"
           maximumTrackTintColor="grey"
-          minimumTrackTintColor="grey"
+          minimumTrackTintColor="#3b82f6"
           hitSlop={40}
           // eslint-disable-next-line react-native/no-inline-styles
           style={{
@@ -137,9 +173,8 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
         className="bg-blue-500 rounded-lg"
         onPress={() => {
           setIsSlideUpModalVisible(false);
-          setExerciseRestTimeString(
-            convertSecondsToString(exerciseRestTimeSeconds)
-          );
+          setExerciseRestTimeSeconds(tempRestTime);
+          setExerciseRestTimeString(convertSecondsToString(tempRestTime));
         }}
       >
         <Text className="text-white">Confirmar</Text>
@@ -172,7 +207,9 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
               testID="text-area-input"
               placeholder="Notas..."
               value={exerciseNotes}
-              onChangeText={(value) => setExerciseNotes(value)}
+              onChangeText={(value) =>
+                setExerciseNotes(value.slice(0, MAX_LENGHT_NOTES))
+              }
             />
           </Textarea>
 
@@ -190,12 +227,23 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
             </Text>
           </Button>
 
+          <Text>Repeticiones objetivo:</Text>
+          <Input className="text-center" variant="underlined">
+            <InputField
+              testID="targetNumberReps"
+              placeholder={targetNumberReps.toString()}
+              value={targetNumberReps.toString()}
+              onChangeText={(value) => handleTargetRepsChange(parseInt(value))}
+              keyboardType="numeric"
+            />
+          </Input>
+
           <Table className="w-[350px]">
             <TableHeader>
               <TableRow className="border-b-0 bg-background-0 hover:bg-background-0">
-                <TableHead>SERIE</TableHead>
-                <TableHead>KG</TableHead>
-                <TableHead>REPS</TableHead>
+                <TableHead className="text-sm">SERIE</TableHead>
+                <TableHead className="text-sm">KG</TableHead>
+                <TableHead className="text-sm">REPS</TableHead>
                 <TableHead></TableHead>
               </TableRow>
             </TableHeader>
@@ -211,10 +259,12 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
                     <Input className="w-full text-center" variant="underlined">
                       <InputField
                         testID="weight"
-                        value={set.weight ? set.weight.toString() : '0'}
+                        placeholder={MIN_KG.toString()}
+                        value={set.weight ? set.weight.toString() : ''}
                         onChangeText={(value) =>
                           handleSetChange(index, 'weight', value)
                         }
+                        keyboardType="numeric"
                       />
                     </Input>
                   </TableData>
@@ -222,31 +272,40 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
                     <Input className="w-full text-center" variant="underlined">
                       <InputField
                         testID="reps"
-                        value={set.reps ? set.reps.toString() : '0'}
+                        placeholder={MIN_REPS.toString()}
+                        value={set.reps ? set.reps.toString() : ''}
                         onChangeText={(value) =>
                           handleSetChange(index, 'reps', value)
                         }
+                        keyboardType="numeric"
                       />
                     </Input>
                   </TableData>
                   <TableData>
-                    <Button
-                      testID="trash"
-                      className="bg-transparent"
-                      onPress={() => deleteSet(index)}
-                    >
-                      <Trash color="red" />
-                    </Button>
+                    {index !== 0 && (
+                      <Button
+                        testID="trash"
+                        className="bg-transparent"
+                        onPress={() => deleteSet(index)}
+                      >
+                        <Trash color="red" />
+                      </Button>
+                    )}
                   </TableData>
                 </TableRow>
               ))}
             </TableBody>
           </Table>
 
-          <Button className="bg-zinc-800 rounded-lg gap-2" onPress={addNewSet}>
-            <Plus color="gray" />
-            <Text className="text-white">Agregar Serie</Text>
-          </Button>
+          {exerciseSets.length < 10 && (
+            <Button
+              className="bg-zinc-800 rounded-lg gap-2"
+              onPress={addNewSet}
+            >
+              <Plus color="gray" />
+              <Text className="text-white">Agregar Serie</Text>
+            </Button>
+          )}
         </Box>
 
         <SlideUpBaseModal

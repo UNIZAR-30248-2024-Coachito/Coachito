@@ -59,9 +59,6 @@ const CustomAreaChart: React.FC<CustomDataChartProps> = ({ data, buttons }) => {
         rulesType="solid"
         spacing={60}
         width={screenWidth - 90}
-        isAnimated
-        animationDuration={1000}
-        animateOnDataChange
       />
 
       <CustomChartButtons

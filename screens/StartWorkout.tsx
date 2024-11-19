@@ -7,7 +7,7 @@ import { Button } from '../components/ui/button';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NavigationProps, RootStackParamList } from '@/types/navigation';
 import PopupBaseModal from '@/components/shared/PopupBaseModal';
-import { ScrollView } from 'react-native';
+import { Alert, ScrollView } from 'react-native';
 import {
   useCreateWorkout,
   useFetchDetailsLastWorkout,
@@ -16,7 +16,6 @@ import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 import DetailsExerciseWorkoutResumeComponent, {
   ExerciseResumeRef,
 } from '@/components/workout/DetailsExerciseWorkoutResume';
-import Timer from '@/components/workout/Timer';
 import { emitter } from '@/utils/emitter';
 
 const StartWorkout: React.FC = () => {
@@ -28,37 +27,65 @@ const StartWorkout: React.FC = () => {
   );
   const [isCancelRoutineModalVisible, setIsCancelWorkoutModalVisible] =
     useState(false);
-  const [timerActive, setTimerActive] = useState(true);
-  const [timerKey, setTimerKey] = useState(0);
+  const [timerActive, setTimerActive] = useState(false);
   const [duration, setDuration] = useState(0);
+  const [startTime, setStartTime] = useState<number | null>(null);
 
   const fetchExercises = async () => {
+    setSelectedExercises([]);
+
     const { data, error } = await useFetchDetailsLastWorkout(
       route.params.routineId!
     );
 
     if (!error) {
       setSelectedExercises(data);
+      setStartTime(Date.now());
+      setTimerActive(true);
     } else {
-      alert('Se ha producido un error obteniendo los ejercicios.');
+      Alert.alert('', 'Se ha producido un error obteniendo los ejercicios.', [
+        { text: 'OK' },
+      ]);
     }
   };
 
   useEffect(() => {
     fetchExercises();
-  }, []);
+  }, [route.params.routineId]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout | null = null;
+
+    if (timerActive && startTime !== null) {
+      interval = setInterval(() => {
+        const currentDuration = Math.floor((Date.now() - startTime) / 1000);
+        setDuration(currentDuration);
+      }, 1000);
+    } else if (!timerActive) {
+      if (interval) clearInterval(interval);
+    }
+
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [timerActive, startTime]);
 
   const handleStopTimer = () => {
     setTimerActive(false);
   };
 
   const handleResetTimer = () => {
-    setTimerKey((prevKey) => prevKey + 1);
+    setStartTime(Date.now());
+    setDuration(0);
     setTimerActive(true);
   };
 
-  const handleDurationUpdate = (time: number) => {
-    setDuration(time);
+  const resetExerciseSets = () => {
+    exerciseRefs.current.forEach((exerciseRef) => {
+      if (exerciseRef) {
+        exerciseRef.resetToOneSet();
+      }
+    });
   };
 
   const saveWorkout = async () => {
@@ -73,10 +100,14 @@ const StartWorkout: React.FC = () => {
     );
 
     if (!error) {
+      handleResetTimer();
+      resetExerciseSets();
       emitter.emit('workoutFinished');
       navigation.navigate('Dashboard');
     } else {
-      alert('Se ha producido un error al guardar el entrenamiento.');
+      Alert.alert('', 'Se ha producido un error al guardar el entrenamiento.', [
+        { text: 'OK' },
+      ]);
     }
   };
 
@@ -90,6 +121,7 @@ const StartWorkout: React.FC = () => {
       onPress={() => {
         setIsCancelWorkoutModalVisible(false);
         handleResetTimer();
+        resetExerciseSets();
         navigation.navigate('Routine');
       }}
     >
@@ -107,17 +139,23 @@ const StartWorkout: React.FC = () => {
     </Button>,
   ];
 
+  const formatDuration = (duration: number) => {
+    const hours = Math.floor(duration / 3600);
+    const minutes = Math.floor((duration % 3600) / 60);
+    const seconds = duration % 60;
+
+    return `${hours > 0 ? `${hours}h` : ''} ${minutes > 0 ? `${minutes}min` : ''} ${seconds > 0 ? `${seconds}s` : ''}`.trim();
+  };
+
   return (
     <VStack className="flex-1 p-4 gap-2 items-center">
       <Text className="text-2xl text-white" bold>
         {route.params.routineName}
       </Text>
 
-      <Timer
-        key={timerKey}
-        active={timerActive}
-        onTimeUpdate={handleDurationUpdate}
-      />
+      <Text className="text-white mb-4">
+        Tiempo transcurrido: {formatDuration(duration)}
+      </Text>
 
       <HStack className="w-full gap-6">
         <Button
@@ -152,6 +190,7 @@ const StartWorkout: React.FC = () => {
             notes={exercise.notes}
             primaryMuscleGroup={exercise.primaryMuscleGroup}
             sets={exercise.sets}
+            targetReps={exercise.targetReps}
           />
         ))}
       </ScrollView>

@@ -10,19 +10,24 @@ import { Dumbbell } from 'lucide-react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NavigationProps, RootStackParamList } from '@/types/navigation';
 import PopupBaseModal from '@/components/shared/PopupBaseModal';
-import { useCreateRoutine } from '@/hooks/workoutTemplateHook';
-import { ScrollView } from 'react-native';
+import {
+  useCreateRoutine,
+  useRoutineTitleExists,
+} from '@/hooks/workoutTemplateHook';
+import { Alert, ScrollView } from 'react-native';
 import { emitter } from '@/utils/emitter';
 import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 import ExerciseResumeComponent, {
   ExerciseResumeRef,
 } from '@/components/exercise/ExerciseResume';
 
+const MAX_LENGHT_TITLE = 100;
+
 const AddRoutine: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute<RouteProp<RootStackParamList, 'AddRoutine'>>();
 
-  const [routineTitleInputValue, setroutineTitleInputValue] = useState('');
+  const [routineTitleInputValue, setRoutineTitleInputValue] = useState('');
   const [selectedExercises, setSelectedExercises] = useState<ExerciseResume[]>(
     route.params.exercises
   );
@@ -34,7 +39,7 @@ const AddRoutine: React.FC = () => {
   const resetState = () => {
     setSelectedExercises([]);
     exerciseRefs.current = [];
-    setroutineTitleInputValue('');
+    setRoutineTitleInputValue('');
   };
 
   const componentsCancelRoutinePopUpModal: React.ReactNode[] = [
@@ -74,12 +79,29 @@ const AddRoutine: React.FC = () => {
     const routineTitle = routineTitleInputValue.trim();
 
     if (routineTitle === '') {
-      alert('Por favor, introduce un nombre para la nueva rutina.');
+      Alert.alert('', 'Por favor, introduce un nombre para la nueva rutina.', [
+        { text: 'OK' },
+      ]);
       return;
     }
 
     if (selectedExercises.length === 0) {
-      alert('La rutina debe contener mínimo un ejercicio.');
+      Alert.alert('', 'La rutina debe contener mínimo un ejercicio.', [
+        { text: 'OK' },
+      ]);
+      return;
+    }
+
+    const { data: exists, error: errorTitle } = await useRoutineTitleExists(
+      routineTitle,
+      route.params.groupId
+    );
+    if (exists && !errorTitle) {
+      Alert.alert(
+        '',
+        'El título introducido ya existe. Por favor, introduzca otro.',
+        [{ text: 'OK' }]
+      );
       return;
     }
 
@@ -98,7 +120,9 @@ const AddRoutine: React.FC = () => {
       emitter.emit('routineAdded');
       navigation.navigate('Routine');
     } else {
-      alert('Se ha producido un error al crear la rutina.');
+      Alert.alert('', 'Se ha producido un error al crear la rutina.', [
+        { text: 'OK' },
+      ]);
     }
   };
 
@@ -132,7 +156,9 @@ const AddRoutine: React.FC = () => {
           <InputField
             placeholder="Título de la rutina"
             value={routineTitleInputValue}
-            onChangeText={setroutineTitleInputValue}
+            onChangeText={(value) =>
+              setRoutineTitleInputValue(value.slice(0, MAX_LENGHT_TITLE))
+            }
           />
         </Input>
 
@@ -155,6 +181,7 @@ const AddRoutine: React.FC = () => {
               notes={exercise.notes}
               primaryMuscleGroup={exercise.primaryMuscleGroup}
               sets={exercise.sets}
+              targetReps={exercise.targetReps ?? 0}
             />
           ))
         )}

@@ -11,7 +11,7 @@ import {
   InputSlot,
   InputIcon,
 } from '../components/ui/input';
-import { Pressable, ScrollView } from 'react-native';
+import { Alert, Pressable, ScrollView } from 'react-native';
 import { useFetchExercisesList } from '@/hooks/exerciseHook';
 import ExercisesListCardResume from '@/components/exercise/ExercisesListCardResume';
 import { SearchIcon } from 'lucide-react-native';
@@ -28,6 +28,10 @@ const AddExercise: React.FC = () => {
     route.params!.selectedExercises
   );
   const selectedExercisesInit = route.params!.selectedExercises;
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [filteredExercises, setFilteredExercises] = useState<ExerciseResume[]>(
+    []
+  );
 
   const handleSelectExercise = (exercise: ExerciseResume) => {
     setSelectedExercises((prevSelected) => {
@@ -35,6 +39,12 @@ const AddExercise: React.FC = () => {
       if (exists) {
         return prevSelected.filter((e) => e.id !== exercise.id);
       } else {
+        if (prevSelected.length >= 20) {
+          Alert.alert('', 'Solo se pueden seleccionar hasta 20 ejercicios.', [
+            { text: 'OK' },
+          ]);
+          return prevSelected;
+        }
         return [...prevSelected, exercise];
       }
     });
@@ -45,6 +55,11 @@ const AddExercise: React.FC = () => {
 
     if (!error) {
       setExercises(data);
+      setFilteredExercises(data);
+    } else {
+      Alert.alert('', 'Se ha producido un error al obtener los ejercicios.', [
+        { text: 'OK' },
+      ]);
     }
   };
 
@@ -55,6 +70,15 @@ const AddExercise: React.FC = () => {
   useEffect(() => {
     setSelectedExercises(route.params!.selectedExercises || []);
   }, [route.params!.selectedExercises]);
+
+  useEffect(() => {
+    const lowercasedTerm = searchTerm.toLowerCase();
+    setFilteredExercises(
+      exercises.filter((exercise) =>
+        exercise.name.toLowerCase().includes(lowercasedTerm)
+      )
+    );
+  }, [searchTerm, exercises]);
 
   return (
     <ScrollView className="flex-1">
@@ -85,10 +109,15 @@ const AddExercise: React.FC = () => {
           <InputSlot className="pl-3">
             <InputIcon as={SearchIcon} />
           </InputSlot>
-          <InputField className="text-white" placeholder="Buscar Ejercicio" />
+          <InputField
+            className="text-white"
+            placeholder="Buscar Ejercicio"
+            value={searchTerm}
+            onChangeText={setSearchTerm}
+          />
         </Input>
 
-        {exercises.map((exercise, index) => {
+        {filteredExercises.map((exercise, index) => {
           return (
             <Pressable
               key={index}

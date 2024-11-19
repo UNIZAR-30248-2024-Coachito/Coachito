@@ -3,6 +3,7 @@ import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { useFetchExercisesList } from '@/hooks/exerciseHook';
 import AddExerciseEdit from '@/screens/AddExerciseEdit';
+import { Alert } from 'react-native';
 
 jest.mock('../../styles.css', () => ({}));
 
@@ -21,7 +22,7 @@ jest.mock('@/utils/emitter', () => ({
   },
 }));
 
-global.alert = jest.fn();
+Alert.alert = jest.fn();
 
 describe('AddExerciseEdit', () => {
   const navigateMock = jest.fn();
@@ -210,13 +211,15 @@ describe('AddExerciseEdit', () => {
       error: 'Some error',
     });
 
-    const alertSpy = jest.spyOn(global, 'alert').mockImplementation(() => {});
+    const alertSpy = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 
     render(<AddExerciseEdit />);
 
     await waitFor(() =>
       expect(alertSpy).toHaveBeenCalledWith(
-        'Se ha producido un error obteniendo los ejercicios.'
+        '',
+        'Se ha producido un error obteniendo los ejercicios.',
+        [{ text: 'OK' }]
       )
     );
 

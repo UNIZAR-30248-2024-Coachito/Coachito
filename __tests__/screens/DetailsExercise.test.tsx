@@ -3,6 +3,7 @@ import React from 'react';
 import DetailsExercise from '@/screens/DetailsExercise';
 import { useRoute } from '@react-navigation/native';
 import { useFetchExerciseDetails } from '@/hooks/exerciseHook';
+import { Alert } from 'react-native';
 
 jest.mock('../../styles.css', () => ({}));
 
@@ -18,7 +19,7 @@ jest.mock('@/hooks/exerciseHook', () => ({
   useFetchExerciseDetails: jest.fn(),
 }));
 
-global.alert = jest.fn();
+Alert.alert = jest.fn();
 
 describe('DetailsExercise', () => {
   const mockExerciseDetails = {
@@ -118,13 +119,15 @@ describe('DetailsExercise', () => {
       error: 'Some error',
     });
 
-    const alertSpy = jest.spyOn(global, 'alert').mockImplementation(() => {});
+    const alertSpy = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 
     render(<DetailsExercise />);
 
     await waitFor(() =>
       expect(alertSpy).toHaveBeenCalledWith(
-        'Se ha producido un error al obtener la información del ejercicio.'
+        '',
+        'Se ha producido un error al obtener la información del ejercicio.',
+        [{ text: 'OK' }]
       )
     );
 

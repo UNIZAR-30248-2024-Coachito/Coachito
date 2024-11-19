@@ -3,6 +3,7 @@ import React from 'react';
 import Dashboard from '@/screens/Dashboard';
 import { useFetchDashboardWorkouts } from '@/hooks/dashboardHook';
 import { useNavigation } from '@react-navigation/native';
+import { Alert } from 'react-native';
 
 jest.mock('../../styles.css', () => ({}));
 
@@ -24,7 +25,7 @@ jest.mock('@/utils/emitter', () => ({
   },
 }));
 
-global.alert = jest.fn();
+Alert.alert = jest.fn();
 
 describe('Dashboard', () => {
   const mockWorkouts = [
@@ -118,13 +119,15 @@ describe('Dashboard', () => {
       error: 'Some error',
     });
 
-    const alertSpy = jest.spyOn(global, 'alert').mockImplementation(() => {});
+    const alertSpy = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 
     render(<Dashboard />);
 
     await waitFor(() =>
       expect(alertSpy).toHaveBeenCalledWith(
-        'Se ha producido un error al obtener los entrenamientos.'
+        '',
+        'Se ha producido un error al obtener los entrenamientos.',
+        [{ text: 'OK' }]
       )
     );
 

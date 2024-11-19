@@ -22,6 +22,7 @@ import { emitter } from '@/utils/emitter';
 import CustomAreaChart, {
   DataChartProps,
 } from '@/components/shared/CustomAreaChart';
+import { Alert } from 'react-native';
 
 const DetailsRoutine: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
@@ -42,7 +43,11 @@ const DetailsRoutine: React.FC = () => {
     if (!error) {
       setChartDetailsWorkout(data);
     } else {
-      alert('Se ha producido un error obteniendo los datos de la gráfica.');
+      Alert.alert(
+        '',
+        'Se ha producido un error obteniendo los datos de la gráfica.',
+        [{ text: 'OK' }]
+      );
     }
   };
 
@@ -52,7 +57,9 @@ const DetailsRoutine: React.FC = () => {
     if (!error) {
       setExercises(data);
     } else {
-      alert('Se ha producido un error obteniendo los ejercicios.');
+      Alert.alert('', 'Se ha producido un error obteniendo los ejercicios.', [
+        { text: 'OK' },
+      ]);
     }
   };
 
@@ -68,7 +75,9 @@ const DetailsRoutine: React.FC = () => {
       emitter.emit('routineDeleted');
       navigation.navigate('Routine');
     } else {
-      alert('Se ha producido un error al eliminar la rutina.');
+      Alert.alert('', 'Se ha producido un error al eliminar la rutina.', [
+        { text: 'OK' },
+      ]);
     }
   };
 
@@ -150,7 +159,7 @@ const DetailsRoutine: React.FC = () => {
             })
           }
         >
-          <Text className="text-white">Empezar Rutina</Text>
+          <Text className="text-white">Empezar Entrenamiento</Text>
         </Button>
 
         <CustomAreaChart data={chartDetailsWorkout} buttons={buttons} />
@@ -180,6 +189,7 @@ const DetailsRoutine: React.FC = () => {
             notes={exercise.notes}
             primaryMuscleGroup={exercise.primaryMuscleGroup}
             sets={exercise.sets}
+            targetReps={exercise.targetReps}
           />
         ))}
 

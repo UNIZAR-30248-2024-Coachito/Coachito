@@ -16,6 +16,7 @@ import PopupBaseModal from '@/components/shared/PopupBaseModal';
 import { Input, InputField } from '@/components/ui/input';
 import { useCreateTemplateWorkoutGroup } from '@/hooks/workoutTemplateGroupHook';
 import { emitter } from '@/utils/emitter';
+import { Alert } from 'react-native';
 
 export interface Group {
   id: number;
@@ -34,35 +35,37 @@ const Routine: React.FC = () => {
     if (!error) {
       setRoutines(data!);
     } else {
-      alert('Se ha producido un error al obtener las rutinas.');
+      Alert.alert('', 'Se ha producido un error al obtener las rutinas.', [
+        { text: 'OK' },
+      ]);
     }
   };
 
   useEffect(() => {
     const routineDeletedListener = emitter.addListener('routineDeleted', () => {
       fetchRoutinesAndGroups();
-      alert('¡Rutina eliminada correctamente!');
+      Alert.alert('', '¡Rutina eliminada correctamente!', [{ text: 'OK' }]);
     });
     const routineRenamedListener = emitter.addListener('routineRenamed', () => {
       fetchRoutinesAndGroups();
-      alert('¡Rutina editada correctamente!');
+      Alert.alert('', '¡Rutina editada correctamente!', [{ text: 'OK' }]);
     });
     const routineAddedListener = emitter.addListener('routineAdded', () => {
       fetchRoutinesAndGroups();
-      alert('¡Rutina creada correctamente!');
+      Alert.alert('', '¡Rutina creada correctamente!', [{ text: 'OK' }]);
     });
 
     const groupCreatedListener = emitter.addListener('groupCreated', () => {
       fetchRoutinesAndGroups();
-      alert('Carpeta creada correctamente!');
+      Alert.alert('', '¡Carpeta creada correctamente!', [{ text: 'OK' }]);
     });
     const groupRenamedListener = emitter.addListener('groupRenamed', () => {
       fetchRoutinesAndGroups();
-      alert('Carpeta editada correctamente!');
+      Alert.alert('', '¡Carpeta editada correctamente!', [{ text: 'OK' }]);
     });
     const groupDeletedListener = emitter.addListener('groupDeleted', () => {
       fetchRoutinesAndGroups();
-      alert('Carpeta eliminada correctamente!');
+      Alert.alert('', '¡Carpeta eliminada correctamente!', [{ text: 'OK' }]);
     });
 
     fetchRoutinesAndGroups();
@@ -77,13 +80,29 @@ const Routine: React.FC = () => {
     };
   }, [navigation]);
 
+  const createRoutine = () => {
+    const folderRoutines = routines.find((routine) => routine.groupId === null);
+
+    if (folderRoutines && folderRoutines.routines.length >= 7) {
+      Alert.alert('', 'No puede añadir más de 7 rutinas.', [{ text: 'OK' }]);
+      return;
+    }
+
+    navigation.navigate('AddRoutine', {
+      exercises: [],
+      groupId: 0,
+    });
+  };
+
   const createGroup = async () => {
     const folderName = newFolderInputValue.trim();
     setIsNewGroupModalVisible(false);
     setNewFolderInputValue('');
 
     if (folderName === '') {
-      alert('Por favor, introduce un nombre para la nueva carpeta.');
+      Alert.alert('', 'Por favor, introduce un nombre para la nueva carpeta.', [
+        { text: 'OK' },
+      ]);
       return;
     }
 
@@ -92,7 +111,9 @@ const Routine: React.FC = () => {
       fetchRoutinesAndGroups();
       emitter.emit('groupCreated');
     } else {
-      alert('Se ha producido un error al crear el nuevo grupo.');
+      Alert.alert('', 'Se ha producido un error al crear el nuevo grupo.', [
+        { text: 'OK' },
+      ]);
     }
   };
 
@@ -131,15 +152,7 @@ const Routine: React.FC = () => {
         <Text className="text-xl font-bold text-white mb-4">Rutinas</Text>
 
         <HStack className="mb-4">
-          <Button
-            className="bg-zinc-900"
-            onPress={() =>
-              navigation.navigate('AddRoutine', {
-                exercises: [],
-                groupId: 0,
-              })
-            }
-          >
+          <Button className="bg-zinc-900" onPress={() => createRoutine()}>
             <ClipboardList color="white" />
             <Text className="text-white ml-2">Nueva Rutina</Text>
           </Button>
@@ -148,7 +161,15 @@ const Routine: React.FC = () => {
             <Button
               className="bg-zinc-900 ml-4"
               onPress={() => {
-                setIsNewGroupModalVisible(true);
+                if (routines.length > 10) {
+                  Alert.alert(
+                    '',
+                    'Solo se pueden tener 10 carpetas por usuario.',
+                    [{ text: 'OK' }]
+                  );
+                } else {
+                  setIsNewGroupModalVisible(true);
+                }
               }}
             >
               <FolderPlus color="white" />

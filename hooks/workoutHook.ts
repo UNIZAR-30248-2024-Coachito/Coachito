@@ -59,25 +59,27 @@ const useCreateWorkout = async (
   }
 
   for (const exercise of exercises) {
-    if (exercise.sets!.length > 0) {
-      for (const set of exercise.sets!) {
-        const { execute: executeWorkoutExerciseInsert } = useCRUD(() =>
-          supabaseClient.post('/workout_exercises', {
-            workout_id: dataWorkoutInsert[0].id,
-            exercise_id: exercise.id,
-            sets: 1,
-            reps: set.reps,
-            weight: set.weight,
-            notes: exercise.notes,
-            rest_time: exercise.restTime === '0' ? null : exercise.restTime,
-          })
-        );
+    if (exercise.sets && exercise.sets.length > 0 && exercise.sets) {
+      for (const set of exercise.sets) {
+        if (set.reps !== 0) {
+          const { execute: executeWorkoutExerciseInsert } = useCRUD(() =>
+            supabaseClient.post('/workout_exercises', {
+              workout_id: dataWorkoutInsert[0].id,
+              exercise_id: exercise.id,
+              sets: 1,
+              reps: set.reps,
+              weight: set.weight,
+              notes: exercise.notes,
+              rest_time: exercise.restTime === '0' ? null : exercise.restTime,
+            })
+          );
 
-        const { error: errorWorkoutExerciseInsert } =
-          await executeWorkoutExerciseInsert();
+          const { error: errorWorkoutExerciseInsert } =
+            await executeWorkoutExerciseInsert();
 
-        if (errorWorkoutExerciseInsert) {
-          return { error: errorWorkoutExerciseInsert };
+          if (errorWorkoutExerciseInsert) {
+            return { error: errorWorkoutExerciseInsert };
+          }
         }
       }
     } else {

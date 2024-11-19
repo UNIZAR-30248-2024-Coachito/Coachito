@@ -68,8 +68,8 @@ const useCreateRoutine = async (
   }
 
   for (const exercise of exercises) {
-    if (exercise.sets.length > 0) {
-      for (const set of exercise.sets) {
+    if (exercise.sets!.length > 0) {
+      for (const set of exercise.sets!) {
         const newWorkoutExerciseEntity = {
           workout_id: dataWorkoutsInsert[0].id,
           exercise_id: exercise.id,
@@ -78,6 +78,7 @@ const useCreateRoutine = async (
           weight: set.weight === 0 ? null : set.weight,
           notes: exercise.notes,
           rest_time: exercise.restTime === '0' ? null : exercise.restTime,
+          target_number_reps: exercise.targetReps,
         };
 
         const { execute: executeWorkoutExerciseInsert } = useCRUD(() =>
@@ -91,6 +92,7 @@ const useCreateRoutine = async (
           return { error: errorWorkoutExerciseInsert };
         }
       }
+      console.log('Numero de reps target: ', exercise.targetReps);
     } else {
       const newWorkoutExerciseEntity = {
         workout_id: dataWorkoutsInsert[0].id,
@@ -111,7 +113,6 @@ const useCreateRoutine = async (
       }
     }
   }
-
   return { error: null };
 };
 
@@ -156,8 +157,8 @@ const useUpdateRoutine = async (
   }
 
   for (const exercise of exercises) {
-    if (exercise.sets.length > 0) {
-      for (const set of exercise.sets) {
+    if (exercise.sets!.length > 0) {
+      for (const set of exercise.sets!) {
         const newWorkoutExerciseEntity = {
           workout_id: dataWorkoutsUpdate[0].id,
           exercise_id: exercise.id,
@@ -203,9 +204,25 @@ const useUpdateRoutine = async (
   return { error: null };
 };
 
+const useRoutineTitleExists = async (title: string, groupId: number) => {
+  const { execute } = useCRUD(() =>
+    supabaseClient.get('/rpc/routine_title_exists', {
+      params: {
+        routine_title: title,
+        folder_id: groupId,
+      },
+    })
+  );
+
+  const { data, error } = await execute();
+
+  return { data, error };
+};
+
 export {
   useDeleteWorkoutTemplate,
   useFetchTemplateWorkouts,
   useCreateRoutine,
   useUpdateRoutine,
+  useRoutineTitleExists,
 };

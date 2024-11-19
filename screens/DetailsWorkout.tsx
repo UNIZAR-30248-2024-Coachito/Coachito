@@ -3,7 +3,7 @@ import { Text } from '../components/ui/text';
 import { VStack } from '../components/ui/vstack';
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '@/types/navigation';
-import { ScrollView } from 'react-native';
+import { Alert, ScrollView } from 'react-native';
 import { useFetchDetailsWorkout } from '@/hooks/workoutHook';
 import ExercisesRoutineResumeComponent, {
   ExerciseResume,
@@ -11,8 +11,9 @@ import ExercisesRoutineResumeComponent, {
 import WorkoutHeaderResumeComponent, {
   WorkoutHeaderResume,
 } from '@/components/workout/WorkoutHeaderResume';
-import WorkoutDivisionComponent from '@/components/workout/WorkoutDivision';
-import { mapToExerciseProportions } from '@/mappers/mapExerciseResumeToExerciseProportion';
+import WorkoutDivisionComponent, {
+  ExerciseProportion,
+} from '@/components/workout/WorkoutDivision';
 import { Box } from '@/components/ui/box';
 
 export interface WorkoutResume {
@@ -24,14 +25,52 @@ const DetailsWorkout: React.FC = () => {
   const route = useRoute<RouteProp<RootStackParamList, 'DetailsWorkout'>>();
   const { workoutId } = route.params;
   const [workoutResume, setWorkoutResume] = useState<WorkoutResume>();
+  const [exerciseProportionData, setExerciseProportionData] = useState<
+    ExerciseProportion[]
+  >([]);
+
+  const calculateExerciseProportions = (
+    exercises: ExerciseResume[]
+  ): ExerciseProportion[] => {
+    const groupedExercises: { [key: string]: number } = exercises.reduce(
+      (acc, exercise) => {
+        if (acc[exercise.primaryMuscleGroup]) {
+          acc[exercise.primaryMuscleGroup] += exercise.sets!.length;
+        } else {
+          acc[exercise.primaryMuscleGroup] = exercise.sets!.length;
+        }
+        return acc;
+      },
+      {} as { [key: string]: number }
+    );
+
+    const totalSeries = Object.values(groupedExercises).reduce(
+      (acc, seriesCount) => acc + seriesCount,
+      0
+    );
+
+    return Object.keys(groupedExercises).map((name) => ({
+      name,
+      proportion:
+        totalSeries > 0
+          ? parseFloat(
+              ((groupedExercises[name] / totalSeries) * 100).toFixed(2)
+            )
+          : 0,
+    }));
+  };
 
   const fetchExercises = async () => {
     const { data, error } = await useFetchDetailsWorkout(workoutId);
 
     if (!error) {
       setWorkoutResume(data);
+      const proportionData = calculateExerciseProportions(data.exercise_resume);
+      setExerciseProportionData(proportionData);
     } else {
-      alert('Se ha producido un error al obtener los datos.');
+      Alert.alert('', 'Se ha producido un error al obtener los datos.', [
+        { text: 'OK' },
+      ]);
     }
   };
 
@@ -59,9 +98,7 @@ const DetailsWorkout: React.FC = () => {
               workoutSeries={workoutResume.workout_header_resume.workoutSeries}
             />
             <WorkoutDivisionComponent
-              exercisesProportion={mapToExerciseProportions(
-                workoutResume?.exercise_resume
-              )}
+              exercisesProportion={exerciseProportionData}
             />
           </>
         )}

@@ -3,6 +3,7 @@ import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import MyRoutinesCardResumeComponent from '@/components/routine/MyRoutinesCardResume';
 import { emitter } from '@/utils/emitter';
 import { useDeleteWorkoutTemplate } from '@/hooks/workoutTemplateHook';
+import { Alert } from 'react-native';
 
 jest.mock('../../../styles.css', () => ({}));
 
@@ -23,7 +24,7 @@ jest.mock('@react-navigation/native', () => ({
   }),
 }));
 
-global.alert = jest.fn();
+Alert.alert = jest.fn();
 
 describe('MyRoutinesCardResumeComponent', () => {
   const routineCardResume = {
@@ -151,7 +152,7 @@ describe('MyRoutinesCardResumeComponent', () => {
     (useDeleteWorkoutTemplate as jest.Mock).mockResolvedValue({
       error: 'Some error',
     });
-    const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => {});
+    const alertMock = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 
     const { getByText, getByTestId } = render(
       <MyRoutinesCardResumeComponent routineCardResume={routineCardResume} />
@@ -169,7 +170,9 @@ describe('MyRoutinesCardResumeComponent', () => {
     });
 
     expect(alertMock).toHaveBeenCalledWith(
-      'Se ha producido un error al eliminar la rutina.'
+      '',
+      'Se ha producido un error al eliminar la rutina.',
+      [{ text: 'OK' }]
     );
 
     alertMock.mockRestore();
