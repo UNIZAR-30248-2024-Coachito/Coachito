@@ -9,6 +9,7 @@ import { emitter } from '@/utils/emitter';
 import { useNavigation } from '@react-navigation/native';
 import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import React from 'react';
+import { Alert } from 'react-native';
 
 jest.mock('../../../styles.css', () => ({}));
 
@@ -25,7 +26,7 @@ jest.mock('@/utils/emitter', () => ({
   emitter: { emit: jest.fn() },
 }));
 
-global.alert = jest.fn();
+Alert.alert = jest.fn();
 
 describe('GroupedRoutinesResumeComponent', () => {
   const mockGroupedRoutine: GroupedRoutines = {
@@ -178,7 +179,7 @@ describe('GroupedRoutinesResumeComponent', () => {
   });
 
   it('debería mostrar un alert si el nombre de la carpeta está vacío', async () => {
-    const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => {});
+    const alertMock = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
     const { getAllByTestId, getByText, getByPlaceholderText } = render(
       <GroupedRoutinesResumeComponent groupedRoutine={mockGroupedRoutine} />
     );
@@ -198,7 +199,9 @@ describe('GroupedRoutinesResumeComponent', () => {
     });
 
     expect(alertMock).toHaveBeenCalledWith(
-      'Por favor, introduce un nombre para la nueva carpeta.'
+      '',
+      'Por favor, introduce un nombre para la nueva carpeta.',
+      [{ text: 'OK' }]
     );
   });
 
@@ -257,7 +260,7 @@ describe('GroupedRoutinesResumeComponent', () => {
     (useDeleteTemplateWorkoutGroupById as jest.Mock).mockResolvedValue({
       error: 'Some error',
     });
-    const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => {});
+    const alertMock = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 
     const { getAllByTestId, getByText, getByTestId } = render(
       <GroupedRoutinesResumeComponent groupedRoutine={mockGroupedRoutine} />
@@ -275,7 +278,9 @@ describe('GroupedRoutinesResumeComponent', () => {
     });
 
     expect(alertMock).toHaveBeenCalledWith(
-      'Se ha producido un error eliminando la carpeta.'
+      '',
+      'Se ha producido un error eliminando la carpeta.',
+      [{ text: 'OK' }]
     );
 
     alertMock.mockRestore();
@@ -285,7 +290,7 @@ describe('GroupedRoutinesResumeComponent', () => {
     (useEditTemplateWorkoutGroup as jest.Mock).mockResolvedValue({
       error: 'Some error',
     });
-    const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => {});
+    const alertMock = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 
     const { getAllByTestId, getByText, getByPlaceholderText } = render(
       <GroupedRoutinesResumeComponent groupedRoutine={mockGroupedRoutine} />
@@ -306,10 +311,76 @@ describe('GroupedRoutinesResumeComponent', () => {
     });
 
     expect(alertMock).toHaveBeenCalledWith(
-      'Se ha producido un error al renombrar la carpeta.'
+      '',
+      'Se ha producido un error al renombrar la carpeta.',
+      [{ text: 'OK' }]
     );
 
     expect(mockGroupedRoutine.groupName).toBe('Mi Grupo');
+
+    alertMock.mockRestore();
+  });
+
+  it('debería mostrar una alerta cuando se intenta agregar más de 7 rutinas', async () => {
+    const mockGroupedRoutine: GroupedRoutines = {
+      groupId: 1,
+      groupName: 'Mi Grupo',
+      routines: [
+        {
+          templateId: 1,
+          myRoutineName: 'Rutina 1',
+          myRoutineExercises: 'Sentadillas, flexiones, peso muerto',
+        },
+        {
+          templateId: 2,
+          myRoutineName: 'Rutina 2',
+          myRoutineExercises: 'Sentadillas, toques de talón',
+        },
+        {
+          templateId: 3,
+          myRoutineName: 'Rutina 3',
+          myRoutineExercises: 'Sentadillas, toques de talón',
+        },
+        {
+          templateId: 4,
+          myRoutineName: 'Rutina 4',
+          myRoutineExercises: 'Sentadillas, toques de talón',
+        },
+        {
+          templateId: 5,
+          myRoutineName: 'Rutina 5',
+          myRoutineExercises: 'Sentadillas, toques de talón',
+        },
+        {
+          templateId: 6,
+          myRoutineName: 'Rutina 6',
+          myRoutineExercises: 'Sentadillas, toques de talón',
+        },
+        {
+          templateId: 7,
+          myRoutineName: 'Rutina 7',
+          myRoutineExercises: 'Sentadillas, toques de talón',
+        },
+      ],
+    };
+
+    const alertMock = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+
+    const { getByText, getAllByTestId } = render(
+      <GroupedRoutinesResumeComponent groupedRoutine={mockGroupedRoutine} />
+    );
+
+    const moreButton = getAllByTestId('slideup-modal')[0];
+    fireEvent.press(moreButton);
+
+    const addButton = getByText('Agregar nueva rutina');
+    fireEvent.press(addButton);
+
+    expect(alertMock).toHaveBeenCalledWith(
+      '',
+      'No puede añadir más de 7 rutinas por carpeta.',
+      [{ text: 'OK' }]
+    );
 
     alertMock.mockRestore();
   });

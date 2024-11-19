@@ -3,6 +3,7 @@ import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import EditRoutine from '@/screens/EditRoutine';
 import { useFetchDetailsLastWorkout } from '@/hooks/workoutHook';
+import { Alert } from 'react-native';
 
 jest.mock('../../styles.css', () => ({}));
 
@@ -36,7 +37,7 @@ jest.mock('@/components/exercise/ExerciseResume', () => ({
   default: jest.fn(() => null),
 }));
 
-global.alert = jest.fn();
+Alert.alert = jest.fn();
 
 describe('EditRoutine', () => {
   const navigationMock = { navigate: jest.fn() };
@@ -131,7 +132,7 @@ describe('EditRoutine', () => {
   });
 
   it('debería mostrar un error si el título de la rutina está vacío', async () => {
-    const alertSpy = jest.spyOn(global, 'alert').mockImplementation(() => {});
+    const alertSpy = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
     const { getByText, getByPlaceholderText } = render(<EditRoutine />);
 
     const inputField = getByPlaceholderText('Título de la rutina');
@@ -143,13 +144,15 @@ describe('EditRoutine', () => {
 
     await waitFor(() =>
       expect(alertSpy).toHaveBeenCalledWith(
-        'Por favor, introduce un nombre para la rutina.'
+        '',
+        'Por favor, introduce un nombre para la rutina.',
+        [{ text: 'OK' }]
       )
     );
   });
 
   it('debería mostrar un error si no hay ejercicios seleccionados al crear la rutina', async () => {
-    const alertSpy = jest.spyOn(global, 'alert').mockImplementation(() => {});
+    const alertSpy = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
     const { getByText } = render(<EditRoutine />);
 
     const saveButton = getByText('Guardar');
@@ -157,7 +160,9 @@ describe('EditRoutine', () => {
 
     await waitFor(() =>
       expect(alertSpy).toHaveBeenCalledWith(
-        'La rutina debe contener mínimo un ejercicio.'
+        '',
+        'La rutina debe contener mínimo un ejercicio.',
+        [{ text: 'OK' }]
       )
     );
   });
@@ -174,13 +179,15 @@ describe('EditRoutine', () => {
       data: null,
       error: 'Some error',
     });
-    const alertSpy = jest.spyOn(global, 'alert').mockImplementation(() => {});
+    const alertSpy = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 
     render(<EditRoutine />);
 
     await waitFor(() =>
       expect(alertSpy).toHaveBeenCalledWith(
-        'Se ha producido un error al obtener los ejercicios.'
+        '',
+        'Se ha producido un error al obtener los ejercicios.',
+        [{ text: 'OK' }]
       )
     );
   });

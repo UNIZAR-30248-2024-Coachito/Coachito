@@ -7,7 +7,7 @@ import { Button } from '../components/ui/button';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NavigationProps, RootStackParamList } from '@/types/navigation';
 import PopupBaseModal from '@/components/shared/PopupBaseModal';
-import { ScrollView } from 'react-native';
+import { Alert, ScrollView } from 'react-native';
 import {
   useCreateWorkout,
   useFetchDetailsLastWorkout,
@@ -41,7 +41,9 @@ const StartWorkout: React.FC = () => {
       setStartTime(Date.now());
       setTimerActive(true);
     } else {
-      alert('Se ha producido un error obteniendo los ejercicios.');
+      Alert.alert('', 'Se ha producido un error obteniendo los ejercicios.', [
+        { text: 'OK' },
+      ]);
     }
   };
 
@@ -101,7 +103,9 @@ const StartWorkout: React.FC = () => {
       emitter.emit('workoutFinished');
       navigation.navigate('Dashboard');
     } else {
-      alert('Se ha producido un error al guardar el entrenamiento.');
+      Alert.alert('', 'Se ha producido un error al guardar el entrenamiento.', [
+        { text: 'OK' },
+      ]);
     }
   };
 

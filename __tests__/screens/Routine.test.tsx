@@ -5,6 +5,7 @@ import { emitter } from '@/utils/emitter';
 import { useFetchTemplateWorkouts } from '@/hooks/workoutTemplateHook';
 import { useCreateTemplateWorkoutGroup } from '@/hooks/workoutTemplateGroupHook';
 import Routine from '@/screens/Routine';
+import { Alert } from 'react-native';
 
 jest.mock('../../styles.css', () => ({}));
 
@@ -36,7 +37,7 @@ jest.mock('@/utils/emitter', () => ({
   },
 }));
 
-global.alert = jest.fn();
+Alert.alert = jest.fn();
 
 describe('Routine', () => {
   beforeEach(() => {
@@ -133,7 +134,7 @@ describe('Routine', () => {
   });
 
   it('debería mostrar un alert cuando se añade una rutina, se elimina o se edita correctamente', async () => {
-    const alertSpy = jest.spyOn(global, 'alert').mockImplementation(() => {});
+    const alertSpy = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 
     render(<Routine />);
 
@@ -141,17 +142,29 @@ describe('Routine', () => {
 
     emitter.emit('routineAdded');
     await waitFor(() => {
-      expect(alertSpy).toHaveBeenCalledWith('¡Rutina creada correctamente!');
+      expect(alertSpy).toHaveBeenCalledWith(
+        '',
+        '¡Rutina creada correctamente!',
+        [{ text: 'OK' }]
+      );
     });
 
     emitter.emit('routineDeleted');
     await waitFor(() => {
-      expect(alertSpy).toHaveBeenCalledWith('¡Rutina eliminada correctamente!');
+      expect(alertSpy).toHaveBeenCalledWith(
+        '',
+        '¡Rutina eliminada correctamente!',
+        [{ text: 'OK' }]
+      );
     });
 
     emitter.emit('routineRenamed');
     await waitFor(() => {
-      expect(alertSpy).toHaveBeenCalledWith('¡Rutina editada correctamente!');
+      expect(alertSpy).toHaveBeenCalledWith(
+        '',
+        '¡Rutina editada correctamente!',
+        [{ text: 'OK' }]
+      );
     });
 
     alertSpy.mockRestore();
@@ -175,7 +188,7 @@ describe('Routine', () => {
   });
 
   it('debería aparecer un alert cuando se intenta guardar un nombre de carpeta vacío', async () => {
-    jest.spyOn(window, 'alert').mockImplementation(() => {});
+    jest.spyOn(Alert, 'alert').mockImplementation(() => {});
     const { getByText, getByPlaceholderText } = render(<Routine />);
 
     const newFolderButton = getByText('Nueva Carpeta');
@@ -188,8 +201,10 @@ describe('Routine', () => {
     fireEvent.press(saveButton);
 
     await waitFor(() => {
-      expect(global.alert).toHaveBeenCalledWith(
-        'Por favor, introduce un nombre para la nueva carpeta.'
+      expect(Alert.alert).toHaveBeenCalledWith(
+        '',
+        'Por favor, introduce un nombre para la nueva carpeta.',
+        [{ text: 'OK' }]
       );
     });
   });
@@ -198,7 +213,7 @@ describe('Routine', () => {
     (useCreateTemplateWorkoutGroup as jest.Mock).mockResolvedValue({
       error: 'Some error',
     });
-    jest.spyOn(window, 'alert').mockImplementation(() => {});
+    jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 
     const { getByText, getByPlaceholderText } = render(<Routine />);
 
@@ -212,8 +227,10 @@ describe('Routine', () => {
     fireEvent.press(saveButton);
 
     await waitFor(() => {
-      expect(global.alert).toHaveBeenCalledWith(
-        'Se ha producido un error al crear el nuevo grupo.'
+      expect(Alert.alert).toHaveBeenCalledWith(
+        '',
+        'Se ha producido un error al crear el nuevo grupo.',
+        [{ text: 'OK' }]
       );
     });
   });
@@ -222,16 +239,18 @@ describe('Routine', () => {
     (useFetchTemplateWorkouts as jest.Mock).mockResolvedValue({
       error: 'Some error',
     });
-    jest.spyOn(window, 'alert').mockImplementation(() => {});
+    jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 
     render(<Routine />);
 
     await waitFor(() => {
-      expect(global.alert).toHaveBeenCalledWith(
-        'Se ha producido un error al obtener las rutinas.'
+      expect(Alert.alert).toHaveBeenCalledWith(
+        '',
+        'Se ha producido un error al obtener las rutinas.',
+        [{ text: 'OK' }]
       );
     });
 
-    (global.alert as jest.Mock).mockRestore();
+    (Alert.alert as jest.Mock).mockRestore();
   });
 });

@@ -8,6 +8,7 @@ import {
 import { useDeleteWorkoutTemplate } from '@/hooks/workoutTemplateHook';
 import { emitter } from '@/utils/emitter';
 import DetailsRoutine from '@/screens/DetailsRoutine';
+import { Alert } from 'react-native';
 
 jest.mock('../../styles.css', () => ({}));
 
@@ -33,7 +34,7 @@ jest.mock('@/utils/emitter', () => ({
   emitter: { emit: jest.fn() },
 }));
 
-global.alert = jest.fn();
+Alert.alert = jest.fn();
 
 describe('DetailsRoutine', () => {
   const mockRoutineData = {
@@ -212,13 +213,15 @@ describe('DetailsRoutine', () => {
       error: 'Some error',
     });
 
-    const alertSpy = jest.spyOn(global, 'alert').mockImplementation(() => {});
+    const alertSpy = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 
     render(<DetailsRoutine />);
 
     await waitFor(() =>
       expect(alertSpy).toHaveBeenCalledWith(
-        'Se ha producido un error obteniendo los datos de la gráfica.'
+        '',
+        'Se ha producido un error obteniendo los datos de la gráfica.',
+        [{ text: 'OK' }]
       )
     );
 
@@ -231,13 +234,15 @@ describe('DetailsRoutine', () => {
       error: 'Some error',
     });
 
-    const alertSpy = jest.spyOn(global, 'alert').mockImplementation(() => {});
+    const alertSpy = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 
     render(<DetailsRoutine />);
 
     await waitFor(() =>
       expect(alertSpy).toHaveBeenCalledWith(
-        'Se ha producido un error obteniendo los ejercicios.'
+        '',
+        'Se ha producido un error obteniendo los ejercicios.',
+        [{ text: 'OK' }]
       )
     );
 
@@ -249,7 +254,7 @@ describe('DetailsRoutine', () => {
       error: 'Some error',
     });
 
-    const alertSpy = jest.spyOn(global, 'alert').mockImplementation(() => {});
+    const alertSpy = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 
     const { getByText, getByTestId } = render(<DetailsRoutine />);
 
@@ -259,7 +264,9 @@ describe('DetailsRoutine', () => {
 
     await waitFor(() =>
       expect(alertSpy).toHaveBeenCalledWith(
-        'Se ha producido un error al eliminar la rutina.'
+        '',
+        'Se ha producido un error al eliminar la rutina.',
+        [{ text: 'OK' }]
       )
     );
 

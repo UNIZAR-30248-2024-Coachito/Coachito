@@ -11,7 +11,7 @@ import {
   InputSlot,
   InputIcon,
 } from '../components/ui/input';
-import { Pressable, ScrollView } from 'react-native';
+import { Alert, Pressable, ScrollView } from 'react-native';
 import { useFetchExercisesList } from '@/hooks/exerciseHook';
 import ExercisesListCardResume from '@/components/exercise/ExercisesListCardResume';
 import { SearchIcon } from 'lucide-react-native';
@@ -39,6 +39,12 @@ const AddExercise: React.FC = () => {
       if (exists) {
         return prevSelected.filter((e) => e.id !== exercise.id);
       } else {
+        if (prevSelected.length >= 20) {
+          Alert.alert('', 'Solo se pueden seleccionar hasta 20 ejercicios.', [
+            { text: 'OK' },
+          ]);
+          return prevSelected;
+        }
         return [...prevSelected, exercise];
       }
     });
@@ -50,6 +56,10 @@ const AddExercise: React.FC = () => {
     if (!error) {
       setExercises(data);
       setFilteredExercises(data);
+    } else {
+      Alert.alert('', 'Se ha producido un error al obtener los ejercicios.', [
+        { text: 'OK' },
+      ]);
     }
   };
 

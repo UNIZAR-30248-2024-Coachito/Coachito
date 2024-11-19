@@ -4,7 +4,7 @@ import { Box } from '../ui/box';
 import '../../styles.css';
 import { Button } from '../ui/button';
 import { MoreHorizontal, Pencil, Trash } from 'lucide-react-native';
-import { Pressable } from 'react-native';
+import { Alert, Pressable } from 'react-native';
 import { useDeleteWorkoutTemplate } from '@/hooks/workoutTemplateHook';
 import SlideUpBaseModal from '../shared/SlideUpBaseModal';
 import PopupBaseModal from '../shared/PopupBaseModal';
@@ -37,7 +37,9 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
     if (!error) {
       emitter.emit('routineDeleted');
     } else {
-      alert('Se ha producido un error al eliminar la rutina.');
+      Alert.alert('', 'Se ha producido un error al eliminar la rutina.', [
+        { text: 'OK' },
+      ]);
     }
   };
 

@@ -25,6 +25,7 @@ import { NavigationProps } from '@/types/navigation';
 import PopupBaseModal from '../shared/PopupBaseModal';
 import { Input, InputField } from '../ui/input';
 import { emitter } from '@/utils/emitter';
+import { Alert } from 'react-native';
 
 export interface GroupedRoutines {
   groupId: number;
@@ -49,6 +50,20 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
     groupedRoutine.groupName ?? ''
   );
 
+  const createRoutine = async () => {
+    if (groupedRoutine.routines.length >= 7) {
+      Alert.alert('', 'No puede añadir más de 7 rutinas por carpeta.', [
+        { text: 'OK' },
+      ]);
+      return;
+    }
+
+    navigation.navigate('AddRoutine', {
+      exercises: [],
+      groupId: groupedRoutine.groupId,
+    });
+  };
+
   const deleteGroup = async () => {
     const { error } = await useDeleteTemplateWorkoutGroupById(
       groupedRoutine.groupId
@@ -57,7 +72,9 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
     if (!error) {
       emitter.emit('groupDeleted');
     } else {
-      alert('Se ha producido un error eliminando la carpeta.');
+      Alert.alert('', 'Se ha producido un error eliminando la carpeta.', [
+        { text: 'OK' },
+      ]);
     }
   };
 
@@ -66,7 +83,9 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
     setIsRenameGroupModalVisible(false);
 
     if (folderName === '') {
-      alert('Por favor, introduce un nombre para la nueva carpeta.');
+      Alert.alert('', 'Por favor, introduce un nombre para la nueva carpeta.', [
+        { text: 'OK' },
+      ]);
       return;
     }
 
@@ -80,7 +99,9 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
       emitter.emit('groupRenamed');
     } else {
       setNewFolderName(groupedRoutine.groupName!);
-      alert('Se ha producido un error al renombrar la carpeta.');
+      Alert.alert('', 'Se ha producido un error al renombrar la carpeta.', [
+        { text: 'OK' },
+      ]);
     }
   };
 
@@ -128,12 +149,7 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
     <Button
       key="2"
       className="bg-transparent gap-2"
-      onPress={() =>
-        navigation.navigate('AddRoutine', {
-          exercises: [],
-          groupId: groupedRoutine.groupId,
-        })
-      }
+      onPress={() => createRoutine()}
     >
       <Plus color="white" />
       <Text className="text-white">Agregar nueva rutina</Text>

@@ -11,7 +11,7 @@ import { Award } from 'lucide-react-native';
 import CustomAreaChart, {
   DataChartProps,
 } from '@/components/shared/CustomAreaChart';
-import { Image } from 'react-native';
+import { Alert, Image } from 'react-native';
 
 export interface repsWeight {
   reps: number;
@@ -48,8 +48,10 @@ const DetailsExercise: React.FC = () => {
     if (!error) {
       setExercisesDetails(data);
     } else {
-      alert(
-        'Se ha producido un error al obtener la información del ejercicio.'
+      Alert.alert(
+        '',
+        'Se ha producido un error al obtener la información del ejercicio.',
+        [{ text: 'OK' }]
       );
     }
   };

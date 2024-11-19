@@ -1,9 +1,13 @@
 import React from 'react';
 import { render, fireEvent, act } from '@testing-library/react-native';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import { useCreateRoutine } from '@/hooks/workoutTemplateHook';
+import {
+  useCreateRoutine,
+  useRoutineTitleExists,
+} from '@/hooks/workoutTemplateHook';
 import AddRoutine from '@/screens/AddRoutine';
 import { emitter } from '@/utils/emitter';
+import { Alert } from 'react-native';
 
 jest.mock('../../styles.css', () => ({}));
 
@@ -14,6 +18,7 @@ jest.mock('@react-navigation/native', () => ({
 
 jest.mock('@/hooks/workoutTemplateHook', () => ({
   useCreateRoutine: jest.fn(),
+  useRoutineTitleExists: jest.fn(),
 }));
 
 jest.mock('@/utils/emitter', () => ({
@@ -137,7 +142,10 @@ describe('AddRoutine', () => {
 
   it('debería crear una rutina correctamente cuando hay un título y ejercicios seleccionados', async () => {
     jest.mocked(useCreateRoutine).mockResolvedValue({ error: null });
-    global.alert = jest.fn;
+    jest
+      .mocked(useRoutineTitleExists)
+      .mockResolvedValue({ data: false, error: null });
+    Alert.alert = jest.fn;
 
     const { getByText, getByPlaceholderText } = render(<AddRoutine />);
     const input = getByPlaceholderText('Título de la rutina');
@@ -150,6 +158,10 @@ describe('AddRoutine', () => {
       fireEvent.press(saveButton);
     });
 
+    expect(useRoutineTitleExists).toHaveBeenCalledWith(
+      'Nueva Rutina',
+      routeMock.params.groupId
+    );
     expect(useCreateRoutine).toHaveBeenCalledWith(
       'Nueva Rutina',
       expect.anything(),
@@ -160,7 +172,7 @@ describe('AddRoutine', () => {
   });
 
   it('debería mostrar un error si el título de la rutina está vacío', async () => {
-    const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => {});
+    const alertMock = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
     const { getByText } = render(<AddRoutine />);
 
     const saveButton = getByText('Guardar');
@@ -169,14 +181,19 @@ describe('AddRoutine', () => {
     });
 
     expect(alertMock).toHaveBeenCalledWith(
-      'Por favor, introduce un nombre para la nueva rutina.'
+      '',
+      'Por favor, introduce un nombre para la nueva rutina.',
+      [{ text: 'OK' }]
     );
     alertMock.mockRestore();
   });
 
   it('debería mostrar un error si la creación de la rutina falla', async () => {
     jest.mocked(useCreateRoutine).mockResolvedValue({ error: 'Some error' });
-    const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => {});
+    jest
+      .mocked(useRoutineTitleExists)
+      .mockResolvedValue({ data: false, error: null });
+    const alertMock = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 
     const { getByText, getByPlaceholderText } = render(<AddRoutine />);
 
@@ -189,14 +206,16 @@ describe('AddRoutine', () => {
     });
 
     expect(alertMock).toHaveBeenCalledWith(
-      'Se ha producido un error al crear la rutina.'
+      '',
+      'Se ha producido un error al crear la rutina.',
+      [{ text: 'OK' }]
     );
 
     alertMock.mockRestore();
   });
 
   it('debería mostrar un error si no hay ejercicios seleccionados al crear la rutina', async () => {
-    const alertMock = jest.spyOn(window, 'alert').mockImplementation(() => {});
+    const alertMock = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
     routeMock.params.exercises = [];
     const { getByText, getByPlaceholderText } = render(<AddRoutine />);
 
@@ -211,7 +230,9 @@ describe('AddRoutine', () => {
     });
 
     expect(alertMock).toHaveBeenCalledWith(
-      'La rutina debe contener mínimo un ejercicio.'
+      '',
+      'La rutina debe contener mínimo un ejercicio.',
+      [{ text: 'OK' }]
     );
     alertMock.mockRestore();
   });

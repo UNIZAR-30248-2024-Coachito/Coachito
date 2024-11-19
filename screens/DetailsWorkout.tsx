@@ -3,7 +3,7 @@ import { Text } from '../components/ui/text';
 import { VStack } from '../components/ui/vstack';
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '@/types/navigation';
-import { ScrollView } from 'react-native';
+import { Alert, ScrollView } from 'react-native';
 import { useFetchDetailsWorkout } from '@/hooks/workoutHook';
 import ExercisesRoutineResumeComponent, {
   ExerciseResume,
@@ -31,7 +31,9 @@ const DetailsWorkout: React.FC = () => {
     if (!error) {
       setWorkoutResume(data);
     } else {
-      alert('Se ha producido un error al obtener los datos.');
+      Alert.alert('', 'Se ha producido un error al obtener los datos.', [
+        { text: 'OK' },
+      ]);
     }
   };
 

@@ -203,9 +203,25 @@ const useUpdateRoutine = async (
   return { error: null };
 };
 
+const useRoutineTitleExists = async (title: string, groupId: number) => {
+  const { execute } = useCRUD(() =>
+    supabaseClient.get('/rpc/routine_title_exists', {
+      params: {
+        routine_title: title,
+        folder_id: groupId,
+      },
+    })
+  );
+
+  const { data, error } = await execute();
+
+  return { data, error };
+};
+
 export {
   useDeleteWorkoutTemplate,
   useFetchTemplateWorkouts,
   useCreateRoutine,
   useUpdateRoutine,
+  useRoutineTitleExists,
 };

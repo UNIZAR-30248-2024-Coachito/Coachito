@@ -7,6 +7,7 @@ import {
   useCreateWorkout,
 } from '@/hooks/workoutHook';
 import StartWorkout from '@/screens/StartWorkout';
+import { Alert } from 'react-native';
 
 jest.mock('../../styles.css', () => ({}));
 
@@ -26,7 +27,7 @@ jest.mock('@/utils/emitter', () => ({
 
 jest.useFakeTimers();
 
-global.alert = jest.fn();
+Alert.alert = jest.fn();
 
 describe('StartWorkout', () => {
   const navigateMock = jest.fn();
@@ -129,8 +130,10 @@ describe('StartWorkout', () => {
     render(<StartWorkout />);
 
     await waitFor(() => {
-      expect(global.alert).toHaveBeenCalledWith(
-        'Se ha producido un error obteniendo los ejercicios.'
+      expect(Alert.alert).toHaveBeenCalledWith(
+        '',
+        'Se ha producido un error obteniendo los ejercicios.',
+        [{ text: 'OK' }]
       );
     });
   });
@@ -167,8 +170,10 @@ describe('StartWorkout', () => {
     });
 
     await waitFor(() => {
-      expect(global.alert).toHaveBeenCalledWith(
-        'Se ha producido un error al guardar el entrenamiento.'
+      expect(Alert.alert).toHaveBeenCalledWith(
+        '',
+        'Se ha producido un error al guardar el entrenamiento.',
+        [{ text: 'OK' }]
       );
     });
   });
