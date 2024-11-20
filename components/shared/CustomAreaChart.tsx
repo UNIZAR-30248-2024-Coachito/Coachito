@@ -1,12 +1,9 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import '../../styles.css';
 import { LineChart } from 'react-native-gifted-charts';
-import { HStack } from '../ui/hstack';
-import { Text } from '../ui/text';
 import { Dimensions } from 'react-native';
 import CustomChartButtons from './CustomChartButtons';
-import { VStack } from '../ui/vstack';
+import { HStack, VStack, Text } from '@gluestack-ui/themed';
 
 export interface DataPoint {
   value: number;

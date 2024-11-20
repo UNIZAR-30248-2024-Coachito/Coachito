@@ -1,22 +1,17 @@
 import React from 'react';
-import { Text } from '../ui/text';
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableData,
-} from '../ui/table';
-import { HStack } from '../ui/hstack';
-import '../../styles.css';
-import { Avatar, AvatarFallbackText, AvatarImage } from '../ui/avatar';
 import { Pressable } from 'react-native';
 import { Timer } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '@/types/navigation';
-import { Box } from '../ui/box';
 import { convertIntervalToMinutesAndSeconds } from '@/utils/interval';
+import {
+  Avatar,
+  AvatarFallbackText,
+  AvatarImage,
+  Box,
+  HStack,
+  Text,
+} from '@gluestack-ui/themed';
 
 export interface SetsExerciseResume {
   weight: number;
@@ -81,8 +76,8 @@ const ExercisesRoutineResumeComponent: React.FC<ExerciseResume> = ({
       </HStack>
 
       <Text>Repeticiones objetivo: {targetReps}</Text>
-
-      <Table className="w-full">
+      
+      {/*<Table className="w-full">
         <TableHeader>
           <TableRow>
             <TableHead>SERIE</TableHead>
@@ -107,7 +102,7 @@ const ExercisesRoutineResumeComponent: React.FC<ExerciseResume> = ({
               </TableRow>
             ))}
         </TableBody>
-      </Table>
+      </Table>*/}
     </Box>
   );
 };

@@ -1,9 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import '../styles.css';
-import { HStack } from '../components/ui/hstack';
-import { VStack } from '../components/ui/vstack';
-import { Text } from '../components/ui/text';
-import { Button } from '../components/ui/button';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NavigationProps, RootStackParamList } from '@/types/navigation';
 import PopupBaseModal from '@/components/shared/PopupBaseModal';
@@ -17,6 +12,7 @@ import DetailsExerciseWorkoutResumeComponent, {
   ExerciseResumeRef,
 } from '@/components/workout/DetailsExerciseWorkoutResume';
 import { emitter } from '@/utils/emitter';
+import { Button, HStack, Text, VStack } from '@gluestack-ui/themed';
 
 const StartWorkout: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();

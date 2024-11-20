@@ -1,6 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { Text } from '../components/ui/text';
-import { VStack } from '../components/ui/vstack';
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { RootStackParamList } from '@/types/navigation';
 import { Alert, ScrollView } from 'react-native';
@@ -14,7 +12,7 @@ import WorkoutHeaderResumeComponent, {
 import WorkoutDivisionComponent, {
   ExerciseProportion,
 } from '@/components/workout/WorkoutDivision';
-import { Box } from '@/components/ui/box';
+import { VStack, Box, Text } from '@gluestack-ui/themed';
 
 export interface WorkoutResume {
   workout_header_resume: WorkoutHeaderResume;

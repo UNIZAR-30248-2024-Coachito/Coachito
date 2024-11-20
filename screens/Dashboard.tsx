@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Alert, ScrollView } from 'react-native';
-import { VStack } from '../components/ui/vstack';
-import '../styles.css';
+import { Alert } from 'react-native';
 import WorkoutCardResumeComponent, {
   WorkoutCardResume,
 } from '@/components/workout/WorkoutCardResume';
@@ -9,6 +7,7 @@ import { useFetchDashboardWorkouts } from '@/hooks/dashboardHook';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '@/types/navigation';
 import { emitter } from '@/utils/emitter';
+import { ScrollView, VStack } from '@gluestack-ui/themed';
 
 const Dashboard: React.FC = () => {
   const [workouts, setWorkouts] = useState<WorkoutCardResume[]>([]);

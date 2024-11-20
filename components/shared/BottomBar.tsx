@@ -1,11 +1,8 @@
 import React from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Home, Dumbbell, User } from 'lucide-react-native';
-import { Pressable } from 'react-native';
-import { HStack } from '../ui/hstack';
-import { VStack } from '../ui/vstack';
-import { Text } from '../ui/text';
 import { NavigationProps } from '@/types/navigation';
+import { HStack, Pressable, VStack, Text } from '@gluestack-ui/themed';
 
 export default function BottomBar() {
   const navigation = useNavigation<NavigationProps>();

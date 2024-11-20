@@ -4,26 +4,6 @@ import React, {
   useState,
   useEffect,
 } from 'react';
-import { Text } from '../ui/text';
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableData,
-} from '../ui/table';
-import { HStack } from '../ui/hstack';
-import '../../styles.css';
-import { Avatar, AvatarFallbackText, AvatarImage } from '../ui/avatar';
-import { Pressable } from 'react-native';
-import { Plus, Timer, Trash } from 'lucide-react-native';
-import { Input, InputField } from '../ui/input';
-import { Button } from '../ui/button';
-import { Textarea, TextareaInput } from '../ui/textarea';
-import SlideUpBaseModal from '../shared/SlideUpBaseModal';
-import { VStack } from '../ui/vstack';
-import { Box } from '../ui/box';
 import Slider from '@react-native-assets/slider';
 import {
   ExerciseResume,
@@ -34,6 +14,23 @@ import {
   convertSecondsToString,
   convertStringToInterval,
 } from '@/utils/interval';
+import {
+  VStack,
+  Text,
+  Box,
+  HStack,
+  Avatar,
+  AvatarFallbackText,
+  AvatarImage,
+  Pressable,
+  Textarea,
+  TextareaInput,
+  Button,
+  Input,
+  InputField,
+} from '@gluestack-ui/themed';
+import { Plus, Timer, Trash } from 'lucide-react-native';
+import SlideUpBaseModal from '../shared/SlideUpBaseModal';
 
 export interface ExerciseResumeRef {
   getExerciseData: () => ExerciseResume;
@@ -238,7 +235,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
             />
           </Input>
 
-          <Table className="w-[350px]">
+          {/*<Table className="w-[350px]">
             <TableHeader>
               <TableRow className="border-b-0 bg-background-0 hover:bg-background-0">
                 <TableHead className="text-sm">SERIE</TableHead>
@@ -295,7 +292,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
                 </TableRow>
               ))}
             </TableBody>
-          </Table>
+          </Table>*/}
 
           {exerciseSets.length < 10 && (
             <Button

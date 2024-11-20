@@ -1,19 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import '../styles.css';
-import { Text } from '../components/ui/text';
-import { ScrollView } from '@/components/ui/scroll-view';
-import { VStack } from '@/components/ui/vstack';
 import { NavigationProps, RootStackParamList } from '@/types/navigation';
 import { useRoute, RouteProp, useNavigation } from '@react-navigation/native';
 import {
   useFetchDetailsLastWorkout,
   useFetchRoutineWorkouts,
 } from '@/hooks/workoutHook';
-import { HStack } from '@/components/ui/hstack';
 import ExercisesRoutineResumeComponent, {
   ExerciseResume,
 } from '@/components/routine/ExercisesRoutineResume';
-import { Button } from '@/components/ui/button';
 import { MoreHorizontal, Pencil, Trash } from 'lucide-react-native';
 import SlideUpBaseModal from '@/components/shared/SlideUpBaseModal';
 import PopupBaseModal from '@/components/shared/PopupBaseModal';
@@ -23,6 +17,7 @@ import CustomAreaChart, {
   DataChartProps,
 } from '@/components/shared/CustomAreaChart';
 import { Alert } from 'react-native';
+import { Button, ScrollView, Text, HStack, VStack } from '@gluestack-ui/themed';
 
 const DetailsRoutine: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();

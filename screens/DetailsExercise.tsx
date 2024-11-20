@@ -1,17 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import '../styles.css';
-import { Text } from '../components/ui/text';
-import { ScrollView } from '@/components/ui/scroll-view';
-import { VStack } from '@/components/ui/vstack';
 import { RootStackParamList } from '@/types/navigation';
 import { useRoute, RouteProp } from '@react-navigation/native';
 import { useFetchExerciseDetails } from '@/hooks/exerciseHook';
-import { HStack } from '@/components/ui/hstack';
 import { Award } from 'lucide-react-native';
 import CustomAreaChart, {
   DataChartProps,
 } from '@/components/shared/CustomAreaChart';
 import { Alert, Image } from 'react-native';
+import { Text, ScrollView, VStack, HStack } from '@gluestack-ui/themed';
 
 export interface repsWeight {
   reps: number;

@@ -1,5 +1,4 @@
 import React from 'react';
-import '../../styles.css';
 import { Pressable } from 'react-native';
 import WorkoutExercisesResumeComponent, {
   WorkoutExercisesResume,

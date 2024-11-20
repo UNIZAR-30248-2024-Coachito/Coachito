@@ -1,7 +1,7 @@
 module.exports = {
   preset: 'jest-expo',
   transformIgnorePatterns: [
-    'node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg|@gluestack-ui|nativewind)',
+    'node_modules/(?!((jest-)?react-native|@react-native(-community)?)|expo(nent)?|@expo(nent)?/.*|@expo-google-fonts/.*|react-navigation|@react-navigation/.*|@sentry/react-native|native-base|react-native-svg)',
   ],
   collectCoverage: true,
   collectCoverageFrom: [
@@ -11,7 +11,6 @@ module.exports = {
     '!**/*.config.js',
     '!**/*-env.d.ts',
     '!**/.*/**',
-    '!**/components/ui/**',
     '!**/types/**',
   ],
   testTimeout: 30000,

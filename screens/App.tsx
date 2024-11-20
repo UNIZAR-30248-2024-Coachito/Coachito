@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Dashboard from './Dashboard';
@@ -8,7 +7,6 @@ import Profile from './Profile';
 import DetailsWorkout from './DetailsWorkout';
 import { RootStackParamList } from '@/types/navigation';
 import Template from '@/components/shared/Template';
-import '@/styles.css';
 import DetailsRoutine from './DetailsRoutine';
 import AddExercise from './AddExercise';
 import AddRoutine from './AddRoutine';
@@ -16,14 +14,16 @@ import EditRoutine from './EditRoutine';
 import AddExerciseEdit from './AddExerciseEdit';
 import StartWorkout from './StartWorkout';
 import DetailsExercise from './DetailsExercise';
+import { GluestackUIProvider } from '@gluestack-ui/themed';
+import { config } from '@gluestack-ui/config';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
 export default function App() {
-  const [colorMode] = useState<'light' | 'dark'>('dark');
+  //const [colorMode] = useState<'light' | 'dark'>('dark');
 
   return (
-    <GluestackUIProvider mode={colorMode}>
+    <GluestackUIProvider config={config}>
       <NavigationContainer>
         <Tab.Navigator
           screenOptions={{

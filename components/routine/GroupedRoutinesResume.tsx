@@ -1,7 +1,4 @@
 import React, { useState } from 'react';
-import '../../styles.css';
-import { Text } from '../ui/text';
-import { Button } from '../ui/button';
 import {
   ChevronDown,
   ChevronRight,
@@ -13,19 +10,24 @@ import {
 import MyRoutinesCardResumeComponent, {
   MyRoutinesCardResume,
 } from './MyRoutinesCardResume';
-import { VStack } from '../ui/vstack';
 import {
   useDeleteTemplateWorkoutGroupById,
   useEditTemplateWorkoutGroup,
 } from '@/hooks/workoutTemplateGroupHook';
-import { HStack } from '../ui/hstack';
 import SlideUpBaseModal from '../shared/SlideUpBaseModal';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '@/types/navigation';
 import PopupBaseModal from '../shared/PopupBaseModal';
-import { Input, InputField } from '../ui/input';
 import { emitter } from '@/utils/emitter';
 import { Alert } from 'react-native';
+import {
+  Input,
+  Button,
+  Text,
+  InputField,
+  VStack,
+  HStack,
+} from '@gluestack-ui/themed';
 
 export interface GroupedRoutines {
   groupId: number;

@@ -1,9 +1,6 @@
 import React from 'react';
-import { VStack } from '../ui/vstack';
-import { Avatar, AvatarFallbackText, AvatarImage } from '../ui/avatar';
-import { Text } from '../ui/text';
-import { HStack } from '../ui/hstack';
 import { ExerciseResume } from '../routine/ExercisesRoutineResume';
+import { Avatar, AvatarFallbackText, HStack, AvatarImage, Text, VStack } from '@gluestack-ui/themed';
 
 const ExercisesListCardResume: React.FC<ExerciseResume> = ({
   name,

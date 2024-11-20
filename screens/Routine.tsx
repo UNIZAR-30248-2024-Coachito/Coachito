@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import '../styles.css';
-import { Text } from '../components/ui/text';
-import { Button } from '../components/ui/button';
 import { ClipboardList, FolderPlus } from 'lucide-react-native';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '@/types/navigation';
-import { ScrollView } from '@/components/ui/scroll-view';
-import { VStack } from '@/components/ui/vstack';
 import { useFetchTemplateWorkouts } from '@/hooks/workoutTemplateHook';
-import { HStack } from '@/components/ui/hstack';
 import GroupedRoutinesResumeComponent, {
   GroupedRoutines,
 } from '@/components/routine/GroupedRoutinesResume';
 import PopupBaseModal from '@/components/shared/PopupBaseModal';
-import { Input, InputField } from '@/components/ui/input';
 import { useCreateTemplateWorkoutGroup } from '@/hooks/workoutTemplateGroupHook';
 import { emitter } from '@/utils/emitter';
+import {
+  Button,
+  ScrollView,
+  Input,
+  InputField,
+  VStack,
+  HStack,
+} from '@gluestack-ui/themed';
 import { Alert } from 'react-native';
 
 export interface Group {

@@ -1,16 +1,13 @@
 import React, { useState } from 'react';
-import { Text } from '../ui/text';
-import { Box } from '../ui/box';
-import '../../styles.css';
-import { Button } from '../ui/button';
 import { MoreHorizontal, Pencil, Trash } from 'lucide-react-native';
-import { Alert, Pressable } from 'react-native';
+import { Alert } from 'react-native';
 import { useDeleteWorkoutTemplate } from '@/hooks/workoutTemplateHook';
 import SlideUpBaseModal from '../shared/SlideUpBaseModal';
 import PopupBaseModal from '../shared/PopupBaseModal';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '@/types/navigation';
 import { emitter } from '@/utils/emitter';
+import { Text, Box, Button, Pressable } from '@gluestack-ui/themed';
 
 export interface MyRoutinesCardResume {
   templateId: number;

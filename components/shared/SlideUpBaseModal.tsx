@@ -1,9 +1,7 @@
 import React from 'react';
 import { Modal, TouchableOpacity } from 'react-native';
-import { Text } from '../ui/text';
-import { Box } from '../ui/box';
 import { Minus } from 'lucide-react-native';
-import { Divider } from '../ui/divider';
+import { Box, Divider, Text } from '@gluestack-ui/themed';
 
 export interface SlideUpModalProps {
   buttons: React.ReactNode[];

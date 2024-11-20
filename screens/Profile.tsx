@@ -1,16 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import '../styles.css';
 import { CircleUserRound, Dumbbell } from 'lucide-react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '@/types/navigation';
-import { VStack } from '@/components/ui/vstack';
-import { Text } from '@/components/ui/text';
 import { useFetchUserWorkouts } from '@/hooks/userHook';
-import { HStack } from '@/components/ui/hstack';
 import CustomBarChart from '@/components/shared/CustomBarChart';
 import { DataChartProps } from '@/components/shared/CustomAreaChart';
 import { convertIntervalToMinutes } from '@/utils/interval';
 import { formatToChartLabel } from '@/utils/date';
+import { HStack, Text, VStack } from '@gluestack-ui/themed';
 
 export interface UserWorkouts {
   workoutId: number;

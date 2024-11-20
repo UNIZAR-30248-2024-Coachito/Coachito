@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
-import { Button } from '../ui/button';
-import { HStack } from '../ui/hstack';
-import { Text } from '../ui/text';
 import { DataChartProps, DataPoint } from './CustomAreaChart';
-import { ScrollView } from '../ui/scroll-view';
+import { ScrollView, HStack, Button, Text } from '@gluestack-ui/themed';
 
 export interface CustomChartButtonsProps {
   buttons: string[];

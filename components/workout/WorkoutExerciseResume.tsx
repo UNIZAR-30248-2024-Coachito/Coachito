@@ -1,10 +1,13 @@
+import {
+  Box,
+  Text,
+  VStack,
+  HStack,
+  Avatar,
+  AvatarFallbackText,
+  AvatarImage,
+} from '@gluestack-ui/themed';
 import React from 'react';
-import { Text } from '../ui/text';
-import { Box } from '../ui/box';
-import { HStack } from '../ui/hstack';
-import { VStack } from '../ui/vstack';
-import '../../styles.css';
-import { Avatar, AvatarFallbackText, AvatarImage } from '../ui/avatar';
 
 export interface WorkoutExerciseResume {
   exerciseName: string;

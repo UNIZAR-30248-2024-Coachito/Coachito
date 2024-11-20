@@ -1,10 +1,5 @@
 import React from 'react';
-import { Text } from '../ui/text';
-import { Box } from '../ui/box';
-import { VStack } from '../ui/vstack';
-import { HStack } from '../ui/hstack';
-import { Progress, ProgressFilledTrack } from '@/components/ui/progress';
-import '../../styles.css';
+import { VStack, Box, Text, HStack, Progress, ProgressFilledTrack } from '@gluestack-ui/themed';
 
 export interface ExerciseProportion {
   name: string;

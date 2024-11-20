@@ -1,21 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { Text } from '../components/ui/text';
-import { HStack } from '../components/ui/hstack';
-import { VStack } from '../components/ui/vstack';
-import { Button } from '../components/ui/button';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NavigationProps, RootStackParamList } from '@/types/navigation';
-import {
-  InputField,
-  Input,
-  InputSlot,
-  InputIcon,
-} from '../components/ui/input';
 import { Alert, Pressable, ScrollView } from 'react-native';
 import { useFetchExercisesList } from '@/hooks/exerciseHook';
 import ExercisesListCardResume from '@/components/exercise/ExercisesListCardResume';
 import { SearchIcon } from 'lucide-react-native';
 import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
+import { HStack, VStack, Button, Text, Input, InputSlot, InputIcon, InputField } from '@gluestack-ui/themed';
 
 type AddExerciseRouteProp = RouteProp<RootStackParamList, 'AddExercise'>;
 

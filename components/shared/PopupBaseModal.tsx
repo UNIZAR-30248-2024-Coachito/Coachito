@@ -1,6 +1,6 @@
+import { Box } from '@gluestack-ui/themed';
 import React from 'react';
 import { Modal, TouchableOpacity } from 'react-native';
-import { Box } from '../ui/box';
 
 interface PopupBaseModalProps {
   components: React.ReactNode[];

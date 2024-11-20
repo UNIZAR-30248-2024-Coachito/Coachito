@@ -4,24 +4,8 @@ import React, {
   useImperativeHandle,
   useState,
 } from 'react';
-import { Text } from '../ui/text';
-import {
-  Table,
-  TableHeader,
-  TableRow,
-  TableHead,
-  TableBody,
-  TableData,
-} from '../ui/table';
-import { HStack } from '../ui/hstack';
-import '../../styles.css';
-import { Avatar, AvatarFallbackText, AvatarImage } from '../ui/avatar';
 import { Modal, Pressable, Vibration } from 'react-native';
 import { InfoIcon, Play, Plus, Timer } from 'lucide-react-native';
-import { Input, InputField } from '../ui/input';
-import { Button } from '../ui/button';
-import { Textarea, TextareaInput } from '../ui/textarea';
-import { Box } from '../ui/box';
 import {
   ExerciseResume,
   SetsExerciseResume,
@@ -39,7 +23,7 @@ import {
   MAX_LENGHT_NOTES,
 } from '../exercise/ExerciseResume';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
-import { Alert, AlertIcon, AlertText } from '../ui/alert';
+import { Alert, AlertIcon, AlertText, Avatar, AvatarFallbackText, AvatarImage, Box, Button, HStack, Input, InputField, Textarea, TextareaInput, Text } from '@gluestack-ui/themed';
 
 export interface ExerciseResumeRef {
   getExerciseData: () => ExerciseResume;

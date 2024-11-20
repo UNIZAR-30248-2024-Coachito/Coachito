@@ -1,10 +1,4 @@
 import React, { useRef, useState, useEffect, useCallback } from 'react';
-import '../styles.css';
-import { HStack } from '../components/ui/hstack';
-import { VStack } from '../components/ui/vstack';
-import { Text } from '../components/ui/text';
-import { Button } from '../components/ui/button';
-import { InputField, Input } from '../components/ui/input';
 import { Plus } from 'lucide-react-native';
 import { Dumbbell } from 'lucide-react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
@@ -18,6 +12,7 @@ import { useFetchDetailsLastWorkout } from '@/hooks/workoutHook';
 import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 import { emitter } from '@/utils/emitter';
 import { useUpdateRoutine } from '@/hooks/workoutTemplateHook';
+import { HStack, VStack, Button, Text, Input, InputField } from '@gluestack-ui/themed';
 
 const EditRoutine: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
