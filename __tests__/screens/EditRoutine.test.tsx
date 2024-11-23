@@ -5,8 +5,6 @@ import EditRoutine from '@/screens/EditRoutine';
 import { useFetchDetailsLastWorkout } from '@/hooks/workoutHook';
 import { Alert } from 'react-native';
 
-jest.mock('../../styles.css', () => ({}));
-
 jest.mock('@react-navigation/native', () => ({
   useNavigation: jest.fn(),
   useRoute: jest.fn(),

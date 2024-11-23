@@ -7,8 +7,6 @@ import { useCreateTemplateWorkoutGroup } from '@/hooks/workoutTemplateGroupHook'
 import Routine from '@/screens/Routine';
 import { Alert } from 'react-native';
 
-jest.mock('../../styles.css', () => ({}));
-
 jest.mock('@react-navigation/native', () => ({
   useNavigation: jest.fn(),
 }));

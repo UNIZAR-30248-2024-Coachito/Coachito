@@ -1,39 +1,19 @@
-/* eslint-disable */
-'use client'
-import '../../../styles.css'
-import React from 'react'
-import { createTextarea } from '@gluestack-ui/textarea'
-import { View, TextInput, Platform } from 'react-native'
-import { tva } from '@gluestack-ui/nativewind-utils/tva'
+'use client';
+import React from 'react';
+import { createTextarea } from '@gluestack-ui/textarea';
+import { View, TextInput } from 'react-native';
+import { tva } from '@gluestack-ui/nativewind-utils/tva';
 import {
   withStyleContext,
   useStyleContext,
-} from '@gluestack-ui/nativewind-utils/withStyleContext'
-import { withStyleContextAndStates } from '@gluestack-ui/nativewind-utils/withStyleContextAndStates'
-import { cssInterop } from 'nativewind'
-import { withStates } from '@gluestack-ui/nativewind-utils/withStates'
-import type { VariantProps } from '@gluestack-ui/nativewind-utils'
+} from '@gluestack-ui/nativewind-utils/withStyleContext';
+import type { VariantProps } from '@gluestack-ui/nativewind-utils';
 
-const TextareaWrapper = React.forwardRef<
-  React.ElementRef<typeof View>,
-  React.ComponentProps<typeof View>
->(({ ...props }, ref) => {
-  return <View {...props} ref={ref} />
-})
-
-const SCOPE = 'TEXTAREA'
+const SCOPE = 'TEXTAREA';
 const UITextarea = createTextarea({
-  Root:
-    Platform.OS === 'web'
-      ? withStyleContext(TextareaWrapper, SCOPE)
-      : withStyleContextAndStates(TextareaWrapper, SCOPE),
-  Input: Platform.OS === 'web' ? TextInput : withStates(TextInput),
-})
-
-cssInterop(TextareaWrapper, { className: 'style' })
-cssInterop(UITextarea.Input, {
-  className: { target: 'style', nativeStyleToProp: { textAlign: true } },
-})
+  Root: withStyleContext(View, SCOPE),
+  Input: TextInput,
+});
 
 const textareaStyle = tva({
   base: 'w-full h-[100px] border border-background-300 rounded data-[hover=true]:border-outline-400 data-[focus=true]:border-primary-700 data-[focus=true]:data-[hover=true]:border-primary-700 data-[disabled=true]:opacity-40 data-[disabled=true]:bg-background-50 data-[disabled=true]:data-[hover=true]:border-background-300',
@@ -50,7 +30,7 @@ const textareaStyle = tva({
       xl: '',
     },
   },
-})
+});
 
 const textareaInputStyle = tva({
   base: 'p-2 web:outline-0 web:outline-none flex-1 color-typography-900 align-text-top placeholder:text-typography-500 web:cursor-text web:data-[disabled=true]:cursor-not-allowed',
@@ -62,10 +42,10 @@ const textareaInputStyle = tva({
       xl: 'text-xl',
     },
   },
-})
+});
 
 type ITextareaProps = React.ComponentProps<typeof UITextarea> &
-  VariantProps<typeof textareaStyle>
+  VariantProps<typeof textareaStyle>;
 
 const Textarea = React.forwardRef<
   React.ElementRef<typeof UITextarea>,
@@ -78,17 +58,17 @@ const Textarea = React.forwardRef<
       className={textareaStyle({ variant, class: className })}
       context={{ size }}
     />
-  )
-})
+  );
+});
 
 type ITextareaInputProps = React.ComponentProps<typeof UITextarea.Input> &
-  VariantProps<typeof textareaInputStyle>
+  VariantProps<typeof textareaInputStyle>;
 
 const TextareaInput = React.forwardRef<
   React.ElementRef<typeof UITextarea.Input>,
   ITextareaInputProps
 >(({ className, ...props }, ref) => {
-  const { size: parentSize } = useStyleContext(SCOPE)
+  const { size: parentSize } = useStyleContext(SCOPE);
 
   return (
     <UITextarea.Input
@@ -101,10 +81,10 @@ const TextareaInput = React.forwardRef<
         class: className,
       })}
     />
-  )
-})
+  );
+});
 
-Textarea.displayName = 'Textarea'
-TextareaInput.displayName = 'TextareaInput'
+Textarea.displayName = 'Textarea';
+TextareaInput.displayName = 'TextareaInput';
 
-export { Textarea, TextareaInput }
+export { Textarea, TextareaInput };

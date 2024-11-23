@@ -5,8 +5,6 @@ import { useFetchDetailsWorkout } from '@/hooks/workoutHook';
 import DetailsWorkout from '@/screens/DetailsWorkout';
 import { Alert } from 'react-native';
 
-jest.mock('../../styles.css', () => ({}));
-
 jest.mock('@react-navigation/native', () => ({
   useNavigation: jest.fn(),
   useRoute: jest.fn(),

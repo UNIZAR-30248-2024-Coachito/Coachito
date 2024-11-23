@@ -7,8 +7,6 @@ import { Vibration } from 'react-native';
 
 jest.useFakeTimers();
 
-jest.mock('../../../styles.css', () => ({}));
-
 describe('DetailsExerciseWorkoutResumeComponent', () => {
   const mockData = {
     id: 1,

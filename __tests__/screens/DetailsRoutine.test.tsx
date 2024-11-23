@@ -10,8 +10,6 @@ import { emitter } from '@/utils/emitter';
 import DetailsRoutine from '@/screens/DetailsRoutine';
 import { Alert } from 'react-native';
 
-jest.mock('../../styles.css', () => ({}));
-
 jest.mock('react-native-gifted-charts', () => ({
   LineChart: jest.fn(() => <></>),
 }));

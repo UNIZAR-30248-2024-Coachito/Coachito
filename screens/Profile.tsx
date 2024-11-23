@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import '../styles.css';
 import { CircleUserRound, Dumbbell } from 'lucide-react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '@/types/navigation';

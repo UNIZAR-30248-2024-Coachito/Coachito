@@ -1,6 +1,5 @@
 /* eslint-disable react-native/no-inline-styles */
 import React, { useEffect, useState } from 'react';
-import '../../styles.css';
 import { BarChart } from 'react-native-gifted-charts';
 import { HStack } from '../ui/hstack';
 import { Text } from '../ui/text';

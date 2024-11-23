@@ -4,8 +4,6 @@ import Profile from '@/screens/Profile';
 import { useFetchUserWorkouts } from '@/hooks/userHook';
 import { useRoute } from '@react-navigation/native';
 
-jest.mock('../../styles.css', () => ({}));
-
 jest.mock('@react-navigation/native', () => ({
   useRoute: jest.fn(),
 }));

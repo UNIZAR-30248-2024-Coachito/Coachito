@@ -9,8 +9,6 @@ const mockTextElement = (text: string) => {
   return <Text>{text}</Text>;
 };
 
-jest.mock('../../../styles.css', () => ({}));
-
 jest.mock(
   '../../../components/workout/WorkoutHeaderResume',
   () => (props: WorkoutHeaderResume) => mockTextElement(props.workoutName)

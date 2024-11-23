@@ -4,8 +4,6 @@ import WorkoutDivisionComponent, {
   ExerciseProportion,
 } from '@/components/workout/WorkoutDivision';
 
-jest.mock('../../../styles.css', () => ({}));
-
 describe('WorkoutDivisionComponent', () => {
   it('debería renderizar correctamente el nombre y proporción de cada ejercicio', () => {
     const mockData: ExerciseProportion[] = [

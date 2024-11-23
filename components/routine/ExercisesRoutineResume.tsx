@@ -9,7 +9,6 @@ import {
   TableData,
 } from '../ui/table';
 import { HStack } from '../ui/hstack';
-import '../../styles.css';
 import { Avatar, AvatarFallbackText, AvatarImage } from '../ui/avatar';
 import { Pressable } from 'react-native';
 import { Timer } from 'lucide-react-native';

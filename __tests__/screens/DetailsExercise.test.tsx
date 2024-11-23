@@ -5,8 +5,6 @@ import { useRoute } from '@react-navigation/native';
 import { useFetchExerciseDetails } from '@/hooks/exerciseHook';
 import { Alert } from 'react-native';
 
-jest.mock('../../styles.css', () => ({}));
-
 jest.mock('react-native-gifted-charts', () => ({
   LineChart: jest.fn(() => <></>),
 }));

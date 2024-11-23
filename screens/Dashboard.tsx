@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Alert, ScrollView } from 'react-native';
 import { VStack } from '../components/ui/vstack';
-import '../styles.css';
 import WorkoutCardResumeComponent, {
   WorkoutCardResume,
 } from '@/components/workout/WorkoutCardResume';

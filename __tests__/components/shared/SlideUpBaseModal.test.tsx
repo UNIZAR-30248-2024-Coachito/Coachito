@@ -3,8 +3,6 @@ import { render, fireEvent } from '@testing-library/react-native';
 import { Text } from '@/components/ui/text';
 import SlideUpBaseModal from '@/components/shared/SlideUpBaseModal';
 
-jest.mock('../../../styles.css', () => ({}));
-
 const mockSetIsModalVisible = jest.fn();
 
 describe('SlideUpBaseModal', () => {

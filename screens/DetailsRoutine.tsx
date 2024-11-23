@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react';
-import '../styles.css';
 import { Text } from '../components/ui/text';
 import { ScrollView } from '@/components/ui/scroll-view';
 import { VStack } from '@/components/ui/vstack';

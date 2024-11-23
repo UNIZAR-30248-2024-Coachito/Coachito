@@ -4,8 +4,6 @@ import React from 'react';
 import { render } from '@testing-library/react-native';
 import App from '@/screens/App';
 
-jest.mock('../../styles.css', () => ({}));
-
 // Mock de los componentes importados
 jest.mock('../../screens/Dashboard', () => {
   const { Text } = require('react-native');

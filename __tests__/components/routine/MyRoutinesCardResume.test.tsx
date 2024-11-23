@@ -5,8 +5,6 @@ import { emitter } from '@/utils/emitter';
 import { useDeleteWorkoutTemplate } from '@/hooks/workoutTemplateHook';
 import { Alert } from 'react-native';
 
-jest.mock('../../../styles.css', () => ({}));
-
 jest.mock('@/hooks/workoutTemplateHook', () => ({
   useDeleteWorkoutTemplate: jest.fn(),
 }));

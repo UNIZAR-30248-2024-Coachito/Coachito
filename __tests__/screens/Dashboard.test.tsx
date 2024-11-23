@@ -5,8 +5,6 @@ import { useFetchDashboardWorkouts } from '@/hooks/dashboardHook';
 import { useNavigation } from '@react-navigation/native';
 import { Alert } from 'react-native';
 
-jest.mock('../../styles.css', () => ({}));
-
 jest.mock('@/hooks/dashboardHook', () => ({
   useFetchDashboardWorkouts: jest.fn(),
 }));

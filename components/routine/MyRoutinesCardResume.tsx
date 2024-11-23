@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { Text } from '../ui/text';
 import { Box } from '../ui/box';
-import '../../styles.css';
 import { Button } from '../ui/button';
 import { MoreHorizontal, Pencil, Trash } from 'lucide-react-native';
 import { Alert, Pressable } from 'react-native';

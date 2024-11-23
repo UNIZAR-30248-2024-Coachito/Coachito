@@ -9,8 +9,6 @@ import AddRoutine from '@/screens/AddRoutine';
 import { emitter } from '@/utils/emitter';
 import { Alert } from 'react-native';
 
-jest.mock('../../styles.css', () => ({}));
-
 jest.mock('@react-navigation/native', () => ({
   useNavigation: jest.fn(),
   useRoute: jest.fn(),

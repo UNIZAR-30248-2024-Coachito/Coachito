@@ -9,8 +9,6 @@ import { useFetchExercisesList } from '@/hooks/exerciseHook';
 import AddExercise from '@/screens/AddExercise';
 import { RootStackParamList } from '@/types/navigation';
 
-jest.mock('../../styles.css', () => ({}));
-
 jest.mock('@react-navigation/native', () => ({
   useNavigation: jest.fn(),
   useRoute: jest.fn(),

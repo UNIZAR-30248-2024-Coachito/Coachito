@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import '../styles.css';
 import { Text } from '../components/ui/text';
 import { Button } from '../components/ui/button';
 import { ClipboardList, FolderPlus } from 'lucide-react-native';

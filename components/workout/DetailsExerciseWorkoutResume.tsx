@@ -14,7 +14,6 @@ import {
   TableData,
 } from '../ui/table';
 import { HStack } from '../ui/hstack';
-import '../../styles.css';
 import { Avatar, AvatarFallbackText, AvatarImage } from '../ui/avatar';
 import { Modal, Pressable, Vibration } from 'react-native';
 import { InfoIcon, Play, Plus, Timer } from 'lucide-react-native';

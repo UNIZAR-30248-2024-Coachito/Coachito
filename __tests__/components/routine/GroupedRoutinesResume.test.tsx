@@ -11,8 +11,6 @@ import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import React from 'react';
 import { Alert } from 'react-native';
 
-jest.mock('../../../styles.css', () => ({}));
-
 jest.mock('@react-navigation/native', () => ({
   useNavigation: jest.fn(),
 }));

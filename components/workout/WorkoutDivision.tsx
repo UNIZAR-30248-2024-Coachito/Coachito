@@ -4,7 +4,6 @@ import { Box } from '../ui/box';
 import { VStack } from '../ui/vstack';
 import { HStack } from '../ui/hstack';
 import { Progress, ProgressFilledTrack } from '@/components/ui/progress';
-import '../../styles.css';
 
 export interface ExerciseProportion {
   name: string;
