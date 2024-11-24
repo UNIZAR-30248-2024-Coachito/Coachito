@@ -22,7 +22,17 @@ export interface Group {
   name: string;
 }
 
-const Routine: React.FC = () => {
+interface RoutineProps {
+  backgroundColorBoton: string;
+  textColor: string;
+  backgroundColorPopUp: string;
+}
+
+const Routine: React.FC<RoutineProps> = ({
+  backgroundColorBoton,
+  textColor,
+  backgroundColorPopUp,
+}) => {
   const navigation = useNavigation<NavigationProps>();
   const [routines, setRoutines] = useState<GroupedRoutines[]>([]);
   const [isNewGroupModalVisible, setIsNewGroupModalVisible] = useState(false);
@@ -117,10 +127,18 @@ const Routine: React.FC = () => {
   };
 
   const newFolderComponentsPopUpModal: React.ReactNode[] = [
-    <Text key="1" className="text-xl font-bold text-center text-white mb-4">
+    <Text
+      style={{ color: textColor }}
+      key="1"
+      className="text-xl font-bold text-center text-white mb-4"
+    >
       Crear nueva carpeta
     </Text>,
-    <Input key="2" className="mb-4">
+    <Input
+      key="2"
+      style={{ backgroundColor: backgroundColorBoton }}
+      className="mb-4"
+    >
       <InputField
         placeholder="Nueva carpeta"
         value={newFolderInputValue}
@@ -129,36 +147,43 @@ const Routine: React.FC = () => {
     </Input>,
     <Button
       key="3"
+      style={{ color: '#3b82f6' }}
       className="bg-blue-500 rounded-lg mb-4"
       onPress={createGroup}
     >
-      <Text className="text-white">Guardar</Text>
+      <Text style={{ color: textColor }}>Guardar</Text>
     </Button>,
     <Button
+      style={{ backgroundColor: backgroundColorBoton }}
       key="4"
-      className="bg-zinc-700 rounded-lg"
+      className="rounded-lg"
       onPress={() => {
         setIsNewGroupModalVisible(false);
       }}
     >
-      <Text className="text-white">Cancelar</Text>
+      <Text style={{ color: textColor }}>Cancelar</Text>
     </Button>,
   ];
 
   return (
     <ScrollView className="flex-1">
       <VStack className="p-4">
-        <Text className="text-xl font-bold text-white mb-4">Rutinas</Text>
+        <Text className="text-xl font-bold text-black mb-4">Rutinas</Text>
 
         <HStack className="mb-4">
-          <Button className="bg-zinc-900" onPress={() => createRoutine()}>
-            <ClipboardList color="white" />
-            <Text className="text-white ml-2">Nueva Rutina</Text>
+          <Button
+            style={{ backgroundColor: backgroundColorBoton }}
+            onPress={() => createRoutine()}
+          >
+            <ClipboardList color={textColor} />
+            <Text style={{ color: textColor }} className="text-white ml-2">
+              Nueva Rutina
+            </Text>
           </Button>
 
           <VStack>
             <Button
-              className="bg-zinc-900 ml-4"
+              style={{ backgroundColor: backgroundColorBoton }}
               onPress={() => {
                 if (routines.length > 10) {
                   Alert.alert(
@@ -171,20 +196,26 @@ const Routine: React.FC = () => {
                 }
               }}
             >
-              <FolderPlus color="white" />
-              <Text className="text-white ml-2">Nueva Carpeta</Text>
+              <FolderPlus color={textColor} />
+              <Text style={{ color: textColor }} className="ml-2">
+                Nueva Carpeta
+              </Text>
             </Button>
           </VStack>
         </HStack>
 
         {routines!.map((routine, index) => (
           <GroupedRoutinesResumeComponent
+            backgroundColor={backgroundColorBoton}
+            textColor={textColor}
+            backgrounColorPopUp={backgroundColorPopUp}
             key={index}
             groupedRoutine={routine}
           />
         ))}
 
         <PopupBaseModal
+          backgroundColor={backgroundColorPopUp}
           components={newFolderComponentsPopUpModal}
           isVisible={isNewGroupModalVisible}
           setIsModalVisible={setIsNewGroupModalVisible}

@@ -72,7 +72,10 @@ export default function App() {
               >
                 <Tab.Screen name="Dashboard">
                   {() => (
-                    <Template>
+                    <Template
+                      backgroundColor={statusBackgroundColor}
+                      iconColor={textColor}
+                    >
                       <Dashboard
                         backgroundColor={statusBackgroundColor}
                         backgroundColorEntrenamiento={statusBoxColor}
@@ -83,70 +86,104 @@ export default function App() {
                 </Tab.Screen>
                 <Tab.Screen name="Routine">
                   {() => (
-                    <Template>
-                      <Routine />
+                    <Template
+                      backgroundColor={statusBackgroundColor}
+                      iconColor={textColor}
+                    >
+                      <Routine
+                        backgroundColorBoton={statusBoxColor}
+                        textColor={textColor}
+                        backgroundColorPopUp={statusTableColor}
+                      />
                     </Template>
                   )}
                 </Tab.Screen>
                 <Tab.Screen name="DetailsRoutine">
                   {() => (
-                    <Template>
+                    <Template
+                      backgroundColor={statusBackgroundColor}
+                      iconColor={textColor}
+                    >
                       <DetailsRoutine />
                     </Template>
                   )}
                 </Tab.Screen>
                 <Tab.Screen name="Profile">
                   {() => (
-                    <Template>
+                    <Template
+                      backgroundColor={statusBackgroundColor}
+                      iconColor={textColor}
+                    >
                       <Profile />
                     </Template>
                   )}
                 </Tab.Screen>
                 <Tab.Screen name="AddExercise">
                   {() => (
-                    <Template>
+                    <Template
+                      backgroundColor={statusBackgroundColor}
+                      iconColor={textColor}
+                    >
                       <AddExercise />
                     </Template>
                   )}
                 </Tab.Screen>
                 <Tab.Screen name="AddRoutine">
                   {() => (
-                    <Template>
+                    <Template
+                      backgroundColor={statusBackgroundColor}
+                      iconColor={textColor}
+                    >
                       <AddRoutine />
                     </Template>
                   )}
                 </Tab.Screen>
                 <Tab.Screen name="EditRoutine">
                   {() => (
-                    <Template>
+                    <Template
+                      backgroundColor={statusBackgroundColor}
+                      iconColor={textColor}
+                    >
                       <EditRoutine />
                     </Template>
                   )}
                 </Tab.Screen>
                 <Tab.Screen name="AddExerciseEdit">
                   {() => (
-                    <Template>
+                    <Template
+                      backgroundColor={statusBackgroundColor}
+                      iconColor={textColor}
+                    >
                       <AddExerciseEdit />
                     </Template>
                   )}
                 </Tab.Screen>
                 <Tab.Screen name="StartWorkout">
                   {() => (
-                    <Template>
+                    <Template
+                      backgroundColor={statusBackgroundColor}
+                      iconColor={textColor}
+                    >
                       <StartWorkout />
                     </Template>
                   )}
                 </Tab.Screen>
                 <Tab.Screen name="DetailsWorkout">
                   {() => (
-                    <Template>
+                    <Template
+                      backgroundColor={statusBackgroundColor}
+                      iconColor={textColor}
+                    >
                       <DetailsWorkout />
                     </Template>
                   )}
                 </Tab.Screen>
                 <Tab.Screen name="DetailsExercise">
                   {() => (
-                    <Template>
+                    <Template
+                      backgroundColor={statusBackgroundColor}
+                      iconColor={textColor}
+                    >
                       <DetailsExercise />
                     </Template>
                   )}

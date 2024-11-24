@@ -18,10 +18,16 @@ export interface MyRoutinesCardResume {
 }
 
 export interface MyRoutineCardResumeProps {
+  backgroundColor: string;
+  textColor: string;
+  backgrounColorPopUp: string;
   routineCardResume: MyRoutinesCardResume;
 }
 
 const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
+  backgroundColor,
+  textColor,
+  backgrounColorPopUp,
   routineCardResume,
 }) => {
   const navigation = useNavigation<NavigationProps>();
@@ -97,7 +103,8 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
 
   return (
     <Pressable
-      className="bg-zinc-900 p-4 mb-4 rounded-lg"
+      style={{ backgroundColor }}
+      className="p-4 mb-4 rounded-lg"
       onPress={() =>
         navigation.navigate('DetailsRoutine', {
           templateId: routineCardResume.templateId,
@@ -106,7 +113,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
       }
     >
       <Box className="flex-row justify-between items-center">
-        <Text className="text-xl font-bold mb-2 text-white">
+        <Text style={{ color: textColor }} className="text-xl font-bold mb-2">
           {routineCardResume.myRoutineName}
         </Text>
 
@@ -126,7 +133,8 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
       </Text>
 
       <Button
-        className="bg-blue-500 rounded-lg"
+        style={{ backgroundColor: '#3b82f6' }}
+        className="rounded-lg"
         onPress={() =>
           navigation.navigate('StartWorkout', {
             routineId: routineCardResume.templateId,
@@ -145,6 +153,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
       />
 
       <PopupBaseModal
+        backgroundColor={backgrounColorPopUp}
         components={componentsPopUpModal}
         isVisible={isDeleteModalVisible}
         setIsModalVisible={setIsDeleteModalVisible}

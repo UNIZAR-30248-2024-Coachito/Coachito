@@ -7,7 +7,15 @@ import { VStack } from '../ui/vstack';
 import { Text } from '../ui/text';
 import { NavigationProps } from '@/types/navigation';
 
-export default function BottomBar() {
+interface BottomBarProps {
+  backgroundColor: string;
+  iconColor: string;
+}
+
+const BottomBar: React.FC<BottomBarProps> = ({
+  backgroundColor,
+  iconColor,
+}) => {
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute();
 
@@ -16,15 +24,18 @@ export default function BottomBar() {
   const isProfileActive = route.name === 'Profile';
 
   return (
-    <HStack className="justify-around bg-zinc-950 py-4">
+    <HStack
+      style={{ backgroundColor: backgroundColor }}
+      className="justify-around py-4"
+    >
       <Pressable onPress={() => navigation.navigate('Dashboard')}>
         <VStack className="items-center">
           <Home
             testID="inicio-icon"
-            color={isDashboardActive ? 'rgb(59 130 246)' : 'white'}
+            color={isDashboardActive ? 'rgb(59 130 246)' : iconColor}
           />
           <Text
-            className={`text-xs ${isDashboardActive ? 'text-blue-500' : 'text-gray-400'}`}
+            className={`text-xs ${isDashboardActive ? 'text-blue-500' : iconColor}`}
           >
             Inicio
           </Text>
@@ -34,10 +45,10 @@ export default function BottomBar() {
         <VStack className="items-center">
           <Dumbbell
             testID="entrenamiento-icon"
-            color={isRoutineActive ? 'rgb(59 130 246)' : 'white'}
+            color={isRoutineActive ? 'rgb(59 130 246)' : iconColor}
           />
           <Text
-            className={`text-xs ${isRoutineActive ? 'text-blue-500' : 'text-gray-400'}`}
+            className={`text-xs ${isRoutineActive ? 'text-blue-500' : iconColor}`}
           >
             Rutinas
           </Text>
@@ -47,10 +58,10 @@ export default function BottomBar() {
         <VStack className="items-center">
           <User
             testID="perfil-icon"
-            color={isProfileActive ? 'rgb(59 130 246)' : 'white'}
+            color={isProfileActive ? 'rgb(59 130 246)' : iconColor}
           />
           <Text
-            className={`text-xs ${isProfileActive ? 'text-blue-500' : 'text-gray-400'}`}
+            className={`text-xs ${isProfileActive ? 'text-blue-500' : iconColor}`}
           >
             Perfil
           </Text>
@@ -58,4 +69,6 @@ export default function BottomBar() {
       </Pressable>
     </HStack>
   );
-}
+};
+
+export default BottomBar;

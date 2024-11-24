@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { CircleUserRound, Dumbbell } from 'lucide-react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { CircleUserRound, Dumbbell, Moon } from 'lucide-react-native';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '@/types/navigation';
 import { VStack } from '@/components/ui/vstack';
@@ -10,6 +10,8 @@ import CustomBarChart from '@/components/shared/CustomBarChart';
 import { DataChartProps } from '@/components/shared/CustomAreaChart';
 import { convertIntervalToMinutes } from '@/utils/interval';
 import { formatToChartLabel } from '@/utils/date';
+import { ThemeContext } from './App';
+import { Pressable } from 'react-native';
 
 export interface UserWorkouts {
   workoutId: number;
@@ -30,6 +32,7 @@ const Profile: React.FC = () => {
   const userId = route.params.userId;
   const [workoutsDetails, setWorkoutsDetails] = useState<UserWorkoutsDetails>();
   const [chartData, setChartData] = useState<DataChartProps[]>([]);
+  const { colorMode, toggleColorMode } = useContext(ThemeContext);
 
   const fetchUserProfile = async () => {
     const { data, error } = await useFetchUserWorkouts(userId);
@@ -85,6 +88,11 @@ const Profile: React.FC = () => {
 
   return (
     <VStack className="items-center gap-4">
+      <HStack className="flex-row justify-end gap-2 w-full mt-5 mr-10">
+        <Pressable onPress={toggleColorMode}>
+          <Moon color="#000000" />
+        </Pressable>
+      </HStack>
       <CircleUserRound color="#3b82f6" size={100} />
 
       {workoutsDetails && (
