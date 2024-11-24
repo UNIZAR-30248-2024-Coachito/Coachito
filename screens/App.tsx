@@ -31,15 +31,23 @@ export const ThemeContext = React.createContext<ThemeContextType>({
 });
 
 export default function App() {
-  const [colorMode, setColorMode] = React.useState<'dark' | 'light'>('dark');
+  const [colorMode, setColorMode] = React.useState<'dark' | 'light'>('light');
 
   const statusBarbackgroundColor =
-    colorMode === 'light' ? '#ffffff' : '#000000';
+    colorMode === 'light' ? '#ffffff' : '#1b1b1b';
+
+  const statusBackgroundColor = colorMode === 'light' ? '#ffffff' : '#1b1b1b';
+
+  const statusBoxColor = colorMode === 'light' ? '#f4f4f5' : '#27272a';
+
+  const textColor = colorMode === 'light' ? '#000000' : '#ffffff';
+
+  const statusTableColor = colorMode === 'light' ? '#3f3f46' : '#757575';
 
   const toggleColorMode = async () => {
     setColorMode((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
-
+  console.log(colorMode);
   return (
     <>
       <StatusBar
@@ -65,7 +73,11 @@ export default function App() {
                 <Tab.Screen name="Dashboard">
                   {() => (
                     <Template>
-                      <Dashboard />
+                      <Dashboard
+                        backgroundColor={statusBackgroundColor}
+                        backgroundColorEntrenamiento={statusBoxColor}
+                        textColor={textColor}
+                      />
                     </Template>
                   )}
                 </Tab.Screen>

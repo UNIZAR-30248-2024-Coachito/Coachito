@@ -9,7 +9,17 @@ import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '@/types/navigation';
 import { emitter } from '@/utils/emitter';
 
-const Dashboard: React.FC = () => {
+interface DashboardProps {
+  backgroundColor: string;
+  backgroundColorEntrenamiento: string;
+  textColor: string;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({
+  backgroundColor,
+  backgroundColorEntrenamiento,
+  textColor,
+}) => {
   const [workouts, setWorkouts] = useState<WorkoutCardResume[]>([]);
   const navigation = useNavigation<NavigationProps>();
 
@@ -26,7 +36,6 @@ const Dashboard: React.FC = () => {
       );
     }
   };
-
   useEffect(() => {
     fetchWorkouts();
   }, []);
@@ -49,9 +58,11 @@ const Dashboard: React.FC = () => {
 
   return (
     <ScrollView className="flex-1">
-      <VStack className="p-4">
+      <VStack style={{ backgroundColor }} className="p-4">
         {workouts!.map((workout, index) => (
           <WorkoutCardResumeComponent
+            backgroundColor={backgroundColorEntrenamiento}
+            textColor={textColor}
             key={index}
             workout_header_resume={workout.workout_header_resume}
             workout_exercises_resume={workout.workout_exercises_resume}

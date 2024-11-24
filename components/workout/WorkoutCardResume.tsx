@@ -8,19 +8,28 @@ import WorkoutHeaderResumeComponent, {
 } from './WorkoutHeaderResume';
 
 export interface WorkoutCardResume {
+  backgroundColor: string;
+  textColor: string;
   workout_header_resume: WorkoutHeaderResume;
   workout_exercises_resume: WorkoutExercisesResume;
   onPress?: () => void;
 }
 
 const WorkoutCardResumeComponent: React.FC<WorkoutCardResume> = ({
+  backgroundColor,
+  textColor,
   workout_header_resume: workoutHeaderResume,
   workout_exercises_resume: workoutExercisesResume,
   onPress,
 }) => {
   return (
-    <Pressable onPress={onPress} className="bg-zinc-900 p-4 mb-4 rounded-lg">
+    <Pressable
+      onPress={onPress}
+      style={{ backgroundColor }}
+      className="p-4 mb-4 rounded-lg"
+    >
       <WorkoutHeaderResumeComponent
+        textColor={textColor}
         workoutId={workoutHeaderResume.workoutId}
         workoutName={workoutHeaderResume.workoutName}
         workoutDate={workoutHeaderResume.workoutDate}
@@ -29,6 +38,7 @@ const WorkoutCardResumeComponent: React.FC<WorkoutCardResume> = ({
         workoutSeries={workoutHeaderResume.workoutSeries}
       />
       <WorkoutExercisesResumeComponent
+        textColor={textColor}
         exercises={workoutExercisesResume.exercises}
       />
     </Pressable>

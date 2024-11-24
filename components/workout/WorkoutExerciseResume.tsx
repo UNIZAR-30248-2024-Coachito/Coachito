@@ -12,10 +12,12 @@ export interface WorkoutExerciseResume {
 }
 
 export interface WorkoutExercisesResume {
+  textColor: string;
   exercises: WorkoutExerciseResume[];
 }
 
 const WorkoutExercisesResumeComponent: React.FC<WorkoutExercisesResume> = ({
+  textColor,
   exercises,
 }) => {
   const totalVisibleExercises = 3;
@@ -23,7 +25,9 @@ const WorkoutExercisesResumeComponent: React.FC<WorkoutExercisesResume> = ({
 
   return (
     <Box>
-      <Text className="font-semibold mb-2 text-white">Entrenamiento</Text>
+      <Text style={{ color: textColor }} className="font-semibold mb-2">
+        Entrenamiento
+      </Text>
       <VStack className="gap-y-4">
         {visibleExercises.map((exercise, index) => (
           <HStack key={index} className="items-center gap-4">
@@ -35,14 +39,14 @@ const WorkoutExercisesResumeComponent: React.FC<WorkoutExercisesResume> = ({
                 }}
               />
             </Avatar>
-            <Text className="flex-1 text-white">
+            <Text style={{ color: textColor }} className="flex-1">
               {exercise.series} series {exercise.exerciseName}
             </Text>
           </HStack>
         ))}
       </VStack>
       {exercises.length > totalVisibleExercises && (
-        <Text className="mt-2 text-gray-400 text-center">
+        <Text style={{ color: textColor }} className="mt-2 text-center">
           Ver {exercises.length - totalVisibleExercises} ejercicios más
         </Text>
       )}
