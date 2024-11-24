@@ -22,7 +22,15 @@ import ExerciseResumeComponent, {
 
 const MAX_LENGHT_TITLE = 100;
 
-const AddRoutine: React.FC = () => {
+interface AddRoutineProps {
+  backgroundColor: string;
+  textColor: string;
+}
+
+const AddRoutine: React.FC<AddRoutineProps> = ({
+  backgroundColor,
+  textColor,
+}) => {
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute<RouteProp<RootStackParamList, 'AddRoutine'>>();
 
@@ -127,7 +135,10 @@ const AddRoutine: React.FC = () => {
 
   return (
     <ScrollView className="flex-1">
-      <VStack className="p-4 gap-2 items-center">
+      <VStack
+        style={{ backgroundColor: backgroundColor }}
+        className="p-4 gap-2 items-center"
+      >
         <HStack className="w-full gap-6 mb-4">
           <Button
             testID="cancel-routine"
@@ -171,6 +182,8 @@ const AddRoutine: React.FC = () => {
         ) : (
           selectedExercises.map((exercise, index) => (
             <ExerciseResumeComponent
+              backgroundColor={backgroundColor}
+              textColor={textColor}
               key={index}
               ref={(el) => (exerciseRefs.current[index] = el)}
               id={exercise.id}

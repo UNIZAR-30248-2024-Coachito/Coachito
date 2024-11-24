@@ -23,6 +23,8 @@ export interface SetsExerciseResume {
 }
 
 export interface ExerciseResume {
+  backgroundColor: string;
+  textColor: string;
   id: number;
   name: string;
   thumbnailUrl: string;

@@ -9,9 +9,14 @@ const ExercisesListCardResume: React.FC<ExerciseResume> = ({
   name,
   thumbnailUrl,
   primaryMuscleGroup,
+  backgroundColor,
+  textColor,
 }) => {
   return (
-    <HStack className="gap-4 p-2 w-full">
+    <HStack
+      style={{ backgroundColor: backgroundColor }}
+      className="gap-4 p-2 w-full"
+    >
       <Avatar>
         <AvatarFallbackText>{name}</AvatarFallbackText>
         <AvatarImage
@@ -21,8 +26,8 @@ const ExercisesListCardResume: React.FC<ExerciseResume> = ({
         />
       </Avatar>
       <VStack>
-        <Text className="text-white">{name}</Text>
-        <Text className="text-gray-400">{primaryMuscleGroup}</Text>
+        <Text style={{ color: textColor }}>{name}</Text>
+        <Text style={{ color: textColor }}>{primaryMuscleGroup}</Text>
       </VStack>
     </HStack>
   );

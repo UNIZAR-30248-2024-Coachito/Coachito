@@ -31,7 +31,7 @@ export const ThemeContext = React.createContext<ThemeContextType>({
 });
 
 export default function App() {
-  const [colorMode, setColorMode] = React.useState<'dark' | 'light'>('light');
+  const [colorMode, setColorMode] = React.useState<'dark' | 'light'>('dark');
 
   const statusBarbackgroundColor =
     colorMode === 'light' ? '#ffffff' : '#1b1b1b';
@@ -44,7 +44,7 @@ export default function App() {
 
   const statusTableColor = colorMode === 'light' ? '#3f3f46' : '#757575';
 
-  const toggleColorMode = async () => {
+  const toggleColorMode = () => {
     setColorMode((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
   console.log(colorMode);
@@ -94,6 +94,7 @@ export default function App() {
                         backgroundColorBoton={statusBoxColor}
                         textColor={textColor}
                         backgroundColorPopUp={statusTableColor}
+                        backgroundColor={statusBackgroundColor}
                       />
                     </Template>
                   )}
@@ -114,7 +115,7 @@ export default function App() {
                       backgroundColor={statusBackgroundColor}
                       iconColor={textColor}
                     >
-                      <Profile />
+                      <Profile backgroundColor={statusBackgroundColor} />
                     </Template>
                   )}
                 </Tab.Screen>
@@ -134,7 +135,10 @@ export default function App() {
                       backgroundColor={statusBackgroundColor}
                       iconColor={textColor}
                     >
-                      <AddRoutine />
+                      <AddRoutine
+                        backgroundColor={statusBackgroundColor}
+                        textColor={textColor}
+                      />
                     </Template>
                   )}
                 </Tab.Screen>
@@ -154,7 +158,10 @@ export default function App() {
                       backgroundColor={statusBackgroundColor}
                       iconColor={textColor}
                     >
-                      <AddExerciseEdit />
+                      <AddExerciseEdit
+                        backgroundColor={statusBackgroundColor}
+                        textColor={textColor}
+                      />
                     </Template>
                   )}
                 </Tab.Screen>

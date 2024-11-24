@@ -26,12 +26,14 @@ interface RoutineProps {
   backgroundColorBoton: string;
   textColor: string;
   backgroundColorPopUp: string;
+  backgroundColor: string;
 }
 
 const Routine: React.FC<RoutineProps> = ({
   backgroundColorBoton,
   textColor,
   backgroundColorPopUp,
+  backgroundColor,
 }) => {
   const navigation = useNavigation<NavigationProps>();
   const [routines, setRoutines] = useState<GroupedRoutines[]>([]);
@@ -167,8 +169,10 @@ const Routine: React.FC<RoutineProps> = ({
 
   return (
     <ScrollView className="flex-1">
-      <VStack className="p-4">
-        <Text className="text-xl font-bold text-black mb-4">Rutinas</Text>
+      <VStack className="p-4" style={{ backgroundColor: backgroundColor }}>
+        <Text style={{ color: textColor }} className="text-xl font-bold mb-4">
+          Rutinas
+        </Text>
 
         <HStack className="mb-4">
           <Button
@@ -176,7 +180,7 @@ const Routine: React.FC<RoutineProps> = ({
             onPress={() => createRoutine()}
           >
             <ClipboardList color={textColor} />
-            <Text style={{ color: textColor }} className="text-white ml-2">
+            <Text style={{ color: textColor }} className="ml-2">
               Nueva Rutina
             </Text>
           </Button>

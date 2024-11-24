@@ -27,7 +27,11 @@ export interface UserWorkoutsDetails {
   workouts: UserWorkouts[];
 }
 
-const Profile: React.FC = () => {
+interface ProfileProps {
+  backgroundColor: string;
+}
+
+const Profile: React.FC<ProfileProps> = ({ backgroundColor }) => {
   const route = useRoute<RouteProp<RootStackParamList, 'Profile'>>();
   const userId = route.params.userId;
   const [workoutsDetails, setWorkoutsDetails] = useState<UserWorkoutsDetails>();
@@ -87,10 +91,10 @@ const Profile: React.FC = () => {
   const buttons = ['Duración', 'Repeticiones', 'Volumen'];
 
   return (
-    <VStack className="items-center gap-4">
+    <VStack style={{ backgroundColor }} className="items-center gap-4">
       <HStack className="flex-row justify-end gap-2 w-full mt-5 mr-10">
         <Pressable onPress={toggleColorMode}>
-          <Moon color="#000000" />
+          <Moon color={colorMode === 'dark' ? '#ffffff' : '#000000'} />
         </Pressable>
       </HStack>
       <CircleUserRound color="#3b82f6" size={100} />
