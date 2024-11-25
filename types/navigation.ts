@@ -6,13 +6,21 @@ export type RootStackParamList = {
   Routine: undefined;
   DetailsRoutine: { templateId: number; myRoutineName: string };
   Profile: { userId: number };
-  AddExercise: { selectedExercises: ExerciseResume[]; groupId: number };
+  AddExercise: {
+    selectedExercises: ExerciseResume[];
+    groupId: number;
+    textColor: string;
+    backgroundColor: string;
+  };
   AddExerciseEdit: {
     selectedExercises: ExerciseResume[];
     routineId: number;
     routineName: string;
   };
-  AddRoutine: { exercises: ExerciseResume[]; groupId: number };
+  AddRoutine: {
+    exercises: ExerciseResume[];
+    groupId: number;
+  };
   ExerciseResume: undefined;
   EditRoutine: {
     routineId: number;
@@ -21,6 +29,9 @@ export type RootStackParamList = {
   StartWorkout: {
     routineId: number;
     routineName: string;
+    textColor: string;
+    backgroundColor: string;
+    backgrounColorPopUp: string;
   };
   DetailsWorkout: { workoutId: number };
   DetailsExercise: { exerciseId: number };

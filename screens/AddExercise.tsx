@@ -17,7 +17,14 @@ import ExercisesListCardResume from '@/components/exercise/ExercisesListCardResu
 import { SearchIcon } from 'lucide-react-native';
 import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 
-type AddExerciseRouteProp = RouteProp<RootStackParamList, 'AddExercise'>;
+type AddExerciseRouteProp = RouteProp<RootStackParamList, 'AddExercise'> & {
+  params: {
+    selectedExercises: ExerciseResume[];
+    groupId: string;
+    textColor: string;
+    backgroundColor: string;
+  };
+};
 
 const AddExercise: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
@@ -32,6 +39,9 @@ const AddExercise: React.FC = () => {
   const [filteredExercises, setFilteredExercises] = useState<ExerciseResume[]>(
     []
   );
+
+  const textColor = route.params.textColor;
+  const backgroundColor = route.params.backgroundColor;
 
   const handleSelectExercise = (exercise: ExerciseResume) => {
     setSelectedExercises((prevSelected) => {
@@ -82,7 +92,10 @@ const AddExercise: React.FC = () => {
 
   return (
     <ScrollView className="flex-1">
-      <VStack className="p-4 gap-4">
+      <VStack
+        style={{ backgroundColor: backgroundColor }}
+        className="p-4 gap-4"
+      >
         <HStack className="items-left gap-4">
           <Button
             className="bg-transparent rounded-lg"
@@ -96,7 +109,9 @@ const AddExercise: React.FC = () => {
           >
             <Text className="text-blue-500">Cancelar</Text>
           </Button>
-          <Text className="text-xl">Agregar Ejercicio</Text>
+          <Text style={{ color: textColor }} className="text-xl">
+            Agregar Ejercicio
+          </Text>
         </HStack>
 
         <Input
@@ -129,6 +144,8 @@ const AddExercise: React.FC = () => {
                 className={`${selectedExercises.includes(exercise) ? 'bg-blue-500' : 'bg-transparent'}`}
               >
                 <ExercisesListCardResume
+                  backgroundColor={backgroundColor}
+                  textColor={textColor}
                   key="1"
                   id={exercise.id}
                   name={exercise.name}

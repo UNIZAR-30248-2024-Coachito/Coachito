@@ -23,13 +23,16 @@ import ExerciseResumeComponent, {
 const MAX_LENGHT_TITLE = 100;
 
 interface AddRoutineProps {
+  backgroundColorBoton: string;
   backgroundColor: string;
   textColor: string;
+  backgroundColorPopUp: string;
 }
 
 const AddRoutine: React.FC<AddRoutineProps> = ({
   backgroundColor,
   textColor,
+  backgroundColorPopUp,
 }) => {
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute<RouteProp<RootStackParamList, 'AddRoutine'>>();
@@ -204,6 +207,8 @@ const AddRoutine: React.FC<AddRoutineProps> = ({
             navigation.navigate('AddExercise', {
               selectedExercises,
               groupId: route.params.groupId,
+              textColor: textColor,
+              backgroundColor: backgroundColor,
             })
           }
         >
@@ -212,6 +217,7 @@ const AddRoutine: React.FC<AddRoutineProps> = ({
         </Button>
 
         <PopupBaseModal
+          backgroundColor={backgroundColorPopUp}
           components={componentsCancelRoutinePopUpModal}
           isVisible={isCancelRoutineModalVisible}
           setIsModalVisible={setIsCancelRoutineModalVisible}

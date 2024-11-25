@@ -30,6 +30,10 @@ const StartWorkout: React.FC = () => {
   const [duration, setDuration] = useState(0);
   const [startTime, setStartTime] = useState<number | null>(null);
 
+  const textColor = route.params.textColor;
+  const backgroundColor = route.params.backgroundColor;
+  const backgrounColorPopUp = route.params.backgrounColorPopUp;
+
   const fetchExercises = async () => {
     setSelectedExercises([]);
 
@@ -147,12 +151,15 @@ const StartWorkout: React.FC = () => {
   };
 
   return (
-    <VStack className="flex-1 p-4 gap-2 items-center">
-      <Text className="text-2xl text-white" bold>
+    <VStack
+      style={{ backgroundColor: backgroundColor }}
+      className="flex-1 p-4 gap-2 items-center"
+    >
+      <Text style={{ color: textColor }} className="text-2xl" bold>
         {route.params.routineName}
       </Text>
 
-      <Text className="text-white mb-4">
+      <Text style={{ color: textColor }} className="text-white mb-4">
         Tiempo transcurrido: {formatDuration(duration)}
       </Text>
 
@@ -195,6 +202,7 @@ const StartWorkout: React.FC = () => {
       </ScrollView>
 
       <PopupBaseModal
+        backgroundColor={backgrounColorPopUp}
         components={componentsCancelRoutinePopUpModal}
         isVisible={isCancelRoutineModalVisible}
         setIsModalVisible={setIsCancelWorkoutModalVisible}

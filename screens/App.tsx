@@ -16,7 +16,7 @@ import AddExerciseEdit from './AddExerciseEdit';
 import StartWorkout from './StartWorkout';
 import DetailsExercise from './DetailsExercise';
 import '../global.css';
-import { SafeAreaView, StatusBar } from 'react-native';
+import { BackHandler, SafeAreaView, StatusBar } from 'react-native';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -136,8 +136,10 @@ export default function App() {
                       iconColor={textColor}
                     >
                       <AddRoutine
+                        backgroundColorBoton={statusBoxColor}
                         backgroundColor={statusBackgroundColor}
                         textColor={textColor}
+                        backgroundColorPopUp={statusTableColor}
                       />
                     </Template>
                   )}
