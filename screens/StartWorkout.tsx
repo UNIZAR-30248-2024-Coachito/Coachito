@@ -34,6 +34,9 @@ const StartWorkout: React.FC = () => {
   const backgroundColor = route.params.backgroundColor;
   const backgrounColorPopUp = route.params.backgrounColorPopUp;
 
+  const redColor = route.params.redColor;
+  const blueColor = route.params.blueColor;
+
   const fetchExercises = async () => {
     setSelectedExercises([]);
 
@@ -120,7 +123,8 @@ const StartWorkout: React.FC = () => {
     </Text>,
     <Button
       key="2"
-      className="bg-red-800 rounded-lg mb-4"
+      style={{ backgroundColor: redColor }}
+      className="rounded-lg mb-4"
       onPress={() => {
         setIsCancelWorkoutModalVisible(false);
         handleResetTimer();
@@ -165,7 +169,8 @@ const StartWorkout: React.FC = () => {
 
       <HStack className="w-full gap-6">
         <Button
-          className="bg-red-800 rounded-lg flex-1"
+          style={{ backgroundColor: redColor }}
+          className="rounded-lg flex-1"
           onPress={() => {
             handleStopTimer();
             setIsCancelWorkoutModalVisible(true);
@@ -174,7 +179,8 @@ const StartWorkout: React.FC = () => {
           <Text className="text-white">Descartar</Text>
         </Button>
         <Button
-          className="bg-blue-500 rounded-lg flex-1"
+          style={{ backgroundColor: blueColor }}
+          className="rounded-lg flex-1"
           onPress={() => {
             handleResetTimer();
             saveWorkout();
@@ -187,6 +193,8 @@ const StartWorkout: React.FC = () => {
       <ScrollView className="w-full">
         {selectedExercises.map((exercise, index) => (
           <DetailsExerciseWorkoutResumeComponent
+            backgroundColor={backgroundColor}
+            textColor={textColor}
             key={index}
             ref={(el) => (exerciseRefs.current[index] = el)}
             id={exercise.id}

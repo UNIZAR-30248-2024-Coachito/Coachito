@@ -27,12 +27,14 @@ interface AddRoutineProps {
   backgroundColor: string;
   textColor: string;
   backgroundColorPopUp: string;
+  blueColor: string;
 }
 
 const AddRoutine: React.FC<AddRoutineProps> = ({
   backgroundColor,
   textColor,
   backgroundColorPopUp,
+  blueColor,
 }) => {
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute<RouteProp<RootStackParamList, 'AddRoutine'>>();
@@ -209,6 +211,7 @@ const AddRoutine: React.FC<AddRoutineProps> = ({
               groupId: route.params.groupId,
               textColor: textColor,
               backgroundColor: backgroundColor,
+              blueColor: blueColor,
             })
           }
         >

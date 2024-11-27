@@ -27,6 +27,9 @@ interface RoutineProps {
   textColor: string;
   backgroundColorPopUp: string;
   backgroundColor: string;
+  blueColor: string;
+  redColor: string;
+  buttonColor: string;
 }
 
 const Routine: React.FC<RoutineProps> = ({
@@ -34,6 +37,9 @@ const Routine: React.FC<RoutineProps> = ({
   textColor,
   backgroundColorPopUp,
   backgroundColor,
+  blueColor,
+  redColor,
+  buttonColor,
 }) => {
   const navigation = useNavigation<NavigationProps>();
   const [routines, setRoutines] = useState<GroupedRoutines[]>([]);
@@ -149,8 +155,8 @@ const Routine: React.FC<RoutineProps> = ({
     </Input>,
     <Button
       key="3"
-      style={{ color: '#3b82f6' }}
-      className="bg-blue-500 rounded-lg mb-4"
+      style={{ backgroundColor: blueColor }}
+      className="rounded-lg mb-4"
       onPress={createGroup}
     >
       <Text style={{ color: textColor }}>Guardar</Text>
@@ -215,6 +221,9 @@ const Routine: React.FC<RoutineProps> = ({
             backgrounColorPopUp={backgroundColorPopUp}
             key={index}
             groupedRoutine={routine}
+            blueColor={blueColor}
+            redColor={redColor}
+            buttonColor={buttonColor}
           />
         ))}
 

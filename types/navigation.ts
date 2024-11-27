@@ -4,13 +4,24 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 export type RootStackParamList = {
   Dashboard: undefined;
   Routine: undefined;
-  DetailsRoutine: { templateId: number; myRoutineName: string };
+  DetailsRoutine: {
+    templateId: number;
+    myRoutineName: string;
+    textColor: string;
+    backgrounColor: string;
+    blueColor: string;
+    exerciseColor: string;
+    buttonColor: string;
+    redColor: string;
+    backgroundColorPopUp: string;
+  };
   Profile: { userId: number };
   AddExercise: {
     selectedExercises: ExerciseResume[];
     groupId: number;
     textColor: string;
     backgroundColor: string;
+    blueColor: string;
   };
   AddExerciseEdit: {
     selectedExercises: ExerciseResume[];
@@ -32,6 +43,8 @@ export type RootStackParamList = {
     textColor: string;
     backgroundColor: string;
     backgrounColorPopUp: string;
+    redColor: string;
+    blueColor: string;
   };
   DetailsWorkout: { workoutId: number };
   DetailsExercise: { exerciseId: number };

@@ -29,9 +29,17 @@ export interface UserWorkoutsDetails {
 
 interface ProfileProps {
   backgroundColor: string;
+  textColor: string;
+  blueColor: string;
+  buttonColor: string;
 }
 
-const Profile: React.FC<ProfileProps> = ({ backgroundColor }) => {
+const Profile: React.FC<ProfileProps> = ({
+  backgroundColor,
+  textColor,
+  blueColor,
+  buttonColor,
+}) => {
   const route = useRoute<RouteProp<RootStackParamList, 'Profile'>>();
   const userId = route.params.userId;
   const [workoutsDetails, setWorkoutsDetails] = useState<UserWorkoutsDetails>();
@@ -97,7 +105,7 @@ const Profile: React.FC<ProfileProps> = ({ backgroundColor }) => {
           <Moon color={colorMode === 'dark' ? '#ffffff' : '#000000'} />
         </Pressable>
       </HStack>
-      <CircleUserRound color="#3b82f6" size={100} />
+      <CircleUserRound color={blueColor} size={100} />
 
       {workoutsDetails && (
         <Text size="xl" bold>
@@ -108,11 +116,18 @@ const Profile: React.FC<ProfileProps> = ({ backgroundColor }) => {
       <HStack className="gap-2">
         <Dumbbell />
         {workoutsDetails && (
-          <Text>{workoutsDetails!.workoutsCount} entrenos realizados</Text>
+          <Text style={{ color: textColor }}>
+            {workoutsDetails!.workoutsCount} entrenos realizados
+          </Text>
         )}
       </HStack>
 
-      <CustomBarChart data={chartData} buttons={buttons} />
+      <CustomBarChart
+        data={chartData}
+        buttons={buttons}
+        buttonColor={buttonColor}
+        textColor={textColor}
+      />
     </VStack>
   );
 };

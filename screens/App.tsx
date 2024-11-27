@@ -16,7 +16,7 @@ import AddExerciseEdit from './AddExerciseEdit';
 import StartWorkout from './StartWorkout';
 import DetailsExercise from './DetailsExercise';
 import '../global.css';
-import { BackHandler, SafeAreaView, StatusBar } from 'react-native';
+import { SafeAreaView, StatusBar } from 'react-native';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -43,6 +43,10 @@ export default function App() {
   const textColor = colorMode === 'light' ? '#000000' : '#ffffff';
 
   const statusTableColor = colorMode === 'light' ? '#3f3f46' : '#757575';
+
+  const blueColor = '#3b82f6';
+
+  const redColor = colorMode === 'light' ? '#b91c1c' : '#991b1b';
 
   const toggleColorMode = () => {
     setColorMode((prev) => (prev === 'light' ? 'dark' : 'light'));
@@ -95,6 +99,9 @@ export default function App() {
                         textColor={textColor}
                         backgroundColorPopUp={statusTableColor}
                         backgroundColor={statusBackgroundColor}
+                        blueColor={blueColor}
+                        redColor={redColor}
+                        buttonColor={statusBoxColor}
                       />
                     </Template>
                   )}
@@ -115,7 +122,12 @@ export default function App() {
                       backgroundColor={statusBackgroundColor}
                       iconColor={textColor}
                     >
-                      <Profile backgroundColor={statusBackgroundColor} />
+                      <Profile
+                        backgroundColor={statusBackgroundColor}
+                        textColor={textColor}
+                        blueColor={blueColor}
+                        buttonColor={statusBoxColor}
+                      />
                     </Template>
                   )}
                 </Tab.Screen>
@@ -140,6 +152,7 @@ export default function App() {
                         backgroundColor={statusBackgroundColor}
                         textColor={textColor}
                         backgroundColorPopUp={statusTableColor}
+                        blueColor={blueColor}
                       />
                     </Template>
                   )}

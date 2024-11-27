@@ -52,6 +52,8 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
 >(
   (
     {
+      backgroundColor,
+      textColor,
       id,
       name,
       thumbnailUrl,
@@ -167,7 +169,7 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
               <AvatarImage source={{ uri: thumbnailUrl }} />
             </Avatar>
             <Pressable className="flex-1">
-              <Text className="text-xl text-white" bold>
+              <Text style={{ color: textColor }} className="text-xl" bold>
                 {exerciseName}
               </Text>
             </Pressable>

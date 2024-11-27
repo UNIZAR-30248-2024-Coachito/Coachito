@@ -75,8 +75,8 @@ const AddExerciseEdit: React.FC<AddExerciseEditProps> = ({
   useEffect(() => {
     setSelectedExercises(route.params!.selectedExercises || []);
   }, [route.params!.selectedExercises]);
-  console.log(backgroundColor);
-  console.log(textColor);
+  //console.log(backgroundColor);
+  //console.log(textColor);
   return (
     <ScrollView className="flex-1">
       <VStack

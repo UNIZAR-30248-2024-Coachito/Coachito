@@ -92,7 +92,7 @@ const useCreateRoutine = async (
           return { error: errorWorkoutExerciseInsert };
         }
       }
-      console.log('Numero de reps target: ', exercise.targetReps);
+      //console.log('Numero de reps target: ', exercise.targetReps);
     } else {
       const newWorkoutExerciseEntity = {
         workout_id: dataWorkoutsInsert[0].id,

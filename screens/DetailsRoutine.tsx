@@ -26,8 +26,15 @@ import { Alert } from 'react-native';
 const DetailsRoutine: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute<RouteProp<RootStackParamList, 'DetailsRoutine'>>();
-  const { templateId, myRoutineName } = route.params;
-
+  const templateId = route.params.templateId;
+  const myRoutineName = route.params.myRoutineName;
+  const textColor = route.params.textColor;
+  const backgroundColor = route.params.backgrounColor;
+  const blueColor = route.params.blueColor;
+  const exerciseColor = route.params.exerciseColor;
+  const redColor = route.params.redColor;
+  const backgrounColorPopUp = route.params.backgroundColorPopUp;
+  const buttonColor = route.params.buttonColor;
   const [chartDetailsWorkout, setChartDetailsWorkout] = useState<
     DataChartProps[]
   >([]);
@@ -135,9 +142,14 @@ const DetailsRoutine: React.FC = () => {
 
   return (
     <ScrollView className="flex-1">
-      <VStack className="p-4 gap-4">
+      <VStack
+        style={{ backgroundColor: backgroundColor }}
+        className="p-4 gap-4"
+      >
         <HStack className="justify-between">
-          <Text className="text-xl font-bold text-white">{myRoutineName}</Text>
+          <Text style={{ color: textColor }} className="text-xl font-bold">
+            {myRoutineName}
+          </Text>
           <Button
             testID="modal-button"
             className="bg-transparent"
@@ -145,7 +157,7 @@ const DetailsRoutine: React.FC = () => {
               setIsSlideUpModalVisible(true);
             }}
           >
-            <MoreHorizontal color="white" />
+            <MoreHorizontal color={textColor} />
           </Button>
         </HStack>
 
@@ -155,16 +167,26 @@ const DetailsRoutine: React.FC = () => {
             navigation.navigate('StartWorkout', {
               routineId: templateId,
               routineName: myRoutineName,
+              textColor: textColor,
+              backgroundColor: backgroundColor,
+              backgrounColorPopUp: backgrounColorPopUp,
+              redColor: redColor,
+              blueColor: blueColor,
             })
           }
         >
           <Text className="text-white">Empezar Entrenamiento</Text>
         </Button>
 
-        <CustomAreaChart data={chartDetailsWorkout} buttons={buttons} />
+        <CustomAreaChart
+          data={chartDetailsWorkout}
+          buttons={buttons}
+          buttonColor={buttonColor}
+          textColor={textColor}
+        />
 
         <HStack className="justify-between items-center">
-          <Text className="text-gray-400">Ejercicios</Text>
+          <Text style={{ color: textColor }}>Ejercicios</Text>
           <Button
             className="bg-transparent"
             onPress={() =>
@@ -174,12 +196,14 @@ const DetailsRoutine: React.FC = () => {
               })
             }
           >
-            <Text className="text-blue-500">Editar rutina</Text>
+            <Text style={{ color: blueColor }}>Editar rutina</Text>
           </Button>
         </HStack>
 
         {exercises!.map((exercise, index) => (
           <ExercisesRoutineResumeComponent
+            backgroundColor={exerciseColor}
+            textColor={textColor}
             key={index}
             id={exercise.id}
             name={exercise.name}
@@ -200,6 +224,7 @@ const DetailsRoutine: React.FC = () => {
         />
 
         <PopupBaseModal
+          backgroundColor={backgroundColor}
           components={componentsDeleteGroupPopUpModal}
           isVisible={isDeleteModalVisible}
           setIsModalVisible={setIsDeleteModalVisible}

@@ -20,9 +20,16 @@ export interface DataChartProps {
 export interface CustomDataChartProps {
   data: DataChartProps[];
   buttons: string[];
+  buttonColor: string;
+  textColor: string;
 }
 
-const CustomAreaChart: React.FC<CustomDataChartProps> = ({ data, buttons }) => {
+const CustomAreaChart: React.FC<CustomDataChartProps> = ({
+  data,
+  buttons,
+  buttonColor,
+  textColor,
+}) => {
   const screenWidth = Dimensions.get('window').width;
   const [dataChartPoints, setDataChartPoints] = useState<DataPoint[]>([]);
   const [dataChartTotal, setDataChartTotal] = useState<string>('');
@@ -65,6 +72,8 @@ const CustomAreaChart: React.FC<CustomDataChartProps> = ({ data, buttons }) => {
         data={data}
         onDataChartPointsChange={setDataChartPoints}
         onDataChartTotalChange={setDataChartTotal}
+        buttonColor={buttonColor}
+        textColor={textColor}
       />
     </VStack>
   );

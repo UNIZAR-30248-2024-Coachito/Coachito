@@ -22,6 +22,10 @@ export interface MyRoutineCardResumeProps {
   textColor: string;
   backgrounColorPopUp: string;
   routineCardResume: MyRoutinesCardResume;
+  redColor: string;
+  blueColor: string;
+  exerciseColor: string;
+  buttonColor: string;
 }
 
 const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
@@ -29,6 +33,10 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
   textColor,
   backgrounColorPopUp,
   routineCardResume,
+  redColor,
+  blueColor,
+  exerciseColor,
+  buttonColor,
 }) => {
   const navigation = useNavigation<NavigationProps>();
   const [isSlideUpModalVisible, setIsSlideUpModalVisible] = useState(false);
@@ -70,8 +78,8 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
         setIsSlideUpModalVisible(false);
       }}
     >
-      <Trash color="red" />
-      <Text className="text-red-600">Eliminar Rutina</Text>
+      <Trash color={redColor} />
+      <Text style={{ color: redColor }}>Eliminar Rutina</Text>
     </Button>,
   ];
 
@@ -109,6 +117,13 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
         navigation.navigate('DetailsRoutine', {
           templateId: routineCardResume.templateId,
           myRoutineName: routineCardResume.myRoutineName,
+          textColor: textColor,
+          backgrounColor: backgroundColor,
+          blueColor: blueColor,
+          exerciseColor: exerciseColor,
+          buttonColor: buttonColor,
+          redColor: redColor,
+          backgroundColorPopUp: backgrounColorPopUp,
         })
       }
     >
@@ -124,7 +139,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
             setIsSlideUpModalVisible(true);
           }}
         >
-          <MoreHorizontal color="white" />
+          <MoreHorizontal color={textColor} />
         </Button>
       </Box>
 
@@ -133,7 +148,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
       </Text>
 
       <Button
-        style={{ backgroundColor: '#3b82f6' }}
+        style={{ backgroundColor: blueColor }}
         className="rounded-lg"
         onPress={() =>
           navigation.navigate('StartWorkout', {
@@ -142,6 +157,8 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
             textColor,
             backgroundColor,
             backgrounColorPopUp,
+            redColor,
+            blueColor,
           })
         }
       >

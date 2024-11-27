@@ -37,6 +37,9 @@ export interface GroupedRoutinesProps {
   textColor: string;
   backgrounColorPopUp: string;
   groupedRoutine: GroupedRoutines;
+  blueColor: string;
+  redColor: string;
+  buttonColor: string;
 }
 
 const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
@@ -44,6 +47,9 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
   backgroundColor,
   backgrounColorPopUp,
   groupedRoutine,
+  blueColor,
+  redColor,
+  buttonColor,
 }) => {
   const navigation = useNavigation<NavigationProps>();
   const [showRoutines, setShowRoutines] = useState(true);
@@ -239,6 +245,10 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
             backgrounColorPopUp={backgrounColorPopUp}
             key={index}
             routineCardResume={routine}
+            redColor={redColor}
+            blueColor={blueColor}
+            exerciseColor={backgrounColorPopUp}
+            buttonColor={buttonColor}
           />
         ))}
 

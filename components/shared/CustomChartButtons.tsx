@@ -10,6 +10,8 @@ export interface CustomChartButtonsProps {
   data: DataChartProps[];
   onDataChartPointsChange: (points: DataPoint[]) => void;
   onDataChartTotalChange: (total: string) => void;
+  buttonColor: string;
+  textColor: string;
 }
 
 const CustomChartButtons: React.FC<CustomChartButtonsProps> = ({
@@ -17,27 +19,37 @@ const CustomChartButtons: React.FC<CustomChartButtonsProps> = ({
   data,
   onDataChartPointsChange,
   onDataChartTotalChange,
+  buttonColor,
+  textColor,
 }) => {
   const [activeButton, setActiveButton] = useState(buttons[0]);
-
   return (
     <ScrollView horizontal showsHorizontalScrollIndicator={false}>
       <HStack className="justify-between gap-4">
         {buttons.map((button, index) => (
           <Button
             key={index}
-            className={
-              activeButton === button
-                ? 'rounded-lg bg-blue-500'
-                : 'rounded-lg bg-background-50'
-            }
+            style={[
+              // eslint-disable-next-line react-native/no-inline-styles
+              {
+                backgroundColor:
+                  activeButton === button ? '#3B82F6' : buttonColor,
+              },
+              // eslint-disable-next-line react-native/no-inline-styles
+              { borderRadius: 10 },
+            ]}
             onPress={() => {
               setActiveButton(button);
               onDataChartPointsChange(data[index].dataPoints);
               onDataChartTotalChange(data[index].dataTotal);
             }}
           >
-            <Text className="text-white">{buttons[index]}</Text>
+            <Text
+              // eslint-disable-next-line react-native/no-inline-styles
+              style={{ color: activeButton === button ? '#ffffff' : textColor }}
+            >
+              {buttons[index]}
+            </Text>
           </Button>
         ))}
       </HStack>

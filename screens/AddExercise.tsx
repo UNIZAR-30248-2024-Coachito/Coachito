@@ -23,6 +23,7 @@ type AddExerciseRouteProp = RouteProp<RootStackParamList, 'AddExercise'> & {
     groupId: string;
     textColor: string;
     backgroundColor: string;
+    blueColor: string;
   };
 };
 
@@ -42,6 +43,7 @@ const AddExercise: React.FC = () => {
 
   const textColor = route.params.textColor;
   const backgroundColor = route.params.backgroundColor;
+  const blueColor = route.params.blueColor;
 
   const handleSelectExercise = (exercise: ExerciseResume) => {
     setSelectedExercises((prevSelected) => {
@@ -141,10 +143,19 @@ const AddExercise: React.FC = () => {
               }}
             >
               <HStack
-                className={`${selectedExercises.includes(exercise) ? 'bg-blue-500' : 'bg-transparent'}`}
+                // eslint-disable-next-line react-native/no-inline-styles
+                style={{
+                  backgroundColor: selectedExercises.includes(exercise)
+                    ? blueColor
+                    : 'transparent',
+                }}
               >
                 <ExercisesListCardResume
-                  backgroundColor={backgroundColor}
+                  backgroundColor={
+                    selectedExercises.includes(exercise)
+                      ? blueColor
+                      : 'transparent'
+                  }
                   textColor={textColor}
                   key="1"
                   id={exercise.id}
