@@ -46,7 +46,12 @@ export type RootStackParamList = {
     redColor: string;
     blueColor: string;
   };
-  DetailsWorkout: { workoutId: number };
+  DetailsWorkout: {
+    workoutId: number;
+    textColor: string;
+    backgroundColor: string;
+    backgroundColorEntrenamiento: string;
+  };
   DetailsExercise: { exerciseId: number };
 };
 

@@ -8,6 +8,7 @@ import { convertIntervalToMinutes } from '@/utils/interval';
 
 export interface WorkoutHeaderResume {
   textColor: string;
+  backgroundColor: string;
   workoutId: number;
   workoutName: string;
   workoutDate: string;
@@ -18,6 +19,7 @@ export interface WorkoutHeaderResume {
 
 const WorkoutHeaderResumeComponent: React.FC<WorkoutHeaderResume> = ({
   textColor,
+  backgroundColor,
   workoutName,
   workoutDate,
   workoutTime,
@@ -29,7 +31,10 @@ const WorkoutHeaderResumeComponent: React.FC<WorkoutHeaderResume> = ({
 
   return (
     <Box>
-      <HStack className="items-center mb-2 space-x-2">
+      <HStack
+        style={{ backgroundColor: backgroundColor }}
+        className="items-center mb-2 space-x-2"
+      >
         <VStack>
           <Text style={{ color: textColor }} className="text-xl font-bold mb-2">
             {workoutName}

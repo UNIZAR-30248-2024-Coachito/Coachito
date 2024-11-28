@@ -30,6 +30,7 @@ const WorkoutCardResumeComponent: React.FC<WorkoutCardResume> = ({
     >
       <WorkoutHeaderResumeComponent
         textColor={textColor}
+        backgroundColor={backgroundColor}
         workoutId={workoutHeaderResume.workoutId}
         workoutName={workoutHeaderResume.workoutName}
         workoutDate={workoutHeaderResume.workoutDate}

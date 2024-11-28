@@ -216,6 +216,7 @@ const Routine: React.FC<RoutineProps> = ({
 
         {routines!.map((routine, index) => (
           <GroupedRoutinesResumeComponent
+            background={backgroundColor}
             backgroundColor={backgroundColorBoton}
             textColor={textColor}
             backgrounColorPopUp={backgroundColorPopUp}

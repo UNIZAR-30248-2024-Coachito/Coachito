@@ -86,6 +86,8 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
 
     useImperativeHandle(ref, () => ({
       getExerciseData: () => ({
+        backgroundColor,
+        textColor,
         id: exerciseId,
         name: exerciseName,
         thumbnailUrl,

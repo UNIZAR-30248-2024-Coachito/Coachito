@@ -18,6 +18,7 @@ export interface MyRoutinesCardResume {
 }
 
 export interface MyRoutineCardResumeProps {
+  background: string;
   backgroundColor: string;
   textColor: string;
   backgrounColorPopUp: string;
@@ -29,6 +30,7 @@ export interface MyRoutineCardResumeProps {
 }
 
 const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
+  background,
   backgroundColor,
   textColor,
   backgrounColorPopUp,
@@ -155,7 +157,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
             routineId: routineCardResume.templateId,
             routineName: routineCardResume.myRoutineName,
             textColor,
-            backgroundColor,
+            backgroundColor: background,
             backgrounColorPopUp,
             redColor,
             blueColor,

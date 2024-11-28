@@ -12,16 +12,18 @@ export interface ExerciseProportion {
 
 export interface WorkoutDivision {
   exercisesProportion: ExerciseProportion[];
+  textColor: string;
 }
 
 const WorkoutDivisionComponent: React.FC<WorkoutDivision> = ({
   exercisesProportion,
+  textColor,
 }) => {
   return (
     <VStack className="justify-between gap-x-8 mb-4">
       {exercisesProportion.map((exerciseProportion, index) => (
         <Box key={index}>
-          <Text className="text-l mb-1 text-white">
+          <Text style={{ color: textColor }} className="text-l mb-1">
             {exerciseProportion.name}
           </Text>
           <HStack>

@@ -51,7 +51,7 @@ export default function App() {
   const toggleColorMode = () => {
     setColorMode((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
-  console.log(colorMode);
+  //console.log(colorMode);
   return (
     <>
       <StatusBar

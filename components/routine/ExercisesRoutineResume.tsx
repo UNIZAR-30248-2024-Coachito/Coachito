@@ -36,6 +36,8 @@ export interface ExerciseResume {
 }
 
 const ExercisesRoutineResumeComponent: React.FC<ExerciseResume> = ({
+  backgroundColor,
+  textColor,
   id,
   name,
   thumbnailUrl,
@@ -48,7 +50,7 @@ const ExercisesRoutineResumeComponent: React.FC<ExerciseResume> = ({
   const formattedRestTime = convertIntervalToMinutesAndSeconds(restTime);
 
   return (
-    <Box className="bg-zinc-900 p-4 gap-4 rounded-lg">
+    <Box style={{ backgroundColor }} className="p-4 gap-4 rounded-lg">
       <Pressable
         testID="ver-detalles"
         onPress={() =>
@@ -66,7 +68,7 @@ const ExercisesRoutineResumeComponent: React.FC<ExerciseResume> = ({
               }}
             />
           </Avatar>
-          <Text className="flex-1 text-white" bold>
+          <Text style={{ color: textColor }} className="flex-1" bold>
             {name}
           </Text>
         </HStack>

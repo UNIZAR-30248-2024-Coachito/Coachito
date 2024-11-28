@@ -69,6 +69,9 @@ const Dashboard: React.FC<DashboardProps> = ({
             onPress={() =>
               navigation.navigate('DetailsWorkout', {
                 workoutId: workout.workout_header_resume.workoutId,
+                textColor: textColor,
+                backgroundColor: backgroundColor,
+                backgroundColorEntrenamiento: backgroundColorEntrenamiento,
               })
             }
           />

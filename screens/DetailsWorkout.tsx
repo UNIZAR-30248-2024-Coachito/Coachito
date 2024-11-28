@@ -23,7 +23,12 @@ export interface WorkoutResume {
 
 const DetailsWorkout: React.FC = () => {
   const route = useRoute<RouteProp<RootStackParamList, 'DetailsWorkout'>>();
-  const { workoutId } = route.params;
+  const {
+    workoutId,
+    textColor,
+    backgroundColor,
+    backgroundColorEntrenamiento,
+  } = route.params;
   const [workoutResume, setWorkoutResume] = useState<WorkoutResume>();
   const [exerciseProportionData, setExerciseProportionData] = useState<
     ExerciseProportion[]
@@ -80,9 +85,15 @@ const DetailsWorkout: React.FC = () => {
 
   return (
     <ScrollView className="flex-1">
-      <VStack className="p-4 gap-4">
+      <VStack
+        style={{ backgroundColor: backgroundColor }}
+        className="p-4 gap-4"
+      >
         <Box className="flex justify-center">
-          <Text className="text-xl font-bold text-white text-center">
+          <Text
+            style={{ color: textColor }}
+            className="text-xl font-bold text-center"
+          >
             Detalles de entrenamiento
           </Text>
         </Box>
@@ -90,6 +101,8 @@ const DetailsWorkout: React.FC = () => {
         {workoutResume && (
           <>
             <WorkoutHeaderResumeComponent
+              textColor={textColor}
+              backgroundColor={backgroundColor}
               workoutId={workoutResume.workout_header_resume.workoutId}
               workoutName={workoutResume.workout_header_resume.workoutName}
               workoutDate={workoutResume.workout_header_resume.workoutDate}
@@ -99,6 +112,7 @@ const DetailsWorkout: React.FC = () => {
             />
             <WorkoutDivisionComponent
               exercisesProportion={exerciseProportionData}
+              textColor={textColor}
             />
           </>
         )}
@@ -107,6 +121,8 @@ const DetailsWorkout: React.FC = () => {
 
         {workoutResume?.exercise_resume.map((exercise, index) => (
           <ExercisesRoutineResumeComponent
+            backgroundColor={backgroundColorEntrenamiento}
+            textColor={textColor}
             key={index}
             id={exercise.id}
             name={exercise.name}

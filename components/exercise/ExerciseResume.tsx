@@ -3,6 +3,7 @@ import React, {
   useImperativeHandle,
   useState,
   useEffect,
+  useContext,
 } from 'react';
 import { Text } from '../ui/text';
 import {
@@ -33,6 +34,7 @@ import {
   convertSecondsToString,
   convertStringToInterval,
 } from '@/utils/interval';
+import { ThemeContext } from '@/screens/App';
 
 export interface ExerciseResumeRef {
   getExerciseData: () => ExerciseResume;
@@ -48,6 +50,8 @@ export const MIN_KG = 0;
 const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
   (
     {
+      backgroundColor,
+      textColor,
       id,
       name,
       thumbnailUrl,
@@ -77,8 +81,12 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
       targetReps !== undefined ? targetReps : MIN_REPS
     );
 
+    const { colorMode, toggleColorMode } = useContext(ThemeContext);
+
     useImperativeHandle(ref, () => ({
       getExerciseData: () => ({
+        backgroundColor: colorMode === 'light' ? '#f4f4f5' : '#27272a',
+        textColor: colorMode === 'light' ? '#000000' : '#ffffff',
         id: exerciseId,
         name: exerciseName,
         thumbnailUrl,
@@ -188,14 +196,17 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
 
     return (
       <>
-        <Box className="p-4 rounded-lg gap-4">
+        <Box
+          style={{ backgroundColor: backgroundColor }}
+          className="p-4 rounded-lg gap-4"
+        >
           <HStack className="items-center gap-4">
             <Avatar>
               <AvatarFallbackText>{exerciseName}</AvatarFallbackText>
               <AvatarImage source={{ uri: thumbnailUrl }} />
             </Avatar>
             <Pressable className="flex-1">
-              <Text className="text-xl text-white" bold>
+              <Text style={{ color: textColor }} className="text-xl bold">
                 {exerciseName}
               </Text>
             </Pressable>
