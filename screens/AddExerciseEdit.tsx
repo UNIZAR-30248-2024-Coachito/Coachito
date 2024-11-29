@@ -90,6 +90,9 @@ const AddExerciseEdit: React.FC<AddExerciseEditProps> = ({
               navigation.navigate('EditRoutine', {
                 routineId: route.params.routineId,
                 routineName: route.params.routineName,
+                backgroundColorPopUp: backgroundColor,
+                backgroundColor,
+                textColor,
               });
             }}
           >
@@ -144,6 +147,9 @@ const AddExerciseEdit: React.FC<AddExerciseEditProps> = ({
               navigation.navigate('EditRoutine', {
                 routineId: route.params.routineId,
                 routineName: route.params.routineName,
+                backgroundColorPopUp: backgroundColor,
+                backgroundColor,
+                textColor,
               });
             }}
           >

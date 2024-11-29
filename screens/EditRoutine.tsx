@@ -25,6 +25,11 @@ const EditRoutine: React.FC = () => {
   const [routineTitleInputValue, setRoutineTitleInputValue] = useState(
     route.params.routineName
   );
+
+  const backgroundColorPopUp = route.params.backgroundColorPopUp;
+  const backgroundColor = route.params.backgroundColor;
+  const textColor = route.params.textColor;
+
   const [selectedExercises, setSelectedExercises] = useState<ExerciseResume[]>(
     []
   );
@@ -128,7 +133,10 @@ const EditRoutine: React.FC = () => {
 
   return (
     <ScrollView className="flex-1">
-      <VStack className="p-4 gap-2 items-center">
+      <VStack
+        style={{ backgroundColor: backgroundColor }}
+        className="p-4 gap-2 items-center"
+      >
         <HStack className="w-full gap-6 mb-4">
           <Button
             className="bg-transparent rounded-lg"
@@ -138,7 +146,9 @@ const EditRoutine: React.FC = () => {
           >
             <Text className="text-blue-500">Cancelar</Text>
           </Button>
-          <Text className="text-xl">Editar Rutina</Text>
+          <Text style={{ color: textColor }} className="text-xl">
+            Editar Rutina
+          </Text>
           <Button className="bg-blue-500 rounded-lg" onPress={updateRoutine}>
             <Text className="text-white">Guardar</Text>
           </Button>
@@ -169,6 +179,8 @@ const EditRoutine: React.FC = () => {
         ) : (
           selectedExercises.map((exercise, index) => (
             <ExerciseResumeComponent
+              backgroundColor={backgroundColor}
+              textColor={textColor}
               key={index}
               ref={(el) => (exerciseRefs.current[index] = el)}
               id={exercise.id}
@@ -198,6 +210,7 @@ const EditRoutine: React.FC = () => {
         </Button>
 
         <PopupBaseModal
+          backgroundColor={backgroundColorPopUp}
           components={componentsCancelRoutinePopUpModal}
           isVisible={isCancelRoutineModalVisible}
           setIsModalVisible={setIsCancelRoutineModalVisible}

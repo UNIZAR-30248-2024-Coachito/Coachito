@@ -66,6 +66,9 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
         navigation.navigate('EditRoutine', {
           routineId: routineCardResume.templateId,
           routineName: routineCardResume.myRoutineName,
+          backgroundColorPopUp: backgrounColorPopUp,
+          backgroundColor: background,
+          textColor,
         });
       }}
     >

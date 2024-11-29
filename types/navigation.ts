@@ -36,6 +36,9 @@ export type RootStackParamList = {
   EditRoutine: {
     routineId: number;
     routineName: string;
+    backgroundColorPopUp: string;
+    backgroundColor: string;
+    textColor: string;
   };
   StartWorkout: {
     routineId: number;

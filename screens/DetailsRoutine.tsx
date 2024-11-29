@@ -95,6 +95,9 @@ const DetailsRoutine: React.FC = () => {
         navigation.navigate('EditRoutine', {
           routineId: templateId,
           routineName: myRoutineName,
+          backgroundColorPopUp: backgrounColorPopUp,
+          backgroundColor,
+          textColor,
         });
       }}
     >
@@ -193,6 +196,9 @@ const DetailsRoutine: React.FC = () => {
               navigation.navigate('EditRoutine', {
                 routineId: templateId,
                 routineName: myRoutineName,
+                backgroundColorPopUp: backgrounColorPopUp,
+                backgroundColor,
+                textColor,
               })
             }
           >
