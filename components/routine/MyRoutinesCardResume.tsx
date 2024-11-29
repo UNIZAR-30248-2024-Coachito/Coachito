@@ -120,7 +120,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
           templateId: routineCardResume.templateId,
           myRoutineName: routineCardResume.myRoutineName,
           textColor: textColor,
-          backgrounColor: backgroundColor,
+          backgrounColor: background,
           blueColor: blueColor,
           exerciseColor: exerciseColor,
           buttonColor: buttonColor,
