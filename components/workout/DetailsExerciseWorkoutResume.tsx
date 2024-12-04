@@ -134,6 +134,10 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
       Vibration.vibrate(2000);
     };
 
+    const stopTimer = () => {
+      setRestTimerModalVisible(false);
+    };
+
     useEffect(() => {
       if (!exerciseSets || exerciseSets.length === 0) {
         addNewSet();
@@ -310,6 +314,12 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
                   </Text>
                 )}
               </CountdownCircleTimer>
+              <Button
+                className="bg-black rounded-lg gap-2 mt-2"
+                onPress={stopTimer}
+              >
+                <Text className="text-white">Cancelar</Text>
+              </Button>
             </Box>
           </Box>
         </Modal>
