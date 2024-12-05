@@ -24,6 +24,7 @@ export type RootStackParamList = {
   };
   DetailsWorkout: { workoutId: number };
   DetailsExercise: { exerciseId: number };
+  AddExerciseWhileWorkout: undefined;
 };
 
 export type NavigationProps = NativeStackNavigationProp<RootStackParamList>;

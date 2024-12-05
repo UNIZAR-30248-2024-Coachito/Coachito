@@ -16,6 +16,7 @@ import DetailsExerciseWorkoutResumeComponent, {
   ExerciseResumeRef,
 } from '@/components/workout/DetailsExerciseWorkoutResume';
 import { emitter } from '@/utils/emitter';
+import { Plus } from 'lucide-react-native';
 
 const StartWorkout: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
@@ -192,6 +193,14 @@ const StartWorkout: React.FC = () => {
             targetReps={exercise.targetReps}
           />
         ))}
+
+        <Button
+          className="bg-blue-500 rounded-lg flex-1"
+          onPress={() => navigation.navigate('AddExerciseWhileWorkout')}
+        >
+          <Plus color="white" />
+          <Text>Agregar Ejercicio</Text>
+        </Button>
       </ScrollView>
 
       <PopupBaseModal
