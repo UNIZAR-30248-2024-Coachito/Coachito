@@ -39,6 +39,7 @@ import {
 } from '../exercise/ExerciseResume';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { Alert, AlertIcon, AlertText } from '../ui/alert';
+import SoundPlayer from 'react-native-sound-player';
 
 export interface ExerciseResumeRef {
   getExerciseData: () => ExerciseResume;
@@ -130,6 +131,12 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
     };
 
     const stopRestTimer = () => {
+      const soundInfo = SoundPlayer.getInfo();
+      console.log('Sound info:', soundInfo);
+
+      // eslint-disable-next-line prettier/prettier
+      SoundPlayer.playSoundFile('dutifully-notification-tone', 'mp3')
+      console.log('Playing sound...');
       setRestTimerModalVisible(false);
       Vibration.vibrate(2000);
     };
