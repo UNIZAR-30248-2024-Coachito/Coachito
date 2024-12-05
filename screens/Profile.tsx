@@ -1,7 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { CircleUserRound, Dumbbell } from 'lucide-react-native';
-import { RouteProp, useRoute } from '@react-navigation/native';
-import { RootStackParamList } from '@/types/navigation';
 import { VStack } from '@/components/ui/vstack';
 import { Text } from '@/components/ui/text';
 import { useFetchUserWorkouts } from '@/hooks/userHook';
@@ -10,6 +8,9 @@ import CustomBarChart from '@/components/shared/CustomBarChart';
 import { DataChartProps } from '@/components/shared/CustomAreaChart';
 import { convertIntervalToMinutes } from '@/utils/interval';
 import { formatToChartLabel } from '@/utils/date';
+import { Button } from '@/components/ui/button';
+import { supabase } from '@/api/supabaseClient';
+import { useUserInfo } from '@/context/UserContext';
 
 export interface UserWorkouts {
   workoutId: number;
@@ -20,20 +21,19 @@ export interface UserWorkouts {
 }
 
 export interface UserWorkoutsDetails {
-  username: string;
   workoutsCount: number;
   workouts: UserWorkouts[];
 }
 
 const Profile: React.FC = () => {
-  const route = useRoute<RouteProp<RootStackParamList, 'Profile'>>();
-  const userId = route.params.userId;
+  const { session, profile } = useUserInfo();
   const [workoutsDetails, setWorkoutsDetails] = useState<UserWorkoutsDetails>();
   const [chartData, setChartData] = useState<DataChartProps[]>([]);
 
-  const fetchUserProfile = async () => {
+  const fetchUserProfile = async (userId: string) => {
     const { data, error } = await useFetchUserWorkouts(userId);
-
+    console.log(data);
+    console.log(error);
     if (!error) {
       setWorkoutsDetails(data!);
 
@@ -78,20 +78,24 @@ const Profile: React.FC = () => {
   };
 
   useEffect(() => {
-    fetchUserProfile();
-  }, [userId]);
+    if (session?.user?.id) {
+      console.log(session.user.id);
+      fetchUserProfile(session.user.id);
+    }
+  }, [session?.user?.id]);
 
   const buttons = ['Duración', 'Repeticiones', 'Volumen'];
 
   return (
     <VStack className="items-center gap-4">
+      <Button onPress={() => supabase.auth.signOut()}>
+        <Text className="text-black">Cerrar Sesion</Text>
+      </Button>
       <CircleUserRound color="#3b82f6" size={100} />
 
-      {workoutsDetails && (
-        <Text size="xl" bold>
-          {workoutsDetails!.username}
-        </Text>
-      )}
+      <Text size="xl" bold>
+        {profile?.username}
+      </Text>
 
       <HStack className="gap-2">
         <Dumbbell />

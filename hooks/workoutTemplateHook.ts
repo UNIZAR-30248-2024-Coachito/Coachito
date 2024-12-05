@@ -1,4 +1,4 @@
-import supabaseClient from '@/api/supabaseClient';
+import supabaseClient, { supabase } from '@/api/supabaseClient';
 import useCRUD from './useCRUD';
 import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 
@@ -22,14 +22,17 @@ const useDeleteWorkoutTemplate = async (id: number) => {
   return { data, error };
 };
 
-const useFetchTemplateWorkouts = async () => {
-  const { execute } = useCRUD(() =>
-    supabaseClient.get('/rpc/get_routines_details')
-  );
+const useFetchTemplateWorkouts = async (userId: string) => {
+  const { data, error } = await supabase.rpc('get_routines_details', {
+    uid: userId,
+  });
 
-  const { data, error } = await execute();
+  if (error) {
+    console.error('Error fetching dashboard data:', error);
+    return { data: null, error };
+  }
 
-  return { data, error };
+  return { data, error: null };
 };
 
 const useCreateRoutine = async (

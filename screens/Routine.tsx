@@ -16,6 +16,7 @@ import { Input, InputField } from '@/components/ui/input';
 import { useCreateTemplateWorkoutGroup } from '@/hooks/workoutTemplateGroupHook';
 import { emitter } from '@/utils/emitter';
 import { Alert } from 'react-native';
+import { useUserInfo } from '@/context/UserContext';
 
 export interface Group {
   id: number;
@@ -24,15 +25,20 @@ export interface Group {
 
 const Routine: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
+  const { session } = useUserInfo();
   const [routines, setRoutines] = useState<GroupedRoutines[]>([]);
   const [isNewGroupModalVisible, setIsNewGroupModalVisible] = useState(false);
   const [newFolderInputValue, setNewFolderInputValue] = useState('');
 
-  const fetchRoutinesAndGroups = async () => {
-    const { data, error } = await useFetchTemplateWorkouts();
+  const fetchRoutinesAndGroups = async (userId: string) => {
+    const { data, error } = await useFetchTemplateWorkouts(userId);
 
     if (!error) {
-      setRoutines(data!);
+      if (data && data.length > 0) {
+        setRoutines(data); // Si hay datos, actualizamos el estado
+      } else {
+        setRoutines([]); // Si no hay rutinas, dejamos el estado vacío
+      }
     } else {
       Alert.alert('', 'Se ha producido un error al obtener las rutinas.', [
         { text: 'OK' },
@@ -42,32 +48,45 @@ const Routine: React.FC = () => {
 
   useEffect(() => {
     const routineDeletedListener = emitter.addListener('routineDeleted', () => {
-      fetchRoutinesAndGroups();
+      if (session?.user?.id) {
+        fetchRoutinesAndGroups(session.user.id);
+      }
       Alert.alert('', '¡Rutina eliminada correctamente!', [{ text: 'OK' }]);
     });
     const routineRenamedListener = emitter.addListener('routineRenamed', () => {
-      fetchRoutinesAndGroups();
+      if (session?.user?.id) {
+        fetchRoutinesAndGroups(session.user.id);
+      }
       Alert.alert('', '¡Rutina editada correctamente!', [{ text: 'OK' }]);
     });
     const routineAddedListener = emitter.addListener('routineAdded', () => {
-      fetchRoutinesAndGroups();
+      if (session?.user?.id) {
+        fetchRoutinesAndGroups(session.user.id);
+      }
       Alert.alert('', '¡Rutina creada correctamente!', [{ text: 'OK' }]);
     });
 
     const groupCreatedListener = emitter.addListener('groupCreated', () => {
-      fetchRoutinesAndGroups();
+      if (session?.user?.id) {
+        fetchRoutinesAndGroups(session.user.id);
+      }
       Alert.alert('', '¡Carpeta creada correctamente!', [{ text: 'OK' }]);
     });
     const groupRenamedListener = emitter.addListener('groupRenamed', () => {
-      fetchRoutinesAndGroups();
+      if (session?.user?.id) {
+        fetchRoutinesAndGroups(session.user.id);
+      }
       Alert.alert('', '¡Carpeta editada correctamente!', [{ text: 'OK' }]);
     });
     const groupDeletedListener = emitter.addListener('groupDeleted', () => {
-      fetchRoutinesAndGroups();
+      if (session?.user?.id) {
+        fetchRoutinesAndGroups(session.user.id);
+      }
       Alert.alert('', '¡Carpeta eliminada correctamente!', [{ text: 'OK' }]);
     });
-
-    fetchRoutinesAndGroups();
+    if (session?.user?.id) {
+      fetchRoutinesAndGroups(session.user.id);
+    }
 
     return () => {
       routineDeletedListener?.remove();
@@ -107,7 +126,9 @@ const Routine: React.FC = () => {
 
     const { error } = await useCreateTemplateWorkoutGroup(folderName);
     if (!error) {
-      fetchRoutinesAndGroups();
+      if (session?.user?.id) {
+        fetchRoutinesAndGroups(session.user.id);
+      }
       emitter.emit('groupCreated');
     } else {
       Alert.alert('', 'Se ha producido un error al crear el nuevo grupo.', [
@@ -177,12 +198,19 @@ const Routine: React.FC = () => {
           </VStack>
         </HStack>
 
-        {routines!.map((routine, index) => (
-          <GroupedRoutinesResumeComponent
-            key={index}
-            groupedRoutine={routine}
-          />
-        ))}
+        {/* Si no hay rutinas, mostramos un mensaje */}
+        {routines.length === 0 ? (
+          <Text className="text-center text-white mt-4">
+            No tienes rutinas disponibles.
+          </Text>
+        ) : (
+          routines.map((routine, index) => (
+            <GroupedRoutinesResumeComponent
+              key={index}
+              groupedRoutine={routine}
+            />
+          ))
+        )}
 
         <PopupBaseModal
           components={newFolderComponentsPopUpModal}

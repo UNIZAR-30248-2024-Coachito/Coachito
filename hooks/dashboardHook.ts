@@ -1,14 +1,16 @@
-import supabaseClient from '@/api/supabaseClient';
-import useCRUD from './useCRUD';
+import { supabase } from '@/api/supabaseClient';
 
-const useFetchDashboardWorkouts = async () => {
-  const { execute } = useCRUD(() =>
-    supabaseClient.get('/rpc/get_dashboard_details')
-  );
+const useFetchDashboardWorkouts = async (userId: string) => {
+  const { data, error } = await supabase.rpc('get_dashboard_details', {
+    uid: userId,
+  });
 
-  const { data, error } = await execute();
+  if (error) {
+    console.error('Error fetching dashboard data:', error);
+    return { data: null, error };
+  }
 
-  return { data, error };
+  return { data, error: null };
 };
 
 export { useFetchDashboardWorkouts };
