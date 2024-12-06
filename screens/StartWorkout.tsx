@@ -196,7 +196,13 @@ const StartWorkout: React.FC = () => {
 
         <Button
           className="bg-blue-500 rounded-lg flex-1"
-          onPress={() => navigation.navigate('AddExerciseWhileWorkout')}
+          onPress={() =>
+            navigation.navigate('AddExerciseWhileWorkout', {
+              selectedExercises,
+              routineId: route.params.routineId,
+              routineName: route.params.routineName,
+            })
+          }
         >
           <Plus color="white" />
           <Text>Agregar Ejercicio</Text>

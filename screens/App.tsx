@@ -17,6 +17,7 @@ import StartWorkout from './StartWorkout';
 import DetailsExercise from './DetailsExercise';
 import '../global.css';
 import { SafeAreaView, StatusBar } from 'react-native';
+import AddExerciseWhileWorkout from './AddExerciseWhileWorkout';
 
 const Tab = createBottomTabNavigator<RootStackParamList>();
 
@@ -136,6 +137,13 @@ export default function App() {
                   {() => (
                     <Template>
                       <DetailsExercise />
+                    </Template>
+                  )}
+                </Tab.Screen>
+                <Tab.Screen name="AddExerciseWhileWorkout">
+                  {() => (
+                    <Template>
+                      <AddExerciseWhileWorkout />
                     </Template>
                   )}
                 </Tab.Screen>
