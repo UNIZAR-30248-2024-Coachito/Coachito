@@ -9,8 +9,9 @@ import { DataChartProps } from '@/components/shared/CustomAreaChart';
 import { convertIntervalToMinutes } from '@/utils/interval';
 import { formatToChartLabel } from '@/utils/date';
 import { Button } from '@/components/ui/button';
-import { supabase } from '@/api/supabaseClient';
 import { useUserInfo } from '@/context/UserContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import supabaseClient from '@/api/supabaseClient';
 
 export interface UserWorkouts {
   workoutId: number;
@@ -86,10 +87,26 @@ const Profile: React.FC = () => {
 
   const buttons = ['Duración', 'Repeticiones', 'Volumen'];
 
+  const handleLogout = async () => {
+    try {
+      // 1. Eliminar el JWT de AsyncStorage
+      await AsyncStorage.removeItem('access_token');
+
+      // 2. Eliminar el token de los encabezados de Axios (supabaseClient)
+      supabaseClient.defaults.headers['Authorization'] = '';
+
+      console.log('Cierre de sesión exitoso');
+      // 3. Aquí puedes redirigir al usuario a la pantalla de inicio de sesión
+      // Por ejemplo: navigate('/login') o cualquier otra lógica de redirección.
+    } catch (error) {
+      console.error('Error al cerrar sesión:', error);
+    }
+  };
+
   return (
     <VStack className="items-center gap-4">
-      <Button onPress={() => supabase.auth.signOut()}>
-        <Text className="text-black">Cerrar Sesion</Text>
+      <Button onPress={handleLogout}>
+        <Text className="text-black">Cerrar Sesión</Text>
       </Button>
       <CircleUserRound color="#3b82f6" size={100} />
 

@@ -32,7 +32,7 @@ const Routine: React.FC = () => {
 
   const fetchRoutinesAndGroups = async (userId: string) => {
     const { data, error } = await useFetchTemplateWorkouts(userId);
-
+    console.log(data);
     if (!error) {
       if (data && data.length > 0) {
         setRoutines(data); // Si hay datos, actualizamos el estado
@@ -123,12 +123,16 @@ const Routine: React.FC = () => {
       ]);
       return;
     }
-
-    const { error } = await useCreateTemplateWorkoutGroup(folderName);
+    if (!session?.user?.id) {
+      return 'Error con la autenticacion';
+    }
+    const { error } = await useCreateTemplateWorkoutGroup(
+      folderName,
+      session.user.id
+    );
     if (!error) {
-      if (session?.user?.id) {
-        fetchRoutinesAndGroups(session.user.id);
-      }
+      fetchRoutinesAndGroups(session.user.id);
+
       emitter.emit('groupCreated');
     } else {
       Alert.alert('', 'Se ha producido un error al crear el nuevo grupo.', [
@@ -204,12 +208,17 @@ const Routine: React.FC = () => {
             No tienes rutinas disponibles.
           </Text>
         ) : (
-          routines.map((routine, index) => (
-            <GroupedRoutinesResumeComponent
-              key={index}
-              groupedRoutine={routine}
-            />
-          ))
+          routines
+            .filter(
+              (routine) =>
+                !(routine.groupId === null && routine.groupName === 'No Group')
+            )
+            .map((routine, index) => (
+              <GroupedRoutinesResumeComponent
+                key={index}
+                groupedRoutine={routine}
+              />
+            ))
         )}
 
         <PopupBaseModal
