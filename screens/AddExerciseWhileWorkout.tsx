@@ -147,7 +147,7 @@ const AddExerciseWhileWorkout: React.FC = () => {
           );
         })}
 
-        {newSelectedExercises.length > 0 && (
+        {/* {newSelectedExercises.length > 0 && (
           <VStack className="p-4">
             <Text className="text-lg">Nuevos Ejercicios Seleccionados:</Text>
             {newSelectedExercises.map((exercise) => (
@@ -156,7 +156,7 @@ const AddExerciseWhileWorkout: React.FC = () => {
               </Text>
             ))}
           </VStack>
-        )}
+        )} */}
 
         {selectedExercises.length > 0 && (
           <Button
