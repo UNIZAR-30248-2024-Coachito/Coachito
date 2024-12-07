@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { HStack } from '../components/ui/hstack';
 import { VStack } from '../components/ui/vstack';
 import { Text } from '../components/ui/text';
@@ -25,21 +25,25 @@ const StartWorkout: React.FC = () => {
   const [selectedExercises, setSelectedExercises] = useState<ExerciseResume[]>(
     []
   );
+  const [addedExercises, setAddedExercises] = useState<ExerciseResume[]>([]);
   const [isCancelRoutineModalVisible, setIsCancelWorkoutModalVisible] =
     useState(false);
   const [timerActive, setTimerActive] = useState(false);
   const [duration, setDuration] = useState(0);
   const [startTime, setStartTime] = useState<number | null>(null);
 
-  const fetchExercises = async () => {
-    setSelectedExercises([]);
+  console.log(route.params.refresh);
+
+  const fetchExercises = useCallback(async () => {
+    setAddedExercises([]); // Limpiar los ejercicios añadidos al iniciar un nuevo entrenamiento
+    console.log(addedExercises);
 
     const { data, error } = await useFetchDetailsLastWorkout(
       route.params.routineId!
     );
 
     if (!error) {
-      setSelectedExercises(data);
+      setSelectedExercises(data); // Establecer los ejercicios originales
       setStartTime(Date.now());
       setTimerActive(true);
     } else {
@@ -47,11 +51,34 @@ const StartWorkout: React.FC = () => {
         { text: 'OK' },
       ]);
     }
-  };
+    //console.log('Ejercicios originales obtenidos:', data);
+  }, [route.params.routineId]);
 
   useEffect(() => {
-    fetchExercises();
-  }, [route.params.routineId]);
+    if (route.params.refresh) {
+      fetchExercises();
+    }
+  }, [route.params.refresh, fetchExercises]);
+
+  const updateExercises = useCallback((newExercises: ExerciseResume[]) => {
+    setAddedExercises((prevAddedExercises) => [
+      ...prevAddedExercises,
+      ...newExercises,
+    ]);
+    //console.log('Nuevos ejercicios añadidos:', newExercises);
+  }, []);
+
+  useEffect(() => {
+    //fetchExercises();
+    const exercisesUpdateListener = emitter.addListener(
+      'workoutUpdate',
+      updateExercises
+    );
+
+    return () => {
+      exercisesUpdateListener?.remove();
+    };
+  }, [updateExercises]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -146,7 +173,7 @@ const StartWorkout: React.FC = () => {
 
     return `${hours > 0 ? `${hours}h` : ''} ${minutes > 0 ? `${minutes}min` : ''} ${seconds > 0 ? `${seconds}s` : ''}`.trim();
   };
-
+  //console.log('Lista combinada:', [...selectedExercises, ...addedExercises]);
   return (
     <VStack className="flex-1 p-4 gap-2 items-center">
       <Text className="text-2xl text-white" bold>
@@ -179,7 +206,7 @@ const StartWorkout: React.FC = () => {
       </HStack>
 
       <ScrollView className="w-full">
-        {selectedExercises.map((exercise, index) => (
+        {[...selectedExercises, ...addedExercises].map((exercise, index) => (
           <DetailsExerciseWorkoutResumeComponent
             key={index}
             ref={(el) => (exerciseRefs.current[index] = el)}
@@ -198,7 +225,7 @@ const StartWorkout: React.FC = () => {
           className="bg-blue-500 rounded-lg flex-1"
           onPress={() =>
             navigation.navigate('AddExerciseWhileWorkout', {
-              selectedExercises,
+              selectedExercises: [...selectedExercises, ...addedExercises],
               routineId: route.params.routineId,
               routineName: route.params.routineName,
             })

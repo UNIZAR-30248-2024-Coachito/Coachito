@@ -22,11 +22,16 @@ const AddExerciseWhileWorkout: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute<AddExerciseEditRouteProp>();
 
+  const [newSelectedExercises, setNewSelectedExercises] = useState<
+    ExerciseResume[]
+  >([]);
+
   const [exercises, setExercises] = useState<ExerciseResume[]>([]);
   const [selectedExercises, setSelectedExercises] = useState<ExerciseResume[]>(
     route.params!.selectedExercises || []
   );
 
+  /*
   const handleSelectExercise = (exercise: ExerciseResume) => {
     setSelectedExercises((prevSelected) => {
       const exists = prevSelected.find((e) => e.id === exercise.id);
@@ -39,6 +44,30 @@ const AddExerciseWhileWorkout: React.FC = () => {
           ]);
           return prevSelected;
         }
+        return [...prevSelected, exercise];
+      }
+    });
+  }; */
+
+  const handleSelectExercise = (exercise: ExerciseResume) => {
+    setSelectedExercises((prevSelected) => {
+      const exists = prevSelected.find((e) => e.id === exercise.id);
+      if (exists) {
+        // Si el ejercicio ya está seleccionado, se elimina de ambos vectores
+        setNewSelectedExercises((prevNew) =>
+          prevNew.filter((e) => e.id !== exercise.id)
+        );
+        return prevSelected.filter((e) => e.id !== exercise.id);
+      } else {
+        if (prevSelected.length >= 20) {
+          Alert.alert('', 'Solo se pueden seleccionar hasta 20 ejercicios.', [
+            { text: 'OK' },
+          ]);
+          return prevSelected;
+        }
+
+        // Agregar el nuevo ejercicio a `newSelectedExercises`
+        setNewSelectedExercises((prevNew) => [...prevNew, exercise]);
         return [...prevSelected, exercise];
       }
     });
@@ -73,6 +102,7 @@ const AddExerciseWhileWorkout: React.FC = () => {
               navigation.navigate('StartWorkout', {
                 routineId: route.params.routineId,
                 routineName: route.params.routineName,
+                refresh: false,
               });
             }}
           >
@@ -117,14 +147,26 @@ const AddExerciseWhileWorkout: React.FC = () => {
           );
         })}
 
+        {newSelectedExercises.length > 0 && (
+          <VStack className="p-4">
+            <Text className="text-lg">Nuevos Ejercicios Seleccionados:</Text>
+            {newSelectedExercises.map((exercise) => (
+              <Text key={exercise.id} className="text-white">
+                {exercise.name}
+              </Text>
+            ))}
+          </VStack>
+        )}
+
         {selectedExercises.length > 0 && (
           <Button
             className="w-full bg-blue-500 rounded-lg"
             onPress={() => {
-              emitter.emit('exercisesUpdated', selectedExercises);
+              emitter.emit('workoutUpdate', newSelectedExercises);
               navigation.navigate('StartWorkout', {
                 routineId: route.params.routineId,
                 routineName: route.params.routineName,
+                refresh: false,
               });
             }}
           >

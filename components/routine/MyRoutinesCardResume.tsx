@@ -131,6 +131,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
           navigation.navigate('StartWorkout', {
             routineId: routineCardResume.templateId,
             routineName: routineCardResume.myRoutineName,
+            refresh: true,
           })
         }
       >
