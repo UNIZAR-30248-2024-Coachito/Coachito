@@ -1,10 +1,8 @@
 import { supabase } from '@/api/supabaseClient';
 
-const useFetchUserWorkouts = async (userId: string) => {
+const useFetchUserWorkouts = async () => {
   try {
-    const { data, error } = await supabase.rpc('get_user_workouts', {
-      uid: userId, // Supabase RPC expects named arguments in an object
-    });
+    const { data, error } = await supabase.rpc('get_user_workouts');
 
     if (error) {
       console.error('Error fetching user workouts:', error.message);

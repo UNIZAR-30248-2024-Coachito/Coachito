@@ -26,12 +26,12 @@ export interface UserWorkoutsDetails {
 }
 
 const Profile: React.FC = () => {
-  const { session, profile } = useUserInfo();
+  const { profile } = useUserInfo();
   const [workoutsDetails, setWorkoutsDetails] = useState<UserWorkoutsDetails>();
   const [chartData, setChartData] = useState<DataChartProps[]>([]);
 
-  const fetchUserProfile = async (userId: string) => {
-    const { data, error } = await useFetchUserWorkouts(userId);
+  const fetchUserProfile = async () => {
+    const { data, error } = await useFetchUserWorkouts();
     console.log(data);
     console.log(error);
     if (!error) {
@@ -78,12 +78,8 @@ const Profile: React.FC = () => {
   };
 
   useEffect(() => {
-    if (session?.user?.id) {
-      console.log(session.user.id);
-      console.log(profile);
-      fetchUserProfile(session.user.id);
-    }
-  }, [session?.user?.id]);
+    fetchUserProfile();
+  }, []);
 
   const buttons = ['Duración', 'Repeticiones', 'Volumen'];
 

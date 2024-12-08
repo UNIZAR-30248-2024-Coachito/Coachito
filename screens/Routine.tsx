@@ -30,8 +30,8 @@ const Routine: React.FC = () => {
   const [isNewGroupModalVisible, setIsNewGroupModalVisible] = useState(false);
   const [newFolderInputValue, setNewFolderInputValue] = useState('');
 
-  const fetchRoutinesAndGroups = async (userId: string) => {
-    const { data, error } = await useFetchTemplateWorkouts(userId);
+  const fetchRoutinesAndGroups = async () => {
+    const { data, error } = await useFetchTemplateWorkouts();
     console.log(data);
     if (!error) {
       if (data && data.length > 0) {
@@ -48,45 +48,38 @@ const Routine: React.FC = () => {
 
   useEffect(() => {
     const routineDeletedListener = emitter.addListener('routineDeleted', () => {
-      if (session?.user?.id) {
-        fetchRoutinesAndGroups(session.user.id);
-      }
+      fetchRoutinesAndGroups();
+
       Alert.alert('', '¡Rutina eliminada correctamente!', [{ text: 'OK' }]);
     });
     const routineRenamedListener = emitter.addListener('routineRenamed', () => {
-      if (session?.user?.id) {
-        fetchRoutinesAndGroups(session.user.id);
-      }
+      fetchRoutinesAndGroups();
+
       Alert.alert('', '¡Rutina editada correctamente!', [{ text: 'OK' }]);
     });
     const routineAddedListener = emitter.addListener('routineAdded', () => {
-      if (session?.user?.id) {
-        fetchRoutinesAndGroups(session.user.id);
-      }
+      fetchRoutinesAndGroups();
+
       Alert.alert('', '¡Rutina creada correctamente!', [{ text: 'OK' }]);
     });
 
     const groupCreatedListener = emitter.addListener('groupCreated', () => {
-      if (session?.user?.id) {
-        fetchRoutinesAndGroups(session.user.id);
-      }
+      fetchRoutinesAndGroups();
+
       Alert.alert('', '¡Carpeta creada correctamente!', [{ text: 'OK' }]);
     });
     const groupRenamedListener = emitter.addListener('groupRenamed', () => {
-      if (session?.user?.id) {
-        fetchRoutinesAndGroups(session.user.id);
-      }
+      fetchRoutinesAndGroups();
+
       Alert.alert('', '¡Carpeta editada correctamente!', [{ text: 'OK' }]);
     });
     const groupDeletedListener = emitter.addListener('groupDeleted', () => {
-      if (session?.user?.id) {
-        fetchRoutinesAndGroups(session.user.id);
-      }
+      fetchRoutinesAndGroups();
+
       Alert.alert('', '¡Carpeta eliminada correctamente!', [{ text: 'OK' }]);
     });
-    if (session?.user?.id) {
-      fetchRoutinesAndGroups(session.user.id);
-    }
+
+    fetchRoutinesAndGroups();
 
     return () => {
       routineDeletedListener?.remove();
@@ -131,7 +124,7 @@ const Routine: React.FC = () => {
       session.user.id
     );
     if (!error) {
-      fetchRoutinesAndGroups(session.user.id);
+      fetchRoutinesAndGroups();
 
       emitter.emit('groupCreated');
     } else {
