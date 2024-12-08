@@ -8,18 +8,17 @@ import { useFetchDashboardWorkouts } from '@/hooks/dashboardHook';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '@/types/navigation';
 import { emitter } from '@/utils/emitter';
-import { useUserInfo } from '@/context/UserContext';
 import { Text } from '../components/ui/text';
 
 const Dashboard: React.FC = () => {
   const [workouts, setWorkouts] = useState<WorkoutCardResume[]>([]);
   const navigation = useNavigation<NavigationProps>();
-  const { session } = useUserInfo();
 
-  const fetchWorkouts = async (userId: string) => {
-    const { data, error } = await useFetchDashboardWorkouts(userId);
+  const fetchWorkouts = async () => {
+    const { data, error } = await useFetchDashboardWorkouts();
 
     if (!error) {
+      console.log('Dashboard:', data);
       setWorkouts(data);
     } else {
       Alert.alert(
@@ -31,25 +30,20 @@ const Dashboard: React.FC = () => {
   };
 
   useEffect(() => {
-    if (session?.user?.id) {
-      fetchWorkouts(session.user.id);
-    }
+    fetchWorkouts();
   }, []);
 
   useEffect(() => {
     const routineDeletedListener = emitter.addListener(
       'workoutFinished',
       () => {
-        if (session?.user?.id) {
-          fetchWorkouts(session.user.id);
-        }
+        fetchWorkouts();
+
         Alert.alert('', '¡Entrenamiento completado!', [{ text: 'OK' }]);
       }
     );
 
-    if (session?.user?.id) {
-      fetchWorkouts(session.user.id);
-    }
+    fetchWorkouts();
 
     return () => {
       routineDeletedListener?.remove();

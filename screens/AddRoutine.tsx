@@ -19,12 +19,15 @@ import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 import ExerciseResumeComponent, {
   ExerciseResumeRef,
 } from '@/components/exercise/ExerciseResume';
+import { useUserInfo } from '@/context/UserContext';
 
 const MAX_LENGHT_TITLE = 100;
 
 const AddRoutine: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute<RouteProp<RootStackParamList, 'AddRoutine'>>();
+
+  const { session } = useUserInfo();
 
   const [routineTitleInputValue, setRoutineTitleInputValue] = useState('');
   const [selectedExercises, setSelectedExercises] = useState<ExerciseResume[]>(
@@ -107,11 +110,16 @@ const AddRoutine: React.FC = () => {
     const allExerciseData = exerciseRefs.current.map((ref) =>
       ref!.getExerciseData()
     );
+    // Temporal
+    if (!session?.user?.id) {
+      return;
+    }
 
     const { error } = await useCreateRoutine(
       routineTitle,
       allExerciseData,
-      route.params.groupId
+      route.params.groupId,
+      session.user.id
     );
 
     resetState();

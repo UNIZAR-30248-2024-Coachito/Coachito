@@ -5,12 +5,7 @@ import {
   SignInWithPasswordCredentials,
 } from '@supabase/supabase-js';
 import { Alert } from 'react-native';
-import supabaseClient, {
-  SUPABASE_URL,
-  SUPABASE_ANON_KEY,
-} from '@/api/supabaseClient';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios'; // Importamos AxiosError para el manejo adecuado del error
+import { supabase } from '@/api/supabaseClient';
 
 export default function LogIn() {
   const [loading, setLoading] = useState(false);
@@ -22,26 +17,29 @@ export default function LogIn() {
     const { email, password, options } = credentials;
 
     try {
-      // Solicitud POST para registrar un usuario
-      const { data } = await supabaseClient.post('/../../auth/v1/signup', {
+      const { data, error } = await supabase.auth.signUp({
         email,
         password,
-        ...options,
+        options,
       });
 
-      console.log('Usuario registrado:', data);
-      // Aquí puedes realizar cualquier acción después del registro, como redirigir o mostrar un mensaje
-    } catch (error) {
-      // Manejamos los errores correctamente
-      if (axios.isAxiosError(error)) {
-        const message = error.response?.data?.message || 'Error al registrar';
-        Alert.alert(message);
-      } else {
-        Alert.alert('Error en la conexión');
+      if (error) {
+        console.error('Error al registrar:', error.message);
+        Alert.alert('Error al registrar', error.message);
+        return;
       }
-    }
 
-    setLoading(false);
+      console.log('Usuario registrado:', data);
+      Alert.alert(
+        'Registro exitoso',
+        'Revisa tu correo para confirmar tu cuenta.'
+      );
+    } catch (error) {
+      console.error('Error inesperado al registrar:', error);
+      Alert.alert('Ocurrió un error inesperado al registrar');
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Función para iniciar sesión
@@ -51,40 +49,25 @@ export default function LogIn() {
     const { email, password } = credentials;
 
     try {
-      // Solicitud POST para obtener el token de sesión
-      const { data } = await axios.post(
-        `${SUPABASE_URL}/auth/v1/token`,
-        {
-          email,
-          password,
-          grant_type: 'password', // Asegúrate de incluir el parámetro 'grant_type' para el flujo de contraseña
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${SUPABASE_ANON_KEY}`, // Añadimos la anon key en los headers
-            'Content-Type': 'application/json', // Tipo de contenido correcto
-          },
-        }
-      );
+      const { data, error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
 
-      if (data && data.access_token) {
-        await AsyncStorage.setItem('access_token', data.access_token);
-        console.log('JWT guardado:', data.access_token);
-        Alert.alert('Inicio de sesión exitoso');
-      } else {
-        Alert.alert('Error al iniciar sesión');
+      if (error) {
+        console.error('Error al iniciar sesión:', error.message);
+        Alert.alert('Error al iniciar sesión', error.message);
+        return;
       }
+
+      console.log('Inicio de sesión exitoso:', data);
+      Alert.alert('Inicio de sesión exitoso');
     } catch (error) {
-      if (axios.isAxiosError(error)) {
-        const message =
-          error.response?.data?.message || 'Error al iniciar sesión';
-        Alert.alert(message);
-      } else {
-        Alert.alert('Error en la conexión');
-      }
+      console.error('Error inesperado al iniciar sesión:', error);
+      Alert.alert('Ocurrió un error inesperado al iniciar sesión');
+    } finally {
+      setLoading(false);
     }
-
-    setLoading(false);
   };
 
   return (
