@@ -18,11 +18,27 @@ export interface MyRoutinesCardResume {
 }
 
 export interface MyRoutineCardResumeProps {
+  background: string;
+  backgroundColor: string;
+  textColor: string;
+  backgrounColorPopUp: string;
   routineCardResume: MyRoutinesCardResume;
+  redColor: string;
+  blueColor: string;
+  exerciseColor: string;
+  buttonColor: string;
 }
 
 const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
+  background,
+  backgroundColor,
+  textColor,
+  backgrounColorPopUp,
   routineCardResume,
+  redColor,
+  blueColor,
+  exerciseColor,
+  buttonColor,
 }) => {
   const navigation = useNavigation<NavigationProps>();
   const [isSlideUpModalVisible, setIsSlideUpModalVisible] = useState(false);
@@ -48,6 +64,9 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
         navigation.navigate('EditRoutine', {
           routineId: routineCardResume.templateId,
           routineName: routineCardResume.myRoutineName,
+          backgroundColorPopUp: backgrounColorPopUp,
+          backgroundColor: background,
+          textColor,
         });
       }}
     >
@@ -62,8 +81,8 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
         setIsSlideUpModalVisible(false);
       }}
     >
-      <Trash color="red" />
-      <Text className="text-red-600">Eliminar Rutina</Text>
+      <Trash color={redColor} />
+      <Text style={{ color: redColor }}>Eliminar Rutina</Text>
     </Button>,
   ];
 
@@ -95,16 +114,24 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
 
   return (
     <Pressable
-      className="bg-zinc-900 p-4 mb-4 rounded-lg"
+      style={{ backgroundColor }}
+      className="p-4 mb-4 rounded-lg"
       onPress={() =>
         navigation.navigate('DetailsRoutine', {
           templateId: routineCardResume.templateId,
           myRoutineName: routineCardResume.myRoutineName,
+          textColor: textColor,
+          backgrounColor: background,
+          blueColor: blueColor,
+          exerciseColor: exerciseColor,
+          buttonColor: buttonColor,
+          redColor: redColor,
+          backgroundColorPopUp: backgrounColorPopUp,
         })
       }
     >
       <Box className="flex-row justify-between items-center">
-        <Text className="text-xl font-bold mb-2 text-white">
+        <Text style={{ color: textColor }} className="text-xl font-bold mb-2">
           {routineCardResume.myRoutineName}
         </Text>
 
@@ -115,7 +142,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
             setIsSlideUpModalVisible(true);
           }}
         >
-          <MoreHorizontal color="white" />
+          <MoreHorizontal color={textColor} />
         </Button>
       </Box>
 
@@ -124,11 +151,17 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
       </Text>
 
       <Button
-        className="bg-blue-500 rounded-lg"
+        style={{ backgroundColor: blueColor }}
+        className="rounded-lg"
         onPress={() =>
           navigation.navigate('StartWorkout', {
             routineId: routineCardResume.templateId,
             routineName: routineCardResume.myRoutineName,
+            textColor,
+            backgroundColor: background,
+            backgrounColorPopUp,
+            redColor,
+            blueColor,
           })
         }
       >
@@ -143,6 +176,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
       />
 
       <PopupBaseModal
+        backgroundColor={backgrounColorPopUp}
         components={componentsPopUpModal}
         isVisible={isDeleteModalVisible}
         setIsModalVisible={setIsDeleteModalVisible}

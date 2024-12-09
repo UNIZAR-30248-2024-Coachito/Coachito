@@ -8,7 +8,12 @@ import { VStack } from '../ui/vstack';
 import CustomChartButtons from './CustomChartButtons';
 import { CustomDataChartProps, DataPoint } from './CustomAreaChart';
 
-const CustomBarChart: React.FC<CustomDataChartProps> = ({ data, buttons }) => {
+const CustomBarChart: React.FC<CustomDataChartProps> = ({
+  data,
+  buttons,
+  buttonColor,
+  textColor,
+}) => {
   const [dataChartPoints, setDataChartPoints] = useState<DataPoint[]>([]);
   const [dataChartTotal, setDataChartTotal] = useState<string>('0');
   const screenWidth = Dimensions.get('window').width;
@@ -50,6 +55,8 @@ const CustomBarChart: React.FC<CustomDataChartProps> = ({ data, buttons }) => {
         data={data}
         onDataChartPointsChange={setDataChartPoints}
         onDataChartTotalChange={setDataChartTotal}
+        buttonColor={buttonColor}
+        textColor={textColor}
       />
     </VStack>
   );

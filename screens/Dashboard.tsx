@@ -10,7 +10,17 @@ import { NavigationProps } from '@/types/navigation';
 import { emitter } from '@/utils/emitter';
 import { Text } from '../components/ui/text';
 
-const Dashboard: React.FC = () => {
+interface DashboardProps {
+  backgroundColor: string;
+  backgroundColorEntrenamiento: string;
+  textColor: string;
+}
+
+const Dashboard: React.FC<DashboardProps> = ({
+  backgroundColor,
+  backgroundColorEntrenamiento,
+  textColor,
+}) => {
   const [workouts, setWorkouts] = useState<WorkoutCardResume[]>([]);
   const navigation = useNavigation<NavigationProps>();
 
@@ -26,7 +36,6 @@ const Dashboard: React.FC = () => {
       );
     }
   };
-
   useEffect(() => {
     fetchWorkouts();
   }, []);
@@ -50,7 +59,7 @@ const Dashboard: React.FC = () => {
 
   return (
     <ScrollView className="flex-1">
-      <VStack className="p-4">
+      <VStack className={`p-4 ${backgroundColor}`}>
         {workouts.length === 0 ? (
           <Text className="text-center text-white mt-4">
             ¡¡¡Realiza tu primer entrenamiento!!!
@@ -58,12 +67,17 @@ const Dashboard: React.FC = () => {
         ) : (
           workouts!.map((workout, index) => (
             <WorkoutCardResumeComponent
+              backgroundColor={backgroundColorEntrenamiento}
+              textColor={textColor}
               key={index}
               workout_header_resume={workout.workout_header_resume}
               workout_exercises_resume={workout.workout_exercises_resume}
               onPress={() =>
                 navigation.navigate('DetailsWorkout', {
                   workoutId: workout.workout_header_resume.workoutId,
+                  textColor: textColor,
+                  backgroundColor: backgroundColor,
+                  backgroundColorEntrenamiento: backgroundColorEntrenamiento,
                 })
               }
             />

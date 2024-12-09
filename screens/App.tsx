@@ -20,9 +20,9 @@ export default function App() {
   const [colorMode, setColorMode] = React.useState<'dark' | 'light'>('dark');
 
   const statusBarbackgroundColor =
-    colorMode === 'light' ? '#ffffff' : '#000000';
+    colorMode === 'light' ? '#ffffff' : '#1b1b1b';
 
-  const toggleColorMode = async () => {
+  const toggleColorMode = () => {
     setColorMode((prev) => (prev === 'light' ? 'dark' : 'light'));
   };
 

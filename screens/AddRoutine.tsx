@@ -23,7 +23,20 @@ import { useUserInfo } from '@/context/UserContext';
 
 const MAX_LENGHT_TITLE = 100;
 
-const AddRoutine: React.FC = () => {
+interface AddRoutineProps {
+  backgroundColorBoton: string;
+  backgroundColor: string;
+  textColor: string;
+  backgroundColorPopUp: string;
+  blueColor: string;
+}
+
+const AddRoutine: React.FC<AddRoutineProps> = ({
+  backgroundColor,
+  textColor,
+  backgroundColorPopUp,
+  blueColor,
+}) => {
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute<RouteProp<RootStackParamList, 'AddRoutine'>>();
 
@@ -128,7 +141,10 @@ const AddRoutine: React.FC = () => {
 
   return (
     <ScrollView className="flex-1">
-      <VStack className="p-4 gap-2 items-center">
+      <VStack
+        style={{ backgroundColor: backgroundColor }}
+        className="p-4 gap-2 items-center"
+      >
         <HStack className="w-full gap-6 mb-4">
           <Button
             testID="cancel-routine"
@@ -172,6 +188,8 @@ const AddRoutine: React.FC = () => {
         ) : (
           selectedExercises.map((exercise, index) => (
             <ExerciseResumeComponent
+              backgroundColor={backgroundColor}
+              textColor={textColor}
               key={index}
               ref={(el) => (exerciseRefs.current[index] = el)}
               id={exercise.id}
@@ -192,6 +210,9 @@ const AddRoutine: React.FC = () => {
             navigation.navigate('AddExercise', {
               selectedExercises,
               groupId: route.params.groupId,
+              textColor: textColor,
+              backgroundColor: backgroundColor,
+              blueColor: blueColor,
             })
           }
         >
@@ -200,6 +221,7 @@ const AddRoutine: React.FC = () => {
         </Button>
 
         <PopupBaseModal
+          backgroundColor={backgroundColorPopUp}
           components={componentsCancelRoutinePopUpModal}
           isVisible={isCancelRoutineModalVisible}
           setIsModalVisible={setIsCancelRoutineModalVisible}

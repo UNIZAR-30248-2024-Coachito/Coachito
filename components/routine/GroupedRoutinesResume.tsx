@@ -33,11 +33,25 @@ export interface GroupedRoutines {
 }
 
 export interface GroupedRoutinesProps {
+  background: string;
+  backgroundColor: string;
+  textColor: string;
+  backgrounColorPopUp: string;
   groupedRoutine: GroupedRoutines;
+  blueColor: string;
+  redColor: string;
+  buttonColor: string;
 }
 
 const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
+  background,
+  textColor,
+  backgroundColor,
+  backgrounColorPopUp,
   groupedRoutine,
+  blueColor,
+  redColor,
+  buttonColor,
 }) => {
   const navigation = useNavigation<NavigationProps>();
   const [showRoutines, setShowRoutines] = useState(true);
@@ -218,8 +232,16 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
       {showRoutines &&
         groupedRoutine.routines!.map((routine, index) => (
           <MyRoutinesCardResumeComponent
+            background={background}
+            backgroundColor={backgroundColor}
+            textColor={textColor}
+            backgrounColorPopUp={backgrounColorPopUp}
             key={index}
             routineCardResume={routine}
+            redColor={redColor}
+            blueColor={blueColor}
+            exerciseColor={buttonColor}
+            buttonColor={buttonColor}
           />
         ))}
 
@@ -231,12 +253,14 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
       />
 
       <PopupBaseModal
+        backgroundColor={backgrounColorPopUp}
         components={componentsDeleteGroupPopUpModal}
         isVisible={isDeleteModalVisible}
         setIsModalVisible={setIsDeleteModalVisible}
       />
 
       <PopupBaseModal
+        backgroundColor={backgrounColorPopUp}
         components={componentsRenameGroupPopUpModal}
         isVisible={isRenameGroupModalVisible}
         setIsModalVisible={setIsRenameGroupModalVisible}

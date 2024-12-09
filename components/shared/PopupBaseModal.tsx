@@ -3,12 +3,14 @@ import { Modal, TouchableOpacity } from 'react-native';
 import { Box } from '../ui/box';
 
 interface PopupBaseModalProps {
+  backgroundColor: string;
   components: React.ReactNode[];
   isVisible: boolean;
   setIsModalVisible: (newState: boolean) => void;
 }
 
 const PopupBaseModal: React.FC<PopupBaseModalProps> = ({
+  backgroundColor,
   components,
   isVisible,
   setIsModalVisible,
@@ -24,7 +26,7 @@ const PopupBaseModal: React.FC<PopupBaseModalProps> = ({
     >
       <TouchableOpacity
         testID="modal-touchable"
-        className="flex-1 bg-black/75 justify-center items-center"
+        className="flex-1 bg-black/25 justify-center items-center"
         onPress={() => {
           setIsModalVisible(false);
         }}
@@ -32,7 +34,8 @@ const PopupBaseModal: React.FC<PopupBaseModalProps> = ({
       >
         <Box
           testID="modal-content"
-          className="bg-zinc-800 rounded-lg items-center p-4 mx-8 self-center"
+          style={{ backgroundColor: backgroundColor }}
+          className="rounded-lg items-center p-4 mx-8 self-center"
         >
           {components.map((component) => component)}
         </Box>

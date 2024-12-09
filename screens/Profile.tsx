@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { CircleUserRound, Dumbbell } from 'lucide-react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { CircleUserRound, Dumbbell, Moon } from 'lucide-react-native';
 import { VStack } from '@/components/ui/vstack';
 import { Text } from '@/components/ui/text';
 import { useFetchUserWorkouts } from '@/hooks/userHook';
@@ -11,6 +11,10 @@ import { formatToChartLabel } from '@/utils/date';
 import { Button } from '@/components/ui/button';
 import { useUserInfo } from '@/context/UserContext';
 import { supabase } from '@/api/supabaseClient';
+import { ThemeContext } from './App';
+import { Pressable } from 'react-native';
+import { RouteProp, useRoute } from '@react-navigation/native';
+import { RootStackParamList } from '@/types/navigation';
 
 export interface UserWorkouts {
   workoutId: number;
@@ -25,10 +29,25 @@ export interface UserWorkoutsDetails {
   workouts: UserWorkouts[];
 }
 
-const Profile: React.FC = () => {
+interface ProfileProps {
+  backgroundColor: string;
+  textColor: string;
+  blueColor: string;
+  buttonColor: string;
+}
+
+const Profile: React.FC<ProfileProps> = ({
+  backgroundColor,
+  textColor,
+  blueColor,
+  buttonColor,
+}) => {
   const { profile } = useUserInfo();
+  const route = useRoute<RouteProp<RootStackParamList, 'Profile'>>();
+  const userId = route.params.userId;
   const [workoutsDetails, setWorkoutsDetails] = useState<UserWorkoutsDetails>();
   const [chartData, setChartData] = useState<DataChartProps[]>([]);
+  const { colorMode, toggleColorMode } = useContext(ThemeContext);
 
   const fetchUserProfile = async () => {
     const { data, error } = await useFetchUserWorkouts();
@@ -82,11 +101,16 @@ const Profile: React.FC = () => {
   const buttons = ['Duración', 'Repeticiones', 'Volumen'];
 
   return (
-    <VStack className="items-center gap-4">
+    <VStack style={{ backgroundColor }} className="items-center gap-4">
       <Button onPress={() => supabase.auth.signOut()}>
         <Text className="text-black">Cerrar Sesión</Text>
       </Button>
-      <CircleUserRound color="#3b82f6" size={100} />
+      <HStack className="flex-row justify-end gap-2 w-full mt-5 mr-10">
+        <Pressable onPress={toggleColorMode}>
+          <Moon color={colorMode === 'dark' ? '#ffffff' : '#000000'} />
+        </Pressable>
+      </HStack>
+      <CircleUserRound color={blueColor} size={100} />
 
       <Text size="xl" bold>
         {profile?.username}
@@ -95,11 +119,18 @@ const Profile: React.FC = () => {
       <HStack className="gap-2">
         <Dumbbell />
         {workoutsDetails && (
-          <Text>{workoutsDetails!.workoutsCount} entrenos realizados</Text>
+          <Text style={{ color: textColor }}>
+            {workoutsDetails!.workoutsCount} entrenos realizados
+          </Text>
         )}
       </HStack>
 
-      <CustomBarChart data={chartData} buttons={buttons} />
+      <CustomBarChart
+        data={chartData}
+        buttons={buttons}
+        buttonColor={buttonColor}
+        textColor={textColor}
+      />
     </VStack>
   );
 };

@@ -23,7 +23,15 @@ type AddExerciseEditRouteProp = RouteProp<
   'AddExerciseEdit'
 >;
 
-const AddExerciseEdit: React.FC = () => {
+interface AddExerciseEditProps {
+  backgroundColor: string;
+  textColor: string;
+}
+
+const AddExerciseEdit: React.FC<AddExerciseEditProps> = ({
+  backgroundColor,
+  textColor,
+}) => {
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute<AddExerciseEditRouteProp>();
 
@@ -81,7 +89,10 @@ const AddExerciseEdit: React.FC = () => {
 
   return (
     <ScrollView className="flex-1">
-      <VStack className="p-4 gap-4">
+      <VStack
+        style={{ backgroundColor: backgroundColor }}
+        className="p-4 gap-4"
+      >
         <HStack className="items-left gap-4">
           <Button
             className="bg-transparent rounded-lg"
@@ -89,12 +100,17 @@ const AddExerciseEdit: React.FC = () => {
               navigation.navigate('EditRoutine', {
                 routineId: route.params.routineId,
                 routineName: route.params.routineName,
+                backgroundColorPopUp: backgroundColor,
+                backgroundColor,
+                textColor,
               });
             }}
           >
             <Text className="text-blue-500">Cancelar</Text>
           </Button>
-          <Text className="text-xl">Agregar Ejercicio</Text>
+          <Text style={{ color: textColor }} className="text-xl">
+            Agregar Ejercicio
+          </Text>
         </HStack>
 
         <Input>
@@ -102,7 +118,7 @@ const AddExerciseEdit: React.FC = () => {
             <InputIcon as={SearchIcon} />
           </InputSlot>
           <InputField
-            className="text-white"
+            className={`${textColor}`}
             placeholder="Buscar Ejercicio"
             value={searchTerm}
             onChangeText={setSearchTerm}
@@ -115,6 +131,8 @@ const AddExerciseEdit: React.FC = () => {
               className={`${selectedExercises.some((e) => e.id === exercise.id) ? 'bg-blue-500' : 'bg-transparent'}`}
             >
               <ExercisesListCardResume
+                backgroundColor={backgroundColor}
+                textColor={textColor}
                 id={exercise.id}
                 name={exercise.name}
                 thumbnailUrl={exercise.thumbnailUrl}
@@ -135,10 +153,13 @@ const AddExerciseEdit: React.FC = () => {
               navigation.navigate('EditRoutine', {
                 routineId: route.params.routineId,
                 routineName: route.params.routineName,
+                backgroundColorPopUp: backgroundColor,
+                backgroundColor,
+                textColor,
               });
             }}
           >
-            <Text className="text-white">Añadir Ejercicios</Text>
+            <Text style={{ color: textColor }}>Añadir Ejercicios</Text>
           </Button>
         )}
       </VStack>
