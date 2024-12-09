@@ -59,15 +59,11 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [isRenameGroupModalVisible, setIsRenameGroupModalVisible] =
     useState(false);
-  const [newFolderName, setNewFolderName] = useState(
-    groupedRoutine.groupName ?? ''
-  );
+  const [newFolderName, setNewFolderName] = useState(groupedRoutine.groupName);
 
   const createRoutine = async () => {
     if (groupedRoutine.routines.length >= 7) {
-      Alert.alert('', 'No puede añadir más de 7 rutinas por carpeta.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'No puede añadir más de 7 rutinas por carpeta.');
       return;
     }
 
@@ -85,36 +81,30 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
     if (!error) {
       emitter.emit('groupDeleted');
     } else {
-      Alert.alert('', 'Se ha producido un error eliminando la carpeta.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error eliminando la carpeta.');
     }
   };
 
   const updateGroup = async () => {
-    const folderName = newFolderName.trim();
+    const folderName = newFolderName?.trim();
     setIsRenameGroupModalVisible(false);
 
     if (folderName === '') {
-      Alert.alert('', 'Por favor, introduce un nombre para la nueva carpeta.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Por favor, introduce un nombre para la nueva carpeta.');
       return;
     }
 
     const { error } = await useEditTemplateWorkoutGroup(
       groupedRoutine.groupId,
-      folderName
+      folderName!
     );
 
     if (!error) {
-      setNewFolderName(folderName);
+      setNewFolderName(folderName!);
       emitter.emit('groupRenamed');
     } else {
       setNewFolderName(groupedRoutine.groupName!);
-      Alert.alert('', 'Se ha producido un error al renombrar la carpeta.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error al renombrar la carpeta.');
     }
   };
 
@@ -125,7 +115,7 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
     <Input key="2" className="mb-4">
       <InputField
         placeholder="Nuevo nombre"
-        value={newFolderName}
+        value={newFolderName!}
         onChangeText={setNewFolderName}
       />
     </Input>,
@@ -226,7 +216,7 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
           </Text>
         </Button>
 
-        {groupedRoutine.groupName && (
+        {groupedRoutine.groupName != 'Mis Rutinas' && (
           <Button
             testID="slideup-modal"
             className="bg-transparent"

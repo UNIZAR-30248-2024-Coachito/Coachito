@@ -52,9 +52,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
     if (!error) {
       emitter.emit('routineDeleted');
     } else {
-      Alert.alert('', 'Se ha producido un error al eliminar la rutina.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error al eliminar la rutina.');
     }
   };
 

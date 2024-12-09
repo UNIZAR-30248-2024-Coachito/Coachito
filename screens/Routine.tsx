@@ -16,6 +16,7 @@ import { Input, InputField } from '@/components/ui/input';
 import { useCreateTemplateWorkoutGroup } from '@/hooks/workoutTemplateGroupHook';
 import { emitter } from '@/utils/emitter';
 import { Alert } from 'react-native';
+import { useUserInfo } from '@/context/UserContext';
 
 export interface Group {
   id: number;
@@ -42,6 +43,7 @@ const Routine: React.FC<RoutineProps> = ({
   buttonColor,
 }) => {
   const navigation = useNavigation<NavigationProps>();
+  const { session } = useUserInfo();
   const [routines, setRoutines] = useState<GroupedRoutines[]>([]);
   const [isNewGroupModalVisible, setIsNewGroupModalVisible] = useState(false);
   const [newFolderInputValue, setNewFolderInputValue] = useState('');
@@ -50,39 +52,47 @@ const Routine: React.FC<RoutineProps> = ({
     const { data, error } = await useFetchTemplateWorkouts();
 
     if (!error) {
-      setRoutines(data!);
+      if (data && data.length > 0) {
+        setRoutines(data);
+      } else {
+        setRoutines([]);
+      }
     } else {
-      Alert.alert('', 'Se ha producido un error al obtener las rutinas.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error al obtener las rutinas.');
     }
   };
 
   useEffect(() => {
     const routineDeletedListener = emitter.addListener('routineDeleted', () => {
       fetchRoutinesAndGroups();
-      Alert.alert('', '¡Rutina eliminada correctamente!', [{ text: 'OK' }]);
+
+      Alert.alert('', '¡Rutina eliminada correctamente!');
     });
     const routineRenamedListener = emitter.addListener('routineRenamed', () => {
       fetchRoutinesAndGroups();
-      Alert.alert('', '¡Rutina editada correctamente!', [{ text: 'OK' }]);
+
+      Alert.alert('', '¡Rutina editada correctamente!');
     });
     const routineAddedListener = emitter.addListener('routineAdded', () => {
       fetchRoutinesAndGroups();
-      Alert.alert('', '¡Rutina creada correctamente!', [{ text: 'OK' }]);
+
+      Alert.alert('', '¡Rutina creada correctamente!');
     });
 
     const groupCreatedListener = emitter.addListener('groupCreated', () => {
       fetchRoutinesAndGroups();
-      Alert.alert('', '¡Carpeta creada correctamente!', [{ text: 'OK' }]);
+
+      Alert.alert('', '¡Carpeta creada correctamente!');
     });
     const groupRenamedListener = emitter.addListener('groupRenamed', () => {
       fetchRoutinesAndGroups();
-      Alert.alert('', '¡Carpeta editada correctamente!', [{ text: 'OK' }]);
+
+      Alert.alert('', '¡Carpeta editada correctamente!');
     });
     const groupDeletedListener = emitter.addListener('groupDeleted', () => {
       fetchRoutinesAndGroups();
-      Alert.alert('', '¡Carpeta eliminada correctamente!', [{ text: 'OK' }]);
+
+      Alert.alert('', '¡Carpeta eliminada correctamente!');
     });
 
     fetchRoutinesAndGroups();
@@ -101,7 +111,7 @@ const Routine: React.FC<RoutineProps> = ({
     const folderRoutines = routines.find((routine) => routine.groupId === null);
 
     if (folderRoutines && folderRoutines.routines.length >= 7) {
-      Alert.alert('', 'No puede añadir más de 7 rutinas.', [{ text: 'OK' }]);
+      Alert.alert('', 'No puede añadir más de 7 rutinas.');
       return;
     }
 
@@ -117,20 +127,24 @@ const Routine: React.FC<RoutineProps> = ({
     setNewFolderInputValue('');
 
     if (folderName === '') {
-      Alert.alert('', 'Por favor, introduce un nombre para la nueva carpeta.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Por favor, introduce un nombre para la nueva carpeta.');
       return;
     }
 
-    const { error } = await useCreateTemplateWorkoutGroup(folderName);
+    if (!session?.user?.id) {
+      return 'Error con la autenticacion';
+    }
+
+    const { error } = await useCreateTemplateWorkoutGroup(
+      folderName,
+      session.user.id
+    );
+
     if (!error) {
       fetchRoutinesAndGroups();
       emitter.emit('groupCreated');
     } else {
-      Alert.alert('', 'Se ha producido un error al crear el nuevo grupo.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error al crear el nuevo grupo.');
     }
   };
 
@@ -198,8 +212,7 @@ const Routine: React.FC<RoutineProps> = ({
                 if (routines.length > 10) {
                   Alert.alert(
                     '',
-                    'Solo se pueden tener 10 carpetas por usuario.',
-                    [{ text: 'OK' }]
+                    'Solo se pueden tener 10 carpetas por usuario.'
                   );
                 } else {
                   setIsNewGroupModalVisible(true);
@@ -214,19 +227,30 @@ const Routine: React.FC<RoutineProps> = ({
           </VStack>
         </HStack>
 
-        {routines!.map((routine, index) => (
-          <GroupedRoutinesResumeComponent
-            background={backgroundColor}
-            backgroundColor={backgroundColorBoton}
-            textColor={textColor}
-            backgrounColorPopUp={backgroundColorPopUp}
-            key={index}
-            groupedRoutine={routine}
-            blueColor={blueColor}
-            redColor={redColor}
-            buttonColor={buttonColor}
-          />
-        ))}
+        {routines.length === 2 && routines[1].routines.length === 0 ? (
+          <Text className="text-center text-white mt-4">
+            No tiene rutinas disponibles
+          </Text>
+        ) : (
+          routines
+            .filter(
+              (routine) =>
+                !(routine.groupId === null && routine.groupName === 'No Group')
+            )
+            .map((routine, index) => (
+              <GroupedRoutinesResumeComponent
+                background={backgroundColor}
+                backgroundColor={backgroundColorBoton}
+                textColor={textColor}
+                backgrounColorPopUp={backgroundColorPopUp}
+                key={index}
+                groupedRoutine={routine}
+                blueColor={blueColor}
+                redColor={redColor}
+                buttonColor={buttonColor}
+              />
+            ))
+        )}
 
         <PopupBaseModal
           backgroundColor={backgroundColorPopUp}

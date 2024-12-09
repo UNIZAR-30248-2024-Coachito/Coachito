@@ -2,6 +2,7 @@ import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 export type RootStackParamList = {
+  Login: undefined;
   Dashboard: undefined;
   Routine: undefined;
   DetailsRoutine: {

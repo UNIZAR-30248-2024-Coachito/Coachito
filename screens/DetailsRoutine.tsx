@@ -51,8 +51,7 @@ const DetailsRoutine: React.FC = () => {
     } else {
       Alert.alert(
         '',
-        'Se ha producido un error obteniendo los datos de la gráfica.',
-        [{ text: 'OK' }]
+        'Se ha producido un error obteniendo los datos de la gráfica.'
       );
     }
   };
@@ -63,9 +62,7 @@ const DetailsRoutine: React.FC = () => {
     if (!error) {
       setExercises(data);
     } else {
-      Alert.alert('', 'Se ha producido un error obteniendo los ejercicios.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error obteniendo los ejercicios.');
     }
   };
 
@@ -81,9 +78,7 @@ const DetailsRoutine: React.FC = () => {
       emitter.emit('routineDeleted');
       navigation.navigate('Routine');
     } else {
-      Alert.alert('', 'Se ha producido un error al eliminar la rutina.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error al eliminar la rutina.');
     }
   };
 

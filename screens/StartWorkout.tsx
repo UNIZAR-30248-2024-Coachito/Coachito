@@ -49,9 +49,7 @@ const StartWorkout: React.FC = () => {
       setStartTime(Date.now());
       setTimerActive(true);
     } else {
-      Alert.alert('', 'Se ha producido un error obteniendo los ejercicios.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error obteniendo los ejercicios.');
     }
   };
 
@@ -111,9 +109,7 @@ const StartWorkout: React.FC = () => {
       emitter.emit('workoutFinished');
       navigation.navigate('Dashboard');
     } else {
-      Alert.alert('', 'Se ha producido un error al guardar el entrenamiento.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error al guardar el entrenamiento.');
     }
   };
 
