@@ -1,50 +1,47 @@
-import supabaseClient from '@/api/supabaseClient';
-import useCRUD from './useCRUD';
+import { supabase } from '@/api/supabaseClient';
 
-const useCreateTemplateWorkoutGroup = async (name: string) => {
-  const { execute } = useCRUD(() =>
-    supabaseClient.post('/workout_templates_group', {
-      name: name,
-    })
-  );
+// Crear un grupo de plantillas de entrenamiento
+const useCreateTemplateWorkoutGroup = async (name: string, user_id: string) => {
+  try {
+    const { data, error } = await supabase
+      .from('workout_templates_group')
+      .insert([{ name, user_id }]);
 
-  const { data, error } = await execute();
-
-  return { data, error };
+    return { data, error };
+  } catch (error) {
+    console.error('Error creating workout template group:', error);
+    return { data: null, error };
+  }
 };
 
+// Editar un grupo de plantillas de entrenamiento
 const useEditTemplateWorkoutGroup = async (id: number, name: string) => {
-  const { execute } = useCRUD(() =>
-    supabaseClient.patch(
-      '/workout_templates_group',
-      {
-        name: name,
-      },
-      {
-        params: {
-          id: `eq.${id}`,
-        },
-      }
-    )
-  );
+  try {
+    const { data, error } = await supabase
+      .from('workout_templates_group')
+      .update({ name })
+      .eq('id', id);
 
-  const { data, error } = await execute();
-
-  return { data, error };
+    return { data, error };
+  } catch (error) {
+    console.error('Error editing workout template group:', error);
+    return { data: null, error };
+  }
 };
 
+// Eliminar un grupo de plantillas de entrenamiento por ID
 const useDeleteTemplateWorkoutGroupById = async (id: number) => {
-  const { execute } = useCRUD(() =>
-    supabaseClient.delete('/workout_templates_group', {
-      params: {
-        id: `eq.${id}`,
-      },
-    })
-  );
+  try {
+    const { data, error } = await supabase
+      .from('workout_templates_group')
+      .delete()
+      .eq('id', id);
 
-  const { data, error } = await execute();
-
-  return { data, error };
+    return { data, error };
+  } catch (error) {
+    console.error('Error deleting workout template group:', error);
+    return { data: null, error };
+  }
 };
 
 export {

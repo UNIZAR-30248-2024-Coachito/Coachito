@@ -40,9 +40,7 @@ const EditRoutine: React.FC = () => {
       exerciseRefs.current = [];
       setSelectedExercises(data);
     } else {
-      Alert.alert('', 'Se ha producido un error al obtener los ejercicios.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error al obtener los ejercicios.');
     }
   }, [route.params.routineId]);
 
@@ -93,16 +91,12 @@ const EditRoutine: React.FC = () => {
     const routineTitle = routineTitleInputValue!.trim();
 
     if (routineTitle === '') {
-      Alert.alert('', 'Por favor, introduce un nombre para la rutina.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Por favor, introduce un nombre para la rutina.');
       return;
     }
 
     if (selectedExercises.length === 0) {
-      Alert.alert('', 'La rutina debe contener mínimo un ejercicio.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'La rutina debe contener mínimo un ejercicio.');
       return;
     }
 
@@ -117,9 +111,7 @@ const EditRoutine: React.FC = () => {
     );
 
     if (error) {
-      Alert.alert('', 'Se ha producido un error al guardar la rutina.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error al guardar la rutina.');
     } else {
       emitter.emit('routineRenamed');
       navigation.navigate('Routine');
