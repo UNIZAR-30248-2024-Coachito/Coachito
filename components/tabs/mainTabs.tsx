@@ -31,7 +31,6 @@ const MainTabs: React.FC = () => {
     >
       {session ? (
         <>
-          {/* Mostrar pestañas principales si hay sesión */}
           <Tab.Screen name="Dashboard">
             {() => (
               <Template>
@@ -111,7 +110,6 @@ const MainTabs: React.FC = () => {
           </Tab.Screen>
         </>
       ) : (
-        // Mostrar solo la pantalla de Login si no hay sesión
         <Tab.Screen name="Login">
           {() => (
             <Box className="flex-1 bg-white dark:bg-black">

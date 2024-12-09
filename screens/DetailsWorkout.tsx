@@ -68,9 +68,7 @@ const DetailsWorkout: React.FC = () => {
       const proportionData = calculateExerciseProportions(data.exercise_resume);
       setExerciseProportionData(proportionData);
     } else {
-      Alert.alert('', 'Se ha producido un error al obtener los datos.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error al obtener los datos.');
     }
   };
 

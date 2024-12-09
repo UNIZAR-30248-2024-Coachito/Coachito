@@ -8,7 +8,6 @@ import React, {
 } from 'react';
 import { supabase } from '@/api/supabaseClient';
 
-// Definir contexto para guardar Session y Profile
 export interface UserProfile {
   username: string;
   avatarUrl?: string;
@@ -23,8 +22,6 @@ const UserContext = createContext<UserInfo>({
   session: null,
   profile: null,
 });
-
-// Crear Provider
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [userInfo, setUserInfo] = useState<UserInfo>({
@@ -77,7 +74,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const { data: subscription } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event, session);
         let profile = null;
         if (session?.user) {
           profile = await fetchUserProfile(session.user.id);
@@ -90,7 +86,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }, []);
 
   if (loading) {
-    return null; // O algún componente de carga
+    return null;
   }
 
   return (
@@ -98,7 +94,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   );
 }
 
-// Hook
 export function useUserInfo() {
   return useContext(UserContext);
 }

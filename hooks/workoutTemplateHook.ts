@@ -1,7 +1,6 @@
 import { supabase } from '@/api/supabaseClient';
 import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 
-// Eliminar plantilla de entrenamiento
 const useDeleteWorkoutTemplate = async (id: number) => {
   try {
     const { data, error } = await supabase
@@ -16,7 +15,6 @@ const useDeleteWorkoutTemplate = async (id: number) => {
   }
 };
 
-// Obtener plantillas de entrenamiento
 const useFetchTemplateWorkouts = async () => {
   try {
     const { data, error } = await supabase.rpc('get_routines_details');
@@ -27,7 +25,6 @@ const useFetchTemplateWorkouts = async () => {
   }
 };
 
-// Crear rutina
 const useCreateRoutine = async (
   name: string,
   exercises: ExerciseResume[],
@@ -35,7 +32,6 @@ const useCreateRoutine = async (
   user_id: string
 ) => {
   try {
-    // Insertar plantilla de entrenamiento
     const { data: workoutTemplate, error: workoutTemplateError } =
       await supabase
         .from('workout_templates')
@@ -51,7 +47,6 @@ const useCreateRoutine = async (
 
     const templateId = workoutTemplate[0].id;
 
-    // Insertar entrenamiento relacionado
     const { data: workout, error: workoutError } = await supabase
       .from('workouts')
       .insert({
@@ -64,7 +59,6 @@ const useCreateRoutine = async (
 
     const workoutId = workout[0].id;
 
-    // Insertar ejercicios relacionados
     for (const exercise of exercises) {
       if (exercise.sets!.length > 0) {
         for (const set of exercise.sets!) {
@@ -108,14 +102,12 @@ const useCreateRoutine = async (
   }
 };
 
-// Actualizar rutina
 const useUpdateRoutine = async (
   templateId: number,
   name: string,
   exercises: ExerciseResume[]
 ) => {
   try {
-    // Actualizar plantilla de entrenamiento
     const { error: updateTemplateError } = await supabase
       .from('workout_templates')
       .update({ name })
@@ -123,7 +115,6 @@ const useUpdateRoutine = async (
 
     if (updateTemplateError) return { error: updateTemplateError };
 
-    // Insertar entrenamiento relacionado
     const { data: workout, error: workoutError } = await supabase
       .from('workouts')
       .insert({
@@ -136,7 +127,6 @@ const useUpdateRoutine = async (
 
     const workoutId = workout[0].id;
 
-    // Insertar ejercicios relacionados
     for (const exercise of exercises) {
       if (exercise.sets!.length > 0) {
         for (const set of exercise.sets!) {
@@ -179,7 +169,6 @@ const useUpdateRoutine = async (
   }
 };
 
-// Verificar si el título de una rutina ya existe
 const useRoutineTitleExists = async (title: string, groupId: number) => {
   try {
     const { data, error } = await supabase.rpc('routine_title_exists', {

@@ -19,7 +19,7 @@ const useFetchExercisesList = async () => {
 const useFetchExerciseDetails = async (exerciseId: number) => {
   try {
     const { data, error } = await supabase.rpc('get_exercise_details', {
-      ex_id: exerciseId, // Supabase RPC expects named arguments in an object
+      ex_id: exerciseId,
     });
 
     if (error) {

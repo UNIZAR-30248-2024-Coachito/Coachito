@@ -49,8 +49,7 @@ const DetailsExercise: React.FC = () => {
     } else {
       Alert.alert(
         '',
-        'Se ha producido un error al obtener la información del ejercicio.',
-        [{ text: 'OK' }]
+        'Se ha producido un error al obtener la información del ejercicio.'
       );
     }
   };

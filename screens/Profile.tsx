@@ -32,8 +32,6 @@ const Profile: React.FC = () => {
 
   const fetchUserProfile = async () => {
     const { data, error } = await useFetchUserWorkouts();
-    console.log(data);
-    console.log(error);
     if (!error) {
       setWorkoutsDetails(data!);
 

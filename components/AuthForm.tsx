@@ -6,12 +6,23 @@ import {
   TouchableWithoutFeedback,
   Keyboard,
 } from 'react-native';
-import { Button, Text, TextInput, View } from 'react-native';
-
 import type {
   SignInWithPasswordCredentials,
   SignUpWithPasswordCredentials,
 } from '@supabase/supabase-js';
+import { VStack } from './ui/vstack';
+import {
+  CircleUserRound,
+  AtSignIcon,
+  LockKeyhole,
+  UserRoundPlus,
+  UserRound,
+} from 'lucide-react-native';
+import { Input, InputField, InputIcon, InputSlot } from './ui/input';
+import { EyeIcon, EyeOffIcon } from './ui/icon';
+import { Text } from './ui/text';
+import { Button } from './ui/button';
+import { HStack } from './ui/hstack';
 
 interface AuthFormProps {
   onSignUp: (credentials: SignUpWithPasswordCredentials) => void;
@@ -28,6 +39,13 @@ export default function AuthForm({
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
+
+  const handlePasswordState = () => {
+    setShowPassword((showState) => {
+      return !showState;
+    });
+  };
 
   const handleSubmit = () => {
     if (mode === 'login') {
@@ -37,70 +55,105 @@ export default function AuthForm({
     }
   };
 
+  const resetInputs = () => {
+    setUsername('');
+    setEmail('');
+    setPassword('');
+  };
+
   return (
-    <SafeAreaView className="flex-1 bg-white">
+    <SafeAreaView className="flex-1">
       <KeyboardAvoidingView
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         className="flex-1"
       >
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-          <View className="flex-1 p-4">
-            <Text className="text-center text-2xl font-bold my-4">
-              Coachito
-            </Text>
+          <VStack className="p-4 gap-4 flex-1 justify-center items-center">
+            {mode === 'signUp' ? (
+              <>
+                <UserRoundPlus color="white" size={100} />
+                <Text className="text-2xl font-bold mb-4 text-white">
+                  Registro
+                </Text>
+              </>
+            ) : (
+              <>
+                <UserRound color="white" size={100} />
+                <Text className="text-2xl font-bold mb-4 text-white">
+                  Inicio de sesión
+                </Text>
+              </>
+            )}
             {mode === 'signUp' && (
-              <View className="my-2">
-                <TextInput
-                  placeholder="Nombre de usuario"
+              <Input>
+                <InputSlot className="pl-3">
+                  <InputIcon as={CircleUserRound} />
+                </InputSlot>
+                <InputField
                   value={username}
                   onChangeText={setUsername}
-                  className="border border-gray-300 rounded px-4 py-2"
+                  placeholder="Nombre de usuario"
                 />
-              </View>
+              </Input>
             )}
-            <View className="my-2">
-              <TextInput
-                placeholder="Correo"
+            <Input>
+              <InputSlot className="pl-3">
+                <InputIcon as={AtSignIcon} />
+              </InputSlot>
+              <InputField
                 value={email}
                 onChangeText={setEmail}
+                placeholder="Correo"
                 autoCapitalize="none"
                 keyboardType="email-address"
-                className="border border-gray-300 rounded px-4 py-2"
               />
-            </View>
-            <View className="my-2">
-              <TextInput
-                placeholder="Contraseña"
+            </Input>
+
+            <Input>
+              <InputSlot className="pl-3">
+                <InputIcon as={LockKeyhole} />
+              </InputSlot>
+              <InputField
+                type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChangeText={setPassword}
-                secureTextEntry={true}
+                placeholder="Contraseña"
                 autoCapitalize="none"
-                className="border border-gray-300 rounded px-4 py-2"
               />
-            </View>
-            <View className="my-2">
-              <Button
-                title={mode === 'login' ? 'Iniciar sesión' : 'Registrarse'}
-                onPress={handleSubmit}
-                disabled={loading || !email || !password}
-                className={`rounded py-2 px-4 ${
-                  loading ? 'bg-gray-400' : 'bg-blue-500'
-                }`}
-              />
-            </View>
-            <View className="mt-4 items-center">
-              <Text className="mb-2">
+              <InputSlot className="p-2" onPress={handlePasswordState}>
+                <InputIcon as={showPassword ? EyeIcon : EyeOffIcon} />
+              </InputSlot>
+            </Input>
+
+            <Button
+              onPress={handleSubmit}
+              isDisabled={loading || !email || !password}
+              className={`${loading || !email || !password ? 'w-full bg-gray-400 rounded-lg' : 'w-full bg-blue-500 rounded-lg'}`}
+            >
+              <Text className="text-white">
+                {mode === 'login' ? 'Iniciar sesión' : 'Registrarse'}
+              </Text>
+            </Button>
+
+            <HStack className="mt-4 items-center">
+              <Text className="text-white">
                 {mode === 'login'
-                  ? '¿No tienes una cuenta?'
-                  : '¿Ya tienes una cuenta?'}
+                  ? '¿No tiene una cuenta?'
+                  : '¿Ya tiene una cuenta?'}
               </Text>
               <Button
-                title={mode === 'login' ? 'Regístrate' : 'Inicia sesión'}
-                onPress={() => setMode(mode === 'login' ? 'signUp' : 'login')}
-                className="text-blue-500"
-              />
-            </View>
-          </View>
+                onPress={() => {
+                  setMode(mode === 'login' ? 'signUp' : 'login');
+                  resetInputs();
+                }}
+                className="bg-transparent"
+              >
+                <Text className="text-blue-500" underline>
+                  {mode === 'login' ? 'Registrarse' : 'Iniciar sesión'}
+                </Text>
+              </Button>
+            </HStack>
+          </VStack>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>
     </SafeAreaView>

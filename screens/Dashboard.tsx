@@ -18,13 +18,11 @@ const Dashboard: React.FC = () => {
     const { data, error } = await useFetchDashboardWorkouts();
 
     if (!error) {
-      console.log('Dashboard:', data);
       setWorkouts(data);
     } else {
       Alert.alert(
         '',
-        'Se ha producido un error al obtener los entrenamientos.',
-        [{ text: 'OK' }]
+        'Se ha producido un error al obtener los entrenamientos.'
       );
     }
   };
@@ -39,7 +37,7 @@ const Dashboard: React.FC = () => {
       () => {
         fetchWorkouts();
 
-        Alert.alert('', '¡Entrenamiento completado!', [{ text: 'OK' }]);
+        Alert.alert('', '¡Entrenamiento completado!');
       }
     );
 

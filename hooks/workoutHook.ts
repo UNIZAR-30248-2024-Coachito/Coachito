@@ -1,34 +1,29 @@
 import { supabase } from '@/api/supabaseClient';
 import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 
-// Obtener los detalles del último entrenamiento
 const useFetchDetailsLastWorkout = async (templateId: number) => {
   try {
     const { data, error } = await supabase.rpc('get_last_workout_details', {
-      templ_id: templateId, // Pasamos el parámetro esperado
+      templ_id: templateId,
     });
 
     if (error) {
-      console.error('Error fetching last workout details:', error.message);
       return { data: null, error };
     }
 
     return { data, error: null };
   } catch (error: unknown) {
-    console.error('Unexpected error fetching last workout details:', error);
     return { data: null, error };
   }
 };
 
-// Obtener los detalles de un entrenamiento específico
 const useFetchDetailsWorkout = async (id: number) => {
   try {
     const { data, error } = await supabase.rpc('get_workout_details', {
-      w_id: id, // Pasamos el parámetro esperado
+      w_id: id,
     });
 
     if (error) {
-      console.error('Error fetching workout details:', error.message);
       return { data: null, error };
     }
 
@@ -39,14 +34,12 @@ const useFetchDetailsWorkout = async (id: number) => {
   }
 };
 
-// Crear un entrenamiento
 const useCreateWorkout = async (
   templateId: number,
   duration: number,
   exercises: ExerciseResume[]
 ) => {
   try {
-    // Calculamos el volumen total
     const totalVolume = exercises.reduce((acc, exercise) => {
       const exerciseVolume = exercise.sets!.reduce((setAcc, set) => {
         return setAcc + set.reps * set.weight;
@@ -54,7 +47,6 @@ const useCreateWorkout = async (
       return acc + exerciseVolume;
     }, 0);
 
-    // Insertamos el entrenamiento
     const { data: workoutData, error: workoutError } = await supabase
       .from('workouts')
       .insert({
@@ -63,7 +55,7 @@ const useCreateWorkout = async (
         duration: duration,
         template: false,
       })
-      .select(); // Necesitamos los datos del workout creado
+      .select();
 
     if (workoutError) {
       console.error('Error inserting workout:', workoutError.message);
@@ -72,7 +64,6 @@ const useCreateWorkout = async (
 
     const workoutId = workoutData[0].id;
 
-    // Insertamos los ejercicios del entrenamiento
     for (const exercise of exercises) {
       if (exercise.sets && exercise.sets.length > 0) {
         for (const set of exercise.sets) {
@@ -125,11 +116,10 @@ const useCreateWorkout = async (
   }
 };
 
-// Obtener los datos de rutina
 const useFetchRoutineWorkouts = async (id: number) => {
   try {
     const { data, error } = await supabase.rpc('get_routine_chart_data', {
-      templ_id: id, // Pasamos el parámetro esperado
+      templ_id: id,
     });
 
     if (error) {

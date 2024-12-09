@@ -81,16 +81,12 @@ const AddRoutine: React.FC = () => {
     const routineTitle = routineTitleInputValue.trim();
 
     if (routineTitle === '') {
-      Alert.alert('', 'Por favor, introduce un nombre para la nueva rutina.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Por favor, introduce un nombre para la nueva rutina.');
       return;
     }
 
     if (selectedExercises.length === 0) {
-      Alert.alert('', 'La rutina debe contener mínimo un ejercicio.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'La rutina debe contener mínimo un ejercicio.');
       return;
     }
 
@@ -101,8 +97,7 @@ const AddRoutine: React.FC = () => {
     if (exists && !errorTitle) {
       Alert.alert(
         '',
-        'El título introducido ya existe. Por favor, introduzca otro.',
-        [{ text: 'OK' }]
+        'El título introducido ya existe. Por favor, introduzca otro.'
       );
       return;
     }
@@ -127,9 +122,7 @@ const AddRoutine: React.FC = () => {
       emitter.emit('routineAdded');
       navigation.navigate('Routine');
     } else {
-      Alert.alert('', 'Se ha producido un error al crear la rutina.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error al crear la rutina.');
     }
   };
 

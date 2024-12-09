@@ -6,8 +6,8 @@ export const SUPABASE_ANON_KEY =
 
 export const supabase = createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
   auth: {
-    persistSession: true, // Asegúrate de que esto esté habilitado
-    autoRefreshToken: true, // Refresca automáticamente el token si caduca
+    persistSession: true,
+    autoRefreshToken: true,
     detectSessionInUrl: false,
   },
 });
