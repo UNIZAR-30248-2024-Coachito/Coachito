@@ -1,5 +1,11 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { CircleUserRound, Dumbbell, Moon } from 'lucide-react-native';
+import {
+  CircleUserRound,
+  Dumbbell,
+  LogOut,
+  Moon,
+  Settings,
+} from 'lucide-react-native';
 import { VStack } from '@/components/ui/vstack';
 import { Text } from '@/components/ui/text';
 import { useFetchUserWorkouts } from '@/hooks/userHook';
@@ -8,10 +14,11 @@ import CustomBarChart from '@/components/shared/CustomBarChart';
 import { DataChartProps } from '@/components/shared/CustomAreaChart';
 import { convertIntervalToMinutes } from '@/utils/interval';
 import { formatToChartLabel } from '@/utils/date';
-import { Button, ButtonIcon } from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import { useUserInfo } from '@/context/UserContext';
 import { supabase } from '@/api/supabaseClient';
 import { ThemeContext } from './App';
+import { Menu, MenuItem } from '@/components/ui/menu';
 
 export interface UserWorkouts {
   workoutId: number;
@@ -84,32 +91,61 @@ const Profile: React.FC = () => {
   const buttons = ['Duración', 'Repeticiones', 'Volumen'];
 
   return (
-    <VStack className="items-center gap-4">
-      <Button onPress={() => supabase.auth.signOut()}>
-        <Text className="text-black">Cerrar Sesión</Text>
-      </Button>
-
-      <Button className="bg-transparent" onPress={toggleColorMode}>
-        <ButtonIcon
-          as={Moon}
-          color={`${colorMode === 'light' ? 'black' : 'white'}`}
-        />
-      </Button>
-
-      <CircleUserRound color="#3b82f6" size={100} />
-
-      <Text size="xl" bold>
-        {profile?.username}
-      </Text>
-
-      <HStack className="gap-2">
-        <Dumbbell />
-        {workoutsDetails && (
-          <Text>{workoutsDetails!.workoutsCount} entrenos realizados</Text>
-        )}
+    <VStack className="gap-4">
+      <HStack className="justify-end mt-4">
+        <Menu
+          placement="bottom right"
+          trigger={({ ...triggerProps }) => (
+            <Button {...triggerProps} className="bg-transparent">
+              <Settings
+                color={`${colorMode === 'light' ? 'black' : 'white'}`}
+                size={30}
+              />
+            </Button>
+          )}
+        >
+          <MenuItem
+            key="logout"
+            onPress={() => supabase.auth.signOut()}
+            textValue="Cerrar Sesión"
+          >
+            <HStack className="items-center gap-2">
+              <LogOut color={`${colorMode === 'light' ? 'black' : 'white'}`} />
+              <Text>Cerrar Sesión</Text>
+            </HStack>
+          </MenuItem>
+          <MenuItem
+            key="themeToggle"
+            onPress={toggleColorMode}
+            textValue="Cambiar Tema"
+          >
+            <HStack className="items-center gap-2">
+              <Moon color={`${colorMode === 'light' ? 'black' : 'white'}`} />
+              <Text>
+                Cambiar a {colorMode === 'light' ? 'Modo Oscuro' : 'Modo Claro'}
+              </Text>
+            </HStack>
+          </MenuItem>
+        </Menu>
       </HStack>
 
-      <CustomBarChart data={chartData} buttons={buttons} />
+      <VStack className="items-center gap-4">
+        <CircleUserRound color="#3b82f6" size={100} />
+
+        <Text size="xl" bold className="mb-4">
+          {profile?.username}
+        </Text>
+
+        <HStack className="gap-2">
+          <Dumbbell color={`${colorMode === 'light' ? 'black' : 'white'}`} />
+          {workoutsDetails && (
+            <Text>{workoutsDetails!.workoutsCount} entrenos realizados</Text>
+          )}
+          <Dumbbell color={`${colorMode === 'light' ? 'black' : 'white'}`} />
+        </HStack>
+
+        <CustomBarChart data={chartData} buttons={buttons} />
+      </VStack>
     </VStack>
   );
 };

@@ -33,8 +33,10 @@ const CustomChartButtons: React.FC<CustomChartButtonsProps> = ({
             }
             onPress={() => {
               setActiveButton(button);
-              onDataChartPointsChange(data[index].dataPoints);
-              onDataChartTotalChange(data[index].dataTotal);
+              if (data && data.length > 0) {
+                onDataChartPointsChange(data[index].dataPoints);
+                onDataChartTotalChange(data[index].dataTotal);
+              }
             }}
           >
             <Text
