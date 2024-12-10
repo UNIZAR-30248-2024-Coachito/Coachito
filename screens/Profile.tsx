@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from 'react';
-import { CircleUserRound, Dumbbell } from 'lucide-react-native';
+import React, { useContext, useEffect, useState } from 'react';
+import { CircleUserRound, Dumbbell, Moon } from 'lucide-react-native';
 import { VStack } from '@/components/ui/vstack';
 import { Text } from '@/components/ui/text';
 import { useFetchUserWorkouts } from '@/hooks/userHook';
@@ -8,9 +8,10 @@ import CustomBarChart from '@/components/shared/CustomBarChart';
 import { DataChartProps } from '@/components/shared/CustomAreaChart';
 import { convertIntervalToMinutes } from '@/utils/interval';
 import { formatToChartLabel } from '@/utils/date';
-import { Button } from '@/components/ui/button';
+import { Button, ButtonIcon } from '@/components/ui/button';
 import { useUserInfo } from '@/context/UserContext';
 import { supabase } from '@/api/supabaseClient';
+import { ThemeContext } from './App';
 
 export interface UserWorkouts {
   workoutId: number;
@@ -26,6 +27,7 @@ export interface UserWorkoutsDetails {
 }
 
 const Profile: React.FC = () => {
+  const { colorMode, toggleColorMode } = useContext(ThemeContext);
   const { profile } = useUserInfo();
   const [workoutsDetails, setWorkoutsDetails] = useState<UserWorkoutsDetails>();
   const [chartData, setChartData] = useState<DataChartProps[]>([]);
@@ -86,6 +88,14 @@ const Profile: React.FC = () => {
       <Button onPress={() => supabase.auth.signOut()}>
         <Text className="text-black">Cerrar Sesión</Text>
       </Button>
+
+      <Button className="bg-transparent" onPress={toggleColorMode}>
+        <ButtonIcon
+          as={Moon}
+          color={`${colorMode === 'light' ? 'black' : 'white'}`}
+        />
+      </Button>
+
       <CircleUserRound color="#3b82f6" size={100} />
 
       <Text size="xl" bold>

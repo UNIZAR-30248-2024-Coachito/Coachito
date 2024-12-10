@@ -45,12 +45,15 @@ const AddRoutine: React.FC = () => {
   };
 
   const componentsCancelRoutinePopUpModal: React.ReactNode[] = [
-    <Text key="1" className="text-xl font-bold text-center text-white pb-8">
+    <Text
+      key="1"
+      className="text-xl font-bold text-center text-typography-0 pb-8"
+    >
       ¿Está seguro de que quiere descartar la rutina?
     </Text>,
     <Button
       key="2"
-      className="bg-red-800 rounded-lg mb-4"
+      className="bg-background-50 rounded-lg mb-4"
       onPress={() => {
         setIsCancelRoutineModalVisible(false);
         resetState();
@@ -62,7 +65,7 @@ const AddRoutine: React.FC = () => {
     <Button
       testID="cancel-cancel-routine-modal"
       key="3"
-      className="bg-zinc-700 rounded-lg"
+      className="bg-tertiary-500 rounded-lg"
       onPress={() => {
         setIsCancelRoutineModalVisible(false);
       }}
@@ -105,16 +108,12 @@ const AddRoutine: React.FC = () => {
     const allExerciseData = exerciseRefs.current.map((ref) =>
       ref!.getExerciseData()
     );
-    // Temporal
-    if (!session?.user?.id) {
-      return;
-    }
 
     const { error } = await useCreateRoutine(
       routineTitle,
       allExerciseData,
       route.params.groupId,
-      session.user.id
+      session!.user.id
     );
 
     resetState();

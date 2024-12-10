@@ -80,7 +80,7 @@ const DetailsWorkout: React.FC = () => {
     <ScrollView className="flex-1">
       <VStack className="p-4 gap-4">
         <Box className="flex justify-center">
-          <Text className="text-xl font-bold text-white text-center">
+          <Text className="text-xl font-bold text-typography-0 text-center">
             Detalles de entrenamiento
           </Text>
         </Box>

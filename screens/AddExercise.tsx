@@ -90,7 +90,7 @@ const AddExercise: React.FC = () => {
               setSelectedExercises(selectedExercisesInit);
             }}
           >
-            <Text className="text-blue-500">Cancelar</Text>
+            <Text className="text-typography-50">Cancelar</Text>
           </Button>
           <Text className="text-xl">Agregar Ejercicio</Text>
         </HStack>
@@ -100,7 +100,7 @@ const AddExercise: React.FC = () => {
             <InputIcon as={SearchIcon} />
           </InputSlot>
           <InputField
-            className="text-white"
+            className="text-typography-0"
             placeholder="Buscar Ejercicio"
             value={searchTerm}
             onChangeText={setSearchTerm}

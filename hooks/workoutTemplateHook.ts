@@ -8,7 +8,8 @@ const useDeleteWorkoutTemplate = async (id: number) => {
       .update({ deleted: true })
       .eq('id', id);
 
-    return { data, error };
+    if (error) return { data: null, error };
+    return { data, error: null };
   } catch (error) {
     console.error('Error deleting workout template:', error);
     return { data: null, error };
@@ -18,7 +19,9 @@ const useDeleteWorkoutTemplate = async (id: number) => {
 const useFetchTemplateWorkouts = async () => {
   try {
     const { data, error } = await supabase.rpc('get_routines_details');
-    return { data, error };
+
+    if (error) return { data: null, error };
+    return { data, error: null };
   } catch (error) {
     console.error('Error fetching template workouts:', error);
     return { data: null, error };

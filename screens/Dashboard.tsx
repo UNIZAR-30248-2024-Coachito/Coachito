@@ -52,7 +52,7 @@ const Dashboard: React.FC = () => {
     <ScrollView className="flex-1">
       <VStack className="p-4">
         {workouts.length === 0 ? (
-          <Text className="text-center text-white mt-4">
+          <Text className="text-center text-typography-0 mt-4">
             ¡¡¡Realiza tu primer entrenamiento!!!
           </Text>
         ) : (

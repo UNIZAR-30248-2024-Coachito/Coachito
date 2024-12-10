@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Text } from '../ui/text';
 import { Button } from '../ui/button';
 import {
@@ -25,6 +25,7 @@ import PopupBaseModal from '../shared/PopupBaseModal';
 import { Input, InputField } from '../ui/input';
 import { emitter } from '@/utils/emitter';
 import { Alert } from 'react-native';
+import { ThemeContext } from '@/screens/App';
 
 export interface GroupedRoutines {
   groupId: number;
@@ -39,6 +40,7 @@ export interface GroupedRoutinesProps {
 const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
   groupedRoutine,
 }) => {
+  const { colorMode } = useContext(ThemeContext);
   const navigation = useNavigation<NavigationProps>();
   const [showRoutines, setShowRoutines] = useState(true);
   const [isSlideUpModalVisible, setIsSlideUpModalVisible] = useState(false);
@@ -95,7 +97,10 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
   };
 
   const componentsRenameGroupPopUpModal: React.ReactNode[] = [
-    <Text key="1" className="text-xl font-bold text-center text-white mb-4">
+    <Text
+      key="1"
+      className="text-xl font-bold text-center text-typography-0 mb-4"
+    >
       Nuevo nombre de la carpeta
     </Text>,
     <Input key="2" className="mb-4">
@@ -114,7 +119,7 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
     </Button>,
     <Button
       key="4"
-      className="bg-zinc-700 rounded-lg"
+      className="bg-tertiary-500 rounded-lg"
       onPress={() => {
         setIsRenameGroupModalVisible(false);
       }}
@@ -132,16 +137,16 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
         setIsRenameGroupModalVisible(true);
       }}
     >
-      <Pencil color="white" />
-      <Text className="text-white">Renombrar Carpeta</Text>
+      <Pencil color={`${colorMode === 'light' ? 'black' : 'white'}`} />
+      <Text className="text-typography-0">Renombrar Carpeta</Text>
     </Button>,
     <Button
       key="2"
       className="bg-transparent gap-2"
       onPress={() => createRoutine()}
     >
-      <Plus color="white" />
-      <Text className="text-white">Agregar nueva rutina</Text>
+      <Plus color={`${colorMode === 'light' ? 'black' : 'white'}`} />
+      <Text className="text-typography-0">Agregar nueva rutina</Text>
     </Button>,
     <Button
       key="3"
@@ -157,13 +162,16 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
   ];
 
   const componentsDeleteGroupPopUpModal: React.ReactNode[] = [
-    <Text key="1" className="text-xl font-bold text-center text-white pb-8">
+    <Text
+      key="1"
+      className="text-xl font-bold text-center text-typography-0 pb-8"
+    >
       ¿Está seguro de que quiere eliminar la carpeta?
     </Text>,
     <Button
       testID="delete-button"
       key="2"
-      className="bg-red-800 rounded-lg mb-4"
+      className="bg-background-50 rounded-lg mb-4"
       onPress={() => {
         setIsDeleteModalVisible(false);
         deleteGroup();
@@ -173,7 +181,7 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
     </Button>,
     <Button
       key="3"
-      className="bg-zinc-700 rounded-lg"
+      className="bg-tertiary-500 rounded-lg"
       onPress={() => {
         setIsDeleteModalVisible(false);
       }}
@@ -210,7 +218,9 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
               setIsSlideUpModalVisible(true);
             }}
           >
-            <MoreHorizontal color="white" />
+            <MoreHorizontal
+              color={`${colorMode === 'light' ? 'black' : 'white'}`}
+            />
           </Button>
         )}
       </HStack>

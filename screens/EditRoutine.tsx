@@ -62,12 +62,15 @@ const EditRoutine: React.FC = () => {
   }, [fetchExercises, updateExercises, route.params.routineId]);
 
   const componentsCancelRoutinePopUpModal: React.ReactNode[] = [
-    <Text key="1" className="text-xl font-bold text-center text-white pb-8">
+    <Text
+      key="1"
+      className="text-xl font-bold text-center text-typography-0 pb-8"
+    >
       ¿Está seguro de que quiere descartar los cambios?
     </Text>,
     <Button
       key="2"
-      className="bg-red-800 rounded-lg mb-4"
+      className="bg-background-50 rounded-lg mb-4"
       onPress={() => {
         setIsCancelRoutineModalVisible(false);
         navigation.navigate('Routine');
@@ -78,7 +81,7 @@ const EditRoutine: React.FC = () => {
     <Button
       testID="cancel-button-modal"
       key="3"
-      className="bg-zinc-700 rounded-lg"
+      className="bg-tertiary-500 rounded-lg"
       onPress={() => {
         setIsCancelRoutineModalVisible(false);
       }}

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import { Text } from '../components/ui/text';
 import { Button } from '../components/ui/button';
 import { ClipboardList, FolderPlus } from 'lucide-react-native';
@@ -17,6 +17,7 @@ import { useCreateTemplateWorkoutGroup } from '@/hooks/workoutTemplateGroupHook'
 import { emitter } from '@/utils/emitter';
 import { Alert } from 'react-native';
 import { useUserInfo } from '@/context/UserContext';
+import { ThemeContext } from './App';
 
 export interface Group {
   id: number;
@@ -24,6 +25,7 @@ export interface Group {
 }
 
 const Routine: React.FC = () => {
+  const { colorMode } = useContext(ThemeContext);
   const navigation = useNavigation<NavigationProps>();
   const { session } = useUserInfo();
   const [routines, setRoutines] = useState<GroupedRoutines[]>([]);
@@ -34,11 +36,7 @@ const Routine: React.FC = () => {
     const { data, error } = await useFetchTemplateWorkouts();
 
     if (!error) {
-      if (data && data.length > 0) {
-        setRoutines(data);
-      } else {
-        setRoutines([]);
-      }
+      setRoutines(data);
     } else {
       Alert.alert('', 'Se ha producido un error al obtener las rutinas.');
     }
@@ -47,33 +45,27 @@ const Routine: React.FC = () => {
   useEffect(() => {
     const routineDeletedListener = emitter.addListener('routineDeleted', () => {
       fetchRoutinesAndGroups();
-
       Alert.alert('', '¡Rutina eliminada correctamente!');
     });
     const routineRenamedListener = emitter.addListener('routineRenamed', () => {
       fetchRoutinesAndGroups();
-
       Alert.alert('', '¡Rutina editada correctamente!');
     });
     const routineAddedListener = emitter.addListener('routineAdded', () => {
       fetchRoutinesAndGroups();
-
       Alert.alert('', '¡Rutina creada correctamente!');
     });
 
     const groupCreatedListener = emitter.addListener('groupCreated', () => {
       fetchRoutinesAndGroups();
-
       Alert.alert('', '¡Carpeta creada correctamente!');
     });
     const groupRenamedListener = emitter.addListener('groupRenamed', () => {
       fetchRoutinesAndGroups();
-
       Alert.alert('', '¡Carpeta editada correctamente!');
     });
     const groupDeletedListener = emitter.addListener('groupDeleted', () => {
       fetchRoutinesAndGroups();
-
       Alert.alert('', '¡Carpeta eliminada correctamente!');
     });
 
@@ -131,7 +123,10 @@ const Routine: React.FC = () => {
   };
 
   const newFolderComponentsPopUpModal: React.ReactNode[] = [
-    <Text key="1" className="text-xl font-bold text-center text-white mb-4">
+    <Text
+      key="1"
+      className="text-xl font-bold text-center text-typography-0 mb-4"
+    >
       Crear nueva carpeta
     </Text>,
     <Input key="2" className="mb-4">
@@ -150,7 +145,7 @@ const Routine: React.FC = () => {
     </Button>,
     <Button
       key="4"
-      className="bg-zinc-700 rounded-lg"
+      className="bg-tertiary-500 rounded-lg"
       onPress={() => {
         setIsNewGroupModalVisible(false);
       }}
@@ -162,17 +157,21 @@ const Routine: React.FC = () => {
   return (
     <ScrollView className="flex-1">
       <VStack className="p-4">
-        <Text className="text-xl font-bold text-white mb-4">Rutinas</Text>
+        <Text className="text-xl font-bold text-typography-0 mb-4">
+          Rutinas
+        </Text>
 
         <HStack className="mb-4">
-          <Button className="bg-zinc-900" onPress={() => createRoutine()}>
-            <ClipboardList color="white" />
-            <Text className="text-white ml-2">Nueva Rutina</Text>
+          <Button className="bg-secondary-500" onPress={() => createRoutine()}>
+            <ClipboardList
+              color={`${colorMode === 'light' ? 'black' : 'white'}`}
+            />
+            <Text className="text-typography-0 ml-2">Nueva Rutina</Text>
           </Button>
 
           <VStack>
             <Button
-              className="bg-zinc-900 ml-4"
+              className="bg-secondary-500 ml-2"
               onPress={() => {
                 if (routines.length > 10) {
                   Alert.alert(
@@ -184,29 +183,25 @@ const Routine: React.FC = () => {
                 }
               }}
             >
-              <FolderPlus color="white" />
-              <Text className="text-white ml-2">Nueva Carpeta</Text>
+              <FolderPlus
+                color={`${colorMode === 'light' ? 'black' : 'white'}`}
+              />
+              <Text className="text-typography-0 ml-2">Nueva Carpeta</Text>
             </Button>
           </VStack>
         </HStack>
 
-        {routines.length === 2 && routines[1].routines.length === 0 ? (
-          <Text className="text-center text-white mt-4">
-            No tiene rutinas disponibles
-          </Text>
-        ) : (
-          routines
-            .filter(
-              (routine) =>
-                !(routine.groupId === null && routine.groupName === 'No Group')
-            )
-            .map((routine, index) => (
-              <GroupedRoutinesResumeComponent
-                key={index}
-                groupedRoutine={routine}
-              />
-            ))
-        )}
+        {routines
+          .filter(
+            (routine) =>
+              !(routine.groupId === null && routine.groupName === 'No Group')
+          )
+          .map((routine, index) => (
+            <GroupedRoutinesResumeComponent
+              key={index}
+              groupedRoutine={routine}
+            />
+          ))}
 
         <PopupBaseModal
           components={newFolderComponentsPopUpModal}

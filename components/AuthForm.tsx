@@ -79,7 +79,7 @@ export default function AuthForm({
             ) : (
               <>
                 <UserRound color="white" size={100} />
-                <Text className="text-2xl font-bold mb-4 text-white">
+                <Text className="text-2xl font-bold mb-4 text-typography-0">
                   Inicio de sesión
                 </Text>
               </>
