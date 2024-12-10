@@ -159,7 +159,6 @@ const DetailsRoutine: React.FC = () => {
             navigation.navigate('StartWorkout', {
               routineId: templateId,
               routineName: myRoutineName,
-              refresh: true,
             })
           }
         >

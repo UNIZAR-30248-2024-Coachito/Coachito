@@ -21,17 +21,15 @@ type AddExerciseEditRouteProp = RouteProp<
 const AddExerciseWhileWorkout: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute<AddExerciseEditRouteProp>();
-
-  const [newSelectedExercises, setNewSelectedExercises] = useState<
-    ExerciseResume[]
-  >([]);
-
   const [exercises, setExercises] = useState<ExerciseResume[]>([]);
   const [selectedExercises, setSelectedExercises] = useState<ExerciseResume[]>(
     route.params!.selectedExercises || []
   );
+  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [filteredExercises, setFilteredExercises] = useState<ExerciseResume[]>(
+    []
+  );
 
-  /*
   const handleSelectExercise = (exercise: ExerciseResume) => {
     setSelectedExercises((prevSelected) => {
       const exists = prevSelected.find((e) => e.id === exercise.id);
@@ -39,35 +37,9 @@ const AddExerciseWhileWorkout: React.FC = () => {
         return prevSelected.filter((e) => e.id !== exercise.id);
       } else {
         if (prevSelected.length >= 20) {
-          Alert.alert('', 'Solo se pueden seleccionar hasta 20 ejercicios.', [
-            { text: 'OK' },
-          ]);
+          Alert.alert('', 'Solo se pueden seleccionar hasta 20 ejercicios.');
           return prevSelected;
         }
-        return [...prevSelected, exercise];
-      }
-    });
-  }; */
-
-  const handleSelectExercise = (exercise: ExerciseResume) => {
-    setSelectedExercises((prevSelected) => {
-      const exists = prevSelected.find((e) => e.id === exercise.id);
-      if (exists) {
-        // Si el ejercicio ya está seleccionado, se elimina de ambos vectores
-        setNewSelectedExercises((prevNew) =>
-          prevNew.filter((e) => e.id !== exercise.id)
-        );
-        return prevSelected.filter((e) => e.id !== exercise.id);
-      } else {
-        if (prevSelected.length >= 20) {
-          Alert.alert('', 'Solo se pueden seleccionar hasta 20 ejercicios.', [
-            { text: 'OK' },
-          ]);
-          return prevSelected;
-        }
-
-        // Agregar el nuevo ejercicio a `newSelectedExercises`
-        setNewSelectedExercises((prevNew) => [...prevNew, exercise]);
         return [...prevSelected, exercise];
       }
     });
@@ -77,10 +49,9 @@ const AddExerciseWhileWorkout: React.FC = () => {
     const { data, error: errorExercises } = await useFetchExercisesList();
     if (!errorExercises) {
       setExercises(data);
+      setFilteredExercises(data);
     } else {
-      Alert.alert('', 'Se ha producido un error obteniendo los ejercicios.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error obteniendo los ejercicios.');
     }
   };
 
@@ -92,6 +63,15 @@ const AddExerciseWhileWorkout: React.FC = () => {
     setSelectedExercises(route.params!.selectedExercises || []);
   }, [route.params!.selectedExercises]);
 
+  useEffect(() => {
+    const lowercasedTerm = searchTerm.toLowerCase();
+    setFilteredExercises(
+      exercises.filter((exercise) =>
+        exercise.name.toLowerCase().includes(lowercasedTerm)
+      )
+    );
+  }, [searchTerm, exercises]);
+
   return (
     <ScrollView className="flex-1">
       <VStack className="p-4 gap-4">
@@ -102,7 +82,6 @@ const AddExerciseWhileWorkout: React.FC = () => {
               navigation.navigate('StartWorkout', {
                 routineId: route.params.routineId,
                 routineName: route.params.routineName,
-                refresh: false,
               });
             }}
           >
@@ -110,63 +89,45 @@ const AddExerciseWhileWorkout: React.FC = () => {
           </Button>
           <Text className="text-xl">Agregar Ejercicio</Text>
         </HStack>
-        <Input
-          variant="outline"
-          size="md"
-          isDisabled={false}
-          isInvalid={false}
-          isReadOnly={false}
-        >
+        <Input>
           <InputSlot className="pl-3">
             <InputIcon as={SearchIcon} />
           </InputSlot>
-          <InputField className="text-white" placeholder="Buscar Ejercicio" />
+          <InputField
+            className="text-typography-0"
+            placeholder="Buscar Ejercicio"
+            value={searchTerm}
+            onChangeText={setSearchTerm}
+          />
         </Input>
 
-        {exercises.map((exercise, index) => {
-          const isSelected = selectedExercises.some(
-            (e) => e.id === exercise.id
-          );
-          return (
-            <Pressable
-              key={index}
-              onPress={() => handleSelectExercise(exercise)}
+        {filteredExercises.map((exercise, index) => (
+          <Pressable key={index} onPress={() => handleSelectExercise(exercise)}>
+            <HStack
+              className={`${selectedExercises.some((e) => e.id === exercise.id) ? 'bg-blue-500' : 'bg-transparent'}`}
             >
-              <HStack className={isSelected ? 'bg-blue-500' : 'bg-transparent'}>
-                <ExercisesListCardResume
-                  id={exercise.id}
-                  name={exercise.name}
-                  thumbnailUrl={exercise.thumbnailUrl}
-                  notes={exercise.notes}
-                  primaryMuscleGroup={exercise.primaryMuscleGroup}
-                  restTime={exercise.restTime}
-                  sets={exercise.sets}
-                />
-              </HStack>
-            </Pressable>
-          );
-        })}
-
-        {/* {newSelectedExercises.length > 0 && (
-          <VStack className="p-4">
-            <Text className="text-lg">Nuevos Ejercicios Seleccionados:</Text>
-            {newSelectedExercises.map((exercise) => (
-              <Text key={exercise.id} className="text-white">
-                {exercise.name}
-              </Text>
-            ))}
-          </VStack>
-        )} */}
+              <ExercisesListCardResume
+                id={exercise.id}
+                name={exercise.name}
+                thumbnailUrl={exercise.thumbnailUrl}
+                notes={exercise.notes}
+                primaryMuscleGroup={exercise.primaryMuscleGroup}
+                restTime={exercise.restTime}
+                sets={exercise.sets}
+              />
+            </HStack>
+          </Pressable>
+        ))}
 
         {selectedExercises.length > 0 && (
           <Button
             className="w-full bg-blue-500 rounded-lg"
             onPress={() => {
-              emitter.emit('workoutUpdate', newSelectedExercises);
+              emitter.emit('workoutUpdate', selectedExercises);
+              setSelectedExercises([]);
               navigation.navigate('StartWorkout', {
                 routineId: route.params.routineId,
                 routineName: route.params.routineName,
-                refresh: false,
               });
             }}
           >

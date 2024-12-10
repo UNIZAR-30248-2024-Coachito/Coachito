@@ -22,7 +22,6 @@ export type RootStackParamList = {
   StartWorkout: {
     routineId: number;
     routineName: string;
-    refresh: boolean;
   };
   DetailsWorkout: { workoutId: number };
   DetailsExercise: { exerciseId: number };

@@ -25,49 +25,41 @@ const StartWorkout: React.FC = () => {
   const [selectedExercises, setSelectedExercises] = useState<ExerciseResume[]>(
     []
   );
-  const [addedExercises, setAddedExercises] = useState<ExerciseResume[]>([]);
   const [isCancelRoutineModalVisible, setIsCancelWorkoutModalVisible] =
     useState(false);
   const [timerActive, setTimerActive] = useState(false);
   const [duration, setDuration] = useState(0);
   const [startTime, setStartTime] = useState<number | null>(null);
-
-  console.log(route.params.refresh);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
   const fetchExercises = useCallback(async () => {
-    setAddedExercises([]); // Limpiar los ejercicios añadidos al iniciar un nuevo entrenamiento
-    console.log(addedExercises);
-
     const { data, error } = await useFetchDetailsLastWorkout(
       route.params.routineId!
     );
 
     if (!error) {
-      setSelectedExercises(data); // Establecer los ejercicios originales
+      setSelectedExercises(data);
       setStartTime(Date.now());
       setTimerActive(true);
+      setIsFirstLoad(false);
     } else {
       Alert.alert('', 'Se ha producido un error obteniendo los ejercicios.');
     }
-    //console.log('Ejercicios originales obtenidos:', data);
-  }, [route.params.routineId]);
+  }, [isFirstLoad, route.params.routineId]);
 
-  useEffect(() => {
-    if (route.params.refresh) {
-      fetchExercises();
-    }
-  }, [route.params.refresh, fetchExercises]);
-
-  const updateExercises = useCallback((newExercises: ExerciseResume[]) => {
-    setAddedExercises((prevAddedExercises) => [
-      ...prevAddedExercises,
-      ...newExercises,
-    ]);
-    //console.log('Nuevos ejercicios añadidos:', newExercises);
+  const updateExercises = useCallback((exercises: ExerciseResume[]) => {
+    setSelectedExercises((prevSelectedExercises) => {
+      const combinedExercises = [...prevSelectedExercises, ...exercises];
+      const uniqueExercises = combinedExercises.filter(
+        (exercise, index, self) =>
+          index === self.findIndex((e) => e.id === exercise.id)
+      );
+      return uniqueExercises;
+    });
   }, []);
 
   useEffect(() => {
-    //fetchExercises();
+    fetchExercises();
     const exercisesUpdateListener = emitter.addListener(
       'workoutUpdate',
       updateExercises
@@ -76,7 +68,7 @@ const StartWorkout: React.FC = () => {
     return () => {
       exercisesUpdateListener?.remove();
     };
-  }, [updateExercises]);
+  }, [fetchExercises, updateExercises, route.params.routineId]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -127,6 +119,7 @@ const StartWorkout: React.FC = () => {
     if (!error) {
       handleResetTimer();
       resetExerciseSets();
+      setIsFirstLoad(true);
       emitter.emit('workoutFinished');
       navigation.navigate('Dashboard');
     } else {
@@ -148,6 +141,7 @@ const StartWorkout: React.FC = () => {
         setIsCancelWorkoutModalVisible(false);
         handleResetTimer();
         resetExerciseSets();
+        setIsFirstLoad(true);
         navigation.navigate('Routine');
       }}
     >
@@ -172,7 +166,7 @@ const StartWorkout: React.FC = () => {
 
     return `${hours > 0 ? `${hours}h` : ''} ${minutes > 0 ? `${minutes}min` : ''} ${seconds > 0 ? `${seconds}s` : ''}`.trim();
   };
-  //console.log('Lista combinada:', [...selectedExercises, ...addedExercises]);
+
   return (
     <VStack className="flex-1 p-4 gap-2 items-center">
       <Text className="text-2xl text-typography-0" bold>
@@ -205,7 +199,7 @@ const StartWorkout: React.FC = () => {
       </HStack>
 
       <ScrollView className="w-full">
-        {[...selectedExercises, ...addedExercises].map((exercise, index) => (
+        {selectedExercises.map((exercise, index) => (
           <DetailsExerciseWorkoutResumeComponent
             key={index}
             ref={(el) => (exerciseRefs.current[index] = el)}
@@ -224,14 +218,14 @@ const StartWorkout: React.FC = () => {
           className="bg-blue-500 rounded-lg flex-1"
           onPress={() =>
             navigation.navigate('AddExerciseWhileWorkout', {
-              selectedExercises: [...selectedExercises, ...addedExercises],
+              selectedExercises,
               routineId: route.params.routineId,
               routineName: route.params.routineName,
             })
           }
         >
           <Plus color="white" />
-          <Text>Agregar Ejercicio</Text>
+          <Text className="text-white">Agregar Ejercicio</Text>
         </Button>
       </ScrollView>
 

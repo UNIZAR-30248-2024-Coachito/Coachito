@@ -102,7 +102,7 @@ const AddExerciseEdit: React.FC = () => {
             <InputIcon as={SearchIcon} />
           </InputSlot>
           <InputField
-            className="text-white"
+            className="text-typography-0"
             placeholder="Buscar Ejercicio"
             value={searchTerm}
             onChangeText={setSearchTerm}

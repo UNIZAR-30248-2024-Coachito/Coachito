@@ -138,7 +138,7 @@ export default function AuthForm({
             <HStack className="mt-4 items-center">
               <Text className="text-white">
                 {mode === 'login'
-                  ? '¿No tiene una cuenta?'
+                  ? '¿No tiene cuenta?'
                   : '¿Ya tiene una cuenta?'}
               </Text>
               <Button
