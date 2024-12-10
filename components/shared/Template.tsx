@@ -8,7 +8,7 @@ interface TemplateProps {
 
 const Template: React.FC<TemplateProps> = ({ children }) => {
   return (
-    <Box className="flex-1 bg-white dark:bg-black">
+    <Box className="flex-1 bg-background-0">
       <Box className="flex-1">{children}</Box>
       <BottomBar />
     </Box>

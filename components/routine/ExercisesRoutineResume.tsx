@@ -46,7 +46,7 @@ const ExercisesRoutineResumeComponent: React.FC<ExerciseResume> = ({
   const formattedRestTime = convertIntervalToMinutesAndSeconds(restTime);
 
   return (
-    <Box className="bg-zinc-900 p-4 gap-4 rounded-lg">
+    <Box className="bg-secondary-500 p-4 gap-4 rounded-lg">
       <Pressable
         testID="ver-detalles"
         onPress={() =>
@@ -64,7 +64,7 @@ const ExercisesRoutineResumeComponent: React.FC<ExerciseResume> = ({
               }}
             />
           </Avatar>
-          <Text className="flex-1 text-white" bold>
+          <Text className="flex-1 text-typography-0" bold>
             {name}
           </Text>
         </HStack>
@@ -96,7 +96,7 @@ const ExercisesRoutineResumeComponent: React.FC<ExerciseResume> = ({
                 key={index}
                 className={
                   index % 2 === 0
-                    ? 'border-b-0 bg-background-50'
+                    ? 'border-b-0 bg-background-200'
                     : 'border-b-0 bg-background-0'
                 }
               >

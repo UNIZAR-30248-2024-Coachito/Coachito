@@ -195,7 +195,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
               <AvatarImage source={{ uri: thumbnailUrl }} />
             </Avatar>
             <Pressable className="flex-1">
-              <Text className="text-xl text-white" bold>
+              <Text className="text-xl text-typography-0" bold>
                 {exerciseName}
               </Text>
             </Pressable>
@@ -251,7 +251,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
                 <TableRow
                   testID="table-row"
                   key={index}
-                  className="border-b-0 bg-background-50"
+                  className="border-b-0 bg-background-100"
                 >
                   <TableData>{index + 1}</TableData>
                   <TableData>
@@ -298,10 +298,10 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
 
           {exerciseSets.length < 10 && (
             <Button
-              className="bg-zinc-800 rounded-lg gap-2"
+              className="bg-tertiary-500 rounded-lg gap-2"
               onPress={addNewSet}
             >
-              <Plus color="gray" />
+              <Plus color="white" />
               <Text className="text-white">Agregar Serie</Text>
             </Button>
           )}

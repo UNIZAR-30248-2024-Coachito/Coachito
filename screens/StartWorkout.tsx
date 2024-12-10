@@ -47,9 +47,7 @@ const StartWorkout: React.FC = () => {
       setStartTime(Date.now());
       setTimerActive(true);
     } else {
-      Alert.alert('', 'Se ha producido un error obteniendo los ejercicios.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error obteniendo los ejercicios.');
     }
     //console.log('Ejercicios originales obtenidos:', data);
   }, [route.params.routineId]);
@@ -132,19 +130,20 @@ const StartWorkout: React.FC = () => {
       emitter.emit('workoutFinished');
       navigation.navigate('Dashboard');
     } else {
-      Alert.alert('', 'Se ha producido un error al guardar el entrenamiento.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error al guardar el entrenamiento.');
     }
   };
 
   const componentsCancelRoutinePopUpModal: React.ReactNode[] = [
-    <Text key="1" className="text-xl font-bold text-center text-white pb-8">
+    <Text
+      key="1"
+      className="text-xl font-bold text-center text-typography-0 pb-8"
+    >
       ¿Está seguro de que quiere descartar el entreno?
     </Text>,
     <Button
       key="2"
-      className="bg-red-800 rounded-lg mb-4"
+      className="bg-background-50 rounded-lg mb-4"
       onPress={() => {
         setIsCancelWorkoutModalVisible(false);
         handleResetTimer();
@@ -156,7 +155,7 @@ const StartWorkout: React.FC = () => {
     </Button>,
     <Button
       key="3"
-      className="bg-zinc-700 rounded-lg"
+      className="bg-tertiary-500 rounded-lg"
       onPress={() => {
         setIsCancelWorkoutModalVisible(false);
         setTimerActive(true);
@@ -176,17 +175,17 @@ const StartWorkout: React.FC = () => {
   //console.log('Lista combinada:', [...selectedExercises, ...addedExercises]);
   return (
     <VStack className="flex-1 p-4 gap-2 items-center">
-      <Text className="text-2xl text-white" bold>
+      <Text className="text-2xl text-typography-0" bold>
         {route.params.routineName}
       </Text>
 
-      <Text className="text-white mb-4">
+      <Text className="text-typography-0 mb-4">
         Tiempo transcurrido: {formatDuration(duration)}
       </Text>
 
       <HStack className="w-full gap-6">
         <Button
-          className="bg-red-800 rounded-lg flex-1"
+          className="bg-background-50 rounded-lg flex-1"
           onPress={() => {
             handleStopTimer();
             setIsCancelWorkoutModalVisible(true);

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import { Text } from '../ui/text';
 import { Box } from '../ui/box';
 import { Button } from '../ui/button';
@@ -10,6 +10,7 @@ import PopupBaseModal from '../shared/PopupBaseModal';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '@/types/navigation';
 import { emitter } from '@/utils/emitter';
+import { ThemeContext } from '@/screens/App';
 
 export interface MyRoutinesCardResume {
   templateId: number;
@@ -24,6 +25,7 @@ export interface MyRoutineCardResumeProps {
 const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
   routineCardResume,
 }) => {
+  const { colorMode } = useContext(ThemeContext);
   const navigation = useNavigation<NavigationProps>();
   const [isSlideUpModalVisible, setIsSlideUpModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
@@ -36,9 +38,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
     if (!error) {
       emitter.emit('routineDeleted');
     } else {
-      Alert.alert('', 'Se ha producido un error al eliminar la rutina.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error al eliminar la rutina.');
     }
   };
 
@@ -53,8 +53,8 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
         });
       }}
     >
-      <Pencil color="white" />
-      <Text className="text-white">Editar Rutina</Text>
+      <Pencil color={`${colorMode === 'light' ? 'black' : 'white'}`} />
+      <Text className="text-typography-0">Editar Rutina</Text>
     </Button>,
     <Button
       key="2"
@@ -70,13 +70,16 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
   ];
 
   const componentsPopUpModal: React.ReactNode[] = [
-    <Text key="1" className="text-xl font-bold text-center text-white pb-8">
+    <Text
+      key="1"
+      className="text-xl font-bold text-center text-typography-0 pb-8"
+    >
       ¿Está seguro de que quiere eliminar la rutina?
     </Text>,
     <Button
       testID="delete-button"
       key="2"
-      className="bg-red-800 rounded-lg mb-4"
+      className="bg-background-50 rounded-lg mb-4"
       onPress={() => {
         setIsDeleteModalVisible(false);
         deleteRoutine();
@@ -86,7 +89,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
     </Button>,
     <Button
       key="3"
-      className="bg-zinc-700 rounded-lg"
+      className="bg-tertiary-500 rounded-lg"
       onPress={() => {
         setIsDeleteModalVisible(false);
       }}
@@ -97,7 +100,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
 
   return (
     <Pressable
-      className="bg-zinc-900 p-4 mb-4 rounded-lg"
+      className="bg-secondary-500 p-4 mb-4 rounded-lg"
       onPress={() =>
         navigation.navigate('DetailsRoutine', {
           templateId: routineCardResume.templateId,
@@ -106,7 +109,7 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
       }
     >
       <Box className="flex-row justify-between items-center">
-        <Text className="text-xl font-bold mb-2 text-white">
+        <Text className="text-xl font-bold mb-2 text-typography-0">
           {routineCardResume.myRoutineName}
         </Text>
 
@@ -117,7 +120,9 @@ const MyRoutinesCardResumeComponent: React.FC<MyRoutineCardResumeProps> = ({
             setIsSlideUpModalVisible(true);
           }}
         >
-          <MoreHorizontal color="white" />
+          <MoreHorizontal
+            color={`${colorMode === 'light' ? 'black' : 'white'}`}
+          />
         </Button>
       </Box>
 

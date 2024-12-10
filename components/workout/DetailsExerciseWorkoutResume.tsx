@@ -3,6 +3,7 @@ import React, {
   useEffect,
   useImperativeHandle,
   useState,
+  useContext,
 } from 'react';
 import { Text } from '../ui/text';
 import {
@@ -15,7 +16,7 @@ import {
 } from '../ui/table';
 import { HStack } from '../ui/hstack';
 import { Avatar, AvatarFallbackText, AvatarImage } from '../ui/avatar';
-import { Modal, Pressable, Vibration } from 'react-native';
+import { Modal, Vibration } from 'react-native';
 import { InfoIcon, Play, Plus, Timer } from 'lucide-react-native';
 import { Input, InputField } from '../ui/input';
 import { Button } from '../ui/button';
@@ -39,6 +40,7 @@ import {
 } from '../exercise/ExerciseResume';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { Alert, AlertIcon, AlertText } from '../ui/alert';
+import { ThemeContext } from '../../screens/App';
 
 export interface ExerciseResumeRef {
   getExerciseData: () => ExerciseResume;
@@ -63,6 +65,7 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
     },
     ref
   ) => {
+    const { colorMode } = useContext(ThemeContext);
     const [exerciseId] = useState(id);
     const [exerciseName] = useState(name);
     const [exerciseRestTimeNumber] = useState(
@@ -166,11 +169,9 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
               <AvatarFallbackText>{exerciseName}</AvatarFallbackText>
               <AvatarImage source={{ uri: thumbnailUrl }} />
             </Avatar>
-            <Pressable className="flex-1">
-              <Text className="text-xl text-white" bold>
-                {exerciseName}
-              </Text>
-            </Pressable>
+            <Text className="text-xl text-typography-0" bold>
+              {exerciseName}
+            </Text>
           </HStack>
 
           <Textarea className="w-100">
@@ -229,7 +230,7 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
                   <TableRow
                     testID="table-row"
                     key={index}
-                    className="border-b-0 bg-background-50"
+                    className="border-b-0 bg-background-100"
                   >
                     <TableData>{index + 1}</TableData>
                     <TableData>
@@ -277,10 +278,10 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
 
           {exerciseSets.length < 10 && (
             <Button
-              className="bg-zinc-800 rounded-lg gap-2"
+              className="bg-tertiary-500 rounded-lg gap-2"
               onPress={addNewSet}
             >
-              <Plus color="gray" />
+              <Plus color={`${colorMode === 'light' ? 'white' : 'gray'}`} />
               <Text className="text-white">Agregar Serie</Text>
             </Button>
           )}

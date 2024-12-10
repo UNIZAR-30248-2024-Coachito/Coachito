@@ -29,7 +29,7 @@ const CustomChartButtons: React.FC<CustomChartButtonsProps> = ({
             className={
               activeButton === button
                 ? 'rounded-lg bg-blue-500'
-                : 'rounded-lg bg-background-50'
+                : 'rounded-lg bg-secondary-500'
             }
             onPress={() => {
               setActiveButton(button);
@@ -37,7 +37,13 @@ const CustomChartButtons: React.FC<CustomChartButtonsProps> = ({
               onDataChartTotalChange(data[index].dataTotal);
             }}
           >
-            <Text className="text-white">{buttons[index]}</Text>
+            <Text
+              className={
+                activeButton === button ? 'text-white' : 'text-typography-0'
+              }
+            >
+              {buttons[index]}
+            </Text>
           </Button>
         ))}
       </HStack>

@@ -21,7 +21,7 @@ const WorkoutDivisionComponent: React.FC<WorkoutDivision> = ({
     <VStack className="justify-between gap-x-8 mb-4">
       {exercisesProportion.map((exerciseProportion, index) => (
         <Box key={index}>
-          <Text className="text-l mb-1 text-white">
+          <Text className="text-l mb-1 text-typography-0">
             {exerciseProportion.name}
           </Text>
           <HStack>

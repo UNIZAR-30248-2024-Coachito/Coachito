@@ -1,28 +1,37 @@
-import supabaseClient from '@/api/supabaseClient';
-import useCRUD from './useCRUD';
+import { supabase } from '@/api/supabaseClient';
 
 const useFetchExercisesList = async () => {
-  const { execute } = useCRUD(() =>
-    supabaseClient.get('/rpc/get_exercises_list')
-  );
+  try {
+    const { data, error } = await supabase.rpc('get_exercises_list');
 
-  const { data, error } = await execute();
+    if (error) {
+      console.error('Error fetching exercises list:', error.message);
+      return { data: null, error };
+    }
 
-  return { data, error };
+    return { data, error: null };
+  } catch (error: unknown) {
+    console.error('Unexpected error fetching exercises list:', error);
+    return { data: null, error };
+  }
 };
 
 const useFetchExerciseDetails = async (exerciseId: number) => {
-  const { execute } = useCRUD(() =>
-    supabaseClient.get('/rpc/get_exercise_details', {
-      params: {
-        ex_id: exerciseId,
-      },
-    })
-  );
+  try {
+    const { data, error } = await supabase.rpc('get_exercise_details', {
+      ex_id: exerciseId,
+    });
 
-  const { data, error } = await execute();
+    if (error) {
+      console.error('Error fetching exercise details:', error.message);
+      return { data: null, error };
+    }
 
-  return { data, error };
+    return { data, error: null };
+  } catch (error: unknown) {
+    console.error('Unexpected error fetching exercise details:', error);
+    return { data: null, error };
+  }
 };
 
 export { useFetchExercisesList, useFetchExerciseDetails };

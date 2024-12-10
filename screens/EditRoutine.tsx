@@ -40,9 +40,7 @@ const EditRoutine: React.FC = () => {
       exerciseRefs.current = [];
       setSelectedExercises(data);
     } else {
-      Alert.alert('', 'Se ha producido un error al obtener los ejercicios.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error al obtener los ejercicios.');
     }
   }, [route.params.routineId]);
 
@@ -64,12 +62,15 @@ const EditRoutine: React.FC = () => {
   }, [fetchExercises, updateExercises, route.params.routineId]);
 
   const componentsCancelRoutinePopUpModal: React.ReactNode[] = [
-    <Text key="1" className="text-xl font-bold text-center text-white pb-8">
+    <Text
+      key="1"
+      className="text-xl font-bold text-center text-typography-0 pb-8"
+    >
       ¿Está seguro de que quiere descartar los cambios?
     </Text>,
     <Button
       key="2"
-      className="bg-red-800 rounded-lg mb-4"
+      className="bg-background-50 rounded-lg mb-4"
       onPress={() => {
         setIsCancelRoutineModalVisible(false);
         navigation.navigate('Routine');
@@ -80,7 +81,7 @@ const EditRoutine: React.FC = () => {
     <Button
       testID="cancel-button-modal"
       key="3"
-      className="bg-zinc-700 rounded-lg"
+      className="bg-tertiary-500 rounded-lg"
       onPress={() => {
         setIsCancelRoutineModalVisible(false);
       }}
@@ -93,16 +94,12 @@ const EditRoutine: React.FC = () => {
     const routineTitle = routineTitleInputValue!.trim();
 
     if (routineTitle === '') {
-      Alert.alert('', 'Por favor, introduce un nombre para la rutina.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Por favor, introduce un nombre para la rutina.');
       return;
     }
 
     if (selectedExercises.length === 0) {
-      Alert.alert('', 'La rutina debe contener mínimo un ejercicio.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'La rutina debe contener mínimo un ejercicio.');
       return;
     }
 
@@ -117,9 +114,7 @@ const EditRoutine: React.FC = () => {
     );
 
     if (error) {
-      Alert.alert('', 'Se ha producido un error al guardar la rutina.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error al guardar la rutina.');
     } else {
       emitter.emit('routineRenamed');
       navigation.navigate('Routine');

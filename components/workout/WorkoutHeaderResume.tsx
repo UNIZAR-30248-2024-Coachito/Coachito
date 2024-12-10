@@ -29,7 +29,7 @@ const WorkoutHeaderResumeComponent: React.FC<WorkoutHeaderResume> = ({
     <Box>
       <HStack className="items-center mb-2 space-x-2">
         <VStack>
-          <Text className="text-xl font-bold mb-2 text-white">
+          <Text className="text-xl font-bold mb-2 text-typography-0">
             {workoutName}
           </Text>
           <Text className="text-xs text-gray-400">
@@ -40,15 +40,15 @@ const WorkoutHeaderResumeComponent: React.FC<WorkoutHeaderResume> = ({
       <HStack className="justify-between gap-x-8 mb-4">
         <VStack>
           <Text className="text-gray-400">Tiempo</Text>
-          <Text className="text-white">{timeInMin} min</Text>
+          <Text className="text-typography-0">{timeInMin} min</Text>
         </VStack>
         <VStack>
           <Text className="text-gray-400">Volumen</Text>
-          <Text className="text-white">{workoutVolume} Kg</Text>
+          <Text className="text-typography-0">{workoutVolume} Kg</Text>
         </VStack>
         <VStack>
           <Text className="text-gray-400">Series</Text>
-          <Text className="text-white">{workoutSeries}</Text>
+          <Text className="text-typography-0">{workoutSeries}</Text>
         </VStack>
       </HStack>
     </Box>
