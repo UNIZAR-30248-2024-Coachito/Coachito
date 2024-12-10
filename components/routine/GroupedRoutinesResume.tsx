@@ -25,7 +25,7 @@ import PopupBaseModal from '../shared/PopupBaseModal';
 import { Input, InputField } from '../ui/input';
 import { emitter } from '@/utils/emitter';
 import { Alert } from 'react-native';
-import { ThemeContext } from '@/screens/App';
+import { ThemeContext } from '@/context/ThemeContext';
 
 export interface GroupedRoutines {
   groupId: number;

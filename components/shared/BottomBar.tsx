@@ -6,7 +6,7 @@ import { HStack } from '../ui/hstack';
 import { VStack } from '../ui/vstack';
 import { Text } from '../ui/text';
 import { NavigationProps } from '@/types/navigation';
-import { ThemeContext } from '@/screens/App';
+import { ThemeContext } from '@/context/ThemeContext';
 
 export default function BottomBar() {
   const { colorMode } = useContext(ThemeContext);

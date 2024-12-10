@@ -17,7 +17,7 @@ import { useCreateTemplateWorkoutGroup } from '@/hooks/workoutTemplateGroupHook'
 import { emitter } from '@/utils/emitter';
 import { Alert } from 'react-native';
 import { useUserInfo } from '@/context/UserContext';
-import { ThemeContext } from './App';
+import { ThemeContext } from '@/context/ThemeContext';
 
 export interface Group {
   id: number;

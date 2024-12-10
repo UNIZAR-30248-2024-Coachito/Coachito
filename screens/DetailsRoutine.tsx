@@ -22,7 +22,7 @@ import CustomAreaChart, {
   DataChartProps,
 } from '@/components/shared/CustomAreaChart';
 import { Alert } from 'react-native';
-import { ThemeContext } from './App';
+import { ThemeContext } from '@/context/ThemeContext';
 
 const DetailsRoutine: React.FC = () => {
   const { colorMode } = useContext(ThemeContext);

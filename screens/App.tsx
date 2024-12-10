@@ -1,29 +1,31 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { GluestackUIProvider } from '@/components/ui/gluestack-ui-provider';
 import { NavigationContainer } from '@react-navigation/native';
 import '../global.css';
 import { SafeAreaView, StatusBar } from 'react-native';
 import { AuthProvider } from '@/context/UserContext';
+import { getTheme, saveTheme, ThemeContext } from '@/context/ThemeContext';
 import MainTabs from '@/components/tabs/mainTabs';
-
-type ThemeContextType = {
-  colorMode?: 'dark' | 'light';
-  toggleColorMode?: () => void;
-};
-
-export const ThemeContext = React.createContext<ThemeContextType>({
-  colorMode: 'light',
-  toggleColorMode: () => {},
-});
 
 export default function App() {
   const [colorMode, setColorMode] = React.useState<'dark' | 'light'>('dark');
+
+  useEffect(() => {
+    const loadTheme = async () => {
+      const savedTheme = await getTheme();
+      setColorMode(savedTheme);
+    };
+
+    loadTheme();
+  }, []);
 
   const statusBarbackgroundColor =
     colorMode === 'light' ? '#ffffff' : '#000000';
 
   const toggleColorMode = async () => {
-    setColorMode((prev) => (prev === 'light' ? 'dark' : 'light'));
+    const newTheme = colorMode === 'light' ? 'dark' : 'light';
+    setColorMode(newTheme);
+    await saveTheme(newTheme);
   };
 
   return (

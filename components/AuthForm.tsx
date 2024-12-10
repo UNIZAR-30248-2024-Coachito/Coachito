@@ -23,7 +23,7 @@ import { EyeIcon, EyeOffIcon } from './ui/icon';
 import { Text } from './ui/text';
 import { Button } from './ui/button';
 import { HStack } from './ui/hstack';
-import { ThemeContext } from '@/screens/App';
+import { ThemeContext } from '@/context/ThemeContext';
 
 interface AuthFormProps {
   onSignUp: (credentials: SignUpWithPasswordCredentials) => void;

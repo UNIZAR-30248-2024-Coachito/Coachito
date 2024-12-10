@@ -10,7 +10,7 @@ import PopupBaseModal from '../shared/PopupBaseModal';
 import { useNavigation } from '@react-navigation/native';
 import { NavigationProps } from '@/types/navigation';
 import { emitter } from '@/utils/emitter';
-import { ThemeContext } from '@/screens/App';
+import { ThemeContext } from '@/context/ThemeContext';
 
 export interface MyRoutinesCardResume {
   templateId: number;

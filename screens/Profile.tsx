@@ -17,8 +17,8 @@ import { formatToChartLabel } from '@/utils/date';
 import { Button } from '@/components/ui/button';
 import { useUserInfo } from '@/context/UserContext';
 import { supabase } from '@/api/supabaseClient';
-import { ThemeContext } from './App';
 import { Menu, MenuItem } from '@/components/ui/menu';
+import { ThemeContext } from '@/context/ThemeContext';
 
 export interface UserWorkouts {
   workoutId: number;
