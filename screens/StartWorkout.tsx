@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { HStack } from '../components/ui/hstack';
 import { VStack } from '../components/ui/vstack';
 import { Text } from '../components/ui/text';
@@ -16,6 +16,7 @@ import DetailsExerciseWorkoutResumeComponent, {
   ExerciseResumeRef,
 } from '@/components/workout/DetailsExerciseWorkoutResume';
 import { emitter } from '@/utils/emitter';
+import { Plus } from 'lucide-react-native';
 
 const StartWorkout: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
@@ -29,10 +30,9 @@ const StartWorkout: React.FC = () => {
   const [timerActive, setTimerActive] = useState(false);
   const [duration, setDuration] = useState(0);
   const [startTime, setStartTime] = useState<number | null>(null);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
-  const fetchExercises = async () => {
-    setSelectedExercises([]);
-
+  const fetchExercises = useCallback(async () => {
     const { data, error } = await useFetchDetailsLastWorkout(
       route.params.routineId!
     );
@@ -41,14 +41,34 @@ const StartWorkout: React.FC = () => {
       setSelectedExercises(data);
       setStartTime(Date.now());
       setTimerActive(true);
+      setIsFirstLoad(false);
     } else {
       Alert.alert('', 'Se ha producido un error obteniendo los ejercicios.');
     }
-  };
+  }, [isFirstLoad, route.params.routineId]);
+
+  const updateExercises = useCallback((exercises: ExerciseResume[]) => {
+    setSelectedExercises((prevSelectedExercises) => {
+      const combinedExercises = [...prevSelectedExercises, ...exercises];
+      const uniqueExercises = combinedExercises.filter(
+        (exercise, index, self) =>
+          index === self.findIndex((e) => e.id === exercise.id)
+      );
+      return uniqueExercises;
+    });
+  }, []);
 
   useEffect(() => {
     fetchExercises();
-  }, [route.params.routineId]);
+    const exercisesUpdateListener = emitter.addListener(
+      'workoutUpdate',
+      updateExercises
+    );
+
+    return () => {
+      exercisesUpdateListener?.remove();
+    };
+  }, [fetchExercises, updateExercises, route.params.routineId]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -99,6 +119,7 @@ const StartWorkout: React.FC = () => {
     if (!error) {
       handleResetTimer();
       resetExerciseSets();
+      setIsFirstLoad(true);
       emitter.emit('workoutFinished');
       navigation.navigate('Dashboard');
     } else {
@@ -120,6 +141,7 @@ const StartWorkout: React.FC = () => {
         setIsCancelWorkoutModalVisible(false);
         handleResetTimer();
         resetExerciseSets();
+        setIsFirstLoad(true);
         navigation.navigate('Routine');
       }}
     >
@@ -191,6 +213,20 @@ const StartWorkout: React.FC = () => {
             targetReps={exercise.targetReps}
           />
         ))}
+
+        <Button
+          className="bg-blue-500 rounded-lg flex-1"
+          onPress={() =>
+            navigation.navigate('AddExerciseWhileWorkout', {
+              selectedExercises,
+              routineId: route.params.routineId,
+              routineName: route.params.routineName,
+            })
+          }
+        >
+          <Plus color="white" />
+          <Text className="text-white">Agregar Ejercicio</Text>
+        </Button>
       </ScrollView>
 
       <PopupBaseModal

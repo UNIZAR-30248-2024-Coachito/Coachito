@@ -218,7 +218,7 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
 
           <Table className="w-[330px]">
             <TableHeader>
-              <TableRow className="border-b-0 bg-background-0 hover:bg-background-0">
+              <TableRow className="bg-background-200">
                 <TableHead>SERIE</TableHead>
                 <TableHead>KG</TableHead>
                 <TableHead>REPS</TableHead>
@@ -230,7 +230,11 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
                   <TableRow
                     testID="table-row"
                     key={index}
-                    className="border-b-0 bg-background-100"
+                    className={
+                      index % 2 === 0
+                        ? 'border-b-0 bg-background-0'
+                        : 'border-b-0 bg-background-200'
+                    }
                   >
                     <TableData>{index + 1}</TableData>
                     <TableData>
@@ -278,11 +282,11 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
 
           {exerciseSets.length < 10 && (
             <Button
-              className="bg-tertiary-500 rounded-lg gap-2"
+              className="bg-secondary-500 rounded-lg gap-2"
               onPress={addNewSet}
             >
-              <Plus color={`${colorMode === 'light' ? 'white' : 'gray'}`} />
-              <Text className="text-white">Agregar Serie</Text>
+              <Plus color={`${colorMode === 'light' ? 'black' : 'gray'}`} />
+              <Text className="text-typography-0">Agregar Serie</Text>
             </Button>
           )}
         </Box>

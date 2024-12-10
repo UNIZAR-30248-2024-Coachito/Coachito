@@ -13,6 +13,7 @@ import EditRoutine from '../../screens/EditRoutine';
 import AddExerciseEdit from '../../screens/AddExerciseEdit';
 import StartWorkout from '../../screens/StartWorkout';
 import DetailsExercise from '../../screens/DetailsExercise';
+import AddExerciseWhileWorkout from '../../screens/AddExerciseWhileWorkout';
 import LogIn from '../../screens/LogIn';
 import { Box } from '@/components/ui/box';
 import { useUserInfo } from '@/context/UserContext';
@@ -105,6 +106,13 @@ const MainTabs: React.FC = () => {
             {() => (
               <Template>
                 <DetailsExercise />
+              </Template>
+            )}
+          </Tab.Screen>
+          <Tab.Screen name="AddExerciseWhileWorkout">
+            {() => (
+              <Template>
+                <AddExerciseWhileWorkout />
               </Template>
             )}
           </Tab.Screen>

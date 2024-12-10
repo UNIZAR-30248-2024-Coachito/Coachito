@@ -3,30 +3,24 @@ import { Text } from '../components/ui/text';
 import { HStack } from '../components/ui/hstack';
 import { VStack } from '../components/ui/vstack';
 import { Button } from '../components/ui/button';
+import { ScrollView, Alert, Pressable } from 'react-native';
 import { RouteProp, useNavigation, useRoute } from '@react-navigation/native';
 import { NavigationProps, RootStackParamList } from '@/types/navigation';
-import {
-  InputField,
-  Input,
-  InputSlot,
-  InputIcon,
-} from '../components/ui/input';
-import { Alert, Pressable, ScrollView } from 'react-native';
-import { useFetchExercisesList } from '@/hooks/exerciseHook';
-import ExercisesListCardResume from '@/components/exercise/ExercisesListCardResume';
+import { Input, InputField, InputIcon, InputSlot } from '@/components/ui/input';
 import { SearchIcon } from 'lucide-react-native';
 import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
+import { useFetchExercisesList } from '@/hooks/exerciseHook';
+import ExercisesListCardResume from '@/components/exercise/ExercisesListCardResume';
 import { emitter } from '@/utils/emitter';
 
 type AddExerciseEditRouteProp = RouteProp<
   RootStackParamList,
-  'AddExerciseEdit'
+  'AddExerciseWhileWorkout'
 >;
 
-const AddExerciseEdit: React.FC = () => {
+const AddExerciseWhileWorkout: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute<AddExerciseEditRouteProp>();
-
   const [exercises, setExercises] = useState<ExerciseResume[]>([]);
   const [selectedExercises, setSelectedExercises] = useState<ExerciseResume[]>(
     route.params!.selectedExercises || []
@@ -53,7 +47,6 @@ const AddExerciseEdit: React.FC = () => {
 
   const fetchExercises = async () => {
     const { data, error: errorExercises } = await useFetchExercisesList();
-
     if (!errorExercises) {
       setExercises(data);
       setFilteredExercises(data);
@@ -86,7 +79,7 @@ const AddExerciseEdit: React.FC = () => {
           <Button
             className="bg-transparent rounded-lg"
             onPress={() => {
-              navigation.navigate('EditRoutine', {
+              navigation.navigate('StartWorkout', {
                 routineId: route.params.routineId,
                 routineName: route.params.routineName,
               });
@@ -96,7 +89,6 @@ const AddExerciseEdit: React.FC = () => {
           </Button>
           <Text className="text-xl">Agregar Ejercicio</Text>
         </HStack>
-
         <Input>
           <InputSlot className="pl-3">
             <InputIcon as={SearchIcon} />
@@ -131,8 +123,9 @@ const AddExerciseEdit: React.FC = () => {
           <Button
             className="w-full bg-blue-500 rounded-lg"
             onPress={() => {
-              emitter.emit('exercisesUpdated', selectedExercises);
-              navigation.navigate('EditRoutine', {
+              emitter.emit('workoutUpdate', selectedExercises);
+              setSelectedExercises([]);
+              navigation.navigate('StartWorkout', {
                 routineId: route.params.routineId,
                 routineName: route.params.routineName,
               });
@@ -146,4 +139,4 @@ const AddExerciseEdit: React.FC = () => {
   );
 };
 
-export default AddExerciseEdit;
+export default AddExerciseWhileWorkout;
