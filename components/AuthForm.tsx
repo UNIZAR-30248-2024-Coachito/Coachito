@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useContext, useState } from 'react';
 import {
   KeyboardAvoidingView,
   Platform,
@@ -23,6 +23,7 @@ import { EyeIcon, EyeOffIcon } from './ui/icon';
 import { Text } from './ui/text';
 import { Button } from './ui/button';
 import { HStack } from './ui/hstack';
+import { ThemeContext } from '@/screens/App';
 
 interface AuthFormProps {
   onSignUp: (credentials: SignUpWithPasswordCredentials) => void;
@@ -35,6 +36,7 @@ export default function AuthForm({
   onLogin,
   loading,
 }: AuthFormProps) {
+  const { colorMode } = useContext(ThemeContext);
   const [mode, setMode] = useState<'login' | 'signUp'>('login');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -71,14 +73,20 @@ export default function AuthForm({
           <VStack className="p-4 gap-4 flex-1 justify-center items-center">
             {mode === 'signUp' ? (
               <>
-                <UserRoundPlus color="white" size={100} />
-                <Text className="text-2xl font-bold mb-4 text-white">
+                <UserRoundPlus
+                  color={`${colorMode === 'light' ? 'black' : 'white'}`}
+                  size={100}
+                />
+                <Text className="text-2xl font-bold mb-4 text-typography-0">
                   Registro
                 </Text>
               </>
             ) : (
               <>
-                <UserRound color="white" size={100} />
+                <UserRound
+                  color={`${colorMode === 'light' ? 'black' : 'white'}`}
+                  size={100}
+                />
                 <Text className="text-2xl font-bold mb-4 text-typography-0">
                   Inicio de sesión
                 </Text>
@@ -136,7 +144,7 @@ export default function AuthForm({
             </Button>
 
             <HStack className="mt-4 items-center">
-              <Text className="text-white">
+              <Text className="text-typography-0">
                 {mode === 'login'
                   ? '¿No tiene cuenta?'
                   : '¿Ya tiene una cuenta?'}

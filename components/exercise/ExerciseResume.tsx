@@ -239,7 +239,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
 
           <Table className="w-[350px]">
             <TableHeader>
-              <TableRow className="border-b-0 bg-background-0 hover:bg-background-0">
+              <TableRow className="bg-background-200">
                 <TableHead className="text-sm">SERIE</TableHead>
                 <TableHead className="text-sm">KG</TableHead>
                 <TableHead className="text-sm">REPS</TableHead>
@@ -251,7 +251,11 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
                 <TableRow
                   testID="table-row"
                   key={index}
-                  className="border-b-0 bg-background-100"
+                  className={
+                    index % 2 === 0
+                      ? 'border-b-0 bg-background-0'
+                      : 'border-b-0 bg-background-200'
+                  }
                 >
                   <TableData>{index + 1}</TableData>
                   <TableData>
