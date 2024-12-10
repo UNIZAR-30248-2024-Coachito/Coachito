@@ -4,6 +4,7 @@ import React, {
   useImperativeHandle,
   useState,
   useContext,
+  useRef,
 } from 'react';
 import { Text } from '../ui/text';
 import {
@@ -17,7 +18,15 @@ import {
 import { HStack } from '../ui/hstack';
 import { Avatar, AvatarFallbackText, AvatarImage } from '../ui/avatar';
 import { Modal, Vibration } from 'react-native';
-import { InfoIcon, Play, Plus, Timer } from 'lucide-react-native';
+import {
+  InfoIcon,
+  PauseCircle,
+  Play,
+  PlayCircle,
+  Plus,
+  Square,
+  Timer,
+} from 'lucide-react-native';
 import { Input, InputField } from '../ui/input';
 import { Button } from '../ui/button';
 import { Textarea, TextareaInput } from '../ui/textarea';
@@ -41,6 +50,7 @@ import {
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { Alert, AlertIcon, AlertText } from '../ui/alert';
 import { ThemeContext } from '../../screens/App';
+import { Audio } from 'expo-av';
 
 export interface ExerciseResumeRef {
   getExerciseData: () => ExerciseResume;
@@ -84,6 +94,8 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
     const [weightPrediction, setWeightPrediction] = useState<number | null>(
       null
     );
+    const [isPlaying, setIsPlaying] = useState(true);
+    const beepSound = useRef<Audio.Sound | null>(null);
 
     useImperativeHandle(ref, () => ({
       getExerciseData: () => ({
@@ -128,11 +140,12 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
     };
 
     const startRestTimer = () => {
+      setIsPlaying(true);
       setTimerKey((prev) => prev + 1);
       setRestTimerModalVisible(true);
     };
 
-    const stopRestTimer = () => {
+    const finishRestTimer = () => {
       setRestTimerModalVisible(false);
       Vibration.vibrate(2000);
     };
@@ -160,6 +173,27 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
         setWeightPrediction(Math.round(targetWeight));
       }
     }, [exerciseSets, targetReps]);
+
+    useEffect(() => {
+      const loadSounds = async () => {
+        const beep = new Audio.Sound();
+        try {
+          await beep.loadAsync(
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
+            require('../../assets/sounds/beep-rest-timer.mp3')
+          );
+          beepSound.current = beep;
+        } catch (error) {
+          console.error('Error al cargar sonidos:', error);
+        }
+      };
+
+      loadSounds();
+
+      return () => {
+        beepSound.current?.unloadAsync();
+      };
+    }, []);
 
     return (
       <>
@@ -201,8 +235,8 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
               className="border-2 border-blue-500 bg-transparent rounded-lg gap-2"
               onPress={startRestTimer}
             >
-              <Play color="white" />
-              <Text className="text-white">Iniciar</Text>
+              <Play color="#3b82f6" />
+              <Text className="text-blue-500">Iniciar</Text>
             </Button>
           )}
 
@@ -297,24 +331,47 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
           transparent={true}
         >
           <Box className="flex-1 bg-black/75 justify-center items-center">
-            <Box className="bg-zinc-800 rounded-lg items-center p-4 mx-8 self-center">
+            <Box className="bg-secondary-500 rounded-lg items-center p-4 mx-8 self-center">
               <CountdownCircleTimer
                 key={timerKey}
-                isPlaying
+                isPlaying={isPlaying}
                 duration={exerciseRestTimeNumber}
                 colors={['#1E40AF', '#3b82f6', '#A30000', '#A30000']}
                 colorsTime={[30, 20, 10, 0]}
+                onUpdate={async (remainingTime) => {
+                  if (remainingTime == 4) {
+                    await beepSound.current?.replayAsync();
+                  }
+                }}
                 onComplete={() => {
-                  stopRestTimer();
+                  finishRestTimer();
                   return { shouldRepeat: false };
                 }}
               >
                 {({ remainingTime }) => (
-                  <Text className="text-white text-xl">
+                  <Text className="text-typography-0 text-xl">
                     {convertSecondsToString(remainingTime)}
                   </Text>
                 )}
               </CountdownCircleTimer>
+              <HStack className="gap-4 mt-4">
+                <Button
+                  className="bg-background-50 rounded-lg"
+                  onPress={() => setRestTimerModalVisible(false)}
+                >
+                  <Square color="white" />
+                </Button>
+                <Button
+                  className="bg-blue-500 rounded-lg"
+                  onPress={() => setIsPlaying((prev) => !prev)}
+                >
+                  {isPlaying ? (
+                    <PauseCircle color="white" />
+                  ) : (
+                    <PlayCircle color="white" />
+                  )}
+                </Button>
+              </HStack>
             </Box>
           </Box>
         </Modal>
