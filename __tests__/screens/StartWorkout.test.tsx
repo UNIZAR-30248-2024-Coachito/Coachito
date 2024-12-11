@@ -20,8 +20,23 @@ jest.mock('@/hooks/workoutHook', () => ({
 }));
 
 jest.mock('@/utils/emitter', () => ({
-  emitter: { emit: jest.fn() },
+  emitter: { emit: jest.fn(), addListener: jest.fn() },
 }));
+
+jest.mock('@react-native-async-storage/async-storage', () => {
+  return {
+    setItem: jest.fn(),
+    getItem: jest.fn(),
+    removeItem: jest.fn(),
+    mergeItem: jest.fn(),
+    clear: jest.fn(),
+    getAllKeys: jest.fn(),
+    multiGet: jest.fn(),
+    multiSet: jest.fn(),
+    multiRemove: jest.fn(),
+    multiMerge: jest.fn(),
+  };
+});
 
 jest.useFakeTimers();
 
@@ -77,8 +92,8 @@ describe('StartWorkout', () => {
 
     await act(async () => {
       fireEvent.press(getByText('Cancelar'));
+      jest.advanceTimersByTime(1000);
     });
-    jest.advanceTimersByTime(1000);
     expect(getByText('Tiempo transcurrido: 1s')).toBeTruthy();
   });
 
@@ -130,8 +145,7 @@ describe('StartWorkout', () => {
     await waitFor(() => {
       expect(Alert.alert).toHaveBeenCalledWith(
         '',
-        'Se ha producido un error obteniendo los ejercicios.',
-        [{ text: 'OK' }]
+        'Se ha producido un error obteniendo los ejercicios.'
       );
     });
   });
@@ -170,8 +184,7 @@ describe('StartWorkout', () => {
     await waitFor(() => {
       expect(Alert.alert).toHaveBeenCalledWith(
         '',
-        'Se ha producido un error al guardar el entrenamiento.',
-        [{ text: 'OK' }]
+        'Se ha producido un error al guardar el entrenamiento.'
       );
     });
   });

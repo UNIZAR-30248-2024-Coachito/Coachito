@@ -49,8 +49,8 @@ import {
 } from '../exercise/ExerciseResume';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { Alert, AlertIcon, AlertText } from '../ui/alert';
-import { ThemeContext } from '../../screens/App';
 import { Audio } from 'expo-av';
+import { ThemeContext } from '@/context/ThemeContext';
 
 export interface ExerciseResumeRef {
   getExerciseData: () => ExerciseResume;
@@ -199,7 +199,7 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
       <>
         <Box className="p-4 rounded-lg gap-4">
           <HStack className="items-center gap-4">
-            <Avatar>
+            <Avatar testID="icono-ejercicio">
               <AvatarFallbackText>{exerciseName}</AvatarFallbackText>
               <AvatarImage source={{ uri: thumbnailUrl }} />
             </Avatar>
@@ -250,7 +250,7 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
             </Alert>
           )}
 
-          <Table className="w-[330px]">
+          <Table className="w-[330px]" testID="tabla-workout">
             <TableHeader>
               <TableRow className="bg-background-200">
                 <TableHead>SERIE</TableHead>

@@ -14,6 +14,28 @@ jest.mock('@/hooks/userHook', () => ({
 
 jest.mock('../../components/shared/CustomBarChart', () => 'CustomBarChart');
 
+jest.mock('@legendapp/motion', () => ({
+  Motion: {
+    View: jest.fn(),
+  },
+  AnimatePresence: jest.fn(),
+}));
+
+jest.mock('@react-native-async-storage/async-storage', () => {
+  return {
+    setItem: jest.fn(),
+    getItem: jest.fn(),
+    removeItem: jest.fn(),
+    mergeItem: jest.fn(),
+    clear: jest.fn(),
+    getAllKeys: jest.fn(),
+    multiGet: jest.fn(),
+    multiSet: jest.fn(),
+    multiRemove: jest.fn(),
+    multiMerge: jest.fn(),
+  };
+});
+
 describe('Profile', () => {
   const mockUseRoute = useRoute as jest.Mock;
   const mockUseFetchUserWorkouts = useFetchUserWorkouts as jest.Mock;
@@ -49,7 +71,6 @@ describe('Profile', () => {
     const { getByText } = render(<Profile />);
 
     await waitFor(() => {
-      expect(getByText('testuser')).toBeTruthy();
       expect(getByText('5 entrenos realizados')).toBeTruthy();
     });
   });

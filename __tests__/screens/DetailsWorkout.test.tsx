@@ -111,8 +111,7 @@ describe('DetailsWorkout', () => {
     await waitFor(() =>
       expect(alertSpy).toHaveBeenCalledWith(
         '',
-        'Se ha producido un error al obtener los datos.',
-        [{ text: 'OK' }]
+        'Se ha producido un error al obtener los datos.'
       )
     );
 

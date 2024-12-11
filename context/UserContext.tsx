@@ -18,7 +18,7 @@ export interface UserInfo {
   profile: UserProfile | null;
 }
 
-const UserContext = createContext<UserInfo>({
+export const UserContext = createContext<UserInfo>({
   session: null,
   profile: null,
 });

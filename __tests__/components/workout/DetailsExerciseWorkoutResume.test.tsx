@@ -2,10 +2,36 @@ import DetailsExerciseWorkoutResumeComponent, {
   ExerciseResumeRef,
 } from '@/components/workout/DetailsExerciseWorkoutResume';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import React from 'react';
+import React, { act } from 'react';
 import { Vibration } from 'react-native';
 
+jest.mock('@react-native-async-storage/async-storage', () => {
+  return {
+    setItem: jest.fn(),
+    getItem: jest.fn(),
+    removeItem: jest.fn(),
+    mergeItem: jest.fn(),
+    clear: jest.fn(),
+    getAllKeys: jest.fn(),
+    multiGet: jest.fn(),
+    multiSet: jest.fn(),
+    multiRemove: jest.fn(),
+    multiMerge: jest.fn(),
+  };
+});
+
 jest.useFakeTimers();
+
+jest.mock('expo-av', () => ({
+  Audio: {
+    Sound: jest.fn().mockImplementation(() => ({
+      loadAsync: jest.fn(),
+      unloadAsync: jest.fn(),
+      setOnPlaybackStatusUpdate: jest.fn(),
+      playAsync: jest.fn(),
+    })),
+  },
+}));
 
 describe('DetailsExerciseWorkoutResumeComponent', () => {
   const mockData = {
@@ -28,10 +54,12 @@ describe('DetailsExerciseWorkoutResumeComponent', () => {
       <DetailsExerciseWorkoutResumeComponent {...mockData} />
     );
 
+    expect(getByTestId('icono-ejercicio')).toBeTruthy();
     expect(getByText('Sentadillas')).toBeTruthy();
     const textareaInput = getByTestId('text-area-input');
     expect(textareaInput.props.value).toBe('Notas');
     expect(getByText('Temporizador de descanso: DESACTIVADO')).toBeTruthy();
+    expect(getByTestId('tabla-workout')).toBeTruthy();
     expect(getByText('Agregar Serie')).toBeTruthy();
   });
 
@@ -165,7 +193,9 @@ describe('DetailsExerciseWorkoutResumeComponent', () => {
     const rowsBeforeReset = getAllByTestId('table-row');
     expect(rowsBeforeReset.length).toBe(mockData.sets.length);
 
-    mockRef.current?.resetToOneSet();
+    act(() => {
+      mockRef.current?.resetToOneSet();
+    });
 
     const rowsAfterReset = getAllByTestId('table-row');
     expect(rowsAfterReset.length).toBe(1);
@@ -193,7 +223,9 @@ describe('DetailsExerciseWorkoutResumeComponent', () => {
       expect(getByTestId('modal')).toBeTruthy();
     });
 
-    jest.advanceTimersByTime(2000);
+    act(() => {
+      jest.advanceTimersByTime(2000);
+    });
 
     await waitFor(() => {
       expect(queryByTestId('modal')).toBeNull();

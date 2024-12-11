@@ -1,6 +1,5 @@
 import { supabase } from '@/api/supabaseClient';
 
-// Crear un grupo de plantillas de entrenamiento
 const useCreateTemplateWorkoutGroup = async (name: string, user_id: string) => {
   try {
     const { data, error } = await supabase
@@ -14,7 +13,6 @@ const useCreateTemplateWorkoutGroup = async (name: string, user_id: string) => {
   }
 };
 
-// Editar un grupo de plantillas de entrenamiento
 const useEditTemplateWorkoutGroup = async (id: number, name: string) => {
   try {
     const { data, error } = await supabase
@@ -29,7 +27,6 @@ const useEditTemplateWorkoutGroup = async (id: number, name: string) => {
   }
 };
 
-// Eliminar un grupo de plantillas de entrenamiento por ID
 const useDeleteTemplateWorkoutGroupById = async (id: number) => {
   try {
     const { data, error } = await supabase

@@ -216,8 +216,7 @@ describe('AddExerciseEdit', () => {
     await waitFor(() =>
       expect(alertSpy).toHaveBeenCalledWith(
         '',
-        'Se ha producido un error obteniendo los ejercicios.',
-        [{ text: 'OK' }]
+        'Se ha producido un error obteniendo los ejercicios.'
       )
     );
 

@@ -143,8 +143,7 @@ describe('EditRoutine', () => {
     await waitFor(() =>
       expect(alertSpy).toHaveBeenCalledWith(
         '',
-        'Por favor, introduce un nombre para la rutina.',
-        [{ text: 'OK' }]
+        'Por favor, introduce un nombre para la rutina.'
       )
     );
   });
@@ -159,8 +158,7 @@ describe('EditRoutine', () => {
     await waitFor(() =>
       expect(alertSpy).toHaveBeenCalledWith(
         '',
-        'La rutina debe contener mínimo un ejercicio.',
-        [{ text: 'OK' }]
+        'La rutina debe contener mínimo un ejercicio.'
       )
     );
   });
@@ -184,8 +182,7 @@ describe('EditRoutine', () => {
     await waitFor(() =>
       expect(alertSpy).toHaveBeenCalledWith(
         '',
-        'Se ha producido un error al obtener los ejercicios.',
-        [{ text: 'OK' }]
+        'Se ha producido un error al obtener los ejercicios.'
       )
     );
   });

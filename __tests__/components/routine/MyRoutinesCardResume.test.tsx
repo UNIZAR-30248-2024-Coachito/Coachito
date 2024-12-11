@@ -22,6 +22,21 @@ jest.mock('@react-navigation/native', () => ({
   }),
 }));
 
+jest.mock('@react-native-async-storage/async-storage', () => {
+  return {
+    setItem: jest.fn(),
+    getItem: jest.fn(),
+    removeItem: jest.fn(),
+    mergeItem: jest.fn(),
+    clear: jest.fn(),
+    getAllKeys: jest.fn(),
+    multiGet: jest.fn(),
+    multiSet: jest.fn(),
+    multiRemove: jest.fn(),
+    multiMerge: jest.fn(),
+  };
+});
+
 Alert.alert = jest.fn();
 
 describe('MyRoutinesCardResumeComponent', () => {
@@ -169,8 +184,7 @@ describe('MyRoutinesCardResumeComponent', () => {
 
     expect(alertMock).toHaveBeenCalledWith(
       '',
-      'Se ha producido un error al eliminar la rutina.',
-      [{ text: 'OK' }]
+      'Se ha producido un error al eliminar la rutina.'
     );
 
     alertMock.mockRestore();

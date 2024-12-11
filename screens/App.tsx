@@ -5,7 +5,7 @@ import '../global.css';
 import { SafeAreaView, StatusBar } from 'react-native';
 import { AuthProvider } from '@/context/UserContext';
 import { getTheme, saveTheme, ThemeContext } from '@/context/ThemeContext';
-import MainTabs from '@/components/tabs/mainTabs';
+import MainTabs from '@/components/tabs/MainTabs';
 
 export default function App() {
   const [colorMode, setColorMode] = React.useState<'dark' | 'light'>('dark');

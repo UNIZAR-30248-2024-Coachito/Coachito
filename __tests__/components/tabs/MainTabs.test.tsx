@@ -1,81 +1,79 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-// App.test.tsx
 import React from 'react';
 import { render } from '@testing-library/react-native';
-import App from '@/screens/App';
+import MainTabs from '@/components/tabs/MainTabs';
 
-// Mock de los componentes importados
-jest.mock('../../screens/Dashboard', () => {
+jest.mock('../../../screens/Dashboard', () => {
   const { Text } = require('react-native');
   const Dashboard = () => <Text>Dashboard</Text>;
   Dashboard.displayName = 'Dashboard';
   return Dashboard;
 });
 
-jest.mock('../../screens/Routine', () => {
+jest.mock('../../../screens/Routine', () => {
   const { Text } = require('react-native');
   const Routine = () => <Text>Routine</Text>;
   Routine.displayName = 'Routine';
   return Routine;
 });
 
-jest.mock('../../screens/Profile', () => {
+jest.mock('../../../screens/Profile', () => {
   const { Text } = require('react-native');
   const Profile = () => <Text>Profile</Text>;
   Profile.displayName = 'Profile';
   return Profile;
 });
 
-jest.mock('../../screens/DetailsWorkout', () => {
+jest.mock('../../../screens/DetailsWorkout', () => {
   const { Text } = require('react-native');
   const DetailsWorkout = () => <Text>DetailsWorkout</Text>;
   DetailsWorkout.displayName = 'DetailsWorkout';
   return DetailsWorkout;
 });
 
-jest.mock('../../screens/DetailsRoutine', () => {
+jest.mock('../../../screens/DetailsRoutine', () => {
   const { Text } = require('react-native');
   const DetailsRoutine = () => <Text>DetailsRoutine</Text>;
   DetailsRoutine.displayName = 'DetailsRoutine';
   return DetailsRoutine;
 });
 
-jest.mock('../../screens/AddExercise', () => {
+jest.mock('../../../screens/AddExercise', () => {
   const { Text } = require('react-native');
   const AddExercise = () => <Text>AddExercise</Text>;
   AddExercise.displayName = 'AddExercise';
   return AddExercise;
 });
 
-jest.mock('../../screens/AddRoutine', () => {
+jest.mock('../../../screens/AddRoutine', () => {
   const { Text } = require('react-native');
   const AddRoutine = () => <Text>AddRoutine</Text>;
   AddRoutine.displayName = 'AddRoutine';
   return AddRoutine;
 });
 
-jest.mock('../../screens/EditRoutine', () => {
+jest.mock('../../../screens/EditRoutine', () => {
   const { Text } = require('react-native');
   const EditRoutine = () => <Text>EditRoutine</Text>;
   EditRoutine.displayName = 'EditRoutine';
   return EditRoutine;
 });
 
-jest.mock('../../screens/AddExerciseEdit', () => {
+jest.mock('../../../screens/AddExerciseEdit', () => {
   const { Text } = require('react-native');
   const AddExerciseEdit = () => <Text>AddExerciseEdit</Text>;
   AddExerciseEdit.displayName = 'AddExerciseEdit';
   return AddExerciseEdit;
 });
 
-jest.mock('../../screens/StartWorkout', () => {
+jest.mock('../../../screens/StartWorkout', () => {
   const { Text } = require('react-native');
   const StartWorkout = () => <Text>StartWorkout</Text>;
   StartWorkout.displayName = 'StartWorkout';
   return StartWorkout;
 });
 
-jest.mock('../../screens/DetailsExercise', () => {
+jest.mock('../../../screens/DetailsExercise', () => {
   const { Text } = require('react-native');
   const DetailsExercise = () => <Text>DetailsExercise</Text>;
   DetailsExercise.displayName = 'DetailsExercise';
@@ -129,11 +127,29 @@ jest.mock('@/components/shared/Template', () => {
   return Children;
 });
 
-describe('App', () => {
-  it('debe renderizar el componente App sin errores y mostrar la pantalla Dashboard por defecto', () => {
-    const { getByText } = render(<App />);
+jest.mock('@/utils/emitter', () => ({
+  emitter: jest.fn(),
+}));
 
-    // Verificamos que el componente Dashboard (mockeado) se renderiza
-    expect(getByText('Dashboard')).toBeTruthy();
+jest.mock('@react-native-async-storage/async-storage', () => {
+  return {
+    setItem: jest.fn(),
+    getItem: jest.fn(),
+    removeItem: jest.fn(),
+    mergeItem: jest.fn(),
+    clear: jest.fn(),
+    getAllKeys: jest.fn(),
+    multiGet: jest.fn(),
+    multiSet: jest.fn(),
+    multiRemove: jest.fn(),
+    multiMerge: jest.fn(),
+  };
+});
+
+describe('MainTabs', () => {
+  it('debe mostrar la pantalla de inicio de sesión por defecto', () => {
+    const { getByText } = render(<MainTabs />);
+
+    expect(getByText('Inicio de sesión')).toBeTruthy();
   });
 });

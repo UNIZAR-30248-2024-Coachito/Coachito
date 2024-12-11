@@ -1,10 +1,9 @@
-// functions.test.ts
 import {
   useCreateTemplateWorkoutGroup,
   useEditTemplateWorkoutGroup,
   useDeleteTemplateWorkoutGroupById,
 } from '@/hooks/workoutTemplateGroupHook';
-import supabaseClient from '@/api/supabaseClient';
+import { supabase } from '@/api/supabaseClient';
 
 jest.mock('@/api/supabaseClient');
 
@@ -14,45 +13,39 @@ describe('useCreateTemplateWorkoutGroup', () => {
   });
 
   it('debe crear un grupo de entrenamiento exitosamente', async () => {
-    // Preparación
     const name = 'Nuevo Grupo de Entrenamiento';
+    const user_id = 'user123';
     const mockData = { id: 1, name };
-    (supabaseClient.post as jest.Mock).mockResolvedValue({
+    const insertMock = jest.fn().mockResolvedValue({
       data: mockData,
-      status: 201,
-      statusText: 'Created',
-      headers: {},
-      config: {},
+      error: null,
     });
+    (supabase.from as jest.Mock).mockReturnValue({ insert: insertMock });
 
-    // Ejecución
-    const result = await useCreateTemplateWorkoutGroup(name);
+    const result = await useCreateTemplateWorkoutGroup(name, user_id);
 
-    // Verificación
-    expect(supabaseClient.post).toHaveBeenCalledWith(
-      '/workout_templates_group',
-      { name }
-    );
+    expect(supabase.from).toHaveBeenCalledWith('workout_templates_group');
+    expect(insertMock).toHaveBeenCalledWith([{ name, user_id }]);
     expect(result.data).toEqual(mockData);
     expect(result.error).toBeNull();
   });
 
   it('debe manejar errores cuando la creación del grupo falla', async () => {
-    // Preparación
     const name = 'Nuevo Grupo de Entrenamiento';
-    const mockError = new Error('Error de red');
-    (supabaseClient.post as jest.Mock).mockRejectedValue(mockError);
+    const user_id = 'user123';
+    const mockError = { message: 'Error de red' };
+    const insertMock = jest.fn().mockResolvedValue({
+      data: null,
+      error: mockError,
+    });
+    (supabase.from as jest.Mock).mockReturnValue({ insert: insertMock });
 
-    // Ejecución
-    const result = await useCreateTemplateWorkoutGroup(name);
+    const result = await useCreateTemplateWorkoutGroup(name, user_id);
 
-    // Verificación
-    expect(supabaseClient.post).toHaveBeenCalledWith(
-      '/workout_templates_group',
-      { name }
-    );
+    expect(supabase.from).toHaveBeenCalledWith('workout_templates_group');
+    expect(insertMock).toHaveBeenCalledWith([{ name, user_id }]);
     expect(result.data).toBeNull();
-    expect(result.error).toBe('Error de red');
+    expect(result.error).toEqual(mockError);
   });
 });
 
@@ -62,49 +55,43 @@ describe('useEditTemplateWorkoutGroup', () => {
   });
 
   it('debe editar un grupo de entrenamiento exitosamente', async () => {
-    // Preparación
     const id = 1;
     const name = 'Grupo de Entrenamiento Actualizado';
     const mockData = { id, name };
-    (supabaseClient.patch as jest.Mock).mockResolvedValue({
+    const eqMock = jest.fn().mockResolvedValue({
       data: mockData,
-      status: 200,
-      statusText: 'OK',
-      headers: {},
-      config: {},
+      error: null,
     });
+    const updateMock = jest.fn().mockReturnValue({ eq: eqMock });
+    (supabase.from as jest.Mock).mockReturnValue({ update: updateMock });
 
-    // Ejecución
     const result = await useEditTemplateWorkoutGroup(id, name);
 
-    // Verificación
-    expect(supabaseClient.patch).toHaveBeenCalledWith(
-      '/workout_templates_group',
-      { name },
-      { params: { id: `eq.${id}` } }
-    );
+    expect(supabase.from).toHaveBeenCalledWith('workout_templates_group');
+    expect(updateMock).toHaveBeenCalledWith({ name });
+    expect(updateMock().eq).toHaveBeenCalledWith('id', id);
     expect(result.data).toEqual(mockData);
     expect(result.error).toBeNull();
   });
 
   it('debe manejar errores cuando la edición del grupo falla', async () => {
-    // Preparación
     const id = 1;
     const name = 'Grupo de Entrenamiento Actualizado';
-    const mockError = new Error('Error de red');
-    (supabaseClient.patch as jest.Mock).mockRejectedValue(mockError);
+    const mockError = { message: 'Error de red' };
+    const eqMock = jest.fn().mockResolvedValue({
+      data: null,
+      error: mockError,
+    });
+    const updateMock = jest.fn().mockReturnValue({ eq: eqMock });
+    (supabase.from as jest.Mock).mockReturnValue({ update: updateMock });
 
-    // Ejecución
     const result = await useEditTemplateWorkoutGroup(id, name);
 
-    // Verificación
-    expect(supabaseClient.patch).toHaveBeenCalledWith(
-      '/workout_templates_group',
-      { name },
-      { params: { id: `eq.${id}` } }
-    );
+    expect(supabase.from).toHaveBeenCalledWith('workout_templates_group');
+    expect(updateMock).toHaveBeenCalledWith({ name });
+    expect(updateMock().eq).toHaveBeenCalledWith('id', id);
     expect(result.data).toBeNull();
-    expect(result.error).toBe('Error de red');
+    expect(result.error).toEqual(mockError);
   });
 });
 
@@ -114,48 +101,40 @@ describe('useDeleteTemplateWorkoutGroupById', () => {
   });
 
   it('debe eliminar un grupo de entrenamiento exitosamente', async () => {
-    // Preparación
     const id = 1;
     const mockData = { message: 'Eliminado exitosamente' };
-    (supabaseClient.delete as jest.Mock).mockResolvedValue({
+    const eqMock = jest.fn().mockResolvedValue({
       data: mockData,
-      status: 200,
-      statusText: 'OK',
-      headers: {},
-      config: {},
+      error: null,
     });
+    const deleteMock = jest.fn().mockReturnValue({ eq: eqMock });
+    (supabase.from as jest.Mock).mockReturnValue({ delete: deleteMock });
 
-    // Ejecución
     const result = await useDeleteTemplateWorkoutGroupById(id);
 
-    // Verificación
-    expect(supabaseClient.delete).toHaveBeenCalledWith(
-      '/workout_templates_group',
-      {
-        params: { id: `eq.${id}` },
-      }
-    );
+    expect(supabase.from).toHaveBeenCalledWith('workout_templates_group');
+    expect(deleteMock).toHaveBeenCalledWith();
+    expect(deleteMock().eq).toHaveBeenCalledWith('id', id);
     expect(result.data).toEqual(mockData);
     expect(result.error).toBeNull();
   });
 
   it('debe manejar errores cuando la eliminación del grupo falla', async () => {
-    // Preparación
     const id = 1;
-    const mockError = new Error('Error de red');
-    (supabaseClient.delete as jest.Mock).mockRejectedValue(mockError);
+    const mockError = { message: 'Error de red' };
+    const eqMock = jest.fn().mockResolvedValue({
+      data: null,
+      error: mockError,
+    });
+    const deleteMock = jest.fn().mockReturnValue({ eq: eqMock });
+    (supabase.from as jest.Mock).mockReturnValue({ delete: deleteMock });
 
-    // Ejecución
     const result = await useDeleteTemplateWorkoutGroupById(id);
 
-    // Verificación
-    expect(supabaseClient.delete).toHaveBeenCalledWith(
-      '/workout_templates_group',
-      {
-        params: { id: `eq.${id}` },
-      }
-    );
+    expect(supabase.from).toHaveBeenCalledWith('workout_templates_group');
+    expect(deleteMock).toHaveBeenCalledWith();
+    expect(deleteMock().eq).toHaveBeenCalledWith('id', id);
     expect(result.data).toBeNull();
-    expect(result.error).toBe('Error de red');
+    expect(result.error).toEqual(mockError);
   });
 });

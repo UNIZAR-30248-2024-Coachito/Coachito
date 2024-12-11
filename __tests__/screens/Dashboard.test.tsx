@@ -124,8 +124,7 @@ describe('Dashboard', () => {
     await waitFor(() =>
       expect(alertSpy).toHaveBeenCalledWith(
         '',
-        'Se ha producido un error al obtener los entrenamientos.',
-        [{ text: 'OK' }]
+        'Se ha producido un error al obtener los entrenamientos.'
       )
     );
 

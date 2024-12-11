@@ -32,6 +32,21 @@ jest.mock('@/utils/emitter', () => ({
   emitter: { emit: jest.fn() },
 }));
 
+jest.mock('@react-native-async-storage/async-storage', () => {
+  return {
+    setItem: jest.fn(),
+    getItem: jest.fn(),
+    removeItem: jest.fn(),
+    mergeItem: jest.fn(),
+    clear: jest.fn(),
+    getAllKeys: jest.fn(),
+    multiGet: jest.fn(),
+    multiSet: jest.fn(),
+    multiRemove: jest.fn(),
+    multiMerge: jest.fn(),
+  };
+});
+
 Alert.alert = jest.fn();
 
 describe('DetailsRoutine', () => {
@@ -218,8 +233,7 @@ describe('DetailsRoutine', () => {
     await waitFor(() =>
       expect(alertSpy).toHaveBeenCalledWith(
         '',
-        'Se ha producido un error obteniendo los datos de la gráfica.',
-        [{ text: 'OK' }]
+        'Se ha producido un error obteniendo los datos de la gráfica.'
       )
     );
 
@@ -239,8 +253,7 @@ describe('DetailsRoutine', () => {
     await waitFor(() =>
       expect(alertSpy).toHaveBeenCalledWith(
         '',
-        'Se ha producido un error obteniendo los ejercicios.',
-        [{ text: 'OK' }]
+        'Se ha producido un error obteniendo los ejercicios.'
       )
     );
 
@@ -263,8 +276,7 @@ describe('DetailsRoutine', () => {
     await waitFor(() =>
       expect(alertSpy).toHaveBeenCalledWith(
         '',
-        'Se ha producido un error al eliminar la rutina.',
-        [{ text: 'OK' }]
+        'Se ha producido un error al eliminar la rutina.'
       )
     );
 
