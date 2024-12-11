@@ -2,6 +2,8 @@
 import React from 'react';
 import { render } from '@testing-library/react-native';
 import MainTabs from '@/components/tabs/MainTabs';
+import { useUserInfo } from '@/context/UserContext';
+import { NavigationContainer } from '@react-navigation/native';
 
 jest.mock('../../../screens/Dashboard', () => {
   const { Text } = require('react-native');
@@ -80,43 +82,18 @@ jest.mock('../../../screens/DetailsExercise', () => {
   return DetailsExercise;
 });
 
-jest.mock('@/components/ui/gluestack-ui-provider', () => ({
-  GluestackUIProvider: ({ children }: { children: React.ReactNode }) =>
-    children,
-}));
-
-jest.mock('@react-navigation/native', () => {
-  const actualNav = jest.requireActual('@react-navigation/native');
-  return {
-    ...actualNav,
-    NavigationContainer: ({ children }: { children: React.ReactNode }) =>
-      children,
-    useNavigation: () => ({
-      navigate: jest.fn(),
-    }),
-  };
+jest.mock('../../../screens/AddExerciseWhileWorkout', () => {
+  const { Text } = require('react-native');
+  const AddExerciseWhileWorkout = () => <Text>AddExerciseWhileWorkout</Text>;
+  AddExerciseWhileWorkout.displayName = 'AddExerciseWhileWorkout';
+  return AddExerciseWhileWorkout;
 });
 
-jest.mock('@react-navigation/bottom-tabs', () => {
-  return {
-    createBottomTabNavigator: jest.fn().mockReturnValue({
-      Navigator: ({ children }: { children: React.ReactNode }) => (
-        <>{children}</>
-      ),
-      Screen: ({
-        children,
-      }: {
-        name: string;
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        children: React.ReactNode | ((props: any) => React.ReactNode);
-      }) => {
-        if (typeof children === 'function') {
-          return <>{children({})}</>;
-        }
-        return <>{children}</>;
-      },
-    }),
-  };
+jest.mock('../../../screens/LogIn', () => {
+  const { Text } = require('react-native');
+  const LogIn = () => <Text>LogIn</Text>;
+  LogIn.displayName = 'LogIn';
+  return LogIn;
 });
 
 jest.mock('@/components/shared/Template', () => {
@@ -127,29 +104,35 @@ jest.mock('@/components/shared/Template', () => {
   return Children;
 });
 
-jest.mock('@/utils/emitter', () => ({
-  emitter: jest.fn(),
+jest.mock('@/context/UserContext', () => ({
+  useUserInfo: jest.fn(),
 }));
 
-jest.mock('@react-native-async-storage/async-storage', () => {
-  return {
-    setItem: jest.fn(),
-    getItem: jest.fn(),
-    removeItem: jest.fn(),
-    mergeItem: jest.fn(),
-    clear: jest.fn(),
-    getAllKeys: jest.fn(),
-    multiGet: jest.fn(),
-    multiSet: jest.fn(),
-    multiRemove: jest.fn(),
-    multiMerge: jest.fn(),
-  };
-});
-
 describe('MainTabs', () => {
-  it('debe mostrar la pantalla de inicio de sesión por defecto', () => {
-    const { getByText } = render(<MainTabs />);
+  const renderWithNavigation = () =>
+    render(
+      <NavigationContainer>
+        <MainTabs />
+      </NavigationContainer>
+    );
 
-    expect(getByText('Inicio de sesión')).toBeTruthy();
+  it('debe mostrar las pantallas protegidas cuando hay sesión activa', () => {
+    (useUserInfo as jest.Mock).mockReturnValue({
+      session: { user: { id: 'test-user-id' } },
+    });
+
+    const { getByText } = renderWithNavigation();
+
+    expect(getByText('Dashboard')).toBeTruthy();
+  });
+
+  it('debe mostrar la pantalla de login cuando no hay sesión activa', () => {
+    (useUserInfo as jest.Mock).mockReturnValue({
+      session: null,
+    });
+
+    const { getByText } = renderWithNavigation();
+
+    expect(getByText('LogIn')).toBeTruthy();
   });
 });

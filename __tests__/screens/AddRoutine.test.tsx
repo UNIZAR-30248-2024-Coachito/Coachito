@@ -161,7 +161,7 @@ describe('AddRoutine', () => {
 
     const mockProfile = {
       username: 'user123',
-      avatarUrl: 'https://example.com/avatar.jpg',
+      email: 'user123@example.com',
     };
     jest.mocked(useCreateRoutine).mockResolvedValue({ error: null });
     jest
