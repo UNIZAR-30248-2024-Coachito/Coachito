@@ -149,7 +149,7 @@ const EditRoutine: React.FC = () => {
         >
           <InputField
             placeholder="Título de la rutina"
-            value={routineTitleInputValue!}
+            value={routineTitleInputValue}
             onChangeText={setRoutineTitleInputValue}
           />
         </Input>
@@ -173,7 +173,7 @@ const EditRoutine: React.FC = () => {
               notes={exercise.notes}
               primaryMuscleGroup={exercise.primaryMuscleGroup}
               sets={exercise.sets}
-              targetReps={exercise.targetReps}
+              targetReps={exercise.targetReps ?? 0}
             />
           ))
         )}

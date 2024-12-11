@@ -79,7 +79,7 @@ const ExercisesRoutineResumeComponent: React.FC<ExerciseResume> = ({
         </Text>
       </HStack>
 
-      <Text>Repeticiones objetivo: {targetReps}</Text>
+      <Text>Repeticiones objetivo: {targetReps ?? 0}</Text>
 
       <Table className="w-full">
         <TableHeader>
