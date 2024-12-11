@@ -233,4 +233,31 @@ describe('DetailsExerciseWorkoutResumeComponent', () => {
 
     expect(Vibration.vibrate).toHaveBeenCalledTimes(1);
   });
+
+  it('debería mostrar el play cuando se pulsa pause y viceversa', async () => {
+    const mockDataWithRestTime = {
+      ...mockData,
+      restTime: '00:01:30',
+    };
+    const { getAllByTestId, getByTestId } = render(
+      <DetailsExerciseWorkoutResumeComponent {...mockDataWithRestTime} />
+    );
+
+    const startButton = getAllByTestId('start-timer')[0];
+    fireEvent.press(startButton);
+
+    const playPauseButton = getByTestId('play/pause button');
+    fireEvent.press(playPauseButton);
+
+    expect(playPauseButton?.props.children).toBeTruthy();
+    expect(getAllByTestId('play icon')).toBeTruthy();
+
+    fireEvent.press(playPauseButton);
+    expect(playPauseButton?.props.children).toBeTruthy();
+    expect(getAllByTestId('pause icon')).toBeTruthy();
+
+    fireEvent.press(playPauseButton);
+    expect(playPauseButton?.props.children).toBeTruthy();
+    expect(getAllByTestId('play icon')).toBeTruthy();
+  });
 });

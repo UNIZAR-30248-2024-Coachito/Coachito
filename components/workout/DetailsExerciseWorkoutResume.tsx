@@ -362,13 +362,14 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
                   <Square color="white" />
                 </Button>
                 <Button
+                  testID="play/pause button"
                   className="bg-blue-500 rounded-lg"
                   onPress={() => setIsPlaying((prev) => !prev)}
                 >
                   {isPlaying ? (
-                    <PauseCircle color="white" />
+                    <PauseCircle color="white" testID="pause icon" />
                   ) : (
-                    <PlayCircle color="white" />
+                    <PlayCircle color="white" testID="play icon" />
                   )}
                 </Button>
               </HStack>

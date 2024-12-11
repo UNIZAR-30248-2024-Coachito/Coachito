@@ -98,4 +98,19 @@ describe('useFetchExerciseDetails', () => {
     expect(result.data).toBeNull();
     expect(result.error).toBe(mockError);
   });
+
+  it('debe manejar errores inesperados correctamente', async () => {
+    const exerciseId = 1;
+    const mockError = new Error('Error inesperado');
+    const rpcMock = jest.fn().mockRejectedValue(mockError);
+    (supabase.rpc as jest.Mock) = rpcMock;
+
+    const result = await useFetchExerciseDetails(exerciseId);
+
+    expect(supabase.rpc).toHaveBeenCalledWith('get_exercise_details', {
+      ex_id: exerciseId,
+    });
+    expect(result.data).toBeNull();
+    expect(result.error).toBe(mockError);
+  });
 });
