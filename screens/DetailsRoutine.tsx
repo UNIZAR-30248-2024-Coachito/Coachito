@@ -129,7 +129,7 @@ const DetailsRoutine: React.FC = () => {
         setIsDeleteModalVisible(false);
       }}
     >
-      <Text className="text-white">Cancelar</Text>
+      <Text className="text-typography-0">Cancelar</Text>
     </Button>,
   ];
 
