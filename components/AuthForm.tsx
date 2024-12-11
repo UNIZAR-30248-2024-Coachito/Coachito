@@ -5,6 +5,7 @@ import {
   SafeAreaView,
   TouchableWithoutFeedback,
   Keyboard,
+  Alert,
 } from 'react-native';
 import type {
   SignInWithPasswordCredentials,
@@ -24,6 +25,8 @@ import { Text } from './ui/text';
 import { Button } from './ui/button';
 import { HStack } from './ui/hstack';
 import { ThemeContext } from '@/context/ThemeContext';
+import { supabase } from '@/api/supabaseClient';
+import PopupBaseModal from './shared/PopupBaseModal';
 
 interface AuthFormProps {
   onSignUp: (credentials: SignUpWithPasswordCredentials) => void;
@@ -42,6 +45,7 @@ export default function AuthForm({
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [isPopUpUpModalVisible, setIsPopUpUpModalVisible] = useState(false);
 
   const handlePasswordState = () => {
     setShowPassword((showState) => {
@@ -62,6 +66,46 @@ export default function AuthForm({
     setEmail('');
     setPassword('');
   };
+
+  const componentsPopUpModal: React.ReactNode[] = [
+    <Text
+      key="1"
+      className="text-xl font-bold text-center text-typography-0 mb-4"
+    >
+      Se le enviará un correo para restablecer la contraseña
+    </Text>,
+    <Input key="2" className="mb-4">
+      <InputSlot className="pl-3">
+        <InputIcon as={AtSignIcon} />
+      </InputSlot>
+      <InputField
+        value={email}
+        onChangeText={setEmail}
+        placeholder="Correo"
+        autoCapitalize="none"
+        keyboardType="email-address"
+      />
+    </Input>,
+    <Button
+      key="3"
+      className="bg-blue-500 rounded-lg mb-4"
+      onPress={() => {
+        supabase.auth.resetPasswordForEmail(email);
+        Alert.alert('', 'Correo enviado');
+      }}
+    >
+      <Text className="text-white">Restablecer contraseña</Text>
+    </Button>,
+    <Button
+      key="4"
+      className="bg-tertiary-500 rounded-lg"
+      onPress={() => {
+        setIsPopUpUpModalVisible(false);
+      }}
+    >
+      <Text className="text-white">Cancelar</Text>
+    </Button>,
+  ];
 
   return (
     <SafeAreaView className="flex-1">
@@ -161,6 +205,30 @@ export default function AuthForm({
                 </Text>
               </Button>
             </HStack>
+            {mode === 'login' && (
+              <VStack className="mt-4 items-center">
+                <Text className="text-typography-0">
+                  ¿Ha olvidado su contraseña?
+                </Text>
+                <Button
+                  onPress={() => {
+                    setEmail('');
+                    setIsPopUpUpModalVisible(true);
+                  }}
+                  className="bg-transparent"
+                >
+                  <Text className="text-blue-500" underline>
+                    Restablecer contraseña
+                  </Text>
+                </Button>
+              </VStack>
+            )}
+
+            <PopupBaseModal
+              components={componentsPopUpModal}
+              isVisible={isPopUpUpModalVisible}
+              setIsModalVisible={setIsPopUpUpModalVisible}
+            />
           </VStack>
         </TouchableWithoutFeedback>
       </KeyboardAvoidingView>

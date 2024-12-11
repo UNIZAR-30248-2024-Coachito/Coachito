@@ -10,7 +10,7 @@ import { supabase } from '@/api/supabaseClient';
 
 export interface UserProfile {
   username: string;
-  avatarUrl?: string;
+  email: string;
 }
 
 export interface UserInfo {
@@ -36,7 +36,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       try {
         const { data, error } = await supabase
           .from('users')
-          .select('username')
+          .select('username, email')
           .eq('id', userId)
           .single();
 
@@ -47,6 +47,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
         return {
           username: data.username,
+          email: data.email,
         };
       } catch (error) {
         console.error('Unexpected error fetching user profile:', error);

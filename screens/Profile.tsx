@@ -105,16 +105,6 @@ const Profile: React.FC = () => {
           )}
         >
           <MenuItem
-            key="logout"
-            onPress={() => supabase.auth.signOut()}
-            textValue="Cerrar Sesión"
-          >
-            <HStack className="items-center gap-2">
-              <LogOut color={`${colorMode === 'light' ? 'black' : 'white'}`} />
-              <Text>Cerrar Sesión</Text>
-            </HStack>
-          </MenuItem>
-          <MenuItem
             key="themeToggle"
             onPress={toggleColorMode}
             textValue="Cambiar Tema"
@@ -124,6 +114,16 @@ const Profile: React.FC = () => {
               <Text>
                 Cambiar a {colorMode === 'light' ? 'Modo Oscuro' : 'Modo Claro'}
               </Text>
+            </HStack>
+          </MenuItem>
+          <MenuItem
+            key="logout"
+            onPress={() => supabase.auth.signOut()}
+            textValue="Cerrar Sesión"
+          >
+            <HStack className="items-center gap-2">
+              <LogOut color={`${colorMode === 'light' ? 'black' : 'white'}`} />
+              <Text>Cerrar Sesión</Text>
             </HStack>
           </MenuItem>
         </Menu>
