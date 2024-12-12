@@ -1,10 +1,12 @@
 import React, { useContext, useEffect, useState } from 'react';
 import {
   CircleUserRound,
-  Dumbbell,
   LogOut,
+  MonitorPlay,
   Moon,
+  PlayCircle,
   Settings,
+  ChartColumn,
 } from 'lucide-react-native';
 import { VStack } from '@/components/ui/vstack';
 import { Text } from '@/components/ui/text';
@@ -19,6 +21,8 @@ import { useUserInfo } from '@/context/UserContext';
 import { supabase } from '@/api/supabaseClient';
 import { Menu, MenuItem } from '@/components/ui/menu';
 import { ThemeContext } from '@/context/ThemeContext';
+import { Alert, Linking, ScrollView } from 'react-native';
+import { Divider } from '@/components/ui/divider';
 
 export interface UserWorkouts {
   workoutId: number;
@@ -88,10 +92,19 @@ const Profile: React.FC = () => {
     fetchUserProfile();
   }, []);
 
+  const handleVideoNavigation = async (videoUrl: string) => {
+    try {
+      await Linking.openURL(videoUrl);
+    } catch (error) {
+      console.log(error);
+      Alert.alert('', 'No se ha podido acceder al archivo');
+    }
+  };
+
   const buttons = ['Duración', 'Repeticiones', 'Volumen'];
 
   return (
-    <VStack className="gap-4">
+    <ScrollView className="gap-4 p-4">
       <HStack className="justify-end mt-4">
         <Menu
           placement="bottom right"
@@ -129,24 +142,67 @@ const Profile: React.FC = () => {
         </Menu>
       </HStack>
 
-      <VStack className="items-center gap-4">
+      <VStack className="items-center gap-4 mb-4">
         <CircleUserRound color="#3b82f6" size={100} />
 
         <Text size="xl" bold className="mb-4">
           {profile?.username}
         </Text>
+      </VStack>
 
+      <Divider className="my-0.5 mb-4" />
+
+      <VStack className="justify-start mb-4">
         <HStack className="gap-2">
-          <Dumbbell color={`${colorMode === 'light' ? 'black' : 'white'}`} />
-          {workoutsDetails && (
-            <Text>{workoutsDetails!.workoutsCount} entrenos realizados</Text>
-          )}
-          <Dumbbell color={`${colorMode === 'light' ? 'black' : 'white'}`} />
+          <MonitorPlay color={`${colorMode === 'light' ? 'black' : 'white'}`} />
+          <Text size="xl" bold className="mb-4">
+            Video Tutoriales
+          </Text>
+        </HStack>
+        <HStack className="items-center">
+          <Text>Rutinas</Text>
+          <Button
+            className="gap-2 bg-transparent"
+            onPress={() =>
+              handleVideoNavigation(
+                'https://drive.google.com/file/d/1LdgN4WkF-HLxCymZLmHRRW3HErUkdhI9/view?usp=drive_link'
+              )
+            }
+          >
+            <PlayCircle color="#3b82f6" />
+          </Button>
+        </HStack>
+        <HStack className="items-center">
+          <Text>Entrenamientos</Text>
+          <Button
+            className="gap-2 bg-transparent"
+            onPress={() =>
+              handleVideoNavigation(
+                'https://drive.google.com/file/d/1kEO48K-X74cZb5NhtgkwgTxf2aowP7hc/view?usp=drive_link'
+              )
+            }
+          >
+            <PlayCircle color="#3b82f6" />
+          </Button>
+        </HStack>
+      </VStack>
+
+      <Divider className="my-0.5 mb-4" />
+
+      <VStack className="justify-start gap-4 mb-4">
+        <HStack className="gap-2">
+          <ChartColumn color={`${colorMode === 'light' ? 'black' : 'white'}`} />
+          <Text size="xl" bold>
+            Estadísticas
+          </Text>
         </HStack>
 
+        {workoutsDetails && (
+          <Text>Entrenos realizados: {workoutsDetails!.workoutsCount}</Text>
+        )}
         <CustomBarChart data={chartData} buttons={buttons} />
       </VStack>
-    </VStack>
+    </ScrollView>
   );
 };
 

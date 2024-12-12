@@ -45,6 +45,8 @@ export default function AuthForm({
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const [isPopUpUpModalVisible, setIsPopUpUpModalVisible] = useState(false);
 
   const handlePasswordState = () => {
@@ -53,10 +55,20 @@ export default function AuthForm({
     });
   };
 
+  const handlePasswordConfirmState = () => {
+    setShowConfirmPassword((showState) => {
+      return !showState;
+    });
+  };
+
   const handleSubmit = () => {
     if (mode === 'login') {
       onLogin({ email, password });
     } else {
+      if (password !== confirmPassword) {
+        Alert.alert('', 'Las contraseñas no coinciden');
+        return;
+      }
       onSignUp({ email, password, options: { data: { username } } });
     }
   };
@@ -176,6 +188,24 @@ export default function AuthForm({
                 <InputIcon as={showPassword ? EyeIcon : EyeOffIcon} />
               </InputSlot>
             </Input>
+
+            {mode === 'signUp' && (
+              <Input>
+                <InputSlot className="pl-3">
+                  <InputIcon as={LockKeyhole} />
+                </InputSlot>
+                <InputField
+                  type={showConfirmPassword ? 'text' : 'password'}
+                  value={confirmPassword}
+                  onChangeText={setConfirmPassword}
+                  placeholder="Repetir la contraseña"
+                  autoCapitalize="none"
+                />
+                <InputSlot className="p-2" onPress={handlePasswordConfirmState}>
+                  <InputIcon as={showConfirmPassword ? EyeIcon : EyeOffIcon} />
+                </InputSlot>
+              </Input>
+            )}
 
             <Button
               onPress={handleSubmit}
