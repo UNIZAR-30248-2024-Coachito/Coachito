@@ -172,7 +172,7 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
         const targetWeight = oneRepMax * (1 - targetReps / 30);
         setWeightPrediction(Math.round(targetWeight));
       }
-    }, [exerciseSets, targetReps]);
+    }, [targetReps]);
 
     useEffect(() => {
       const loadSounds = async () => {
@@ -240,7 +240,7 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
             </Button>
           )}
 
-          {targetReps !== undefined && weightPrediction !== null && (
+          {targetReps !== null && weightPrediction !== null && (
             <Alert action="info" variant="solid">
               <AlertIcon as={InfoIcon} />
               <AlertText>
