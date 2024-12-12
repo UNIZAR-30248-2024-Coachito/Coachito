@@ -71,7 +71,7 @@ describe('Profile', () => {
     const { getByText } = render(<Profile />);
 
     await waitFor(() => {
-      expect(getByText('5 entrenos realizados')).toBeTruthy();
+      expect(getByText('Entrenos realizados: 5')).toBeTruthy();
     });
   });
 });
