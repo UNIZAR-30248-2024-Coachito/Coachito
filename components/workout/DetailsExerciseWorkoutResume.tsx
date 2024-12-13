@@ -51,6 +51,7 @@ import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { Alert, AlertIcon, AlertText } from '../ui/alert';
 import { Audio } from 'expo-av';
 import { ThemeContext } from '@/context/ThemeContext';
+import { VStack } from '../ui/vstack';
 
 export interface ExerciseResumeRef {
   getExerciseData: () => ExerciseResume;
@@ -76,8 +77,6 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
     ref
   ) => {
     const { colorMode } = useContext(ThemeContext);
-    const [exerciseId] = useState(id);
-    const [exerciseName] = useState(name);
     const [exerciseRestTimeNumber] = useState(
       convertIntervalToSeconds(restTime)
     );
@@ -85,7 +84,6 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
       convertIntervalToMinutesAndSeconds(restTime)
     );
     const [exerciseNotes, setExerciseNotes] = useState(notes);
-    const [exercisePrimaryMuscleGroup] = useState(primaryMuscleGroup);
     const [exerciseSets, setExerciseSets] = useState<SetsExerciseResume[]>(
       sets ?? []
     );
@@ -99,12 +97,12 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
 
     useImperativeHandle(ref, () => ({
       getExerciseData: () => ({
-        id: exerciseId,
-        name: exerciseName,
+        id: id,
+        name: name,
         thumbnailUrl,
         restTime: exerciseRestTimeNumber > 0 ? exerciseRestTimeString : '0',
         notes: exerciseNotes,
-        primaryMuscleGroup: exercisePrimaryMuscleGroup,
+        primaryMuscleGroup: primaryMuscleGroup,
         sets: exerciseSets,
         targetReps,
       }),
@@ -197,14 +195,14 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
 
     return (
       <>
-        <Box className="p-4 rounded-lg gap-4">
-          <HStack className="items-center gap-4">
+        <VStack className="p-4 rounded-lg gap-4">
+          <HStack className="items-center gap-4 w-[270px]">
             <Avatar testID="icono-ejercicio">
-              <AvatarFallbackText>{exerciseName}</AvatarFallbackText>
+              <AvatarFallbackText>{name}</AvatarFallbackText>
               <AvatarImage source={{ uri: thumbnailUrl }} />
             </Avatar>
             <Text className="text-xl text-typography-0" bold>
-              {exerciseName}
+              {name}
             </Text>
           </HStack>
 
@@ -240,7 +238,7 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
             </Button>
           )}
 
-          {targetReps !== null && weightPrediction !== null && (
+          {targetReps !== null && targetReps !== 0 && (
             <Alert action="info" variant="solid">
               <AlertIcon as={InfoIcon} />
               <AlertText>
@@ -323,7 +321,7 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
               <Text className="text-typography-0">Agregar Serie</Text>
             </Button>
           )}
-        </Box>
+        </VStack>
 
         <Modal
           testID="modal"

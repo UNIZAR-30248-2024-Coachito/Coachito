@@ -32,7 +32,7 @@ const StartWorkout: React.FC = () => {
   const [startTime, setStartTime] = useState<number | null>(null);
   const [isFirstLoad, setIsFirstLoad] = useState(true);
 
-  const fetchExercises = useCallback(async () => {
+  const fetchExercises = async () => {
     const { data, error } = await useFetchDetailsLastWorkout(
       route.params.routineId!
     );
@@ -45,6 +45,18 @@ const StartWorkout: React.FC = () => {
     } else {
       Alert.alert('', 'Se ha producido un error obteniendo los ejercicios.');
     }
+  };
+
+  useEffect(() => {
+    fetchExercises();
+    const exercisesUpdateListener = emitter.addListener(
+      'workoutUpdate',
+      updateExercises
+    );
+
+    return () => {
+      exercisesUpdateListener?.remove();
+    };
   }, [isFirstLoad, route.params.routineId]);
 
   const updateExercises = useCallback((exercises: ExerciseResume[]) => {
@@ -57,18 +69,6 @@ const StartWorkout: React.FC = () => {
       return uniqueExercises;
     });
   }, []);
-
-  useEffect(() => {
-    fetchExercises();
-    const exercisesUpdateListener = emitter.addListener(
-      'workoutUpdate',
-      updateExercises
-    );
-
-    return () => {
-      exercisesUpdateListener?.remove();
-    };
-  }, [fetchExercises, updateExercises, route.params.routineId]);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
