@@ -103,6 +103,7 @@ export default function AuthForm({
       className="bg-blue-500 rounded-lg mb-4"
       onPress={() => {
         supabase.auth.resetPasswordForEmail(email);
+        setIsPopUpUpModalVisible(false);
         Alert.alert('', 'Correo enviado');
       }}
     >
