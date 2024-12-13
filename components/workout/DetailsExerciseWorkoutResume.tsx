@@ -238,15 +238,17 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
             </Button>
           )}
 
-          {targetReps !== null && targetReps !== 0 && (
-            <Alert action="info" variant="solid">
-              <AlertIcon as={InfoIcon} />
-              <AlertText>
-                Se recomienda emplear {weightPrediction} kg para llegar al
-                número de {targetReps} repeticiones objetivo.
-              </AlertText>
-            </Alert>
-          )}
+          {targetReps !== null &&
+            targetReps !== 0 &&
+            targetReps !== undefined && (
+              <Alert action="info" variant="solid">
+                <AlertIcon as={InfoIcon} />
+                <AlertText>
+                  Se recomienda emplear {weightPrediction} kg para llegar al
+                  número de {targetReps} repeticiones objetivo.
+                </AlertText>
+              </Alert>
+            )}
 
           <Table className="w-[330px]" testID="tabla-workout">
             <TableHeader>
