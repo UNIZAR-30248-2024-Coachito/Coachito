@@ -1,19 +1,19 @@
-import supabaseClient from '@/api/supabaseClient';
-import useCRUD from './useCRUD';
-import { UserWorkoutsDetails } from '@/screens/Profile';
+import { supabase } from '@/api/supabaseClient';
 
-const useFetchUserWorkouts = async (userId: number) => {
-  const { execute } = useCRUD<UserWorkoutsDetails>(() =>
-    supabaseClient.get('/rpc/get_user_workouts', {
-      params: {
-        user_id: userId,
-      },
-    })
-  );
+const useFetchUserWorkouts = async () => {
+  try {
+    const { data, error } = await supabase.rpc('get_user_workouts');
 
-  const { data, error } = await execute();
+    if (error) {
+      console.error('Error fetching user workouts:', error.message);
+      return { data: null, error };
+    }
 
-  return { data, error };
+    return { data, error: null };
+  } catch (error: unknown) {
+    console.error('Unexpected error fetching user workouts:', error);
+    return { data: null, error };
+  }
 };
 
 export { useFetchUserWorkouts };

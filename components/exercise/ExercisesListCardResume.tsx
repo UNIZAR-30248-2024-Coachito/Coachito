@@ -21,8 +21,8 @@ const ExercisesListCardResume: React.FC<ExerciseResume> = ({
         />
       </Avatar>
       <VStack>
-        <Text className="text-white">{name}</Text>
-        <Text className="text-gray-400">{primaryMuscleGroup}</Text>
+        <Text className="text-typography-0">{name}</Text>
+        <Text className="text-typography-500">{primaryMuscleGroup}</Text>
       </VStack>
     </HStack>
   );

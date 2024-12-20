@@ -2,8 +2,6 @@ import ExercisesListCardResume from '@/components/exercise/ExercisesListCardResu
 import { render } from '@testing-library/react-native';
 import React from 'react';
 
-jest.mock('../../../styles.css', () => ({}));
-
 describe('ExercisesListCardResume', () => {
   const mockProps = {
     id: 1,

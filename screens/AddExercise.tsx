@@ -40,9 +40,7 @@ const AddExercise: React.FC = () => {
         return prevSelected.filter((e) => e.id !== exercise.id);
       } else {
         if (prevSelected.length >= 20) {
-          Alert.alert('', 'Solo se pueden seleccionar hasta 20 ejercicios.', [
-            { text: 'OK' },
-          ]);
+          Alert.alert('', 'Solo se pueden seleccionar hasta 20 ejercicios.');
           return prevSelected;
         }
         return [...prevSelected, exercise];
@@ -57,9 +55,7 @@ const AddExercise: React.FC = () => {
       setExercises(data);
       setFilteredExercises(data);
     } else {
-      Alert.alert('', 'Se ha producido un error al obtener los ejercicios.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error al obtener los ejercicios.');
     }
   };
 
@@ -94,23 +90,17 @@ const AddExercise: React.FC = () => {
               setSelectedExercises(selectedExercisesInit);
             }}
           >
-            <Text className="text-blue-500">Cancelar</Text>
+            <Text className="text-typography-50">Cancelar</Text>
           </Button>
           <Text className="text-xl">Agregar Ejercicio</Text>
         </HStack>
 
-        <Input
-          variant="outline"
-          size="md"
-          isDisabled={false}
-          isInvalid={false}
-          isReadOnly={false}
-        >
+        <Input>
           <InputSlot className="pl-3">
             <InputIcon as={SearchIcon} />
           </InputSlot>
           <InputField
-            className="text-white"
+            className="text-typography-0"
             placeholder="Buscar Ejercicio"
             value={searchTerm}
             onChangeText={setSearchTerm}

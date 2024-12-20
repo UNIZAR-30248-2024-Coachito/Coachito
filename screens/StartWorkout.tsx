@@ -1,5 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
-import '../styles.css';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { HStack } from '../components/ui/hstack';
 import { VStack } from '../components/ui/vstack';
 import { Text } from '../components/ui/text';
@@ -17,6 +16,7 @@ import DetailsExerciseWorkoutResumeComponent, {
   ExerciseResumeRef,
 } from '@/components/workout/DetailsExerciseWorkoutResume';
 import { emitter } from '@/utils/emitter';
+import { Plus } from 'lucide-react-native';
 
 const StartWorkout: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
@@ -30,10 +30,9 @@ const StartWorkout: React.FC = () => {
   const [timerActive, setTimerActive] = useState(false);
   const [duration, setDuration] = useState(0);
   const [startTime, setStartTime] = useState<number | null>(null);
+  const [isFirstLoad, setIsFirstLoad] = useState(true);
 
   const fetchExercises = async () => {
-    setSelectedExercises([]);
-
     const { data, error } = await useFetchDetailsLastWorkout(
       route.params.routineId!
     );
@@ -42,16 +41,34 @@ const StartWorkout: React.FC = () => {
       setSelectedExercises(data);
       setStartTime(Date.now());
       setTimerActive(true);
+      setIsFirstLoad(false);
     } else {
-      Alert.alert('', 'Se ha producido un error obteniendo los ejercicios.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error obteniendo los ejercicios.');
     }
   };
 
   useEffect(() => {
     fetchExercises();
-  }, [route.params.routineId]);
+    const exercisesUpdateListener = emitter.addListener(
+      'workoutUpdate',
+      updateExercises
+    );
+
+    return () => {
+      exercisesUpdateListener?.remove();
+    };
+  }, [isFirstLoad, route.params.routineId]);
+
+  const updateExercises = useCallback((exercises: ExerciseResume[]) => {
+    setSelectedExercises((prevSelectedExercises) => {
+      const combinedExercises = [...prevSelectedExercises, ...exercises];
+      const uniqueExercises = combinedExercises.filter(
+        (exercise, index, self) =>
+          index === self.findIndex((e) => e.id === exercise.id)
+      );
+      return uniqueExercises;
+    });
+  }, []);
 
   useEffect(() => {
     let interval: NodeJS.Timeout | null = null;
@@ -102,26 +119,29 @@ const StartWorkout: React.FC = () => {
     if (!error) {
       handleResetTimer();
       resetExerciseSets();
+      setIsFirstLoad(true);
       emitter.emit('workoutFinished');
       navigation.navigate('Dashboard');
     } else {
-      Alert.alert('', 'Se ha producido un error al guardar el entrenamiento.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error al guardar el entrenamiento.');
     }
   };
 
   const componentsCancelRoutinePopUpModal: React.ReactNode[] = [
-    <Text key="1" className="text-xl font-bold text-center text-white pb-8">
+    <Text
+      key="1"
+      className="text-xl font-bold text-center text-typography-0 pb-8"
+    >
       ¿Está seguro de que quiere descartar el entreno?
     </Text>,
     <Button
       key="2"
-      className="bg-red-800 rounded-lg mb-4"
+      className="bg-background-50 rounded-lg mb-4"
       onPress={() => {
         setIsCancelWorkoutModalVisible(false);
         handleResetTimer();
         resetExerciseSets();
+        setIsFirstLoad(true);
         navigation.navigate('Routine');
       }}
     >
@@ -129,7 +149,7 @@ const StartWorkout: React.FC = () => {
     </Button>,
     <Button
       key="3"
-      className="bg-zinc-700 rounded-lg"
+      className="bg-tertiary-500 rounded-lg"
       onPress={() => {
         setIsCancelWorkoutModalVisible(false);
         setTimerActive(true);
@@ -149,17 +169,17 @@ const StartWorkout: React.FC = () => {
 
   return (
     <VStack className="flex-1 p-4 gap-2 items-center">
-      <Text className="text-2xl text-white" bold>
+      <Text className="text-2xl text-typography-0" bold>
         {route.params.routineName}
       </Text>
 
-      <Text className="text-white mb-4">
+      <Text className="text-typography-0 mb-4">
         Tiempo transcurrido: {formatDuration(duration)}
       </Text>
 
       <HStack className="w-full gap-6">
         <Button
-          className="bg-red-800 rounded-lg flex-1"
+          className="bg-background-50 rounded-lg flex-1"
           onPress={() => {
             handleStopTimer();
             setIsCancelWorkoutModalVisible(true);
@@ -193,6 +213,20 @@ const StartWorkout: React.FC = () => {
             targetReps={exercise.targetReps}
           />
         ))}
+
+        <Button
+          className="bg-blue-500 rounded-lg flex-1"
+          onPress={() =>
+            navigation.navigate('AddExerciseWhileWorkout', {
+              selectedExercises,
+              routineId: route.params.routineId,
+              routineName: route.params.routineName,
+            })
+          }
+        >
+          <Plus color="white" />
+          <Text className="text-white">Agregar Ejercicio</Text>
+        </Button>
       </ScrollView>
 
       <PopupBaseModal

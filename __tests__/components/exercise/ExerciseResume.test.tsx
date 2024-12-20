@@ -5,8 +5,6 @@ import ExerciseResumeComponent, {
 } from '@/components/exercise/ExerciseResume';
 import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 
-jest.mock('../../../styles.css', () => ({}));
-
 describe('ExerciseResumeComponent', () => {
   const mockData: ExerciseResume = {
     id: 1,

@@ -68,9 +68,7 @@ const DetailsWorkout: React.FC = () => {
       const proportionData = calculateExerciseProportions(data.exercise_resume);
       setExerciseProportionData(proportionData);
     } else {
-      Alert.alert('', 'Se ha producido un error al obtener los datos.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error al obtener los datos.');
     }
   };
 
@@ -82,7 +80,7 @@ const DetailsWorkout: React.FC = () => {
     <ScrollView className="flex-1">
       <VStack className="p-4 gap-4">
         <Box className="flex justify-center">
-          <Text className="text-xl font-bold text-white text-center">
+          <Text className="text-xl font-bold text-typography-0 text-center">
             Detalles de entrenamiento
           </Text>
         </Box>

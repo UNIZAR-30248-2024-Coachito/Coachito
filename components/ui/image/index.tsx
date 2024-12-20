@@ -1,12 +1,9 @@
-/* eslint-disable */
-'use client'
-import '../../../styles.css'
-import React from 'react'
-import { createImage } from '@gluestack-ui/image'
-import { Platform, Image as RNImage } from 'react-native'
-import { tva } from '@gluestack-ui/nativewind-utils/tva'
-import type { VariantProps } from '@gluestack-ui/nativewind-utils'
-import { cssInterop } from 'nativewind'
+'use client';
+import React from 'react';
+import { createImage } from '@gluestack-ui/image';
+import { Platform, Image as RNImage } from 'react-native';
+import { tva } from '@gluestack-ui/nativewind-utils/tva';
+import type { VariantProps } from '@gluestack-ui/nativewind-utils';
 
 const imageStyle = tva({
   base: 'max-w-full',
@@ -20,15 +17,15 @@ const imageStyle = tva({
       xl: 'h-32 w-32',
       '2xl': 'h-64 w-64',
       full: 'h-full w-full',
+      none: '',
     },
   },
-})
+});
 
-const UIImage = createImage({ Root: RNImage })
-cssInterop(UIImage, { className: 'style' })
+const UIImage = createImage({ Root: RNImage });
 
 type ImageProps = VariantProps<typeof imageStyle> &
-  React.ComponentProps<typeof UIImage>
+  React.ComponentProps<typeof UIImage>;
 const Image = React.forwardRef<
   React.ElementRef<typeof UIImage>,
   ImageProps & { className?: string }
@@ -38,15 +35,16 @@ const Image = React.forwardRef<
       className={imageStyle({ size, class: className })}
       {...props}
       ref={ref}
-      //@ts-ignore
+      // @ts-expect-error
       style={
         Platform.OS === 'web'
-          ? { height: 'revert-layer', width: 'revert-layer' }
+          ? // eslint-disable-next-line react-native/no-inline-styles
+            { height: 'revert-layer', width: 'revert-layer' }
           : undefined
       }
     />
-  )
-})
+  );
+});
 
-Image.displayName = 'Image'
-export { Image }
+Image.displayName = 'Image';
+export { Image };

@@ -5,8 +5,6 @@ import WorkoutHeaderResumeComponent, {
 } from '@/components/workout/WorkoutHeaderResume';
 import { calculateDaysDifferenceNow } from '@/utils/date';
 
-jest.mock('../../../styles.css', () => ({}));
-
 jest.mock('@/utils/date', () => ({
   calculateDaysDifferenceNow: jest.fn(),
 }));

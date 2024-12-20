@@ -11,8 +11,6 @@ import { render, fireEvent, waitFor, act } from '@testing-library/react-native';
 import React from 'react';
 import { Alert } from 'react-native';
 
-jest.mock('../../../styles.css', () => ({}));
-
 jest.mock('@react-navigation/native', () => ({
   useNavigation: jest.fn(),
 }));
@@ -25,6 +23,21 @@ jest.mock('@/hooks/workoutTemplateGroupHook', () => ({
 jest.mock('@/utils/emitter', () => ({
   emitter: { emit: jest.fn() },
 }));
+
+jest.mock('@react-native-async-storage/async-storage', () => {
+  return {
+    setItem: jest.fn(),
+    getItem: jest.fn(),
+    removeItem: jest.fn(),
+    mergeItem: jest.fn(),
+    clear: jest.fn(),
+    getAllKeys: jest.fn(),
+    multiGet: jest.fn(),
+    multiSet: jest.fn(),
+    multiRemove: jest.fn(),
+    multiMerge: jest.fn(),
+  };
+});
 
 Alert.alert = jest.fn();
 
@@ -200,8 +213,7 @@ describe('GroupedRoutinesResumeComponent', () => {
 
     expect(alertMock).toHaveBeenCalledWith(
       '',
-      'Por favor, introduce un nombre para la nueva carpeta.',
-      [{ text: 'OK' }]
+      'Por favor, introduce un nombre para la nueva carpeta.'
     );
   });
 
@@ -279,8 +291,7 @@ describe('GroupedRoutinesResumeComponent', () => {
 
     expect(alertMock).toHaveBeenCalledWith(
       '',
-      'Se ha producido un error eliminando la carpeta.',
-      [{ text: 'OK' }]
+      'Se ha producido un error eliminando la carpeta.'
     );
 
     alertMock.mockRestore();
@@ -312,8 +323,7 @@ describe('GroupedRoutinesResumeComponent', () => {
 
     expect(alertMock).toHaveBeenCalledWith(
       '',
-      'Se ha producido un error al renombrar la carpeta.',
-      [{ text: 'OK' }]
+      'Se ha producido un error al renombrar la carpeta.'
     );
 
     expect(mockGroupedRoutine.groupName).toBe('Mi Grupo');
@@ -378,8 +388,7 @@ describe('GroupedRoutinesResumeComponent', () => {
 
     expect(alertMock).toHaveBeenCalledWith(
       '',
-      'No puede añadir más de 7 rutinas por carpeta.',
-      [{ text: 'OK' }]
+      'No puede añadir más de 7 rutinas por carpeta.'
     );
 
     alertMock.mockRestore();

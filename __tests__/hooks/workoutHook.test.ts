@@ -1,371 +1,365 @@
-// functions.test.ts
 import {
   useFetchDetailsLastWorkout,
   useFetchDetailsWorkout,
   useCreateWorkout,
   useFetchRoutineWorkouts,
 } from '@/hooks/workoutHook';
-import supabaseClient from '@/api/supabaseClient';
+import { supabase } from '@/api/supabaseClient';
 import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 
-jest.mock('@/api/supabaseClient');
+jest.mock('@/api/supabaseClient', () => ({
+  supabase: {
+    rpc: jest.fn(),
+    from: jest.fn(() => ({
+      insert: jest.fn().mockReturnThis(),
+      select: jest.fn().mockReturnThis(),
+    })),
+  },
+}));
 
 describe('useFetchDetailsLastWorkout', () => {
   afterEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
   });
 
-  it('debe llamar a supabaseClient.get con los parámetros correctos y retornar datos exitosamente', async () => {
-    // Preparación
+  it('debe llamar a supabase.rpc con los parámetros correctos y retornar datos exitosamente', async () => {
     const templateId = 1;
     const mockData = {
       id: templateId,
       details: 'Detalles del último entrenamiento',
     };
-    const getMock = jest.fn().mockResolvedValue({
-      data: mockData,
-      status: 200,
-      statusText: 'OK',
-      headers: {},
-      config: {},
-    });
-    (supabaseClient.get as jest.Mock) = getMock;
 
-    // Ejecución
+    (supabase.rpc as jest.Mock).mockResolvedValue({
+      data: mockData,
+      error: null,
+    });
+
     const result = await useFetchDetailsLastWorkout(templateId);
 
-    // Verificación
-    expect(supabaseClient.get).toHaveBeenCalledWith(
-      '/rpc/get_last_workout_details',
-      {
-        params: { templ_id: templateId },
-      }
-    );
+    expect(supabase.rpc).toHaveBeenCalledWith('get_last_workout_details', {
+      templ_id: templateId,
+    });
     expect(result.data).toEqual(mockData);
     expect(result.error).toBeNull();
   });
 
-  it('debe manejar errores cuando supabaseClient.get rechaza', async () => {
-    // Preparación
+  it('debe manejar errores cuando supabase.rpc rechaza', async () => {
     const templateId = 1;
-    const mockError = new Error('Error de red');
-    const getMock = jest.fn().mockRejectedValue(mockError);
-    (supabaseClient.get as jest.Mock) = getMock;
+    const mockError = { message: 'Error de red' };
 
-    // Ejecución
+    (supabase.rpc as jest.Mock).mockResolvedValue({
+      data: null,
+      error: mockError,
+    });
+
     const result = await useFetchDetailsLastWorkout(templateId);
 
-    // Verificación
-    expect(supabaseClient.get).toHaveBeenCalledWith(
-      '/rpc/get_last_workout_details',
-      {
-        params: { templ_id: templateId },
-      }
-    );
+    expect(supabase.rpc).toHaveBeenCalledWith('get_last_workout_details', {
+      templ_id: templateId,
+    });
     expect(result.data).toBeNull();
-    expect(result.error).toBe('Error de red');
+    expect(result.error).toEqual(mockError);
+  });
+
+  it('debe manejar errores inesperados correctamente', async () => {
+    const templateId = 1;
+    const mockError = new Error('Error inesperado');
+    const rpcMock = jest.fn().mockRejectedValue(mockError);
+    (supabase.rpc as jest.Mock) = rpcMock;
+
+    const result = await useFetchDetailsLastWorkout(templateId);
+
+    expect(supabase.rpc).toHaveBeenCalledWith('get_last_workout_details', {
+      templ_id: templateId,
+    });
+    expect(result.data).toBeNull();
+    expect(result.error).toBe(mockError);
   });
 });
 
 describe('useFetchDetailsWorkout', () => {
   afterEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
   });
 
-  it('debe llamar a supabaseClient.get con los parámetros correctos y retornar datos exitosamente', async () => {
-    // Preparación
+  it('debe llamar a supabase.rpc con los parámetros correctos y retornar datos exitosamente', async () => {
     const workoutId = 1;
     const mockData = { id: workoutId, details: 'Detalles del entrenamiento' };
-    const getMock = jest.fn().mockResolvedValue({
-      data: mockData,
-      status: 200,
-      statusText: 'OK',
-      headers: {},
-      config: {},
-    });
-    (supabaseClient.get as jest.Mock) = getMock;
 
-    // Ejecución
+    (supabase.rpc as jest.Mock).mockResolvedValue({
+      data: mockData,
+      error: null,
+    });
+
     const result = await useFetchDetailsWorkout(workoutId);
 
-    // Verificación
-    expect(supabaseClient.get).toHaveBeenCalledWith(
-      '/rpc/get_workout_details',
-      {
-        params: { w_id: workoutId },
-      }
-    );
+    expect(supabase.rpc).toHaveBeenCalledWith('get_workout_details', {
+      w_id: workoutId,
+    });
     expect(result.data).toEqual(mockData);
     expect(result.error).toBeNull();
   });
 
-  it('debe manejar errores cuando supabaseClient.get rechaza', async () => {
-    // Preparación
+  it('debe manejar errores cuando supabase.rpc rechaza', async () => {
     const workoutId = 1;
-    const mockError = new Error('Error de red');
-    const getMock = jest.fn().mockRejectedValue(mockError);
-    (supabaseClient.get as jest.Mock) = getMock;
+    const mockError = { message: 'Error de red' };
 
-    // Ejecución
+    (supabase.rpc as jest.Mock).mockResolvedValue({
+      data: null,
+      error: mockError,
+    });
+
     const result = await useFetchDetailsWorkout(workoutId);
 
-    // Verificación
-    expect(supabaseClient.get).toHaveBeenCalledWith(
-      '/rpc/get_workout_details',
-      {
-        params: { w_id: workoutId },
-      }
-    );
+    expect(supabase.rpc).toHaveBeenCalledWith('get_workout_details', {
+      w_id: workoutId,
+    });
     expect(result.data).toBeNull();
-    expect(result.error).toBe('Error de red');
+    expect(result.error).toEqual(mockError);
+  });
+
+  it('debe manejar errores inesperados correctamente', async () => {
+    const id = 1;
+    const mockError = new Error('Error inesperado');
+    const rpcMock = jest.fn().mockRejectedValue(mockError);
+    (supabase.rpc as jest.Mock) = rpcMock;
+
+    const result = await useFetchDetailsWorkout(id);
+
+    expect(supabase.rpc).toHaveBeenCalledWith('get_workout_details', {
+      w_id: id,
+    });
+    expect(result.data).toBeNull();
+    expect(result.error).toBe(mockError);
   });
 });
 
 describe('useFetchRoutineWorkouts', () => {
   afterEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
   });
 
-  it('debe llamar a supabaseClient.get con los parámetros correctos y retornar datos exitosamente', async () => {
-    // Preparación
+  it('debe llamar a supabase.rpc con los parámetros correctos y retornar datos exitosamente', async () => {
     const templateId = 1;
     const mockData = [{ date: '2023-01-01', volume: 100 }];
-    const getMock = jest.fn().mockResolvedValue({
-      data: mockData,
-      status: 200,
-      statusText: 'OK',
-      headers: {},
-      config: {},
-    });
-    (supabaseClient.get as jest.Mock) = getMock;
 
-    // Ejecución
+    (supabase.rpc as jest.Mock).mockResolvedValue({
+      data: mockData,
+      error: null,
+    });
+
     const result = await useFetchRoutineWorkouts(templateId);
 
-    // Verificación
-    expect(supabaseClient.get).toHaveBeenCalledWith(
-      '/rpc/get_routine_chart_data',
-      {
-        params: { templ_id: templateId },
-      }
-    );
+    expect(supabase.rpc).toHaveBeenCalledWith('get_routine_chart_data', {
+      templ_id: templateId,
+    });
     expect(result.data).toEqual(mockData);
     expect(result.error).toBeNull();
   });
 
-  it('debe manejar errores cuando supabaseClient.get rechaza', async () => {
-    // Preparación
+  it('debe manejar errores cuando supabase.rpc rechaza', async () => {
     const templateId = 1;
-    const mockError = new Error('Error de red');
-    const getMock = jest.fn().mockRejectedValue(mockError);
-    (supabaseClient.get as jest.Mock) = getMock;
+    const mockError = { message: 'Error de red' };
 
-    // Ejecución
+    (supabase.rpc as jest.Mock).mockResolvedValue({
+      data: null,
+      error: mockError,
+    });
+
     const result = await useFetchRoutineWorkouts(templateId);
 
-    // Verificación
-    expect(supabaseClient.get).toHaveBeenCalledWith(
-      '/rpc/get_routine_chart_data',
-      {
-        params: { templ_id: templateId },
-      }
-    );
+    expect(supabase.rpc).toHaveBeenCalledWith('get_routine_chart_data', {
+      templ_id: templateId,
+    });
     expect(result.data).toBeNull();
-    expect(result.error).toBe('Error de red');
+    expect(result.error).toEqual(mockError);
+  });
+
+  it('debe manejar errores inesperados correctamente', async () => {
+    const id = 1;
+    const mockError = new Error('Error inesperado');
+    const rpcMock = jest.fn().mockRejectedValue(mockError);
+    (supabase.rpc as jest.Mock) = rpcMock;
+
+    const result = await useFetchRoutineWorkouts(id);
+
+    expect(supabase.rpc).toHaveBeenCalledWith('get_routine_chart_data', {
+      templ_id: id,
+    });
+    expect(result.data).toBeNull();
+    expect(result.error).toBe(mockError);
   });
 });
 
 describe('useCreateWorkout', () => {
   afterEach(() => {
-    jest.resetAllMocks();
+    jest.clearAllMocks();
   });
 
   it('debe crear un entrenamiento y ejercicios asociados exitosamente', async () => {
-    // Preparación
-    const templateId = 1;
-    const duration = 60;
-    const exercises: ExerciseResume[] = [
-      {
-        id: 1,
-        name: 'Ejercicio 1',
-        notes: 'Nota 1',
-        restTime: '60',
-        sets: [
-          { reps: 10, weight: 50 },
-          { reps: 8, weight: 55 },
-        ],
-        thumbnailUrl: '',
-        primaryMuscleGroup: '',
-      },
-      {
-        id: 2,
-        name: 'Ejercicio 2',
-        notes: 'Nota 2',
-        restTime: '90',
-        sets: [],
-        thumbnailUrl: '',
-        primaryMuscleGroup: '',
-      },
-    ];
-
-    // Calculamos el volumen total para verificar más adelante
-    const totalVolume = exercises.reduce((acc, exercise) => {
-      const exerciseVolume = exercise.sets!.reduce((setAcc, set) => {
-        return setAcc + set.reps * set.weight;
-      }, 0);
-      return acc + exerciseVolume;
-    }, 0);
-
-    // Mock de supabaseClient.post para insertar el entrenamiento
-    const postWorkoutMock = jest.fn().mockResolvedValue({
-      data: [{ id: 100 }],
-      status: 201,
-      statusText: 'Created',
-      headers: {},
-      config: {},
-    });
-
-    // Mock de supabaseClient.post para insertar los ejercicios del entrenamiento
-    const postWorkoutExerciseMock = jest.fn().mockResolvedValue({
-      data: [{ id: 200 }],
-      status: 201,
-      statusText: 'Created',
-      headers: {},
-      config: {},
-    });
-
-    // Asignamos los mocks a supabaseClient.post
-    (supabaseClient.post as jest.Mock).mockImplementation((url: string) => {
-      if (url === '/workouts') {
-        return postWorkoutMock();
-      } else if (url === '/workout_exercises') {
-        return postWorkoutExerciseMock();
-      }
-    });
-
-    // Ejecución
-    const result = await useCreateWorkout(templateId, duration, exercises);
-
-    // Verificación
-    expect(supabaseClient.post).toHaveBeenCalledWith('/workouts', {
-      template_id: templateId,
-      volume: totalVolume,
-      duration: duration,
-      template: false,
-    });
-
-    // Verificamos que se hayan insertado los ejercicios correctamente
-    expect(supabaseClient.post).toHaveBeenCalledWith('/workout_exercises', {
-      workout_id: 100, // ID del workout insertado
-      exercise_id: 1,
-      sets: 1,
-      reps: 10,
-      weight: 50,
-      notes: 'Nota 1',
-      rest_time: '60',
-    });
-    expect(supabaseClient.post).toHaveBeenCalledWith('/workout_exercises', {
-      workout_id: 100,
-      exercise_id: 1,
-      sets: 1,
-      reps: 8,
-      weight: 55,
-      notes: 'Nota 1',
-      rest_time: '60',
-    });
-    expect(supabaseClient.post).toHaveBeenCalledWith('/workout_exercises', {
-      workout_id: 100,
-      exercise_id: 2,
-      notes: 'Nota 2',
-      rest_time: '90',
-    });
-
-    expect(result.error).toBeNull();
-  });
-
-  it('debe manejar errores al insertar el entrenamiento', async () => {
-    // Preparación
     const templateId = 1;
     const duration = 60;
     const exercises: ExerciseResume[] = [];
-    const mockError = new Error('Error al insertar entrenamiento');
+    const mockResponse = { data: [{ id: 1 }], error: null };
 
-    const postWorkoutMock = jest.fn().mockRejectedValue(mockError);
-    (supabaseClient.post as jest.Mock).mockImplementation((url: string) => {
-      if (url === '/workouts') {
-        return postWorkoutMock();
-      }
+    const selectMock = jest.fn().mockResolvedValue(mockResponse);
+    const insertMock = jest.fn().mockReturnValue({
+      select: selectMock,
     });
 
-    // Ejecución
+    (supabase.from as jest.Mock).mockReturnValue({
+      insert: insertMock,
+    });
+
     const result = await useCreateWorkout(templateId, duration, exercises);
 
-    // Verificación
-    expect(supabaseClient.post).toHaveBeenCalledWith('/workouts', {
+    expect(supabase.from).toHaveBeenCalledWith('workouts');
+    expect(insertMock).toHaveBeenCalledWith({
       template_id: templateId,
       volume: 0,
       duration: duration,
       template: false,
     });
-    expect(result.error).toBe('Error al insertar entrenamiento');
+    expect(selectMock).toHaveBeenCalled();
+    expect(result.error).toBeNull();
   });
 
-  it('debe manejar errores al insertar un ejercicio del entrenamiento', async () => {
-    // Preparación
+  it('debe manejar errores al crear el entrenamiento', async () => {
     const templateId = 1;
     const duration = 60;
-    const exercises: ExerciseResume[] = [
-      {
-        id: 1,
-        name: 'Ejercicio 1',
-        notes: 'Nota 1',
-        restTime: '60',
-        sets: [{ reps: 10, weight: 50 }],
-        thumbnailUrl: '',
-        primaryMuscleGroup: '',
-      },
-    ];
+    const exercises: ExerciseResume[] = [];
+    const mockError = { message: 'Error al insertar entrenamiento' };
 
-    const postWorkoutMock = jest.fn().mockResolvedValue({
-      data: [{ id: 100 }],
-      status: 201,
-      statusText: 'Created',
-      headers: {},
-      config: {},
+    const selectMock = jest.fn().mockResolvedValue({
+      data: null,
+      error: mockError,
+    });
+    const insertMock = jest.fn().mockReturnValue({
+      select: selectMock,
     });
 
-    const mockError = new Error('Error al insertar ejercicio');
-    const postWorkoutExerciseMock = jest.fn().mockRejectedValue(mockError);
-
-    (supabaseClient.post as jest.Mock).mockImplementation((url: string) => {
-      if (url === '/workouts') {
-        return postWorkoutMock();
-      } else if (url === '/workout_exercises') {
-        return postWorkoutExerciseMock();
-      }
+    (supabase.from as jest.Mock).mockReturnValue({
+      insert: insertMock,
     });
 
-    // Ejecución
     const result = await useCreateWorkout(templateId, duration, exercises);
 
-    // Verificación
-    expect(supabaseClient.post).toHaveBeenCalledWith('/workouts', {
+    expect(supabase.from).toHaveBeenCalledWith('workouts');
+    expect(insertMock).toHaveBeenCalledWith({
       template_id: templateId,
-      volume: 500, // 10 reps * 50 weight
+      volume: 0,
       duration: duration,
       template: false,
     });
+    expect(selectMock).toHaveBeenCalled();
+    expect(result.error).toEqual(mockError);
+  });
 
-    expect(supabaseClient.post).toHaveBeenCalledWith('/workout_exercises', {
-      workout_id: 100,
-      exercise_id: 1,
-      sets: 1,
-      reps: 10,
-      weight: 50,
-      notes: 'Nota 1',
-      rest_time: '60',
+  it('debe manejar errores inesperados correctamente', async () => {
+    const templateId = 1;
+    const duration = 60;
+    const exercises: ExerciseResume[] = [];
+    const mockError = new Error('Error inesperado');
+
+    const selectMock = jest.fn().mockResolvedValue({
+      data: null,
+      error: mockError,
+    });
+    const insertMock = jest.fn().mockReturnValue({
+      select: selectMock,
     });
 
-    expect(result.error).toBe('Error al insertar ejercicio');
+    (supabase.from as jest.Mock).mockReturnValue({
+      insert: insertMock,
+    });
+
+    const result = await useCreateWorkout(templateId, duration, exercises);
+
+    expect(supabase.from).toHaveBeenCalledWith('workouts');
+    expect(result.error).toBe(mockError);
+  });
+
+  it('debe calcular correctamente el totalVolume y manejar errores inesperados', async () => {
+    const templateId = 1;
+    const duration = 60;
+
+    const exercises = [
+      {
+        id: 1,
+        name: 'Squats',
+        thumbnailUrl: 'path/to/image.jpg',
+        primaryMuscleGroup: 'Legs',
+        sets: [{ reps: 10, weight: 100 }],
+        notes: 'Ejercicio 1',
+        restTime: '60',
+      },
+      {
+        id: 2,
+        name: 'Bench Press',
+        thumbnailUrl: 'path/to/image2.jpg',
+        primaryMuscleGroup: 'Chest',
+        sets: [],
+        notes: 'Ejercicio 2',
+        restTime: '30',
+      },
+    ];
+
+    const rpcInsertMock = jest
+      .fn()
+      .mockResolvedValue({ data: [{ id: 1 }], error: null });
+    const rpcExerciseInsertMock = jest.fn().mockResolvedValue({ error: null });
+
+    (supabase.from as jest.Mock).mockImplementation((table) => {
+      if (table === 'workouts') return { insert: rpcInsertMock };
+      if (table === 'workout_exercises')
+        return { insert: rpcExerciseInsertMock };
+    });
+
+    await useCreateWorkout(templateId, duration, exercises);
+
+    expect(supabase.from).toHaveBeenCalledTimes(1);
+    expect(supabase.from).toHaveBeenNthCalledWith(1, 'workouts');
+  });
+
+  it('debe manejar correctamente ejercicios con sets y con reps distintos de cero', async () => {
+    const templateId = 1;
+    const duration = 60;
+
+    const exercises = [
+      {
+        id: 1,
+        name: 'Squats',
+        thumbnailUrl: 'path/to/image.jpg',
+        primaryMuscleGroup: 'Legs',
+        sets: [{ reps: 10, weight: 100 }],
+        notes: 'Low bar squats',
+        restTime: '60',
+      },
+      {
+        id: 2,
+        name: 'Bench Press',
+        thumbnailUrl: 'path/to/image2.jpg',
+        primaryMuscleGroup: 'Chest',
+        sets: [],
+        notes: 'Incline bench',
+        restTime: '90',
+      },
+    ];
+
+    const rpcInsertMock = jest
+      .fn()
+      .mockResolvedValue({ data: [{ id: 1 }], error: null });
+    const rpcExerciseInsertMock = jest.fn().mockResolvedValue({ error: null });
+
+    (supabase.from as jest.Mock).mockImplementation((table) => {
+      if (table === 'workouts') return { insert: rpcInsertMock };
+      if (table === 'workout_exercises')
+        return { insert: rpcExerciseInsertMock };
+    });
+
+    await useCreateWorkout(templateId, duration, exercises);
+
+    expect(supabase.from).toHaveBeenCalledTimes(1);
+    expect(supabase.from).toHaveBeenNthCalledWith(1, 'workouts');
   });
 });

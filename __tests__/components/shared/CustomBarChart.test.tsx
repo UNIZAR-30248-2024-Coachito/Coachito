@@ -2,8 +2,6 @@ import CustomBarChart from '@/components/shared/CustomBarChart';
 import { render } from '@testing-library/react-native';
 import React from 'react';
 
-jest.mock('../../../styles.css', () => ({}));
-
 jest.mock('react-native-gifted-charts', () => ({
   BarChart: jest.fn(() => <div>Mock BarChart</div>),
 }));

@@ -9,6 +9,9 @@ import configPrettier from 'eslint-config-prettier';
 
 export default [
   {
+    ignores: ['components/ui/'],
+  },
+  {
     files: ['**/*.{js,mjs,cjs,ts,jsx,tsx}'],
     languageOptions: {
       globals: {

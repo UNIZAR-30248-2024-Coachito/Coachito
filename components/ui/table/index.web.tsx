@@ -1,5 +1,4 @@
-/* eslint-disable */
-import React, { createContext, useMemo, useContext } from 'react'
+import React, { createContext, useMemo, useContext } from 'react';
 import {
   tableStyle,
   tableHeaderStyle,
@@ -9,24 +8,32 @@ import {
   tableRowStyleStyle,
   tableDataStyle,
   tableCaptionStyle,
-} from './styles'
+} from './styles';
 
-const TableHeaderContext = createContext<any>({})
-const TableFooterContext = createContext<any>({})
+const TableHeaderContext = createContext<{
+  isHeaderRow: boolean;
+}>({
+  isHeaderRow: false,
+});
+const TableFooterContext = createContext<{
+  isFooterRow: boolean;
+}>({
+  isFooterRow: false,
+});
 
 const Table = React.forwardRef(({ className, ...props }: any, ref?: any) => {
   return (
     <table ref={ref} className={tableStyle({ class: className })} {...props} />
-  )
-})
+  );
+});
 
 const TableHeader = React.forwardRef(
   ({ className, ...props }: any, ref?: any) => {
     const contextValue = useMemo(() => {
       return {
         isHeaderRow: true,
-      }
-    }, [])
+      };
+    }, []);
     return (
       <TableHeaderContext.Provider value={contextValue}>
         <thead
@@ -35,9 +42,9 @@ const TableHeader = React.forwardRef(
           {...props}
         />
       </TableHeaderContext.Provider>
-    )
-  },
-)
+    );
+  }
+);
 
 const TableBody = React.forwardRef(
   ({ className, ...props }: any, ref?: any) => {
@@ -47,17 +54,17 @@ const TableBody = React.forwardRef(
         className={tableBodyStyle({ class: className })}
         {...props}
       />
-    )
-  },
-)
+    );
+  }
+);
 
 const TableFooter = React.forwardRef(
   ({ className, ...props }: any, ref?: any) => {
     const contextValue = useMemo(() => {
       return {
         isFooterRow: true,
-      }
-    }, [])
+      };
+    }, []);
     return (
       <TableFooterContext.Provider value={contextValue}>
         <tfoot
@@ -66,9 +73,9 @@ const TableFooter = React.forwardRef(
           {...props}
         />
       </TableFooterContext.Provider>
-    )
-  },
-)
+    );
+  }
+);
 
 const TableHead = React.forwardRef(
   ({ className, ...props }: any, ref?: any) => {
@@ -78,13 +85,13 @@ const TableHead = React.forwardRef(
         className={tableHeadStyle({ class: className })}
         {...props}
       />
-    )
-  },
-)
+    );
+  }
+);
 
 const TableRow = React.forwardRef(({ className, ...props }: any, ref?: any) => {
-  const { isHeaderRow } = useContext(TableHeaderContext)
-  const { isFooterRow } = useContext(TableFooterContext)
+  const { isHeaderRow } = useContext(TableHeaderContext);
+  const { isFooterRow } = useContext(TableFooterContext);
   return (
     <tr
       ref={ref}
@@ -95,8 +102,8 @@ const TableRow = React.forwardRef(({ className, ...props }: any, ref?: any) => {
       })}
       {...props}
     />
-  )
-})
+  );
+});
 
 const TableData = React.forwardRef(
   ({ className, ...props }: any, ref?: any) => {
@@ -106,9 +113,9 @@ const TableData = React.forwardRef(
         className={tableDataStyle({ class: className })}
         {...props}
       />
-    )
-  },
-)
+    );
+  }
+);
 
 const TableCaption = React.forwardRef(
   ({ className, ...props }: any, ref?: any) => {
@@ -118,18 +125,18 @@ const TableCaption = React.forwardRef(
         className={tableCaptionStyle({ class: className })}
         {...props}
       />
-    )
-  },
-)
+    );
+  }
+);
 
-Table.displayName = 'Table'
-TableHeader.displayName = 'TableHeader'
-TableBody.displayName = 'TableBody'
-TableFooter.displayName = 'TableFooter'
-TableHead.displayName = 'TableHead'
-TableRow.displayName = 'TableRow'
-TableData.displayName = 'TableData'
-TableCaption.displayName = 'TableCaption'
+Table.displayName = 'Table';
+TableHeader.displayName = 'TableHeader';
+TableBody.displayName = 'TableBody';
+TableFooter.displayName = 'TableFooter';
+TableHead.displayName = 'TableHead';
+TableRow.displayName = 'TableRow';
+TableData.displayName = 'TableData';
+TableCaption.displayName = 'TableCaption';
 
 export {
   Table,
@@ -140,4 +147,4 @@ export {
   TableRow,
   TableData,
   TableCaption,
-}
+};

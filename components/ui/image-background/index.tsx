@@ -1,11 +1,9 @@
-/* eslint-disable */
-'use client'
-import '../../../styles.css'
-import { ImageBackground as RNImageBackground } from 'react-native'
-import React from 'react'
-import { tva } from '@gluestack-ui/nativewind-utils/tva'
+'use client';
+import { ImageBackground as RNImageBackground } from 'react-native';
+import React from 'react';
+import { tva } from '@gluestack-ui/nativewind-utils/tva';
 
-const imageBackgroundStyle = tva({})
+const imageBackgroundStyle = tva({});
 
 export const ImageBackground = React.forwardRef<
   React.ElementRef<typeof RNImageBackground>,
@@ -19,5 +17,5 @@ export const ImageBackground = React.forwardRef<
       {...props}
       ref={ref}
     />
-  )
-})
+  );
+});

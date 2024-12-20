@@ -5,8 +5,6 @@ import { useRoute } from '@react-navigation/native';
 import { useFetchExerciseDetails } from '@/hooks/exerciseHook';
 import { Alert } from 'react-native';
 
-jest.mock('../../styles.css', () => ({}));
-
 jest.mock('react-native-gifted-charts', () => ({
   LineChart: jest.fn(() => <></>),
 }));
@@ -126,8 +124,7 @@ describe('DetailsExercise', () => {
     await waitFor(() =>
       expect(alertSpy).toHaveBeenCalledWith(
         '',
-        'Se ha producido un error al obtener la información del ejercicio.',
-        [{ text: 'OK' }]
+        'Se ha producido un error al obtener la información del ejercicio.'
       )
     );
 

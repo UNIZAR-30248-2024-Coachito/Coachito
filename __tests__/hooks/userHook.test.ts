@@ -1,5 +1,5 @@
 import { useFetchUserWorkouts } from '@/hooks/userHook';
-import supabaseClient from '@/api/supabaseClient';
+import { supabase } from '@/api/supabaseClient';
 
 jest.mock('@/api/supabaseClient');
 
@@ -8,48 +8,48 @@ describe('useFetchUserWorkouts', () => {
     jest.resetAllMocks();
   });
 
-  it('debe llamar a supabaseClient.get con la ruta y parámetros correctos y retornar datos exitosamente', async () => {
-    // Preparación
-    const userId = 1;
-    const mockData = {
-      id: userId,
-      name: 'Test',
-    };
-    const getMock = jest.fn().mockResolvedValue({
+  it('debe llamar a supabase.rpc con el nombre del procedimiento correcto y retornar datos exitosamente', async () => {
+    const mockData = [
+      { id: 1, name: 'Workout 1' },
+      { id: 2, name: 'Workout 2' },
+    ];
+    const rpcMock = jest.fn().mockResolvedValue({
       data: mockData,
-      status: 200,
-      statusText: 'OK',
-      headers: {},
-      config: {},
+      error: null,
     });
-    (supabaseClient.get as jest.Mock) = getMock;
+    (supabase.rpc as jest.Mock) = rpcMock;
 
-    // Ejecución
-    const result = await useFetchUserWorkouts(userId);
+    const result = await useFetchUserWorkouts();
 
-    // Verificación
-    expect(supabaseClient.get).toHaveBeenCalledWith('/rpc/get_user_workouts', {
-      params: { user_id: userId },
-    });
+    expect(supabase.rpc).toHaveBeenCalledWith('get_user_workouts');
     expect(result.data).toEqual(mockData);
     expect(result.error).toBeNull();
   });
 
-  it('debe manejar errores cuando supabaseClient.get rechaza', async () => {
-    // Preparación
-    const userId = 1;
-    const mockError = new Error('Error de red');
-    const getMock = jest.fn().mockRejectedValue(mockError);
-    (supabaseClient.get as jest.Mock) = getMock;
-
-    // Ejecución
-    const result = await useFetchUserWorkouts(userId);
-
-    // Verificación
-    expect(supabaseClient.get).toHaveBeenCalledWith('/rpc/get_user_workouts', {
-      params: { user_id: userId },
+  it('debe manejar errores cuando supabase.rpc retorna un error', async () => {
+    const mockError = { message: 'Error al obtener los datos' };
+    const rpcMock = jest.fn().mockResolvedValue({
+      data: null,
+      error: mockError,
     });
+    (supabase.rpc as jest.Mock) = rpcMock;
+
+    const result = await useFetchUserWorkouts();
+
+    expect(supabase.rpc).toHaveBeenCalledWith('get_user_workouts');
     expect(result.data).toBeNull();
-    expect(result.error).toBe('Error de red');
+    expect(result.error).toEqual(mockError);
+  });
+
+  it('debe manejar errores inesperados lanzados durante la ejecución', async () => {
+    const unexpectedError = new Error('Error inesperado');
+    const rpcMock = jest.fn().mockRejectedValue(unexpectedError);
+    (supabase.rpc as jest.Mock) = rpcMock;
+
+    const result = await useFetchUserWorkouts();
+
+    expect(supabase.rpc).toHaveBeenCalledWith('get_user_workouts');
+    expect(result.data).toBeNull();
+    expect(result.error).toEqual(unexpectedError);
   });
 });

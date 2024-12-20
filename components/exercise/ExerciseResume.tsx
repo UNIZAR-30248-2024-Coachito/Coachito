@@ -14,7 +14,6 @@ import {
   TableData,
 } from '../ui/table';
 import { HStack } from '../ui/hstack';
-import '../../styles.css';
 import { Avatar, AvatarFallbackText, AvatarImage } from '../ui/avatar';
 import { Pressable } from 'react-native';
 import { Plus, Timer, Trash } from 'lucide-react-native';
@@ -196,7 +195,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
               <AvatarImage source={{ uri: thumbnailUrl }} />
             </Avatar>
             <Pressable className="flex-1">
-              <Text className="text-xl text-white" bold>
+              <Text className="text-xl text-typography-0" bold>
                 {exerciseName}
               </Text>
             </Pressable>
@@ -240,7 +239,7 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
 
           <Table className="w-[350px]">
             <TableHeader>
-              <TableRow className="border-b-0 bg-background-0 hover:bg-background-0">
+              <TableRow className="bg-background-200">
                 <TableHead className="text-sm">SERIE</TableHead>
                 <TableHead className="text-sm">KG</TableHead>
                 <TableHead className="text-sm">REPS</TableHead>
@@ -252,7 +251,11 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
                 <TableRow
                   testID="table-row"
                   key={index}
-                  className="border-b-0 bg-background-50"
+                  className={
+                    index % 2 === 0
+                      ? 'border-b-0 bg-background-0'
+                      : 'border-b-0 bg-background-200'
+                  }
                 >
                   <TableData>{index + 1}</TableData>
                   <TableData>
@@ -299,10 +302,10 @@ const ExerciseResumeComponent = forwardRef<ExerciseResumeRef, ExerciseResume>(
 
           {exerciseSets.length < 10 && (
             <Button
-              className="bg-zinc-800 rounded-lg gap-2"
+              className="bg-tertiary-500 rounded-lg gap-2"
               onPress={addNewSet}
             >
-              <Plus color="gray" />
+              <Plus color="white" />
               <Text className="text-white">Agregar Serie</Text>
             </Button>
           )}

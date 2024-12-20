@@ -3,13 +3,13 @@ import { vars } from 'nativewind';
 
 export const config = {
   light: vars({
-    '--color-primary-0': '179 179 179',
+    '--color-primary-0': '255 255 255', /* blanco */
     '--color-primary-50': '153 153 153',
     '--color-primary-100': '128 128 128',
     '--color-primary-200': '115 115 115',
     '--color-primary-300': '102 102 102',
     '--color-primary-400': '82 82 82',
-    '--color-primary-500': '51 51 51',
+    '--color-primary-500': '59 130 246', /* azul */
     '--color-primary-600': '41 41 41',
     '--color-primary-700': '31 31 31',
     '--color-primary-800': '13 13 13',
@@ -23,7 +23,7 @@ export const config = {
     '--color-secondary-200': '219 219 219',
     '--color-secondary-300': '175 176 176',
     '--color-secondary-400': '114 115 115',
-    '--color-secondary-500': '94 95 95',
+    '--color-secondary-500': '244 244 245', /* gris claro 2 */
     '--color-secondary-600': '81 82 82',
     '--color-secondary-700': '63 64 64',
     '--color-secondary-800': '39 38 38',
@@ -37,7 +37,7 @@ export const config = {
     '--color-tertiary-200': '254 209 170',
     '--color-tertiary-300': '253 180 116',
     '--color-tertiary-400': '251 157 75',
-    '--color-tertiary-500': '231 129 40',
+    '--color-tertiary-500': '117 117 117', /* gris claro 1 */
     '--color-tertiary-600': '215 117 31',
     '--color-tertiary-700': '180 98 26',
     '--color-tertiary-800': '130 73 23',
@@ -101,13 +101,13 @@ export const config = {
     '--color-info-950': '3 38 56',
 
     /* Typography */
-    '--color-typography-0': '254 254 255',
-    '--color-typography-50': '245 245 245',
+    '--color-typography-0': '0 0 0', /* negro */
+    '--color-typography-50': '59 130 246', /* azul */
     '--color-typography-100': '229 229 229',
     '--color-typography-200': '219 219 220',
     '--color-typography-300': '212 212 212',
     '--color-typography-400': '163 163 163',
-    '--color-typography-500': '140 140 140',
+    '--color-typography-500': '156 163 175', /* gris */
     '--color-typography-600': '115 115 115',
     '--color-typography-700': '82 82 82',
     '--color-typography-800': '64 64 64',
@@ -129,9 +129,9 @@ export const config = {
     '--color-outline-950': '26 23 23',
 
     /* Background */
-    '--color-background-0': '255 255 255',
-    '--color-background-50': '246 246 246',
-    '--color-background-100': '242 241 241',
+    '--color-background-0': '255 255 255', /* blanco */
+    '--color-background-50': '185 28 28', /* rojo */
+    '--color-background-100': '117 117 117', /* gris claro 1 */
     '--color-background-200': '220 219 219',
     '--color-background-300': '213 212 212',
     '--color-background-400': '162 163 163',
@@ -155,13 +155,13 @@ export const config = {
     '--color-indicator-error': '185 28 28',
   }),
   dark: vars({
-    '--color-primary-0': '130 130 130',
+    '--color-primary-0': '0 0 0', /* negro */
     '--color-primary-50': '148 148 148',
     '--color-primary-100': '158 158 158',
     '--color-primary-200': '179 179 179',
     '--color-primary-300': '199 199 199',
     '--color-primary-400': '230 230 230',
-    '--color-primary-500': '240 240 240',
+    '--color-primary-500': '59 130 246', /* azul */
     '--color-primary-600': '250 250 250',
     '--color-primary-700': '252 252 252',
     '--color-primary-800': '253 253 253',
@@ -169,13 +169,13 @@ export const config = {
     '--color-primary-950': '253 252 252',
 
     /* Secondary  */
-    '--color-secondary-0': '11 12 12',
+    '--color-secondary-0': '153 27 27', /* rojo */
     '--color-secondary-50': '24 23 23',
     '--color-secondary-100': '39 38 38',
     '--color-secondary-200': '63 64 64',
     '--color-secondary-300': '81 82 82',
     '--color-secondary-400': '94 95 95',
-    '--color-secondary-500': '114 115 115',
+    '--color-secondary-500': '39 39 42', /* gris oscuro 1 */
     '--color-secondary-600': '175 176 176',
     '--color-secondary-700': '219 219 219',
     '--color-secondary-800': '231 232 232',
@@ -189,7 +189,7 @@ export const config = {
     '--color-tertiary-200': '180 98 26',
     '--color-tertiary-300': '215 117 31',
     '--color-tertiary-400': '231 129 40',
-    '--color-tertiary-500': '251 157 75',
+    '--color-tertiary-500': '63 63 70', /* gris oscuro 2 */
     '--color-tertiary-600': '253 180 116',
     '--color-tertiary-700': '254 209 170',
     '--color-tertiary-800': '255 233 213',
@@ -253,13 +253,13 @@ export const config = {
     '--color-info-950': '236 248 254',
 
     /* Typography */
-    '--color-typography-0': '23 23 23',
-    '--color-typography-50': '38 38 39',
+    '--color-typography-0': '255 255 255', /* blanco */
+    '--color-typography-50': '59 130 246', /* azul */
     '--color-typography-100': '64 64 64',
     '--color-typography-200': '82 82 82',
     '--color-typography-300': '115 115 115',
     '--color-typography-400': '140 140 140',
-    '--color-typography-500': '163 163 163',
+    '--color-typography-500': '156 163 175', /* gris */
     '--color-typography-600': '212 212 212',
     '--color-typography-700': '219 219 220',
     '--color-typography-800': '229 229 229',
@@ -281,9 +281,9 @@ export const config = {
     '--color-outline-950': '253 254 254',
 
     /* Background */
-    '--color-background-0': '18 18 18',
-    '--color-background-50': '39 38 37',
-    '--color-background-100': '65 64 64',
+    '--color-background-0': '0 0 0', /* negro */
+    '--color-background-50': '153 27 27', /* rojo */
+    '--color-background-100': '39 39 42', /* gris oscuro 1 */
     '--color-background-200': '83 82 82',
     '--color-background-300': '116 116 116',
     '--color-background-400': '142 142 142',

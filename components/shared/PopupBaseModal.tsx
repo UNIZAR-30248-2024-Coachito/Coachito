@@ -32,7 +32,7 @@ const PopupBaseModal: React.FC<PopupBaseModalProps> = ({
       >
         <Box
           testID="modal-content"
-          className="bg-zinc-800 rounded-lg items-center p-4 mx-8 self-center"
+          className="bg-secondary-500 rounded-lg items-center p-4 mx-8 self-center"
         >
           {components.map((component) => component)}
         </Box>
