@@ -15,4 +15,7 @@ module.exports = {
     '!**/types/**',
   ],
   testTimeout: 30000,
+  moduleNameMapper: {
+    '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
+  },
 };

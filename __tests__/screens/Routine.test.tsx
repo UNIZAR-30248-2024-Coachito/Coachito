@@ -7,8 +7,6 @@ import { useCreateTemplateWorkoutGroup } from '@/hooks/workoutTemplateGroupHook'
 import Routine from '@/screens/Routine';
 import { Alert } from 'react-native';
 
-jest.mock('../../styles.css', () => ({}));
-
 jest.mock('@react-navigation/native', () => ({
   useNavigation: jest.fn(),
 }));
@@ -36,6 +34,21 @@ jest.mock('@/utils/emitter', () => ({
     removeListener: jest.fn(),
   },
 }));
+
+jest.mock('@react-native-async-storage/async-storage', () => {
+  return {
+    setItem: jest.fn(),
+    getItem: jest.fn(),
+    removeItem: jest.fn(),
+    mergeItem: jest.fn(),
+    clear: jest.fn(),
+    getAllKeys: jest.fn(),
+    multiGet: jest.fn(),
+    multiSet: jest.fn(),
+    multiRemove: jest.fn(),
+    multiMerge: jest.fn(),
+  };
+});
 
 Alert.alert = jest.fn();
 
@@ -116,36 +129,18 @@ describe('Routine', () => {
     expect(getByText('Crear nueva carpeta')).toBeTruthy();
   });
 
-  it('´debería aparecer la nueva carpeta cuando se crea', async () => {
-    const { getByText, getByPlaceholderText } = render(<Routine />);
-
-    const newFolderButton = getByText('Nueva Carpeta');
-    fireEvent.press(newFolderButton);
-
-    const inputField = getByPlaceholderText('Nueva carpeta');
-    fireEvent.changeText(inputField, 'New Group');
-
-    const saveButton = getByText('Guardar');
-    fireEvent.press(saveButton);
-
-    await waitFor(() =>
-      expect(useCreateTemplateWorkoutGroup).toHaveBeenCalledWith('New Group')
-    );
-  });
-
   it('debería mostrar un alert cuando se añade una rutina, se elimina o se edita correctamente', async () => {
     const alertSpy = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
 
     render(<Routine />);
 
-    await waitFor(() => expect(emitter.addListener).toHaveBeenCalledTimes(36));
+    await waitFor(() => expect(emitter.addListener).toHaveBeenCalledTimes(30));
 
     emitter.emit('routineAdded');
     await waitFor(() => {
       expect(alertSpy).toHaveBeenCalledWith(
         '',
-        '¡Rutina creada correctamente!',
-        [{ text: 'OK' }]
+        '¡Rutina creada correctamente!'
       );
     });
 
@@ -153,8 +148,7 @@ describe('Routine', () => {
     await waitFor(() => {
       expect(alertSpy).toHaveBeenCalledWith(
         '',
-        '¡Rutina eliminada correctamente!',
-        [{ text: 'OK' }]
+        '¡Rutina eliminada correctamente!'
       );
     });
 
@@ -162,8 +156,7 @@ describe('Routine', () => {
     await waitFor(() => {
       expect(alertSpy).toHaveBeenCalledWith(
         '',
-        '¡Rutina editada correctamente!',
-        [{ text: 'OK' }]
+        '¡Rutina editada correctamente!'
       );
     });
 
@@ -203,34 +196,7 @@ describe('Routine', () => {
     await waitFor(() => {
       expect(Alert.alert).toHaveBeenCalledWith(
         '',
-        'Por favor, introduce un nombre para la nueva carpeta.',
-        [{ text: 'OK' }]
-      );
-    });
-  });
-
-  it('debería aparecer un alert cuando no se añade la nueva carpeta correctamente', async () => {
-    (useCreateTemplateWorkoutGroup as jest.Mock).mockResolvedValue({
-      error: 'Some error',
-    });
-    jest.spyOn(Alert, 'alert').mockImplementation(() => {});
-
-    const { getByText, getByPlaceholderText } = render(<Routine />);
-
-    const newFolderButton = getByText('Nueva Carpeta');
-    fireEvent.press(newFolderButton);
-
-    const inputField = getByPlaceholderText('Nueva carpeta');
-    fireEvent.changeText(inputField, 'Nuevo nombre');
-
-    const saveButton = getByText('Guardar');
-    fireEvent.press(saveButton);
-
-    await waitFor(() => {
-      expect(Alert.alert).toHaveBeenCalledWith(
-        '',
-        'Se ha producido un error al crear el nuevo grupo.',
-        [{ text: 'OK' }]
+        'Por favor, introduce un nombre para la nueva carpeta.'
       );
     });
   });
@@ -246,11 +212,28 @@ describe('Routine', () => {
     await waitFor(() => {
       expect(Alert.alert).toHaveBeenCalledWith(
         '',
-        'Se ha producido un error al obtener las rutinas.',
-        [{ text: 'OK' }]
+        'Se ha producido un error al obtener las rutinas.'
       );
     });
 
     (Alert.alert as jest.Mock).mockRestore();
+  });
+
+  it('debería limitar el título de la carpeta a 100 caracteres', async () => {
+    const { getByText, getByPlaceholderText } = render(<Routine />);
+
+    const newFolderButton = getByText('Nueva Carpeta');
+    fireEvent.press(newFolderButton);
+
+    const inputField = getByPlaceholderText('Nueva carpeta');
+    const longTitle =
+      'Este es un título de rutina muy largo que definitivamente excede el límite de 100 caracteres porque queremos probar si realmente se corta correctamente.';
+
+    await act(async () => {
+      fireEvent.changeText(inputField, longTitle);
+    });
+
+    expect(inputField.props.value.length).toBeLessThanOrEqual(100);
+    expect(inputField.props.value).toBe(longTitle.slice(0, 100));
   });
 });

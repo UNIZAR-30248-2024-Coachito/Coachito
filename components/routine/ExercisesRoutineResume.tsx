@@ -9,7 +9,6 @@ import {
   TableData,
 } from '../ui/table';
 import { HStack } from '../ui/hstack';
-import '../../styles.css';
 import { Avatar, AvatarFallbackText, AvatarImage } from '../ui/avatar';
 import { Pressable } from 'react-native';
 import { Timer } from 'lucide-react-native';
@@ -47,7 +46,7 @@ const ExercisesRoutineResumeComponent: React.FC<ExerciseResume> = ({
   const formattedRestTime = convertIntervalToMinutesAndSeconds(restTime);
 
   return (
-    <Box className="bg-zinc-900 p-4 gap-4 rounded-lg">
+    <Box className="bg-secondary-500 p-4 gap-4 rounded-lg">
       <Pressable
         testID="ver-detalles"
         onPress={() =>
@@ -65,7 +64,7 @@ const ExercisesRoutineResumeComponent: React.FC<ExerciseResume> = ({
               }}
             />
           </Avatar>
-          <Text className="flex-1 text-white" bold>
+          <Text className="flex-1 text-typography-0" bold>
             {name}
           </Text>
         </HStack>
@@ -80,7 +79,7 @@ const ExercisesRoutineResumeComponent: React.FC<ExerciseResume> = ({
         </Text>
       </HStack>
 
-      <Text>Repeticiones objetivo: {targetReps}</Text>
+      <Text>Repeticiones objetivo: {targetReps ?? 0}</Text>
 
       <Table className="w-full">
         <TableHeader>
@@ -97,7 +96,7 @@ const ExercisesRoutineResumeComponent: React.FC<ExerciseResume> = ({
                 key={index}
                 className={
                   index % 2 === 0
-                    ? 'border-b-0 bg-background-50'
+                    ? 'border-b-0 bg-background-200'
                     : 'border-b-0 bg-background-0'
                 }
               >

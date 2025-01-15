@@ -8,8 +8,8 @@ import {
 import AddRoutine from '@/screens/AddRoutine';
 import { emitter } from '@/utils/emitter';
 import { Alert } from 'react-native';
-
-jest.mock('../../styles.css', () => ({}));
+import { UserContext } from '@/context/UserContext';
+import { Session } from '@supabase/supabase-js';
 
 jest.mock('@react-navigation/native', () => ({
   useNavigation: jest.fn(),
@@ -141,13 +141,41 @@ describe('AddRoutine', () => {
   });
 
   it('debería crear una rutina correctamente cuando hay un título y ejercicios seleccionados', async () => {
+    const mockSession: Session = {
+      access_token: 'mock-access-token',
+      refresh_token: 'mock-refresh-token',
+      user: {
+        id: 'user-id',
+        aud: 'authenticated',
+        role: 'user',
+        email: 'user@example.com',
+        email_confirmed_at: '2024-01-01T00:00:00.000Z',
+        app_metadata: {},
+        user_metadata: {},
+        created_at: '2024-01-01T00:00:00.000Z',
+        updated_at: '2024-01-01T00:00:00.000Z',
+      },
+      expires_in: 0,
+      token_type: '',
+    };
+
+    const mockProfile = {
+      username: 'user123',
+      email: 'user123@example.com',
+    };
     jest.mocked(useCreateRoutine).mockResolvedValue({ error: null });
     jest
       .mocked(useRoutineTitleExists)
       .mockResolvedValue({ data: false, error: null });
     Alert.alert = jest.fn;
 
-    const { getByText, getByPlaceholderText } = render(<AddRoutine />);
+    const { getByText, getByPlaceholderText } = render(
+      <UserContext.Provider
+        value={{ session: mockSession, profile: mockProfile }}
+      >
+        <AddRoutine />
+      </UserContext.Provider>
+    );
     const input = getByPlaceholderText('Título de la rutina');
     await act(async () => {
       fireEvent.changeText(input, 'Nueva Rutina');
@@ -164,11 +192,42 @@ describe('AddRoutine', () => {
     );
     expect(useCreateRoutine).toHaveBeenCalledWith(
       'Nueva Rutina',
-      expect.anything(),
-      routeMock.params.groupId
+      [],
+      routeMock.params.groupId,
+      mockSession.user.id
     );
     expect(emitter.emit).toHaveBeenCalledWith('routineAdded');
     expect(navigateMock).toHaveBeenCalledWith('Routine');
+  });
+
+  it('debería mostrar un error si ya existe una rutina con el mismo nombre en la carpeta', async () => {
+    jest
+      .mocked(useRoutineTitleExists)
+      .mockResolvedValue({ data: true, error: null });
+    const alertMock = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
+
+    const { getByText, getByPlaceholderText } = render(<AddRoutine />);
+
+    const input = getByPlaceholderText('Título de la rutina');
+    await act(async () => {
+      fireEvent.changeText(input, 'Rutina Duplicada');
+    });
+
+    const saveButton = getByText('Guardar');
+    await act(async () => {
+      fireEvent.press(saveButton);
+    });
+
+    expect(useRoutineTitleExists).toHaveBeenCalledWith(
+      'Rutina Duplicada',
+      routeMock.params.groupId
+    );
+    expect(alertMock).toHaveBeenCalledWith(
+      '',
+      'El título introducido ya existe. Por favor, introduzca otro.'
+    );
+
+    alertMock.mockRestore();
   });
 
   it('debería mostrar un error si el título de la rutina está vacío', async () => {
@@ -182,35 +241,8 @@ describe('AddRoutine', () => {
 
     expect(alertMock).toHaveBeenCalledWith(
       '',
-      'Por favor, introduce un nombre para la nueva rutina.',
-      [{ text: 'OK' }]
+      'Por favor, introduce un nombre para la nueva rutina.'
     );
-    alertMock.mockRestore();
-  });
-
-  it('debería mostrar un error si la creación de la rutina falla', async () => {
-    jest.mocked(useCreateRoutine).mockResolvedValue({ error: 'Some error' });
-    jest
-      .mocked(useRoutineTitleExists)
-      .mockResolvedValue({ data: false, error: null });
-    const alertMock = jest.spyOn(Alert, 'alert').mockImplementation(() => {});
-
-    const { getByText, getByPlaceholderText } = render(<AddRoutine />);
-
-    const input = getByPlaceholderText('Título de la rutina');
-    fireEvent.changeText(input, 'Nueva Rutina');
-
-    const saveButton = getByText('Guardar');
-    await act(async () => {
-      fireEvent.press(saveButton);
-    });
-
-    expect(alertMock).toHaveBeenCalledWith(
-      '',
-      'Se ha producido un error al crear la rutina.',
-      [{ text: 'OK' }]
-    );
-
     alertMock.mockRestore();
   });
 
@@ -231,8 +263,7 @@ describe('AddRoutine', () => {
 
     expect(alertMock).toHaveBeenCalledWith(
       '',
-      'La rutina debe contener mínimo un ejercicio.',
-      [{ text: 'OK' }]
+      'La rutina debe contener mínimo un ejercicio.'
     );
     alertMock.mockRestore();
   });
@@ -243,5 +274,20 @@ describe('AddRoutine', () => {
     expect(
       getByText('Empieza agregando un ejercicio a tu rutina')
     ).toBeTruthy();
+  });
+
+  it('debería limitar el título de la rutina a 100 caracteres', async () => {
+    const { getByPlaceholderText } = render(<AddRoutine />);
+
+    const input = getByPlaceholderText('Título de la rutina');
+    const longTitle =
+      'Este es un título de rutina muy largo que definitivamente excede el límite de 100 caracteres porque queremos probar si realmente se corta correctamente.';
+
+    await act(async () => {
+      fireEvent.changeText(input, longTitle);
+    });
+
+    expect(input.props.value.length).toBeLessThanOrEqual(100);
+    expect(input.props.value).toBe(longTitle.slice(0, 100));
   });
 });

@@ -3,7 +3,6 @@ import { Text } from '../ui/text';
 import { Box } from '../ui/box';
 import { HStack } from '../ui/hstack';
 import { VStack } from '../ui/vstack';
-import '../../styles.css';
 import { Avatar, AvatarFallbackText, AvatarImage } from '../ui/avatar';
 
 export interface WorkoutExerciseResume {
@@ -24,7 +23,9 @@ const WorkoutExercisesResumeComponent: React.FC<WorkoutExercisesResume> = ({
 
   return (
     <Box>
-      <Text className="font-semibold mb-2 text-white">Entrenamiento</Text>
+      <Text className="font-semibold mb-2 text-typography-0">
+        Entrenamiento
+      </Text>
       <VStack className="gap-y-4">
         {visibleExercises.map((exercise, index) => (
           <HStack key={index} className="items-center gap-4">
@@ -36,7 +37,7 @@ const WorkoutExercisesResumeComponent: React.FC<WorkoutExercisesResume> = ({
                 }}
               />
             </Avatar>
-            <Text className="flex-1 text-white">
+            <Text className="flex-1 text-typography-0">
               {exercise.series} series {exercise.exerciseName}
             </Text>
           </HStack>

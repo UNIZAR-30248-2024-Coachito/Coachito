@@ -1,19 +1,17 @@
-/* eslint-disable */
-'use client'
-import '../../../styles.css'
-import { createAlert } from '@gluestack-ui/alert'
-import { View, Text } from 'react-native'
-import { tva } from '@gluestack-ui/nativewind-utils/tva'
+'use client';
+import { createAlert } from '@gluestack-ui/alert';
+import { View, Text } from 'react-native';
+import { tva } from '@gluestack-ui/nativewind-utils/tva';
 import {
   withStyleContext,
   useStyleContext,
-} from '@gluestack-ui/nativewind-utils/withStyleContext'
-import React, { useMemo } from 'react'
-import { Svg } from 'react-native-svg'
-import { cssInterop } from 'nativewind'
-import type { VariantProps } from '@gluestack-ui/nativewind-utils'
+} from '@gluestack-ui/nativewind-utils/withStyleContext';
+import React from 'react';
+import { cssInterop } from 'nativewind';
+import type { VariantProps } from '@gluestack-ui/nativewind-utils';
+import { PrimitiveIcon, UIIcon } from '@gluestack-ui/icon';
 
-const SCOPE = 'ALERT'
+const SCOPE = 'ALERT';
 
 const alertStyle = tva({
   base: 'items-center py-3 px-4 rounded-md flex-row gap-2 border-outline-100',
@@ -32,7 +30,7 @@ const alertStyle = tva({
       outline: 'border bg-background-0',
     },
   },
-})
+});
 
 const alertTextStyle = tva({
   base: 'flex-1 font-normal font-body',
@@ -82,7 +80,7 @@ const alertTextStyle = tva({
       muted: 'text-background-800',
     },
   },
-})
+});
 
 const alertIconStyle = tva({
   base: 'fill-none',
@@ -105,101 +103,32 @@ const alertIconStyle = tva({
       muted: 'text-secondary-800',
     },
   },
-})
-
-type IPrimitiveIcon = React.ComponentPropsWithoutRef<typeof Svg> & {
-  height?: number | string
-  width?: number | string
-  fill?: string
-  color?: string
-  size?: number | string
-  stroke?: string
-  as?: React.ElementType
-  className?: string
-  classNameColor?: string
-}
-const PrimitiveIcon = React.forwardRef<
-  React.ElementRef<typeof Svg>,
-  IPrimitiveIcon
->(
-  (
-    {
-      height,
-      width,
-      fill,
-      color,
-      classNameColor,
-      size,
-      stroke = 'currentColor',
-      as: AsComp,
-      ...props
-    },
-    ref,
-  ) => {
-    color = color ?? classNameColor
-    const sizeProps = useMemo(() => {
-      if (size) return { size }
-      if (height && width) return { height, width }
-      if (height) return { height }
-      if (width) return { width }
-      return {}
-    }, [size, height, width])
-
-    let colorProps = {}
-    if (fill) {
-      colorProps = { ...colorProps, fill: fill }
-    }
-    if (stroke !== 'currentColor') {
-      colorProps = { ...colorProps, stroke: stroke }
-    } else if (stroke === 'currentColor' && color !== undefined) {
-      colorProps = { ...colorProps, stroke: color }
-    }
-
-    if (AsComp) {
-      return <AsComp ref={ref} {...props} {...sizeProps} {...colorProps} />
-    }
-    return (
-      <Svg ref={ref} height={height} width={width} {...colorProps} {...props} />
-    )
-  },
-)
-
-const IconWrapper = React.forwardRef<
-  React.ElementRef<typeof PrimitiveIcon>,
-  IPrimitiveIcon
->(({ ...props }, ref) => {
-  return <PrimitiveIcon {...props} ref={ref} />
-})
+});
 
 export const UIAlert = createAlert({
   Root: withStyleContext(View, SCOPE),
   Text: Text,
-  Icon: IconWrapper,
-})
+  Icon: UIIcon,
+});
 
-cssInterop(UIAlert, { className: 'style' })
-//@ts-ignore
-cssInterop(UIAlert.Text, { className: 'style' })
-//@ts-ignore
-cssInterop(IconWrapper, {
+cssInterop(PrimitiveIcon, {
   className: {
     target: 'style',
     nativeStyleToProp: {
       height: true,
       width: true,
-      //@ts-ignore
       fill: true,
       color: 'classNameColor',
       stroke: true,
     },
   },
-})
+});
 
 type IAlertProps = Omit<
   React.ComponentPropsWithoutRef<typeof UIAlert>,
   'context'
 > &
-  VariantProps<typeof alertStyle>
+  VariantProps<typeof alertStyle>;
 
 const Alert = React.forwardRef<React.ElementRef<typeof UIAlert>, IAlertProps>(
   ({ className, variant = 'solid', action = 'muted', ...props }, ref) => {
@@ -210,12 +139,12 @@ const Alert = React.forwardRef<React.ElementRef<typeof UIAlert>, IAlertProps>(
         ref={ref}
         {...props}
       />
-    )
-  },
-)
+    );
+  }
+);
 
 type IAlertTextProps = React.ComponentPropsWithoutRef<typeof UIAlert.Text> &
-  VariantProps<typeof alertTextStyle>
+  VariantProps<typeof alertTextStyle>;
 
 const AlertText = React.forwardRef<
   React.ElementRef<typeof UIAlert.Text>,
@@ -234,9 +163,9 @@ const AlertText = React.forwardRef<
       highlight,
       ...props
     },
-    ref,
+    ref
   ) => {
-    const { action: parentAction } = useStyleContext(SCOPE)
+    const { action: parentAction } = useStyleContext(SCOPE);
     return (
       <UIAlert.Text
         className={alertTextStyle({
@@ -256,18 +185,18 @@ const AlertText = React.forwardRef<
         {...props}
         ref={ref}
       />
-    )
-  },
-)
+    );
+  }
+);
 
 type IAlertIconProps = React.ComponentPropsWithoutRef<typeof UIAlert.Icon> &
-  VariantProps<typeof alertIconStyle>
+  VariantProps<typeof alertIconStyle>;
 
 const AlertIcon = React.forwardRef<
   React.ElementRef<typeof UIAlert.Icon>,
   IAlertIconProps
 >(({ className, size = 'md', ...props }, ref) => {
-  const { action: parentAction } = useStyleContext(SCOPE)
+  const { action: parentAction } = useStyleContext(SCOPE);
 
   if (typeof size === 'number') {
     return (
@@ -277,7 +206,7 @@ const AlertIcon = React.forwardRef<
         className={alertIconStyle({ class: className })}
         size={size}
       />
-    )
+    );
   } else if (
     (props.height !== undefined || props.width !== undefined) &&
     size === undefined
@@ -288,7 +217,7 @@ const AlertIcon = React.forwardRef<
         {...props}
         className={alertIconStyle({ class: className })}
       />
-    )
+    );
   }
   return (
     <UIAlert.Icon
@@ -302,11 +231,11 @@ const AlertIcon = React.forwardRef<
       {...props}
       ref={ref}
     />
-  )
-})
+  );
+});
 
-Alert.displayName = 'Alert'
-AlertText.displayName = 'AlertText'
-AlertIcon.displayName = 'AlertIcon'
+Alert.displayName = 'Alert';
+AlertText.displayName = 'AlertText';
+AlertIcon.displayName = 'AlertIcon';
 
-export { Alert, AlertText, AlertIcon }
+export { Alert, AlertText, AlertIcon };

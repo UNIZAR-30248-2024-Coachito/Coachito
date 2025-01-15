@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-import '../styles.css';
+import React, { useEffect, useState, useContext } from 'react';
 import { Text } from '../components/ui/text';
 import { ScrollView } from '@/components/ui/scroll-view';
 import { VStack } from '@/components/ui/vstack';
@@ -23,8 +22,10 @@ import CustomAreaChart, {
   DataChartProps,
 } from '@/components/shared/CustomAreaChart';
 import { Alert } from 'react-native';
+import { ThemeContext } from '@/context/ThemeContext';
 
 const DetailsRoutine: React.FC = () => {
+  const { colorMode } = useContext(ThemeContext);
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute<RouteProp<RootStackParamList, 'DetailsRoutine'>>();
   const { templateId, myRoutineName } = route.params;
@@ -45,8 +46,7 @@ const DetailsRoutine: React.FC = () => {
     } else {
       Alert.alert(
         '',
-        'Se ha producido un error obteniendo los datos de la gráfica.',
-        [{ text: 'OK' }]
+        'Se ha producido un error obteniendo los datos de la gráfica.'
       );
     }
   };
@@ -57,9 +57,7 @@ const DetailsRoutine: React.FC = () => {
     if (!error) {
       setExercises(data);
     } else {
-      Alert.alert('', 'Se ha producido un error obteniendo los ejercicios.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error obteniendo los ejercicios.');
     }
   };
 
@@ -75,9 +73,7 @@ const DetailsRoutine: React.FC = () => {
       emitter.emit('routineDeleted');
       navigation.navigate('Routine');
     } else {
-      Alert.alert('', 'Se ha producido un error al eliminar la rutina.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error al eliminar la rutina.');
     }
   };
 
@@ -92,8 +88,8 @@ const DetailsRoutine: React.FC = () => {
         });
       }}
     >
-      <Pencil color="white" />
-      <Text className="text-white ml-4">Editar rutina</Text>
+      <Pencil color={`${colorMode === 'light' ? 'black' : 'white'}`} />
+      <Text className="text-typography-0 ml-4">Editar rutina</Text>
     </Button>,
     <Button
       key="3"
@@ -109,13 +105,16 @@ const DetailsRoutine: React.FC = () => {
   ];
 
   const componentsDeleteGroupPopUpModal: React.ReactNode[] = [
-    <Text key="1" className="text-xl font-bold text-center text-white pb-8">
+    <Text
+      key="1"
+      className="text-xl font-bold text-center text-typography-0 pb-8"
+    >
       ¿Está seguro de que quiere borrar la rutina?
     </Text>,
     <Button
       testID="delete-button"
       key="2"
-      className="bg-red-800 rounded-lg mb-4"
+      className="bg-background-50 rounded-lg mb-4"
       onPress={() => {
         setIsDeleteModalVisible(false);
         deleteRoutine();
@@ -125,12 +124,12 @@ const DetailsRoutine: React.FC = () => {
     </Button>,
     <Button
       key="3"
-      className="bg-zinc-700 rounded-lg"
+      className="bg-secondary-500 rounded-lg"
       onPress={() => {
         setIsDeleteModalVisible(false);
       }}
     >
-      <Text className="text-white">Cancelar</Text>
+      <Text className="text-typography-0">Cancelar</Text>
     </Button>,
   ];
 
@@ -138,7 +137,9 @@ const DetailsRoutine: React.FC = () => {
     <ScrollView className="flex-1">
       <VStack className="p-4 gap-4">
         <HStack className="justify-between">
-          <Text className="text-xl font-bold text-white">{myRoutineName}</Text>
+          <Text className="text-xl font-bold text-typography-0">
+            {myRoutineName}
+          </Text>
           <Button
             testID="modal-button"
             className="bg-transparent"
@@ -146,7 +147,9 @@ const DetailsRoutine: React.FC = () => {
               setIsSlideUpModalVisible(true);
             }}
           >
-            <MoreHorizontal color="white" />
+            <MoreHorizontal
+              color={`${colorMode === 'light' ? 'black' : 'white'}`}
+            />
           </Button>
         </HStack>
 

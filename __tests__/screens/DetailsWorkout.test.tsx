@@ -5,8 +5,6 @@ import { useFetchDetailsWorkout } from '@/hooks/workoutHook';
 import DetailsWorkout from '@/screens/DetailsWorkout';
 import { Alert } from 'react-native';
 
-jest.mock('../../styles.css', () => ({}));
-
 jest.mock('@react-navigation/native', () => ({
   useNavigation: jest.fn(),
   useRoute: jest.fn(),
@@ -113,8 +111,7 @@ describe('DetailsWorkout', () => {
     await waitFor(() =>
       expect(alertSpy).toHaveBeenCalledWith(
         '',
-        'Se ha producido un error al obtener los datos.',
-        [{ text: 'OK' }]
+        'Se ha producido un error al obtener los datos.'
       )
     );
 

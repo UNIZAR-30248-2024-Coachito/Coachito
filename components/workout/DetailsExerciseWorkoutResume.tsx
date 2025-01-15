@@ -3,6 +3,8 @@ import React, {
   useEffect,
   useImperativeHandle,
   useState,
+  useContext,
+  useRef,
 } from 'react';
 import { Text } from '../ui/text';
 import {
@@ -14,10 +16,17 @@ import {
   TableData,
 } from '../ui/table';
 import { HStack } from '../ui/hstack';
-import '../../styles.css';
 import { Avatar, AvatarFallbackText, AvatarImage } from '../ui/avatar';
-import { Modal, Pressable, Vibration } from 'react-native';
-import { InfoIcon, Play, Plus, Timer } from 'lucide-react-native';
+import { Modal, Vibration } from 'react-native';
+import {
+  InfoIcon,
+  PauseCircle,
+  Play,
+  PlayCircle,
+  Plus,
+  Square,
+  Timer,
+} from 'lucide-react-native';
 import { Input, InputField } from '../ui/input';
 import { Button } from '../ui/button';
 import { Textarea, TextareaInput } from '../ui/textarea';
@@ -40,6 +49,9 @@ import {
 } from '../exercise/ExerciseResume';
 import { CountdownCircleTimer } from 'react-native-countdown-circle-timer';
 import { Alert, AlertIcon, AlertText } from '../ui/alert';
+import { Audio } from 'expo-av';
+import { ThemeContext } from '@/context/ThemeContext';
+import { VStack } from '../ui/vstack';
 
 export interface ExerciseResumeRef {
   getExerciseData: () => ExerciseResume;
@@ -64,8 +76,7 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
     },
     ref
   ) => {
-    const [exerciseId] = useState(id);
-    const [exerciseName] = useState(name);
+    const { colorMode } = useContext(ThemeContext);
     const [exerciseRestTimeNumber] = useState(
       convertIntervalToSeconds(restTime)
     );
@@ -73,7 +84,6 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
       convertIntervalToMinutesAndSeconds(restTime)
     );
     const [exerciseNotes, setExerciseNotes] = useState(notes);
-    const [exercisePrimaryMuscleGroup] = useState(primaryMuscleGroup);
     const [exerciseSets, setExerciseSets] = useState<SetsExerciseResume[]>(
       sets ?? []
     );
@@ -82,15 +92,17 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
     const [weightPrediction, setWeightPrediction] = useState<number | null>(
       null
     );
+    const [isPlaying, setIsPlaying] = useState(true);
+    const beepSound = useRef<Audio.Sound | null>(null);
 
     useImperativeHandle(ref, () => ({
       getExerciseData: () => ({
-        id: exerciseId,
-        name: exerciseName,
+        id: id,
+        name: name,
         thumbnailUrl,
         restTime: exerciseRestTimeNumber > 0 ? exerciseRestTimeString : '0',
         notes: exerciseNotes,
-        primaryMuscleGroup: exercisePrimaryMuscleGroup,
+        primaryMuscleGroup: primaryMuscleGroup,
         sets: exerciseSets,
         targetReps,
       }),
@@ -126,11 +138,12 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
     };
 
     const startRestTimer = () => {
+      setIsPlaying(true);
       setTimerKey((prev) => prev + 1);
       setRestTimerModalVisible(true);
     };
 
-    const stopRestTimer = () => {
+    const finishRestTimer = () => {
       setRestTimerModalVisible(false);
       Vibration.vibrate(2000);
     };
@@ -157,21 +170,40 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
         const targetWeight = oneRepMax * (1 - targetReps / 30);
         setWeightPrediction(Math.round(targetWeight));
       }
-    }, [exerciseSets, targetReps]);
+    }, [targetReps]);
+
+    useEffect(() => {
+      const loadSounds = async () => {
+        const beep = new Audio.Sound();
+        try {
+          await beep.loadAsync(
+            // eslint-disable-next-line @typescript-eslint/no-require-imports
+            require('../../assets/sounds/beep-rest-timer.mp3')
+          );
+          beepSound.current = beep;
+        } catch (error) {
+          console.error('Error al cargar sonidos:', error);
+        }
+      };
+
+      loadSounds();
+
+      return () => {
+        beepSound.current?.unloadAsync();
+      };
+    }, []);
 
     return (
       <>
-        <Box className="p-4 rounded-lg gap-4">
-          <HStack className="items-center gap-4">
-            <Avatar>
-              <AvatarFallbackText>{exerciseName}</AvatarFallbackText>
+        <VStack className="p-4 rounded-lg gap-4">
+          <HStack className="items-center gap-4 w-[270px]">
+            <Avatar testID="icono-ejercicio">
+              <AvatarFallbackText>{name}</AvatarFallbackText>
               <AvatarImage source={{ uri: thumbnailUrl }} />
             </Avatar>
-            <Pressable className="flex-1">
-              <Text className="text-xl text-white" bold>
-                {exerciseName}
-              </Text>
-            </Pressable>
+            <Text className="text-xl text-typography-0" bold>
+              {name}
+            </Text>
           </HStack>
 
           <Textarea className="w-100">
@@ -201,24 +233,26 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
               className="border-2 border-blue-500 bg-transparent rounded-lg gap-2"
               onPress={startRestTimer}
             >
-              <Play color="white" />
-              <Text className="text-white">Iniciar</Text>
+              <Play color="#3b82f6" />
+              <Text className="text-blue-500">Iniciar</Text>
             </Button>
           )}
 
-          {targetReps !== undefined && weightPrediction !== null && (
-            <Alert action="info" variant="solid">
-              <AlertIcon as={InfoIcon} />
-              <AlertText>
-                Se recomienda emplear {weightPrediction} kg para llegar al
-                número de {targetReps} repeticiones objetivo.
-              </AlertText>
-            </Alert>
-          )}
+          {targetReps !== null &&
+            targetReps !== 0 &&
+            targetReps !== undefined && (
+              <Alert action="info" variant="solid">
+                <AlertIcon as={InfoIcon} />
+                <AlertText>
+                  Se recomienda emplear {weightPrediction} kg para llegar al
+                  número de {targetReps} repeticiones objetivo.
+                </AlertText>
+              </Alert>
+            )}
 
-          <Table className="w-[330px]">
+          <Table className="w-[330px]" testID="tabla-workout">
             <TableHeader>
-              <TableRow className="border-b-0 bg-background-0 hover:bg-background-0">
+              <TableRow className="bg-background-200">
                 <TableHead>SERIE</TableHead>
                 <TableHead>KG</TableHead>
                 <TableHead>REPS</TableHead>
@@ -230,7 +264,11 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
                   <TableRow
                     testID="table-row"
                     key={index}
-                    className="border-b-0 bg-background-50"
+                    className={
+                      index % 2 === 0
+                        ? 'border-b-0 bg-background-0'
+                        : 'border-b-0 bg-background-200'
+                    }
                   >
                     <TableData>{index + 1}</TableData>
                     <TableData>
@@ -278,14 +316,14 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
 
           {exerciseSets.length < 10 && (
             <Button
-              className="bg-zinc-800 rounded-lg gap-2"
+              className="bg-secondary-500 rounded-lg gap-2"
               onPress={addNewSet}
             >
-              <Plus color="gray" />
-              <Text className="text-white">Agregar Serie</Text>
+              <Plus color={`${colorMode === 'light' ? 'black' : 'gray'}`} />
+              <Text className="text-typography-0">Agregar Serie</Text>
             </Button>
           )}
-        </Box>
+        </VStack>
 
         <Modal
           testID="modal"
@@ -293,24 +331,48 @@ const DetailsExerciseWorkoutResumeComponent = forwardRef<
           transparent={true}
         >
           <Box className="flex-1 bg-black/75 justify-center items-center">
-            <Box className="bg-zinc-800 rounded-lg items-center p-4 mx-8 self-center">
+            <Box className="bg-secondary-500 rounded-lg items-center p-4 mx-8 self-center">
               <CountdownCircleTimer
                 key={timerKey}
-                isPlaying
+                isPlaying={isPlaying}
                 duration={exerciseRestTimeNumber}
                 colors={['#1E40AF', '#3b82f6', '#A30000', '#A30000']}
                 colorsTime={[30, 20, 10, 0]}
+                onUpdate={async (remainingTime) => {
+                  if (remainingTime == 4) {
+                    await beepSound.current?.replayAsync();
+                  }
+                }}
                 onComplete={() => {
-                  stopRestTimer();
+                  finishRestTimer();
                   return { shouldRepeat: false };
                 }}
               >
                 {({ remainingTime }) => (
-                  <Text className="text-white text-xl">
+                  <Text className="text-typography-0 text-xl">
                     {convertSecondsToString(remainingTime)}
                   </Text>
                 )}
               </CountdownCircleTimer>
+              <HStack className="gap-4 mt-4">
+                <Button
+                  className="bg-background-50 rounded-lg"
+                  onPress={() => setRestTimerModalVisible(false)}
+                >
+                  <Square color="white" />
+                </Button>
+                <Button
+                  testID="play/pause button"
+                  className="bg-blue-500 rounded-lg"
+                  onPress={() => setIsPlaying((prev) => !prev)}
+                >
+                  {isPlaying ? (
+                    <PauseCircle color="white" testID="pause icon" />
+                  ) : (
+                    <PlayCircle color="white" testID="play icon" />
+                  )}
+                </Button>
+              </HStack>
             </Box>
           </Box>
         </Modal>

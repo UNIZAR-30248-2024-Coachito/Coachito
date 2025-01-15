@@ -1,19 +1,16 @@
-/* eslint-disable */
+/* eslint-disable no-undef */
+/* eslint-disable @typescript-eslint/no-require-imports */
+const gluestackPlugin = require('@gluestack-ui/nativewind-utils/tailwind-plugin');
+
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: process.env.DARK_MODE ? process.env.DARK_MODE : 'media',
   content: [
-    './components/**/*.{html,js,jsx,ts,tsx}',
-    './screens/**/*.{html,js,jsx,ts,tsx}',
-    './screens/App.tsx',
+    'components/**/*.{html,js,jsx,ts,tsx}',
+    'screens/**/*.{html,js,jsx,ts,tsx}',
+    'screens/App.tsx',
   ],
   presets: [require('nativewind/preset')],
-  safelist: [
-    {
-      pattern:
-        /(bg|border|text|stroke|fill)-(primary|secondary|tertiary|error|success|warning|info|typography|outline|background)-(0|50|100|200|300|400|500|600|700|800|900|950|white|gray|black|error|warning|muted|success|info|light|dark)/,
-    },
-  ],
   theme: {
     extend: {
       colors: {
@@ -171,21 +168,15 @@ module.exports = {
           info: 'rgb(var(--color-indicator-info)/<alpha-value>)',
           error: 'rgb(var(--color-indicator-error)/<alpha-value>)',
         },
-        content: {
-          0: '#FCFCFC',
-          50: 'rgb(var(--color-content-50)/<alpha-value>)',
-        },
-        shade: {
-          0: 'rgb(var(--color-shade-0)/<alpha-value>)',
-        },
       },
       fontFamily: {
         heading: undefined,
         body: undefined,
         mono: undefined,
+        roboto: ['Roboto', 'sans-serif'],
       },
       fontWeight: {
-        extraBlack: '950',
+        extrablack: '950',
       },
       fontSize: {
         '2xs': '10px',
@@ -202,6 +193,6 @@ module.exports = {
         'soft-4': '0px 0px 40px rgba(38, 38, 38, 0.1)',
       },
     },
-    plugins: [],
   },
-}
+  plugins: [gluestackPlugin],
+};

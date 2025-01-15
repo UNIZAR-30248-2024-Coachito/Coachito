@@ -2,11 +2,27 @@ import React from 'react';
 import { render, fireEvent } from '@testing-library/react-native';
 import BottomBar from '@/components/shared/BottomBar';
 import { useNavigation, useRoute } from '@react-navigation/native';
+import { ThemeContext } from '@/context/ThemeContext';
 
 jest.mock('@react-navigation/native', () => ({
   useNavigation: jest.fn(),
   useRoute: jest.fn(),
 }));
+
+jest.mock('@react-native-async-storage/async-storage', () => {
+  return {
+    setItem: jest.fn(),
+    getItem: jest.fn(),
+    removeItem: jest.fn(),
+    mergeItem: jest.fn(),
+    clear: jest.fn(),
+    getAllKeys: jest.fn(),
+    multiGet: jest.fn(),
+    multiSet: jest.fn(),
+    multiRemove: jest.fn(),
+    multiMerge: jest.fn(),
+  };
+});
 
 describe('BottomBar', () => {
   let mockNavigate: jest.Mock;
@@ -22,10 +38,18 @@ describe('BottomBar', () => {
     jest.clearAllMocks();
   });
 
-  it('debería renderizar correctamente y marcar "Dashboard" como activo cuando la ruta es "Dashboard"', () => {
-    (useRoute as jest.Mock).mockReturnValue({ name: 'Dashboard' });
+  const renderWithTheme = (theme: 'light' | 'dark', routeName: string) => {
+    (useRoute as jest.Mock).mockReturnValue({ name: routeName });
 
-    const { getByText, getAllByTestId } = render(<BottomBar />);
+    return render(
+      <ThemeContext.Provider value={{ colorMode: theme }}>
+        <BottomBar />
+      </ThemeContext.Provider>
+    );
+  };
+
+  it('debería marcar "Dashboard" como activo y renderizar correctamente con tema claro', () => {
+    const { getByText, getAllByTestId } = renderWithTheme('light', 'Dashboard');
 
     expect(getByText('Inicio').props.className).toContain('text-blue-500');
     expect(
@@ -34,14 +58,39 @@ describe('BottomBar', () => {
       )
     ).toBeDefined();
 
-    expect(getByText('Rutinas').props.className).toContain('text-gray-400');
+    expect(getByText('Rutinas').props.className).toContain('text-typography-0');
+    expect(
+      getAllByTestId('entrenamiento-icon').find(
+        (icon) => icon.props.stroke === 'black'
+      )
+    ).toBeDefined();
+
+    expect(getByText('Perfil').props.className).toContain('text-typography-0');
+    expect(
+      getAllByTestId('perfil-icon').find(
+        (icon) => icon.props.stroke === 'black'
+      )
+    ).toBeDefined();
+  });
+
+  it('debería marcar "Dashboard" como activo y renderizar correctamente con tema oscuro', () => {
+    const { getByText, getAllByTestId } = renderWithTheme('dark', 'Dashboard');
+
+    expect(getByText('Inicio').props.className).toContain('text-blue-500');
+    expect(
+      getAllByTestId('inicio-icon').find(
+        (icon) => icon.props.stroke === 'rgb(59 130 246)'
+      )
+    ).toBeDefined();
+
+    expect(getByText('Rutinas').props.className).toContain('text-typography-0');
     expect(
       getAllByTestId('entrenamiento-icon').find(
         (icon) => icon.props.stroke === 'white'
       )
     ).toBeDefined();
 
-    expect(getByText('Perfil').props.className).toContain('text-gray-400');
+    expect(getByText('Perfil').props.className).toContain('text-typography-0');
     expect(
       getAllByTestId('perfil-icon').find(
         (icon) => icon.props.stroke === 'white'
@@ -49,52 +98,92 @@ describe('BottomBar', () => {
     ).toBeDefined();
   });
 
-  it('debería marcar "Routine" como activo cuando la ruta es "Routine"', async () => {
-    (useRoute as jest.Mock).mockReturnValue({ name: 'Routine' });
+  it('debería marcar "Routine" como activo y renderizar correctamente con tema claro', async () => {
+    const { getByText, getAllByTestId } = renderWithTheme('light', 'Routine');
 
-    const { findByText, findAllByTestId } = render(<BottomBar />);
-
-    expect((await findByText('Inicio')).props.className).toContain(
-      'text-gray-400'
-    );
+    expect(getByText('Inicio').props.className).toContain('text-typography-0');
     expect(
-      (await findAllByTestId('inicio-icon')).find(
-        (icon) => icon.props.stroke === 'white'
+      getAllByTestId('inicio-icon').find(
+        (icon) => icon.props.stroke === 'black'
       )
     ).toBeDefined();
 
-    expect((await findByText('Rutinas')).props.className).toContain(
-      'text-blue-500'
-    );
+    expect(getByText('Rutinas').props.className).toContain('text-blue-500');
     expect(
-      (await findAllByTestId('entrenamiento-icon')).find(
+      getAllByTestId('entrenamiento-icon').find(
         (icon) => icon.props.stroke === 'rgb(59 130 246)'
       )
     ).toBeDefined();
 
-    expect((await findByText('Perfil')).props.className).toContain(
-      'text-gray-400'
-    );
+    expect(getByText('Perfil').props.className).toContain('text-typography-0');
     expect(
-      (await findAllByTestId('perfil-icon')).find(
-        (icon) => icon.props.stroke === 'white'
+      getAllByTestId('perfil-icon').find(
+        (icon) => icon.props.stroke === 'black'
       )
     ).toBeDefined();
   });
 
-  it('debería marcar "Profile" como activo cuando la ruta es "Profile"', () => {
-    (useRoute as jest.Mock).mockReturnValue({ name: 'Profile' });
+  it('debería marcar "Routine" como activo y renderizar correctamente con tema oscuro', async () => {
+    const { getByText, getAllByTestId } = renderWithTheme('dark', 'Routine');
 
-    const { getByText, getAllByTestId } = render(<BottomBar />);
-
-    expect(getByText('Inicio').props.className).toContain('text-gray-400');
+    expect(getByText('Inicio').props.className).toContain('text-typography-0');
     expect(
       getAllByTestId('inicio-icon').find(
         (icon) => icon.props.stroke === 'white'
       )
     ).toBeDefined();
 
-    expect(getByText('Rutinas').props.className).toContain('text-gray-400');
+    expect(getByText('Rutinas').props.className).toContain('text-blue-500');
+    expect(
+      getAllByTestId('entrenamiento-icon').find(
+        (icon) => icon.props.stroke === 'rgb(59 130 246)'
+      )
+    ).toBeDefined();
+
+    expect(getByText('Perfil').props.className).toContain('text-typography-0');
+    expect(
+      getAllByTestId('perfil-icon').find(
+        (icon) => icon.props.stroke === 'white'
+      )
+    ).toBeDefined();
+  });
+
+  it('debería marcar "Profile" como activo y renderizar correctamente con tema claro', () => {
+    const { getByText, getAllByTestId } = renderWithTheme('light', 'Profile');
+
+    expect(getByText('Inicio').props.className).toContain('text-typography-0');
+    expect(
+      getAllByTestId('inicio-icon').find(
+        (icon) => icon.props.stroke === 'black'
+      )
+    ).toBeDefined();
+
+    expect(getByText('Rutinas').props.className).toContain('text-typography-0');
+    expect(
+      getAllByTestId('entrenamiento-icon').find(
+        (icon) => icon.props.stroke === 'black'
+      )
+    ).toBeDefined();
+
+    expect(getByText('Perfil').props.className).toContain('text-blue-500');
+    expect(
+      getAllByTestId('perfil-icon').find(
+        (icon) => icon.props.stroke === 'rgb(59 130 246)'
+      )
+    ).toBeDefined();
+  });
+
+  it('debería marcar "Profile" como activo y renderizar correctamente con tema oscuro', () => {
+    const { getByText, getAllByTestId } = renderWithTheme('dark', 'Profile');
+
+    expect(getByText('Inicio').props.className).toContain('text-typography-0');
+    expect(
+      getAllByTestId('inicio-icon').find(
+        (icon) => icon.props.stroke === 'white'
+      )
+    ).toBeDefined();
+
+    expect(getByText('Rutinas').props.className).toContain('text-typography-0');
     expect(
       getAllByTestId('entrenamiento-icon').find(
         (icon) => icon.props.stroke === 'white'
@@ -110,32 +199,23 @@ describe('BottomBar', () => {
   });
 
   it('debería cambiar a la pantalla de "Dashboard" al presionar el botón de inicio', () => {
-    (useRoute as jest.Mock).mockReturnValue({ name: 'Profile' });
-
     const { getByText } = render(<BottomBar />);
 
     fireEvent.press(getByText('Inicio'));
-
     expect(mockNavigate).toHaveBeenCalledWith('Dashboard');
   });
 
   it('debería cambiar a la pantalla de "Routine" al presionar el botón de entrenamiento', () => {
-    (useRoute as jest.Mock).mockReturnValue({ name: 'Dashboard' });
-
     const { getByText } = render(<BottomBar />);
 
     fireEvent.press(getByText('Rutinas'));
-
     expect(mockNavigate).toHaveBeenCalledWith('Routine');
   });
 
   it('debería cambiar a la pantalla de "Profile" al presionar el botón de perfil', () => {
-    (useRoute as jest.Mock).mockReturnValue({ name: 'Dashboard' });
-
     const { getByText } = render(<BottomBar />);
 
     fireEvent.press(getByText('Perfil'));
-
     expect(mockNavigate).toHaveBeenCalledWith('Profile', { userId: 1 });
   });
 });

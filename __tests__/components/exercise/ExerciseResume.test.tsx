@@ -5,8 +5,6 @@ import ExerciseResumeComponent, {
 } from '@/components/exercise/ExerciseResume';
 import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 
-jest.mock('../../../styles.css', () => ({}));
-
 describe('ExerciseResumeComponent', () => {
   const mockData: ExerciseResume = {
     id: 1,
@@ -213,5 +211,47 @@ describe('ExerciseResumeComponent', () => {
     const inputReps = getAllByTestId('reps')[0];
     fireEvent.changeText(inputReps, '150');
     expect(inputReps.props.value).toBe('99');
+  });
+
+  it('debería garantizar que siempre haya entre 1 y 10 series', async () => {
+    const {
+      getByText,
+      getAllByTestId,
+      queryAllByTestId,
+      queryByText,
+      queryByTestId,
+    } = render(<ExerciseResumeComponent {...mockData} />);
+
+    let rows = getAllByTestId('table-row');
+    expect(rows.length).toBeGreaterThanOrEqual(1);
+    expect(rows.length).toBeLessThanOrEqual(10);
+
+    for (let i = 0; i < 8; i++) {
+      const addButton = getByText('Agregar Serie');
+      fireEvent.press(addButton);
+    }
+    rows = getAllByTestId('table-row');
+    expect(rows.length).toBe(10);
+    expect(queryByText('Agregar Serie')).toBeNull();
+
+    for (let i = 0; i < 9; i++) {
+      fireEvent.press(queryAllByTestId('trash')[0]);
+    }
+    expect(queryByTestId('trash')).toBeNull();
+    rows = getAllByTestId('table-row');
+    expect(rows.length).toBe(1);
+  });
+
+  it('debería garantizar que las notas no superen los 4000 caracteres', () => {
+    const { getByTestId } = render(<ExerciseResumeComponent {...mockData} />);
+
+    const textareaInput = getByTestId('text-area-input');
+
+    expect(textareaInput.props.value.length).toBeLessThanOrEqual(4000);
+
+    const longText = 'a'.repeat(4001);
+    fireEvent.changeText(textareaInput, longText);
+
+    expect(textareaInput.props.value.length).toBe(4000);
   });
 });

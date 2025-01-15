@@ -2,8 +2,6 @@ import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react-native';
 import CustomChartButtons from '@/components/shared/CustomChartButtons';
 
-jest.mock('../../../styles.css', () => ({}));
-
 const sampleData = [
   {
     dataPoints: [

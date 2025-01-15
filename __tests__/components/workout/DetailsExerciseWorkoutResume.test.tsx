@@ -2,12 +2,36 @@ import DetailsExerciseWorkoutResumeComponent, {
   ExerciseResumeRef,
 } from '@/components/workout/DetailsExerciseWorkoutResume';
 import { render, fireEvent, waitFor } from '@testing-library/react-native';
-import React from 'react';
+import React, { act } from 'react';
 import { Vibration } from 'react-native';
+
+jest.mock('@react-native-async-storage/async-storage', () => {
+  return {
+    setItem: jest.fn(),
+    getItem: jest.fn(),
+    removeItem: jest.fn(),
+    mergeItem: jest.fn(),
+    clear: jest.fn(),
+    getAllKeys: jest.fn(),
+    multiGet: jest.fn(),
+    multiSet: jest.fn(),
+    multiRemove: jest.fn(),
+    multiMerge: jest.fn(),
+  };
+});
 
 jest.useFakeTimers();
 
-jest.mock('../../../styles.css', () => ({}));
+jest.mock('expo-av', () => ({
+  Audio: {
+    Sound: jest.fn().mockImplementation(() => ({
+      loadAsync: jest.fn(),
+      unloadAsync: jest.fn(),
+      setOnPlaybackStatusUpdate: jest.fn(),
+      playAsync: jest.fn(),
+    })),
+  },
+}));
 
 describe('DetailsExerciseWorkoutResumeComponent', () => {
   const mockData = {
@@ -30,10 +54,12 @@ describe('DetailsExerciseWorkoutResumeComponent', () => {
       <DetailsExerciseWorkoutResumeComponent {...mockData} />
     );
 
+    expect(getByTestId('icono-ejercicio')).toBeTruthy();
     expect(getByText('Sentadillas')).toBeTruthy();
     const textareaInput = getByTestId('text-area-input');
     expect(textareaInput.props.value).toBe('Notas');
     expect(getByText('Temporizador de descanso: DESACTIVADO')).toBeTruthy();
+    expect(getByTestId('tabla-workout')).toBeTruthy();
     expect(getByText('Agregar Serie')).toBeTruthy();
   });
 
@@ -167,7 +193,9 @@ describe('DetailsExerciseWorkoutResumeComponent', () => {
     const rowsBeforeReset = getAllByTestId('table-row');
     expect(rowsBeforeReset.length).toBe(mockData.sets.length);
 
-    mockRef.current?.resetToOneSet();
+    act(() => {
+      mockRef.current?.resetToOneSet();
+    });
 
     const rowsAfterReset = getAllByTestId('table-row');
     expect(rowsAfterReset.length).toBe(1);
@@ -195,12 +223,76 @@ describe('DetailsExerciseWorkoutResumeComponent', () => {
       expect(getByTestId('modal')).toBeTruthy();
     });
 
-    jest.advanceTimersByTime(2000);
+    act(() => {
+      jest.advanceTimersByTime(2000);
+    });
 
     await waitFor(() => {
       expect(queryByTestId('modal')).toBeNull();
     });
 
     expect(Vibration.vibrate).toHaveBeenCalledTimes(1);
+  });
+
+  it('debería mostrar el play cuando se pulsa pause y viceversa', async () => {
+    const mockDataWithRestTime = {
+      ...mockData,
+      restTime: '00:01:30',
+    };
+    const { getAllByTestId, getByTestId } = render(
+      <DetailsExerciseWorkoutResumeComponent {...mockDataWithRestTime} />
+    );
+
+    const startButton = getAllByTestId('start-timer')[0];
+    fireEvent.press(startButton);
+
+    const playPauseButton = getByTestId('play/pause button');
+    fireEvent.press(playPauseButton);
+
+    expect(playPauseButton?.props.children).toBeTruthy();
+    expect(getAllByTestId('play icon')).toBeTruthy();
+
+    fireEvent.press(playPauseButton);
+    expect(playPauseButton?.props.children).toBeTruthy();
+    expect(getAllByTestId('pause icon')).toBeTruthy();
+
+    fireEvent.press(playPauseButton);
+    expect(playPauseButton?.props.children).toBeTruthy();
+    expect(getAllByTestId('play icon')).toBeTruthy();
+  });
+
+  it('debería ajustar el peso a los límites definidos', () => {
+    const { getAllByTestId } = render(
+      <DetailsExerciseWorkoutResumeComponent {...mockData} />
+    );
+
+    const inputWeight = getAllByTestId('weight')[0];
+    fireEvent.changeText(inputWeight, '600');
+    expect(inputWeight.props.value).toBe('499');
+  });
+
+  it('debería ajustar las repeticiones a los límites definidos', () => {
+    const { getAllByTestId } = render(
+      <DetailsExerciseWorkoutResumeComponent {...mockData} />
+    );
+
+    const inputReps = getAllByTestId('reps')[0];
+    fireEvent.changeText(inputReps, '150');
+    expect(inputReps.props.value).toBe('99');
+  });
+
+  it('debería garantizar que las notas no superen los 4000 caracteres', () => {
+    const { getByTestId } = render(
+      <DetailsExerciseWorkoutResumeComponent {...mockData} />
+    );
+
+    const textareaInput = getByTestId('text-area-input');
+
+    expect(textareaInput.props.value.length).toBeLessThanOrEqual(4000);
+
+    const longText = 'a'.repeat(4001);
+    fireEvent.changeText(textareaInput, longText);
+
+    expect(textareaInput.props.value.length).toBe(4000);
   });
 });

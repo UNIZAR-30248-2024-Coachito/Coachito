@@ -38,13 +38,13 @@ const SlideUpBaseModal: React.FC<SlideUpModalProps> = ({
       >
         <Box
           testID="modal-content"
-          className="absolute bottom-0 w-full bg-zinc-950 rounded-t-2xl shadow-lg items-center"
+          className="absolute bottom-0 w-full bg-primary-0 rounded-t-2xl shadow-lg items-center"
         >
           <Minus color="grey" />
-          <Text className="text-xl font-bold text-center text-white py-4">
+          <Text className="text-xl font-bold text-center text-typography-0 py-4">
             {title}
           </Text>
-          <Box className="bottom-0 bg-zinc-800 rounded-lg p-4 w-full gap-2">
+          <Box className="bottom-0 bg-secondary-500 rounded-lg p-4 w-full gap-2">
             {buttons.map((button, index) => (
               <React.Fragment key={index}>
                 {button}

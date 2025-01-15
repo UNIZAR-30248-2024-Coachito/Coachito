@@ -5,8 +5,6 @@ import EditRoutine from '@/screens/EditRoutine';
 import { useFetchDetailsLastWorkout } from '@/hooks/workoutHook';
 import { Alert } from 'react-native';
 
-jest.mock('../../styles.css', () => ({}));
-
 jest.mock('@react-navigation/native', () => ({
   useNavigation: jest.fn(),
   useRoute: jest.fn(),
@@ -145,8 +143,7 @@ describe('EditRoutine', () => {
     await waitFor(() =>
       expect(alertSpy).toHaveBeenCalledWith(
         '',
-        'Por favor, introduce un nombre para la rutina.',
-        [{ text: 'OK' }]
+        'Por favor, introduce un nombre para la rutina.'
       )
     );
   });
@@ -161,8 +158,7 @@ describe('EditRoutine', () => {
     await waitFor(() =>
       expect(alertSpy).toHaveBeenCalledWith(
         '',
-        'La rutina debe contener mínimo un ejercicio.',
-        [{ text: 'OK' }]
+        'La rutina debe contener mínimo un ejercicio.'
       )
     );
   });
@@ -186,9 +182,23 @@ describe('EditRoutine', () => {
     await waitFor(() =>
       expect(alertSpy).toHaveBeenCalledWith(
         '',
-        'Se ha producido un error al obtener los ejercicios.',
-        [{ text: 'OK' }]
+        'Se ha producido un error al obtener los ejercicios.'
       )
     );
+  });
+
+  it('debería limitar el título de la rutina a 100 caracteres', async () => {
+    const { getByPlaceholderText } = render(<EditRoutine />);
+
+    const input = getByPlaceholderText('Título de la rutina');
+    const longTitle =
+      'Este es un título de rutina muy largo que definitivamente excede el límite de 100 caracteres porque queremos probar si realmente se corta correctamente.';
+
+    await act(async () => {
+      fireEvent.changeText(input, longTitle);
+    });
+
+    expect(input.props.value.length).toBeLessThanOrEqual(100);
+    expect(input.props.value).toBe(longTitle.slice(0, 100));
   });
 });

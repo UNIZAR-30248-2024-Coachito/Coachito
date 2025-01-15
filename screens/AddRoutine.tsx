@@ -1,5 +1,4 @@
 import React, { useEffect, useRef, useState } from 'react';
-import '../styles.css';
 import { HStack } from '../components/ui/hstack';
 import { VStack } from '../components/ui/vstack';
 import { Text } from '../components/ui/text';
@@ -20,12 +19,15 @@ import { ExerciseResume } from '@/components/routine/ExercisesRoutineResume';
 import ExerciseResumeComponent, {
   ExerciseResumeRef,
 } from '@/components/exercise/ExerciseResume';
+import { useUserInfo } from '@/context/UserContext';
 
-const MAX_LENGHT_TITLE = 100;
+export const MAX_LENGHT_TITLE = 100;
 
 const AddRoutine: React.FC = () => {
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute<RouteProp<RootStackParamList, 'AddRoutine'>>();
+
+  const { session } = useUserInfo();
 
   const [routineTitleInputValue, setRoutineTitleInputValue] = useState('');
   const [selectedExercises, setSelectedExercises] = useState<ExerciseResume[]>(
@@ -43,12 +45,15 @@ const AddRoutine: React.FC = () => {
   };
 
   const componentsCancelRoutinePopUpModal: React.ReactNode[] = [
-    <Text key="1" className="text-xl font-bold text-center text-white pb-8">
+    <Text
+      key="1"
+      className="text-xl font-bold text-center text-typography-0 pb-8"
+    >
       ¿Está seguro de que quiere descartar la rutina?
     </Text>,
     <Button
       key="2"
-      className="bg-red-800 rounded-lg mb-4"
+      className="bg-background-50 rounded-lg mb-4"
       onPress={() => {
         setIsCancelRoutineModalVisible(false);
         resetState();
@@ -60,7 +65,7 @@ const AddRoutine: React.FC = () => {
     <Button
       testID="cancel-cancel-routine-modal"
       key="3"
-      className="bg-zinc-700 rounded-lg"
+      className="bg-tertiary-500 rounded-lg"
       onPress={() => {
         setIsCancelRoutineModalVisible(false);
       }}
@@ -79,16 +84,12 @@ const AddRoutine: React.FC = () => {
     const routineTitle = routineTitleInputValue.trim();
 
     if (routineTitle === '') {
-      Alert.alert('', 'Por favor, introduce un nombre para la nueva rutina.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Por favor, introduce un nombre para la nueva rutina.');
       return;
     }
 
     if (selectedExercises.length === 0) {
-      Alert.alert('', 'La rutina debe contener mínimo un ejercicio.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'La rutina debe contener mínimo un ejercicio.');
       return;
     }
 
@@ -99,8 +100,7 @@ const AddRoutine: React.FC = () => {
     if (exists && !errorTitle) {
       Alert.alert(
         '',
-        'El título introducido ya existe. Por favor, introduzca otro.',
-        [{ text: 'OK' }]
+        'El título introducido ya existe. Por favor, introduzca otro.'
       );
       return;
     }
@@ -112,7 +112,8 @@ const AddRoutine: React.FC = () => {
     const { error } = await useCreateRoutine(
       routineTitle,
       allExerciseData,
-      route.params.groupId
+      route.params.groupId,
+      session!.user.id
     );
 
     resetState();
@@ -120,9 +121,7 @@ const AddRoutine: React.FC = () => {
       emitter.emit('routineAdded');
       navigation.navigate('Routine');
     } else {
-      Alert.alert('', 'Se ha producido un error al crear la rutina.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error al crear la rutina.');
     }
   };
 

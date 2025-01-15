@@ -4,8 +4,6 @@ import WorkoutExercisesResumeComponent, {
   WorkoutExercisesResume,
 } from '@/components/workout/WorkoutExerciseResume';
 
-jest.mock('../../../styles.css', () => ({}));
-
 jest.mock('../../../components/ui/avatar', () => ({
   Avatar: ({ children }: { children: React.ReactNode }) => (
     <div>{children}</div>

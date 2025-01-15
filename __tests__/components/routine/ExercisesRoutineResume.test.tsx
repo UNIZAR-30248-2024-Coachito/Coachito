@@ -5,8 +5,6 @@ import { useNavigation } from '@react-navigation/native';
 import { render, fireEvent } from '@testing-library/react-native';
 import React from 'react';
 
-jest.mock('../../../styles.css', () => ({}));
-
 jest.mock('@react-navigation/native', () => ({
   useNavigation: jest.fn(),
 }));

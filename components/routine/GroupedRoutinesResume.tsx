@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-import '../../styles.css';
+import React, { useContext, useState } from 'react';
 import { Text } from '../ui/text';
 import { Button } from '../ui/button';
 import {
@@ -26,6 +25,8 @@ import PopupBaseModal from '../shared/PopupBaseModal';
 import { Input, InputField } from '../ui/input';
 import { emitter } from '@/utils/emitter';
 import { Alert } from 'react-native';
+import { ThemeContext } from '@/context/ThemeContext';
+import { MAX_LENGHT_TITLE } from '@/screens/AddRoutine';
 
 export interface GroupedRoutines {
   groupId: number;
@@ -40,21 +41,18 @@ export interface GroupedRoutinesProps {
 const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
   groupedRoutine,
 }) => {
+  const { colorMode } = useContext(ThemeContext);
   const navigation = useNavigation<NavigationProps>();
   const [showRoutines, setShowRoutines] = useState(true);
   const [isSlideUpModalVisible, setIsSlideUpModalVisible] = useState(false);
   const [isDeleteModalVisible, setIsDeleteModalVisible] = useState(false);
   const [isRenameGroupModalVisible, setIsRenameGroupModalVisible] =
     useState(false);
-  const [newFolderName, setNewFolderName] = useState(
-    groupedRoutine.groupName ?? ''
-  );
+  const [newFolderName, setNewFolderName] = useState(groupedRoutine.groupName);
 
   const createRoutine = async () => {
     if (groupedRoutine.routines.length >= 7) {
-      Alert.alert('', 'No puede añadir más de 7 rutinas por carpeta.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'No puede añadir más de 7 rutinas por carpeta.');
       return;
     }
 
@@ -72,48 +70,47 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
     if (!error) {
       emitter.emit('groupDeleted');
     } else {
-      Alert.alert('', 'Se ha producido un error eliminando la carpeta.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error eliminando la carpeta.');
     }
   };
 
   const updateGroup = async () => {
-    const folderName = newFolderName.trim();
+    const folderName = newFolderName?.trim();
     setIsRenameGroupModalVisible(false);
 
     if (folderName === '') {
-      Alert.alert('', 'Por favor, introduce un nombre para la nueva carpeta.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Por favor, introduce un nombre para la nueva carpeta.');
       return;
     }
 
     const { error } = await useEditTemplateWorkoutGroup(
       groupedRoutine.groupId,
-      folderName
+      folderName!
     );
 
     if (!error) {
-      setNewFolderName(folderName);
+      setNewFolderName(folderName!);
       emitter.emit('groupRenamed');
     } else {
       setNewFolderName(groupedRoutine.groupName!);
-      Alert.alert('', 'Se ha producido un error al renombrar la carpeta.', [
-        { text: 'OK' },
-      ]);
+      Alert.alert('', 'Se ha producido un error al renombrar la carpeta.');
     }
   };
 
   const componentsRenameGroupPopUpModal: React.ReactNode[] = [
-    <Text key="1" className="text-xl font-bold text-center text-white mb-4">
+    <Text
+      key="1"
+      className="text-xl font-bold text-center text-typography-0 mb-4"
+    >
       Nuevo nombre de la carpeta
     </Text>,
     <Input key="2" className="mb-4">
       <InputField
         placeholder="Nuevo nombre"
-        value={newFolderName}
-        onChangeText={setNewFolderName}
+        value={newFolderName!}
+        onChangeText={(value) =>
+          setNewFolderName(value.slice(0, MAX_LENGHT_TITLE))
+        }
       />
     </Input>,
     <Button
@@ -125,7 +122,7 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
     </Button>,
     <Button
       key="4"
-      className="bg-zinc-700 rounded-lg"
+      className="bg-tertiary-500 rounded-lg"
       onPress={() => {
         setIsRenameGroupModalVisible(false);
       }}
@@ -143,16 +140,16 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
         setIsRenameGroupModalVisible(true);
       }}
     >
-      <Pencil color="white" />
-      <Text className="text-white">Renombrar Carpeta</Text>
+      <Pencil color={`${colorMode === 'light' ? 'black' : 'white'}`} />
+      <Text className="text-typography-0">Renombrar Carpeta</Text>
     </Button>,
     <Button
       key="2"
       className="bg-transparent gap-2"
       onPress={() => createRoutine()}
     >
-      <Plus color="white" />
-      <Text className="text-white">Agregar nueva rutina</Text>
+      <Plus color={`${colorMode === 'light' ? 'black' : 'white'}`} />
+      <Text className="text-typography-0">Agregar nueva rutina</Text>
     </Button>,
     <Button
       key="3"
@@ -168,13 +165,16 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
   ];
 
   const componentsDeleteGroupPopUpModal: React.ReactNode[] = [
-    <Text key="1" className="text-xl font-bold text-center text-white pb-8">
+    <Text
+      key="1"
+      className="text-xl font-bold text-center text-typography-0 pb-8"
+    >
       ¿Está seguro de que quiere eliminar la carpeta?
     </Text>,
     <Button
       testID="delete-button"
       key="2"
-      className="bg-red-800 rounded-lg mb-4"
+      className="bg-background-50 rounded-lg mb-4"
       onPress={() => {
         setIsDeleteModalVisible(false);
         deleteGroup();
@@ -184,7 +184,7 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
     </Button>,
     <Button
       key="3"
-      className="bg-zinc-700 rounded-lg"
+      className="bg-tertiary-500 rounded-lg"
       onPress={() => {
         setIsDeleteModalVisible(false);
       }}
@@ -213,7 +213,7 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
           </Text>
         </Button>
 
-        {groupedRoutine.groupName && (
+        {groupedRoutine.groupName != 'Mis Rutinas' && (
           <Button
             testID="slideup-modal"
             className="bg-transparent"
@@ -221,7 +221,9 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
               setIsSlideUpModalVisible(true);
             }}
           >
-            <MoreHorizontal color="white" />
+            <MoreHorizontal
+              color={`${colorMode === 'light' ? 'black' : 'white'}`}
+            />
           </Button>
         )}
       </HStack>

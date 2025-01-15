@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { useNavigation, useRoute } from '@react-navigation/native';
 import { Home, Dumbbell, User } from 'lucide-react-native';
 import { Pressable } from 'react-native';
@@ -6,8 +6,10 @@ import { HStack } from '../ui/hstack';
 import { VStack } from '../ui/vstack';
 import { Text } from '../ui/text';
 import { NavigationProps } from '@/types/navigation';
+import { ThemeContext } from '@/context/ThemeContext';
 
 export default function BottomBar() {
+  const { colorMode } = useContext(ThemeContext);
   const navigation = useNavigation<NavigationProps>();
   const route = useRoute();
 
@@ -16,15 +18,19 @@ export default function BottomBar() {
   const isProfileActive = route.name === 'Profile';
 
   return (
-    <HStack className="justify-around bg-zinc-950 py-4">
+    <HStack className="justify-around bg-background-10 py-4">
       <Pressable onPress={() => navigation.navigate('Dashboard')}>
         <VStack className="items-center">
           <Home
             testID="inicio-icon"
-            color={isDashboardActive ? 'rgb(59 130 246)' : 'white'}
+            color={
+              isDashboardActive
+                ? 'rgb(59 130 246)'
+                : `${colorMode === 'light' ? 'black' : 'white'}`
+            }
           />
           <Text
-            className={`text-xs ${isDashboardActive ? 'text-blue-500' : 'text-gray-400'}`}
+            className={`text-xs ${isDashboardActive ? 'text-blue-500' : 'text-typography-0'}`}
           >
             Inicio
           </Text>
@@ -34,10 +40,14 @@ export default function BottomBar() {
         <VStack className="items-center">
           <Dumbbell
             testID="entrenamiento-icon"
-            color={isRoutineActive ? 'rgb(59 130 246)' : 'white'}
+            color={
+              isRoutineActive
+                ? 'rgb(59 130 246)'
+                : `${colorMode === 'light' ? 'black' : 'white'}`
+            }
           />
           <Text
-            className={`text-xs ${isRoutineActive ? 'text-blue-500' : 'text-gray-400'}`}
+            className={`text-xs ${isRoutineActive ? 'text-blue-500' : 'text-typography-0'}`}
           >
             Rutinas
           </Text>
@@ -47,10 +57,14 @@ export default function BottomBar() {
         <VStack className="items-center">
           <User
             testID="perfil-icon"
-            color={isProfileActive ? 'rgb(59 130 246)' : 'white'}
+            color={
+              isProfileActive
+                ? 'rgb(59 130 246)'
+                : `${colorMode === 'light' ? 'black' : 'white'}`
+            }
           />
           <Text
-            className={`text-xs ${isProfileActive ? 'text-blue-500' : 'text-gray-400'}`}
+            className={`text-xs ${isProfileActive ? 'text-blue-500' : 'text-typography-0'}`}
           >
             Perfil
           </Text>
