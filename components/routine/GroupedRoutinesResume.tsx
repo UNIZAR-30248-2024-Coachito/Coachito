@@ -26,6 +26,7 @@ import { Input, InputField } from '../ui/input';
 import { emitter } from '@/utils/emitter';
 import { Alert } from 'react-native';
 import { ThemeContext } from '@/context/ThemeContext';
+import { MAX_LENGHT_TITLE } from '@/screens/AddRoutine';
 
 export interface GroupedRoutines {
   groupId: number;
@@ -107,7 +108,9 @@ const GroupedRoutinesResumeComponent: React.FC<GroupedRoutinesProps> = ({
       <InputField
         placeholder="Nuevo nombre"
         value={newFolderName!}
-        onChangeText={setNewFolderName}
+        onChangeText={(value) =>
+          setNewFolderName(value.slice(0, MAX_LENGHT_TITLE))
+        }
       />
     </Input>,
     <Button

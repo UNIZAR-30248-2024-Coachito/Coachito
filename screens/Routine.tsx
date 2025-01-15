@@ -18,6 +18,7 @@ import { emitter } from '@/utils/emitter';
 import { Alert } from 'react-native';
 import { useUserInfo } from '@/context/UserContext';
 import { ThemeContext } from '@/context/ThemeContext';
+import { MAX_LENGHT_TITLE } from './AddRoutine';
 
 export interface Group {
   id: number;
@@ -133,7 +134,9 @@ const Routine: React.FC = () => {
       <InputField
         placeholder="Nueva carpeta"
         value={newFolderInputValue}
-        onChangeText={setNewFolderInputValue}
+        onChangeText={(value) =>
+          setNewFolderInputValue(value.slice(0, MAX_LENGHT_TITLE))
+        }
       />
     </Input>,
     <Button
