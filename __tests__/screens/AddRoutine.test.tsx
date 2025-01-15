@@ -224,8 +224,7 @@ describe('AddRoutine', () => {
     );
     expect(alertMock).toHaveBeenCalledWith(
       '',
-      'El título introducido ya existe. Por favor, introduzca otro.',
-      [{ text: 'OK' }]
+      'El título introducido ya existe. Por favor, introduzca otro.'
     );
 
     alertMock.mockRestore();
